@@ -32,6 +32,10 @@
             <name>Bartosz Miszczak</name>
             <id>236605</id>
         </developer>
+        <developer>
+            <name>Jakub Kucharski</name>
+            <id>236576</id>
+        </developer>
     </developers>
 
     <properties>
