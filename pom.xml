@@ -20,6 +20,10 @@
             <name>Bartosz Zuchora</name>
             <id>236710</id>
         </developer>
+        <developer>
+            <name>Hubert Królikowski</name>
+            <id>236574</id>
+        </developer>
     </developers>
 
     <properties>
