@@ -24,6 +24,10 @@
             <name>Hubert Królikowski</name>
             <id>236574</id>
         </developer>
+        <developer>
+            <name>Radosław Moskal</name>
+            <id>236607</id>
+        </developer>
     </developers>
 
     <properties>
