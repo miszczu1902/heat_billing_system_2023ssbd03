@@ -12,7 +12,10 @@
     <name>ssbd03</name>
 
     <developers>
-
+        <developer>
+            <name>Magdalena Malinowska</name>
+            <id>236596</id>
+        </developer>
     </developers>
 
     <properties>
