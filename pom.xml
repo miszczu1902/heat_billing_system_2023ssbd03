@@ -20,6 +20,10 @@
             <name>Bartosz Miszczak</name>
             <id>236605</id>
         </developer>
+        <developer>
+            <name>Hubert Królikowski</name>
+            <id>236574</id>
+        </developer>
     </developers>
 
     <properties>
