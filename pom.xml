@@ -32,6 +32,10 @@
             <name>Magdalena Malinowska</name>
             <id>236596</id>
         </developer>
+        <developer>
+            <name>Jakub Kucharski</name>
+            <id>236576</id>
+        </developer>
     </developers>
 
     <properties>
