@@ -12,6 +12,10 @@
     <name>ssbd03</name>
 
     <developers>
+        <developer>
+            <name>Radosław Moskal</name>
+            <id>236607</id>
+        </developer>
     </developers>
 
     <properties>
