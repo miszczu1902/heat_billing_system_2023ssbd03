@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 public class Admin extends Account {
 
 
-    public Admin(int id, String email, String password, Boolean isEnable, LocalDateTime registerDate, String language, LoginData loginData, PersonalData personalData) {
+    public Admin(Long id, String email, String password, Boolean isEnable, LocalDateTime registerDate, String language, LoginData loginData, PersonalData personalData) {
         super(id, email, password, isEnable, registerDate, language, loginData, personalData);
     }
 

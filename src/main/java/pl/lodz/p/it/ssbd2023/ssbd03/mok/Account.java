@@ -9,15 +9,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public abstract class Account {
     @Setter(AccessLevel.NONE)
-    private int id;
-    private String email;
-    private String password;
-    private Boolean isEnable;
-    private LocalDateTime registerDate;
-    private String language;
-    private LoginData loginData;
-    private PersonalData personalData;
-
-
-
+    protected Long id;
+    protected String email;
+    protected String password;
+    protected Boolean isEnable;
+    protected LocalDateTime registerDate;
+    protected String language;
+    protected LoginData loginData;
+    protected PersonalData personalData;
 }

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 public class LoginData {
     @Setter(AccessLevel.NONE)
-    private int id;
+    private Long id;
     private LocalDateTime lastValidLoginDate;
     private String lastValidLogicAddress;
     private LocalDateTime lastInvalidLoginDate;

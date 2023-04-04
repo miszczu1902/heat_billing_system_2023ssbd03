@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @EqualsAndHashCode
 public abstract class AbstractEntity {
-    private int version;
-    private LocalDateTime lastModificationDate;
-    private String lastModificationAuthor;
-    private String lastModificationOperation;
+    protected long version;
+    protected LocalDateTime lastModificationDate;
+    protected String lastModificationAuthor;
+    protected String lastModificationOperation;
 }

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Data
 public class PersonalData {
     @Setter(AccessLevel.NONE)
-    private int id;
+    private Long id;
     private String name;
     private String surname;
 }
