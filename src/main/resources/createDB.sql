@@ -23,13 +23,15 @@ create table address (
     street VARCHAR(32) NOT NULL,
     place_number INT NOT NULL,
     city VARCHAR(32) NOT NULL,
-    postal_code VARCHAR(6) NOT NULL CHECK (postal_code ~* '^\d{2}-\d{3}$')
+    postal_code VARCHAR(6) NOT NULL CHECK (postal_code ~* '^\d{2}-\d{3}$'),
+    version BIGINT NOT NULL
 );
 
 create table past_quarter_hot_water_pay_off (
     id BIGINT PRIMARY KEY,
     average_consumption DECIMAL(10,2) CHECK (average_consumption >= 0),
-    days_number_in_quarter SMALLINT
+    days_number_in_quarter SMALLINT,
+    version BIGINT NOT NULL
 );
 
 create table account (
@@ -40,14 +42,16 @@ create table account (
     password VARCHAR(60) NOT NULL,
     is_enable BOOLEAN NOT NULL DEFAULT FALSE,
     register_date TIMESTAMP NOT NULL,
-    language_ VARCHAR NOT NULL DEFAULT 'PL'
+    language_ VARCHAR NOT NULL DEFAULT 'PL',
+    version BIGINT NOT NULL
 );
 
 create table personal_data (
     id BIGINT PRIMARY KEY,
     FOREIGN KEY (id) REFERENCES account(id),
     first_name VARCHAR(32) NOT NULL,
-    surname VARCHAR(32) NOT NULL
+    surname VARCHAR(32) NOT NULL,
+    version BIGINT NOT NULL
 );
 
 create table login_data (
@@ -57,37 +61,43 @@ create table login_data (
     last_valid_logic_address VARCHAR(64) CHECK (last_valid_logic_address ~* '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'),
     last_invalid_login_date TIMESTAMP,
     last_invalid_logic_address VARCHAR(64) CHECK (last_invalid_logic_address ~* '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'),
-    invalid_login_counter SMALLINT NOT NULL
+    invalid_login_counter SMALLINT NOT NULL,
+    version BIGINT NOT NULL
 );
 
 create table access_level_mapping (
     id BIGINT PRIMARY KEY,
     access_level VARCHAR(7) NOT NULL,
     account_id BIGINT NOT NULL,
-    FOREIGN KEY (account_id) REFERENCES account(id)
+    FOREIGN KEY (account_id) REFERENCES account(id),
+    version BIGINT NOT NULL
 );
 
 create table admin (
     id BIGINT PRIMARY KEY,
-    FOREIGN KEY (id) REFERENCES access_level_mapping(id)
+    FOREIGN KEY (id) REFERENCES access_level_mapping(id),
+    version BIGINT NOT NULL
 );
 
 create table manager (
     id BIGINT PRIMARY KEY,
     FOREIGN KEY (id) REFERENCES access_level_mapping(id),
     license VARCHAR(20) NOT NULL,
-    constraint unique_license UNIQUE(license)
+    constraint unique_license UNIQUE(license),
+    version BIGINT NOT NULL
 );
 
 create table owner (
     id BIGINT PRIMARY KEY,
     FOREIGN KEY (id) REFERENCES access_level_mapping(id),
     address_id BIGINT NOT NULL,
-    FOREIGN KEY (address_id) REFERENCES address(id)
+    FOREIGN KEY (address_id) REFERENCES address(id),
+    version BIGINT NOT NULL
 );
 
 create table heat_distribution_centre (
-    id BIGINT PRIMARY KEY
+    id BIGINT PRIMARY KEY,
+    version BIGINT NOT NULL
 );
 
 CREATE TABLE building (
@@ -97,7 +107,8 @@ CREATE TABLE building (
     address_id BIGINT NOT NULL,
     FOREIGN KEY (address_id) REFERENCES address(id),
     heat_distribution_centre_id BIGINT NOT NULL,
-    FOREIGN KEY (heat_distribution_centre_id) REFERENCES heat_distribution_centre(id)
+    FOREIGN KEY (heat_distribution_centre_id) REFERENCES heat_distribution_centre(id),
+    version BIGINT NOT NULL
 );
 
 CREATE TABLE place (
@@ -111,7 +122,8 @@ CREATE TABLE place (
     past_quarter_hot_water_payoff_id BIGINT NOT NULL,
     FOREIGN KEY (past_quarter_hot_water_payoff_id) REFERENCES past_quarter_hot_water_pay_off(id),
     owner_id BIGINT NOT NULL,
-    FOREIGN KEY (owner_id) REFERENCES owner(id)
+    FOREIGN KEY (owner_id) REFERENCES owner(id),
+    version BIGINT NOT NULL
 );
 
 create table annual_balance (
@@ -124,7 +136,8 @@ create table annual_balance (
     total_heating_place_cost DECIMAL(10,2) NOT NULL CHECK (total_heating_place_cost >= 0),
     total_heating_communal_area_cost DECIMAL(10,2) NOT NULL CHECK (total_heating_communal_area_cost >= 0),
     place_id BIGINT NOT NULL,
-    FOREIGN KEY (place_id) REFERENCES place(id)
+    FOREIGN KEY (place_id) REFERENCES place(id),
+    version BIGINT NOT NULL
 );
 
 create table month_pay_off (
@@ -136,20 +149,23 @@ create table month_pay_off (
     account_id BIGINT NOT NULL,
     FOREIGN KEY (account_id) REFERENCES owner(id),
     place_id BIGINT NOT NULL,
-    FOREIGN KEY (place_id) REFERENCES place(id)
+    FOREIGN KEY (place_id) REFERENCES place(id),
+    version BIGINT NOT NULL
 );
 
 create table advance (
     id BIGINT PRIMARY KEY,
     date_ DATE NOT NULL,
     place_id BIGINT NOT NULL,
-    FOREIGN KEY (place_id) REFERENCES place(id)
+    FOREIGN KEY (place_id) REFERENCES place(id),
+    version BIGINT NOT NULL
 );
 
 create table hot_water_advance (
     id BIGINT PRIMARY KEY,
     FOREIGN KEY (id) REFERENCES advance(id),
-    hot_water_advance_value DECIMAL(10,2) NOT NULL CHECK (hot_water_advance_value >= 0)
+    hot_water_advance_value DECIMAL(10,2) NOT NULL CHECK (hot_water_advance_value >= 0),
+    version BIGINT NOT NULL
 );
 
 create table heating_place_and_communal_area_advance (
@@ -157,7 +173,8 @@ create table heating_place_and_communal_area_advance (
     FOREIGN KEY (id) REFERENCES advance(id),
     heating_place_advance_value DECIMAL(10,2) NOT NULL CHECK (heating_place_advance_value >= 0),
     heating_communal_area_advance_value DECIMAL(10,2) NOT NULL CHECK (heating_communal_area_advance_value >= 0),
-    advance_change_factor FLOAT NOT NULL
+    advance_change_factor FLOAT NOT NULL,
+    version BIGINT NOT NULL
 );
 
 create table heat_distribution_centre_pay_off (
@@ -169,7 +186,8 @@ create table heat_distribution_centre_pay_off (
     heat_distribution_centre_id BIGINT NOT NULL,
     FOREIGN KEY (heat_distribution_centre_id) REFERENCES heat_distribution_centre(id),
     manager_id BIGINT NOT NULL,
-    FOREIGN KEY (manager_id) REFERENCES manager(id)
+    FOREIGN KEY (manager_id) REFERENCES manager(id),
+    version BIGINT NOT NULL
 );
 
 create table hot_water_entry (
@@ -179,6 +197,7 @@ create table hot_water_entry (
     place_id BIGINT NOT NULL,
     FOREIGN KEY (place_id) REFERENCES place(id),
     manager_id BIGINT,
-    FOREIGN KEY (manager_id) REFERENCES manager(id)
+    FOREIGN KEY (manager_id) REFERENCES manager(id),
+    version BIGINT NOT NULL
 );
 
