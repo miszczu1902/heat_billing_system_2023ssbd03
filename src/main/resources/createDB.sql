@@ -29,13 +29,14 @@ create table address (
 create table past_quarter_hot_water_pay_off (
     id BIGINT PRIMARY KEY,
     average_consumption DECIMAL(10,2) CHECK (average_consumption >= 0),
-    days_number_in_quarter INT
+    days_number_in_quarter SMALLINT
 );
 
 create table account (
     id BIGINT PRIMARY KEY,
-    email VARCHAR(254) NOT NULL CHECK (email ~* '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'),
+    email VARCHAR(254) NOT NULL CHECK (email ~* '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]$'),
     constraint unique_email UNIQUE(email),
+    username VARCHAR(16) NOT NULL CHECK (username ~* '^[a-zA-Z0-9_]{6,}$'),
     password VARCHAR(60) NOT NULL,
     is_enable BOOLEAN NOT NULL DEFAULT FALSE,
     register_date TIMESTAMP NOT NULL,
@@ -56,7 +57,7 @@ create table login_data (
     last_valid_logic_address VARCHAR(64) CHECK (last_valid_logic_address ~* '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'),
     last_invalid_login_date TIMESTAMP,
     last_invalid_logic_address VARCHAR(64) CHECK (last_invalid_logic_address ~* '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'),
-    invalid_login_counter INT NOT NULL
+    invalid_login_counter SMALLINT NOT NULL
 );
 
 create table access_level_mapping (
