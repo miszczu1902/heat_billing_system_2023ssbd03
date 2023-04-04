@@ -1,10 +1,16 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <groupId>pl.lodz.p.it.ssbd2023</groupId>
     <artifactId>ssbd03</artifactId>
     <version>0.0.1</version>
     <packaging>war</packaging>
+
     <name>ssbd03</name>
+
     <developers>
         <developer>
             <name>Radosław Moskal</name>
@@ -19,6 +25,10 @@
             <id>236574</id>
         </developer>
         <developer>
+            <name>Bartosz Zuchora</name>
+            <id>236710</id>
+        </developer>
+        <developer>
             <name>Magdalena Malinowska</name>
             <id>236596</id>
         </developer>
@@ -26,23 +36,12 @@
             <name>Jakub Kucharski</name>
             <id>236576</id>
         </developer>
-        <developer>
-            <name>Bartosz Zuchora</name>
-            <id>236710</id>
-        </developer>
     </developers>
+
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <lombok.version>1.18.24</lombok.version>
     </properties>
-    <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>compile</scope>
-        </dependency>
-    </dependencies>
+
 </project>
