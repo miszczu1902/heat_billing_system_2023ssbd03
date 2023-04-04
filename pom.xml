@@ -22,6 +22,14 @@
             <name>Magdalena Malinowska</name>
             <id>236596</id>
         </developer>
+        <developer>
+            <name>Jakub Kucharski</name>
+            <id>236576</id>
+        </developer>
+        <developer>
+            <name>Bartosz Zuchora</name>
+            <id>236710</id>
+        </developer>
     </developers>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
