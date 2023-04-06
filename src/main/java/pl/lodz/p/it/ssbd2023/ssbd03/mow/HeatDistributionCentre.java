@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow;
 
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
@@ -8,14 +9,19 @@ import java.util.List;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @EqualsAndHashCode
+@Entity
+@Table(name = "heat_distribution_centre")
 public class HeatDistributionCentre {
 
     @NonNull
-    private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    @OneToMany(mappedBy = "building")
     private List<Building> buildings;
 
-    public void addBuilding(Building building) {
+    public HeatDistributionCentre() {
 
     }
 

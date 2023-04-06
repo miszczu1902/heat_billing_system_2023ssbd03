@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode
 public abstract class AbstractEntity {
     protected long version;
-    protected LocalDateTime lastModificationDate;
-    protected String lastModificationAuthor;
-    protected String lastModificationOperation;
+//    protected LocalDateTime lastModificationDate;
+//    protected String lastModificationAuthor;
+//    protected String lastModificationOperation;
 }

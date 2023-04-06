@@ -1,23 +1,28 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
+@Entity
+@Table(name = "past_quarter_hot_water_pay_off")
 public class PastQuarterHotWaterPayoff {
 
-    private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Setter
+    @Column(nullable = false)
     private BigDecimal averageConsumption;
 
     @Setter
+    @Column(nullable = false)
     private Integer daysNumberInQuarter;
 
 }
