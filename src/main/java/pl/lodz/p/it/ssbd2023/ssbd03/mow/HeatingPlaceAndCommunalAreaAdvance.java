@@ -1,6 +1,9 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,9 +21,12 @@ public final class HeatingPlaceAndCommunalAreaAdvance extends Advance {
     @Column(nullable = false)
     private BigDecimal heatingPlaceAdvanceValue;
 
+    @DecimalMin(value = "0")
     @Column(nullable = false)
     private BigDecimal heatingCommunalAreaAdvanceValue;
 
+    @Min(value = 0)
+    @Max(value = 1)
     @Column(nullable = false)
     private Float advanceChangeFactor;
 

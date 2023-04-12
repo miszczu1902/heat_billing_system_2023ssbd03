@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.AbstractEntity;
 
@@ -19,10 +20,12 @@ public class PastQuarterHotWaterPayoff extends AbstractEntity {
     private Long id;
 
     @Setter
+    @Min(value = 0)
     @Column(nullable = false)
     private BigDecimal averageConsumption;
 
     @Setter
+    @Min(value = 0)
     @Column(nullable = false)
     private Integer daysNumberInQuarter;
 }

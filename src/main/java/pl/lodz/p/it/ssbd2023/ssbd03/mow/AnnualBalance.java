@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mow;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.AbstractEntity;
 
@@ -19,6 +20,7 @@ public class AnnualBalance extends AbstractEntity {
     @Column(name = "annual_balance_id")
     private Long id;
 
+    @Min(value = 0)
     @Column(nullable = false, name = "year_")
     private Short year;
 

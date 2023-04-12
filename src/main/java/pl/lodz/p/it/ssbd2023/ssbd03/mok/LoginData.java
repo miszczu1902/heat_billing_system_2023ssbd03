@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,7 +36,8 @@ public class LoginData extends AbstractEntity {
     private String lastInvalidLogicAddress;
 
     @Setter
-    @Column(nullable = false)
+    @Min(value = 0)
+    @Column(nullable = false, length = 4)
     private int invalidLoginCounter;
 
 }
