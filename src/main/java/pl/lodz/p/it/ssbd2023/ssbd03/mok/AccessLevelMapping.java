@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.mow;
+package pl.lodz.p.it.ssbd2023.ssbd03.mok;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -10,6 +10,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.mok.Account;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, name = "access_level")
 @EqualsAndHashCode
 @Entity
 @Table(name = "access_level_mapping")
