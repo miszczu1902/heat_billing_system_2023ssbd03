@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "heating_place_and_communal_area_advance")
-public final class HeatingPlaceAndCommunalAreaAdvance extends Advance{
+public final class HeatingPlaceAndCommunalAreaAdvance extends Advance {
     @Column(nullable = false)
     private BigDecimal heatingPlaceAdvanceValue;
 

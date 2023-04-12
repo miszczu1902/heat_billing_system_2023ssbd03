@@ -39,6 +39,7 @@ public class Building extends AbstractEntity {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "heat_distribution_centre_id")
     private HeatDistributionCentre heatDistributionCentre;
+
     public void addPlace(Place place) {
 
     }

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Entity
 @Table(name = "personal_data")
-public class PersonalData extends AbstractEntity{
+public class PersonalData extends AbstractEntity {
     @Id
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id")

@@ -16,18 +16,13 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "hot_water_advance")
 public final class HotWaterAdvance extends Advance {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "hot_water_advance_id")
-    private Long id;
 
     @DecimalMin(value = "0")
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal hotWaterAdvanceValue;
 
-    public HotWaterAdvance(Long id, LocalDate date, Place place, Long id1, BigDecimal hotWaterAdvanceValue) {
+    public HotWaterAdvance(Long id, LocalDate date, Place place, BigDecimal hotWaterAdvanceValue) {
         super(id, date, place);
-        this.id = id1;
         this.hotWaterAdvanceValue = hotWaterAdvanceValue;
     }
 }

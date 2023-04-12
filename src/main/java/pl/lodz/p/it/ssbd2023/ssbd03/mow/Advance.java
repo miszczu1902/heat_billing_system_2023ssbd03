@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 @Entity
 @Table(name = "advance")
-public sealed abstract class Advance extends AbstractEntity permits HeatingPlaceAndCommunalAreaAdvance, HotWaterAdvance{
+public sealed abstract class Advance extends AbstractEntity permits HeatingPlaceAndCommunalAreaAdvance, HotWaterAdvance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "advance_id")

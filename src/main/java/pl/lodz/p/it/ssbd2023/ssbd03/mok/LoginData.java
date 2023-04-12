@@ -2,17 +2,14 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mok;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
-import lombok.AccessLevel;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.time.LocalDateTime;
 
 @Getter
 @Entity
 @Table(name = "login_data")
-public class LoginData extends AbstractEntity{
+public class LoginData extends AbstractEntity {
     @Id
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id")
