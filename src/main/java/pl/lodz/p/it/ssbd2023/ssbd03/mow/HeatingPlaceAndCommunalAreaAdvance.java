@@ -15,10 +15,6 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "heating_place_and_communal_area_advance")
 public final class HeatingPlaceAndCommunalAreaAdvance extends Advance{
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-
     @Column(nullable = false)
     private BigDecimal heatingPlaceAdvanceValue;
 
@@ -28,9 +24,8 @@ public final class HeatingPlaceAndCommunalAreaAdvance extends Advance{
     @Column(nullable = false)
     private Float advanceChangeFactor;
 
-    public HeatingPlaceAndCommunalAreaAdvance(Long id, LocalDate date, Place place, Long id1, BigDecimal heatingPlaceAdvanceValue, BigDecimal heatingCommunalAreaAdvanceValue, Float advanceChangeFactor) {
+    public HeatingPlaceAndCommunalAreaAdvance(Long id, LocalDate date, Place place, BigDecimal heatingPlaceAdvanceValue, BigDecimal heatingCommunalAreaAdvanceValue, Float advanceChangeFactor) {
         super(id, date, place);
-        this.id = id1;
         this.heatingPlaceAdvanceValue = heatingPlaceAdvanceValue;
         this.heatingCommunalAreaAdvanceValue = heatingCommunalAreaAdvanceValue;
         this.advanceChangeFactor = advanceChangeFactor;

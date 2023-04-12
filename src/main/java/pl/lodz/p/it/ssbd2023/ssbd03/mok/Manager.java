@@ -5,22 +5,19 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "manager")
 public class Manager extends Account {
-
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true, length = 20)
     private String license;
 
-    public Manager(Long id, String email, String password, Boolean isEnable, LocalDateTime registerDate, String language, LoginData loginData, PersonalData personalData, String license) {
-        super(id, email, password, isEnable, registerDate, language, loginData, personalData);
-        this.license=license;
+    public Manager(Long id, String email, String username, String password, Boolean isEnable, LocalDateTime registerDate, String language_, LoginData loginData, PersonalData personalData, String license) {
+        super(id, email, username, password, isEnable, registerDate, language_, loginData, personalData);
+        this.license = license;
     }
-
 
     public void editOwnerAccount(int ownerId, String name, String surname, String language) {
 

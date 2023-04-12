@@ -1,36 +1,39 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import jakarta.validation.constraints.DecimalMin;
+import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.AbstractEntity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
 @Entity
 @Table(name = "heat_distribution_centre_pay_off")
-public class HeatDistributionCentrePayoff {
-
+public class HeatDistributionCentrePayoff extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "heat_distribution_centre_pay_off_id")
     private Long id;
 
     @Column(nullable = false)
     private LocalDate date;
 
-    @Column(nullable = false)
+    @DecimalMin(value = "0")
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal consumption;
 
-    @Column(nullable = false)
+    @DecimalMin(value = "0")
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal consumptionCost;
 
-    @Column(nullable = false)
+    @DecimalMin(value = "0")
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal heatingAreaFactor;
 
-    public HeatDistributionCentrePayoff() {
-    }
+
 }

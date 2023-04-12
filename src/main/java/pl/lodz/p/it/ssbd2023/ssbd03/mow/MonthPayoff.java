@@ -1,7 +1,9 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.AbstractEntity;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.Account;
 
 import java.math.BigDecimal;
@@ -13,22 +15,25 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 @Entity
 @Table(name = "month_pay_off")
-public class MonthPayoff {
-
+public class MonthPayoff extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "month_pay_off_id")
     private Long id;
 
     @Column(nullable = false)
     private LocalDate payoffDate;
 
-    @Column(nullable = false)
+    @DecimalMin(value = "0")
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal waterHeatingUnitCost;
 
-    @Column(nullable = false)
+    @DecimalMin(value = "0")
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal centralHeatingUnitCost;
 
-    @Column(nullable = false)
+    @DecimalMin(value = "0")
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal hotWaterConsumption;
 
     @OneToOne(cascade = CascadeType.ALL)

@@ -13,8 +13,8 @@ public class Owner extends Account {
     @JoinColumn(name = "address_id")
     private Address address;
 
-    public Owner(Long id, String email, String password, Boolean isEnable, LocalDateTime registerDate, String language, LoginData loginData, PersonalData personalData, Address address) {
-        super(id, email, password, isEnable, registerDate, language, loginData, personalData);
+    public Owner(Long id, String email, String username, String password, Boolean isEnable, LocalDateTime registerDate, String language_, LoginData loginData, PersonalData personalData, Address address) {
+        super(id, email, username, password, isEnable, registerDate, language_, loginData, personalData);
         this.address = address;
     }
 }

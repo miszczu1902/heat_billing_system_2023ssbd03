@@ -1,7 +1,10 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.AbstractEntity;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.Address;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -12,24 +15,30 @@ import java.util.List;
 @EqualsAndHashCode
 @Entity
 @Table(name = "building")
-public class Building {
-
+public class Building extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "building_id")
     private Long id;
 
-    @Column(nullable = false)
+    @DecimalMin(value = "0")
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalArea;
 
-    @Column(nullable = false)
+    @DecimalMin(value = "0")
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal communalAreaAggregate;
 
-    @Column(nullable = false)
-    private String address;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private Address address;
 
     @OneToMany(mappedBy = "place")
     private List<Place> places;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "heat_distribution_centre_id")
+    private HeatDistributionCentre heatDistributionCentre;
     public void addPlace(Place place) {
 
     }

@@ -1,7 +1,9 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.AbstractEntity;
 
 import java.math.BigDecimal;
 
@@ -11,30 +13,37 @@ import java.math.BigDecimal;
 @EqualsAndHashCode
 @Entity
 @Table(name = "annual_balance")
-public class AnnualBalance {
+public class AnnualBalance extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "annual_balance_id")
     private Long id;
 
-    @Column(nullable = false)
-    private Integer year;
+    @Column(nullable = false, name = "year_")
+    private Short year;
 
-    @Column(nullable = false)
+    @DecimalMin(value = "0")
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalHotWaterAdvance;
 
-    @Column(nullable = false)
+    @DecimalMin(value = "0")
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalHeatingPlaceAdvance;
 
-    @Column(nullable = false)
+    @DecimalMin(value = "0")
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalHeatingCommunalAreaAdvance;
 
-    @Column(nullable = false)
+    @DecimalMin(value = "0")
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalHotWaterCost;
 
-    @Column(nullable = false)
+    @DecimalMin(value = "0")
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalHeatingPlaceCost;
 
-    @Column(nullable = false)
+    @DecimalMin(value = "0")
+    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal totalHeatingCommunalAreaCost;
 
     @OneToOne(cascade = CascadeType.ALL)

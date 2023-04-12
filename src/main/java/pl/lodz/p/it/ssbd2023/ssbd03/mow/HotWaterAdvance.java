@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -17,10 +18,12 @@ import java.time.LocalDate;
 public final class HotWaterAdvance extends Advance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    @Column(name = "hot_water_advance_id")
+    private Long id;
 
-    @Column(nullable = false)
-    BigDecimal hotWaterAdvanceValue;
+    @DecimalMin(value = "0")
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal hotWaterAdvanceValue;
 
     public HotWaterAdvance(Long id, LocalDate date, Place place, Long id1, BigDecimal hotWaterAdvanceValue) {
         super(id, date, place);

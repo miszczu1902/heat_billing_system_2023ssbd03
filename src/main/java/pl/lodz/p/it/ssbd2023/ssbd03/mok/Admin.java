@@ -4,7 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDateTime;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -12,9 +11,8 @@ import java.time.LocalDateTime;
 @Table(name = "admin")
 public class Admin extends Account {
 
-
-    public Admin(Long id, String email, String password, Boolean isEnable, LocalDateTime registerDate, String language, LoginData loginData, PersonalData personalData) {
-        super(id, email, password, isEnable, registerDate, language, loginData, personalData);
+    public Admin(Long id, String email, String username, String password, Boolean isEnable, LocalDateTime registerDate, String language_, LoginData loginData, PersonalData personalData) {
+        super(id, email, username, password, isEnable, registerDate, language_, loginData, personalData);
     }
 
     public void editUserAccount(int accountId, String name, String surname, String language) {

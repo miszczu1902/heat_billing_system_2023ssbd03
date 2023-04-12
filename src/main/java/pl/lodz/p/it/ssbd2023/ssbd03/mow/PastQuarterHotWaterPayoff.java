@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mow;
 
 import jakarta.persistence.*;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.AbstractEntity;
 
 import java.math.BigDecimal;
 
@@ -11,10 +12,10 @@ import java.math.BigDecimal;
 @EqualsAndHashCode
 @Entity
 @Table(name = "past_quarter_hot_water_pay_off")
-public class PastQuarterHotWaterPayoff {
-
+public class PastQuarterHotWaterPayoff extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "past_quarter_hot_water_pay_off_id")
     private Long id;
 
     @Setter
@@ -24,5 +25,4 @@ public class PastQuarterHotWaterPayoff {
     @Setter
     @Column(nullable = false)
     private Integer daysNumberInQuarter;
-
 }
