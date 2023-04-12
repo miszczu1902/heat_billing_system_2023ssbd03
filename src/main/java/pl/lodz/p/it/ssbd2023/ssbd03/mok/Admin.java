@@ -1,13 +1,19 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok;
 
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
-public class Admin extends Account {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+@DiscriminatorValue("ADMIN")
+@Table(name = "admin")
+public class Admin extends AccessLevelMapping {
 
 
-    public Admin(Long id, String email, String password, Boolean isEnable, LocalDateTime registerDate, String language, LoginData loginData, PersonalData personalData) {
-        super(id, email, password, isEnable, registerDate, language, loginData, personalData);
-    }
 
     public void editUserAccount(int accountId, String name, String surname, String language) {
 

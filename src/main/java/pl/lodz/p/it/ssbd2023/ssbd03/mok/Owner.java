@@ -1,10 +1,20 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok;
 
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+@DiscriminatorValue("OWNER")
+@Table(name = "owner")
+public class Owner extends AccessLevelMapping {
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id")
+    private Address address;
 
-public class Owner extends Account {
-
-    public Owner(Long id, String email, String password, Boolean isEnable, LocalDateTime registerDate, String language, LoginData loginData, PersonalData personalData) {
-        super(id, email, password, isEnable, registerDate, language, loginData, personalData);
+    public Owner(Address address) {
+        this.address = address;
     }
 }

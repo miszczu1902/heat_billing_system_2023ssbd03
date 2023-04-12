@@ -1,16 +1,24 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
-public class Manager extends Account {
-
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+@DiscriminatorValue("MANAGER")
+@Table(name = "manager")
+public class Manager extends AccessLevelMapping {
+    @Column(nullable = false, unique = true, length = 20)
     private String license;
 
-    public Manager(Long id, String email, String password, Boolean isEnable, LocalDateTime registerDate, String language, LoginData loginData, PersonalData personalData, String license) {
-        super(id, email, password, isEnable, registerDate, language, loginData, personalData);
-        this.license=license;
+    public Manager(String license) {
+        this.license = license;
     }
-
 
     public void editOwnerAccount(int ownerId, String name, String surname, String language) {
 
