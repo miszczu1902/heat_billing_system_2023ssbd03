@@ -1,10 +1,13 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.mok;
+package pl.lodz.p.it.ssbd2023.ssbd03.mok.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.entities.AbstractEntity;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.entities.Account;
+
 import java.time.LocalDateTime;
 
 @Getter

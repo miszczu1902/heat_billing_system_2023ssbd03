@@ -13,7 +13,8 @@ import java.sql.Connection;
         initialPoolSize = 1,
         minPoolSize = 0,
         maxPoolSize = 1,
-        maxIdleTime = 10)
+        maxIdleTime = 10,
+        isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
 
 @DataSourceDefinition(
         name = "java:app/jdbc/ssbd03auth",
@@ -21,7 +22,8 @@ import java.sql.Connection;
         user = "ssbd03auth",
         password = "KHgXydJUv",
         portNumber = 5352,
-        databaseName = "ssbd03")
+        databaseName = "ssbd03",
+        isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
 
 @DataSourceDefinition(
         name = "java:app/jdbc/ssbd03mok",

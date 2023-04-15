@@ -1,10 +1,10 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.mow;
+package pl.lodz.p.it.ssbd2023.ssbd03.mow.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import lombok.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.AbstractEntity;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.entities.AbstractEntity;
 
 import java.math.BigDecimal;
 
