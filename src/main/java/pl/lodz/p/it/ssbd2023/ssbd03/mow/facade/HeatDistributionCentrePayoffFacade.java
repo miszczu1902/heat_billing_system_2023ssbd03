@@ -3,7 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mow.facade;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.AbstractFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mow.HeatDistributionCentrePayoff;
+import pl.lodz.p.it.ssbd2023.ssbd03.mow.entities.HeatDistributionCentrePayoff;
 
 public class HeatDistributionCentrePayoffFacade extends AbstractFacade<HeatDistributionCentrePayoff> {
     @PersistenceContext(unitName = "ssbd03mow")
