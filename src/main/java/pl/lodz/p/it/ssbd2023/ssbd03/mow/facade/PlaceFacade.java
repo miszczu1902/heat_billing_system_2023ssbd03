@@ -21,12 +21,10 @@ public class PlaceFacade extends AbstractFacade<Place> {
     public void edit(Place entity) {
         super.edit(entity);
     }
-
     @Override
     public void create(Place entity) {
         super.create(entity);
     }
-
     @Override
     public void remove(Place entity) {
         super.remove(entity);

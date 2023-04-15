@@ -21,12 +21,10 @@ public class BuildingFacade extends AbstractFacade<Building> {
     public void edit(Building entity) {
         super.edit(entity);
     }
-
     @Override
     public void create(Building entity) {
         super.create(entity);
     }
-
     @Override
     public void remove(Building entity) {
         super.remove(entity);
