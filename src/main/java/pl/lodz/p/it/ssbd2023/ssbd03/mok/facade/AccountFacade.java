@@ -10,23 +10,29 @@ import pl.lodz.p.it.ssbd2023.ssbd03.mok.Account;
 public class AccountFacade extends AbstractFacade<Account> {
     @PersistenceContext(unitName = "ssbd03mok")
     private EntityManager em;
+
+    public AccountFacade() {
+        super(Account.class);
+    }
+
     @Override
     protected EntityManager getEntityManager() {
         return em;
     }
-    public AccountFacade() {
-        super(Account.class);
-    }
+
     @Override
     public void edit(Account entity) {
         super.edit(entity);
     }
+
     @Override
     public void create(Account entity) {
             super.create(entity);
     }
+
     @Override
     public void remove(Account entity) {
         super.remove(entity);
     }
+
 }

@@ -8,17 +8,21 @@ import pl.lodz.p.it.ssbd2023.ssbd03.mow.HeatDistributionCentrePayoff;
 public class HeatDistributionCentrePayoffFacade extends AbstractFacade<HeatDistributionCentrePayoff> {
     @PersistenceContext(unitName = "ssbd03mow")
     private EntityManager em;
+
+    public HeatDistributionCentrePayoffFacade() {
+        super(HeatDistributionCentrePayoff.class);
+    }
+
     @Override
     protected EntityManager getEntityManager() {
         return em;
     }
-    public HeatDistributionCentrePayoffFacade() {
-        super(HeatDistributionCentrePayoff.class);
-    }
+
     @Override
     public void edit(HeatDistributionCentrePayoff entity) {
         super.edit(entity);
     }
+
     @Override
     public void create(HeatDistributionCentrePayoff entity) {
         super.create(entity);

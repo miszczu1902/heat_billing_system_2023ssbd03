@@ -10,21 +10,26 @@ import pl.lodz.p.it.ssbd2023.ssbd03.mow.Place;
 public class PlaceFacade extends AbstractFacade<Place> {
     @PersistenceContext(unitName = "ssbd03mow")
     private EntityManager em;
+
+    public PlaceFacade() {
+        super(Place.class);
+    }
+
     @Override
     protected EntityManager getEntityManager() {
         return em;
     }
-    public PlaceFacade() {
-        super(Place.class);
-    }
+
     @Override
     public void edit(Place entity) {
         super.edit(entity);
     }
+
     @Override
     public void create(Place entity) {
         super.create(entity);
     }
+
     @Override
     public void remove(Place entity) {
         super.remove(entity);
