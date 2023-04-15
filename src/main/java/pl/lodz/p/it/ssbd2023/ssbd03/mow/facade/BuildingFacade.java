@@ -4,11 +4,11 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.AbstractFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mow.entities.Building;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.mow.Building;
 
 @Stateless
 public class BuildingFacade extends AbstractFacade<Building> {
-    @PersistenceContext(unitName = "ssbd03mow")
+    @PersistenceContext(unitName = "ssbd03mowPU")
     private EntityManager em;
 
     public BuildingFacade() {

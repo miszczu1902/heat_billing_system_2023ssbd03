@@ -1,6 +1,10 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.config;
 
 import jakarta.annotation.sql.DataSourceDefinition;
+import jakarta.ejb.Stateless;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+
 import java.sql.Connection;
 
 @DataSourceDefinition(
@@ -8,7 +12,7 @@ import java.sql.Connection;
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd03admin",
         password = "9LUoYTSMH",
-        portNumber = 5352,
+        portNumber = 5430,
         databaseName = "ssbd03",
         initialPoolSize = 1,
         minPoolSize = 0,
@@ -21,7 +25,7 @@ import java.sql.Connection;
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd03auth",
         password = "KHgXydJUv",
-        portNumber = 5352,
+        portNumber = 5430,
         databaseName = "ssbd03",
         isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
 
@@ -30,7 +34,7 @@ import java.sql.Connection;
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd03mok",
         password = "CHqZxv5R1",
-        portNumber = 5352,
+        portNumber = 5430,
         databaseName = "ssbd03",
         isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
 
@@ -39,9 +43,12 @@ import java.sql.Connection;
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd03mow",
         password = "obSjEBGaX",
-        portNumber = 5352,
+        portNumber = 5430,
         databaseName = "ssbd03",
         isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
 
+@Stateless
 public class JDBCConfig {
+    @PersistenceContext(unitName = "ssbd03adminPU")
+    private EntityManager em;
 }

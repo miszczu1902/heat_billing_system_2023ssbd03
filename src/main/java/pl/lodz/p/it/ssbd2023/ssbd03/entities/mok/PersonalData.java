@@ -1,10 +1,10 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.mok.entities;
+package pl.lodz.p.it.ssbd2023.ssbd03.entities.mok;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.entities.AbstractEntity;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Account;
 
 @Getter
 @Entity
