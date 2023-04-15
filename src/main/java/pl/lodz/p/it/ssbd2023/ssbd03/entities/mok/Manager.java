@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.mok.entities;
+package pl.lodz.p.it.ssbd2023.ssbd03.entities.mok;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
@@ -6,7 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.entities.AccessLevelMapping;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AccessLevelMapping;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity

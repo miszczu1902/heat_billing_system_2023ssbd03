@@ -1,10 +1,10 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.mok.entities;
+package pl.lodz.p.it.ssbd2023.ssbd03.entities.mok;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.entities.AccessLevelMapping;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.entities.Address;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AccessLevelMapping;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Address;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity

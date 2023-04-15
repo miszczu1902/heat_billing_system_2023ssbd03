@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.mok.entities;
+package pl.lodz.p.it.ssbd2023.ssbd03.entities.mok;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
