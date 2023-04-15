@@ -16,7 +16,6 @@
             <property name="javax.persistence.sql-load-script-source" value="init.sql"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
-            <property name="hibernate.connection.isolation" value="2"/>
         </properties>
     </persistence-unit>
 
@@ -40,7 +39,6 @@
                       value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
-            <property name="hibernate.connection.isolation" value="2"/>
         </properties>
     </persistence-unit>
 
@@ -72,7 +70,6 @@
                       value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
-            <property name="hibernate.connection.isolation" value="2"/>
         </properties>
     </persistence-unit>
 
