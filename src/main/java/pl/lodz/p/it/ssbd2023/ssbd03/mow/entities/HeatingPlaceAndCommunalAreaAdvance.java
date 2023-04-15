@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.mow;
+package pl.lodz.p.it.ssbd2023.ssbd03.mow.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;

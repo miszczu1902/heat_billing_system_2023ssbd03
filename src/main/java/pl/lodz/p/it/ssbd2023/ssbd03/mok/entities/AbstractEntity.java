@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.mok;
+package pl.lodz.p.it.ssbd2023.ssbd03.mok.entities;
 
 
 import jakarta.persistence.MappedSuperclass;

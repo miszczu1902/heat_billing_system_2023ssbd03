@@ -1,12 +1,10 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.mok;
+package pl.lodz.p.it.ssbd2023.ssbd03.mok.entities;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.AbstractEntity;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.Account;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

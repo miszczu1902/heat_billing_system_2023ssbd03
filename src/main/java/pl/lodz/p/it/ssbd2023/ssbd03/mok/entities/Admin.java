@@ -1,11 +1,11 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.mok;
+package pl.lodz.p.it.ssbd2023.ssbd03.mok.entities;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.entities.AccessLevelMapping;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity

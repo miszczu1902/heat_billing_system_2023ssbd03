@@ -1,10 +1,13 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.mow;
+package pl.lodz.p.it.ssbd2023.ssbd03.mow.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.AbstractEntity;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.Owner;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.entities.AbstractEntity;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.entities.Owner;
+import pl.lodz.p.it.ssbd2023.ssbd03.mow.entities.Advance;
+import pl.lodz.p.it.ssbd2023.ssbd03.mow.entities.Building;
+import pl.lodz.p.it.ssbd2023.ssbd03.mow.entities.PastQuarterHotWaterPayoff;
 
 import java.math.BigDecimal;
 import java.util.List;
