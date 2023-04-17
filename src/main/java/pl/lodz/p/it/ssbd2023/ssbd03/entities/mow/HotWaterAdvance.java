@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "hot_water_advance")
-public final class HotWaterAdvance extends Advance {
+public final class HotWaterAdvance extends Advance implements Serializable {
 
     @DecimalMin(value = "0")
     @Column(nullable = false, precision = 10, scale = 2)

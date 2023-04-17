@@ -6,6 +6,7 @@ import lombok.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Address;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 @EqualsAndHashCode
 @Entity
 @Table(name = "building")
-public class Building extends AbstractEntity {
+public class Building extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "building_id")
@@ -33,10 +34,10 @@ public class Building extends AbstractEntity {
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @OneToMany(mappedBy = "place")
+    @OneToMany(mappedBy = "building")
     private List<Place> places;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "heat_distribution_centre_id")
     private HeatDistributionCentre heatDistributionCentre;
 

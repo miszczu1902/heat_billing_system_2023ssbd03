@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -13,7 +15,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @Entity
 @Table(name = "access_level_mapping")
-public class AccessLevelMapping extends AbstractEntity {
+public class AccessLevelMapping extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "access_level_mapping_id")

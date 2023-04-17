@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Getter
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 @Entity
 @Table(name = "advance")
-public sealed abstract class Advance extends AbstractEntity permits HeatingPlaceAndCommunalAreaAdvance, HotWaterAdvance {
+public abstract class Advance extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "advance_id")
@@ -22,7 +23,7 @@ public sealed abstract class Advance extends AbstractEntity permits HeatingPlace
     @Column(nullable = false, name = "date_")
     protected LocalDate date;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "place_id")
     protected Place place;
 }

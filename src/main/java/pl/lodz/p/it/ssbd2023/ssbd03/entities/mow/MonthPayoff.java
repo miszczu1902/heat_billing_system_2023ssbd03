@@ -6,6 +6,7 @@ import lombok.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Account;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 @Entity
 @Table(name = "month_pay_off")
-public class MonthPayoff extends AbstractEntity {
+public class MonthPayoff extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "month_pay_off_id")

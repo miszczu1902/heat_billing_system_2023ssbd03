@@ -25,6 +25,7 @@
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Account</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AccessLevelMapping</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Address</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Account</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Admin</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.LoginData</class>
@@ -46,7 +47,6 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <jta-data-source>java:app/jdbc/ssbd03mow</jta-data-source>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Address</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mow.Advance</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mow.AnnualBalance</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mow.Building</class>
@@ -58,10 +58,13 @@
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mow.MonthPayoff</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mow.PastQuarterHotWaterPayoff</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mow.Place</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Address</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Account</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AccessLevelMapping</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Manager</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Owner</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.LoginData</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.PersonalData</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect"/>

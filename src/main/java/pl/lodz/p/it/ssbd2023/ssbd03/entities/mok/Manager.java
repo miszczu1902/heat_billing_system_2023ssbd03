@@ -8,11 +8,13 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AccessLevelMapping;
 
+import java.io.Serializable;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @DiscriminatorValue("MANAGER")
 @Table(name = "manager")
-public class Manager extends AccessLevelMapping {
+public class Manager extends AccessLevelMapping implements Serializable {
     @Column(nullable = false, unique = true, length = 20)
     private String license;
 

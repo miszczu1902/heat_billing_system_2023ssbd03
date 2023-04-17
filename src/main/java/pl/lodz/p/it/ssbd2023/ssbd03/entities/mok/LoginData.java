@@ -8,16 +8,16 @@ import lombok.Setter;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Account;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
 @Entity
 @Table(name = "login_data")
-public class LoginData extends AbstractEntity {
+public class LoginData extends AbstractEntity implements Serializable {
     @Id
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id")
-    @Column(name = "login_data")
     private Account id;
 
     @Setter

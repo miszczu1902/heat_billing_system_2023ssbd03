@@ -9,6 +9,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -17,7 +18,7 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "heating_place_and_communal_area_advance")
-public final class HeatingPlaceAndCommunalAreaAdvance extends Advance {
+public final class HeatingPlaceAndCommunalAreaAdvance extends Advance implements Serializable {
     @Column(nullable = false)
     private BigDecimal heatingPlaceAdvanceValue;
 

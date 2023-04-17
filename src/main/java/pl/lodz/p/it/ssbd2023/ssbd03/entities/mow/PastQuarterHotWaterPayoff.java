@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Min;
 import lombok.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Getter
@@ -13,7 +14,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode
 @Entity
 @Table(name = "past_quarter_hot_water_pay_off")
-public class PastQuarterHotWaterPayoff extends AbstractEntity {
+public class PastQuarterHotWaterPayoff extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "past_quarter_hot_water_pay_off_id")
