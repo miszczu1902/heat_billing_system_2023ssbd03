@@ -13,7 +13,7 @@
             <property name="hibernate.transaction.jta.platform"
                       value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
             <property name="javax.persistence.schema-generation.database.action" value="create"/>
-<!--            <property name="javax.persistence.sql-load-script-source" value="init.sql"/>-->
+            <property name="javax.persistence.sql-load-script-source" value="init.sql"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
         </properties>

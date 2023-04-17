@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 @Entity
 @Table(name = "advance")
-public abstract class Advance extends AbstractEntity implements Serializable {
+public abstract class Advance extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "advance_id")
