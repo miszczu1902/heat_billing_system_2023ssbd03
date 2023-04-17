@@ -21,7 +21,7 @@ drop table IF EXISTS heat_distribution_centre;
 create table address (
     id BIGINT PRIMARY KEY,
     street VARCHAR(32) NOT NULL,
-    place_number INT NOT NULL,
+    place_number SMALLINT NOT NULL,
     city VARCHAR(32) NOT NULL,
     postal_code VARCHAR(6) NOT NULL CHECK (postal_code ~* '^\d{2}-\d{3}$'),
     version BIGINT NOT NULL
@@ -41,6 +41,7 @@ create table account (
     username VARCHAR(16) NOT NULL CHECK (username ~* '^[a-zA-Z0-9_]{6,}$'),
     password VARCHAR(60) NOT NULL,
     is_enable BOOLEAN NOT NULL DEFAULT FALSE,
+    is_active BOOLEAN NOT NULL DEFAULT FALSE,
     register_date TIMESTAMP NOT NULL,
     language_ VARCHAR NOT NULL DEFAULT 'PL',
     version BIGINT NOT NULL
@@ -90,8 +91,8 @@ create table manager (
 create table owner (
     id BIGINT PRIMARY KEY,
     FOREIGN KEY (id) REFERENCES access_level_mapping(id),
-    address_id BIGINT NOT NULL,
-    FOREIGN KEY (address_id) REFERENCES address(id),
+    phone_number VARCHAR(9) NOT NULL CHECK(phone_number ~ '^\d{9}$'),
+    constraint unique_phone_number UNIQUE(phone_number),
     version BIGINT NOT NULL
 );
 
@@ -128,7 +129,7 @@ CREATE TABLE place (
 
 create table annual_balance (
     id BIGINT PRIMARY KEY,
-    year_ SMALLINT NOT NULL,
+    year_ SMALLINT NOT NULL CHECK (year_ > 2022),
     total_hot_water_advance DECIMAL(10,2) NOT NULL CHECK (total_hot_water_advance >= 0),
     total_heating_place_advance DECIMAL(10,2) NOT NULL CHECK (total_heating_place_advance >= 0),
     total_heating_communal_area_advance DECIMAL(10,2) NOT NULL CHECK (total_heating_communal_area_advance >= 0),
@@ -173,7 +174,7 @@ create table heating_place_and_communal_area_advance (
     FOREIGN KEY (id) REFERENCES advance(id),
     heating_place_advance_value DECIMAL(10,2) NOT NULL CHECK (heating_place_advance_value >= 0),
     heating_communal_area_advance_value DECIMAL(10,2) NOT NULL CHECK (heating_communal_area_advance_value >= 0),
-    advance_change_factor FLOAT NOT NULL,
+    advance_change_factor DECIMAL(3,2) NOT NULL,
     version BIGINT NOT NULL
 );
 
