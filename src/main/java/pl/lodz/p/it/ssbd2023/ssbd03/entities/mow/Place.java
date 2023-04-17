@@ -6,6 +6,7 @@ import lombok.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Owner;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -15,7 +16,7 @@ import java.util.List;
 @EqualsAndHashCode
 @Entity
 @Table(name = "place")
-public class Place extends AbstractEntity {
+public class Place extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "place_id")
@@ -40,10 +41,10 @@ public class Place extends AbstractEntity {
     private BigDecimal predictedHotWaterConsumption;
 
     @Setter
-    @OneToMany(mappedBy = "advances")
+    @OneToMany(mappedBy = "place")
     private List<Advance> advances;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "building_id")
     private Building building;
 

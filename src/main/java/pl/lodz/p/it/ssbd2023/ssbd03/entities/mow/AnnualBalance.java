@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Min;
 import lombok.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Getter
@@ -14,7 +15,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode
 @Entity
 @Table(name = "annual_balance")
-public class AnnualBalance extends AbstractEntity {
+public class AnnualBalance extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "annual_balance_id")

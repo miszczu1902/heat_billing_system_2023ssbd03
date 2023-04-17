@@ -49,6 +49,4 @@ import java.sql.Connection;
 
 @Stateless
 public class JDBCConfig {
-    @PersistenceContext(unitName = "ssbd03adminPU")
-    private EntityManager em;
 }

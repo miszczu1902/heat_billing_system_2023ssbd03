@@ -5,6 +5,7 @@ import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 @Entity
 @Table(name = "hot_water_entry")
-public class HotWaterEntry extends AbstractEntity {
+public class HotWaterEntry extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hot_water_entry_id")
