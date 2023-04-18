@@ -3,8 +3,6 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities.mok;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Account;
 
 import java.io.Serializable;
 
@@ -14,14 +12,14 @@ import java.io.Serializable;
 public class PersonalData extends AbstractEntity implements Serializable {
     @Id
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "id", referencedColumnName = "id")
     private Account id;
 
     @Setter
-    @Column(nullable = false, length = 32)
+    @Column(name = "first_name", nullable = false, length = 32)
     private String firstName;
 
     @Setter
-    @Column(nullable = false, length = 32)
+    @Column(name = "surname", nullable = false, length = 32)
     private String surname;
 }

@@ -18,46 +18,38 @@ import java.math.BigDecimal;
 public class AnnualBalance extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "annual_balance_id")
+    @Column(name = "id")
     private Long id;
 
     @Min(value = 0)
-    @Column(nullable = false, name = "year_")
+    @Column(name = "year_", nullable = false)
     private Short year;
 
     @DecimalMin(value = "0")
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "total_hot_water_advance", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalHotWaterAdvance;
 
     @DecimalMin(value = "0")
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "total_heating_place_advance", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalHeatingPlaceAdvance;
 
     @DecimalMin(value = "0")
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "total_heating_communal_area_advance", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalHeatingCommunalAreaAdvance;
 
     @DecimalMin(value = "0")
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "total_hot_water_cost", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalHotWaterCost;
 
     @DecimalMin(value = "0")
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "total_heating_place_cost", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalHeatingPlaceCost;
 
     @DecimalMin(value = "0")
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "total_heating_communal_area_cost", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalHeatingCommunalAreaCost;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "place_id")
+    @JoinColumn(name = "place_id", referencedColumnName = "id")
     private Place place;
-
-    public void updateTotalAdvance(BigDecimal hotWater, BigDecimal heatingPlace, BigDecimal heatingCommunalArea) {
-
-    }
-
-    public void updateTotalCost(BigDecimal hotWater, BigDecimal heatingPlace, BigDecimal heatingCommunalArea) {
-
-    }
 }

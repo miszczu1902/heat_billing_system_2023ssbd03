@@ -18,15 +18,15 @@ import java.time.LocalDate;
 public class HotWaterEntry extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "hot_water_entry_id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(nullable = false, name = "date_")
+    @Column(name = "date_", nullable = false)
     private LocalDate date;
 
     @Setter
     @DecimalMin(value = "0")
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "entry_value", nullable = false, precision = 10, scale = 2)
     private BigDecimal entryValue;
 
 }

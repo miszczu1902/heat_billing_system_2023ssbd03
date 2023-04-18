@@ -21,7 +21,7 @@ drop table IF EXISTS heat_distribution_centre;
 create table address (
     id BIGINT PRIMARY KEY,
     street VARCHAR(32) NOT NULL,
-    place_number SMALLINT NOT NULL,
+    building_number SMALLINT NOT NULL,
     city VARCHAR(32) NOT NULL,
     postal_code VARCHAR(6) NOT NULL CHECK (postal_code ~* '^\d{2}-\d{3}$'),
     version BIGINT NOT NULL
@@ -36,7 +36,7 @@ create table past_quarter_hot_water_pay_off (
 
 create table account (
     id BIGINT PRIMARY KEY,
-    email VARCHAR(254) NOT NULL CHECK (email ~* '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]$'),
+    email VARCHAR(254) NOT NULL CHECK (email ~* '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{1,10}$'),
     constraint unique_email UNIQUE(email),
     username VARCHAR(16) NOT NULL CHECK (username ~* '^[a-zA-Z0-9_]{6,}$'),
     password VARCHAR(60) NOT NULL,
@@ -174,7 +174,7 @@ create table heating_place_and_communal_area_advance (
     FOREIGN KEY (id) REFERENCES advance(id),
     heating_place_advance_value DECIMAL(10,2) NOT NULL CHECK (heating_place_advance_value >= 0),
     heating_communal_area_advance_value DECIMAL(10,2) NOT NULL CHECK (heating_communal_area_advance_value >= 0),
-    advance_change_factor DECIMAL(3,2) NOT NULL,
+    advance_change_factor DECIMAL(3,2) NOT NULL CHECK (advance_change_factor >= 0 && advance_change_factor <= 9),
     version BIGINT NOT NULL
 );
 

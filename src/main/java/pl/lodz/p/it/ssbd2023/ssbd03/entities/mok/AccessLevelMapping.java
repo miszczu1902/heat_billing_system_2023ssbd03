@@ -18,13 +18,13 @@ import java.io.Serializable;
 public class AccessLevelMapping extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "access_level_mapping_id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(nullable = false, length = 7)
+    @Column(name = "access_level", nullable = false, length = 7)
     private String accessLevel;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 }

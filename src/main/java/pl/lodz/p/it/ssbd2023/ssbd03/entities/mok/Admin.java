@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AccessLevelMapping;
 
 import java.io.Serializable;
 
@@ -14,26 +13,4 @@ import java.io.Serializable;
 @DiscriminatorValue("ADMIN")
 @Table(name = "admin")
 public class Admin extends AccessLevelMapping implements Serializable {
-
-
-
-    public void editUserAccount(int accountId, String name, String surname, String language) {
-
-    }
-
-    public void setUserAccountEnable(int accountId, Boolean enable) {
-
-    }
-
-    public void editUserEmail(int accountId, String email) {
-
-    }
-
-    public void editUserPassword(int accountId, String password) {
-
-    }
-
-    public void editUserRole(int accountId, String role) {
-
-    }
 }

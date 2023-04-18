@@ -2,8 +2,10 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities.mok;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
-import lombok.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -15,19 +17,19 @@ import java.io.Serializable;
 public class Address extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "address_id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "street", nullable = false)
     private String street;
 
-    @Column(nullable = false)
-    private int place_number;
+    @Column(name = "building_number", nullable = false)
+    private short buildingNumber;
 
-    @Column(nullable = false)
+    @Column(name = "city", nullable = false)
     private String city;
 
     @Pattern(regexp = "^\\d{2}-\\d{3}$", message = "Invalid postal code format")
-    @Column(nullable = false)
-    private String postal_code;
+    @Column(name = "postal_code", nullable = false)
+    private String postalCode;
 }

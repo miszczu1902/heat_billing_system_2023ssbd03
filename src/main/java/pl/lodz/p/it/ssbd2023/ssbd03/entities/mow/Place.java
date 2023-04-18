@@ -19,25 +19,25 @@ import java.util.List;
 public class Place extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "place_id")
+    @Column(name = "id")
     private Long id;
 
     @Setter
     @DecimalMin(value = "0")
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "area", nullable = false, precision = 10, scale = 2)
     private BigDecimal area;
 
     @Setter
-    @Column(nullable = false)
+    @Column(name = "hot_water_connection", nullable = false)
     private Boolean hotWaterConnection;
 
     @Setter
-    @Column(nullable = false)
+    @Column(name = "central_heating_connection", nullable = false)
     private Boolean centralHeatingConnection;
 
     @Setter
     @DecimalMin(value = "0")
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "predicted_hot_water_consumption", nullable = false, precision = 10, scale = 2)
     private BigDecimal predictedHotWaterConsumption;
 
     @Setter
@@ -45,14 +45,14 @@ public class Place extends AbstractEntity implements Serializable {
     private List<Advance> advances;
 
     @ManyToOne()
-    @JoinColumn(name = "building_id")
+    @JoinColumn(name = "building_id", referencedColumnName = "id")
     private Building building;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "past_quarter_hot_water_payoff_id")
+    @JoinColumn(name = "past_quarter_hot_water_payoff_id", referencedColumnName = "id")
     private PastQuarterHotWaterPayoff pastQuarterHotWaterPayoff;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private Owner owner;
 }
