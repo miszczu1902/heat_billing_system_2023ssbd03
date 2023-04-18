@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
 @Getter
@@ -17,13 +16,13 @@ import java.time.LocalDate;
 public abstract class Advance extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "advance_id")
+    @Column(name = "id")
     protected Long id;
 
-    @Column(nullable = false, name = "date_")
+    @Column(name = "date_", nullable = false)
     protected LocalDate date;
 
     @ManyToOne()
-    @JoinColumn(name = "place_id")
+    @JoinColumn(name = "place_id", referencedColumnName = "id")
     protected Place place;
 }

@@ -18,23 +18,21 @@ import java.time.LocalDate;
 public class HeatDistributionCentrePayoff extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "heat_distribution_centre_pay_off_id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "date_", nullable = false)
     private LocalDate date;
 
     @DecimalMin(value = "0")
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "consumption", nullable = false, precision = 10, scale = 2)
     private BigDecimal consumption;
 
     @DecimalMin(value = "0")
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "consumption_cost", nullable = false, precision = 10, scale = 2)
     private BigDecimal consumptionCost;
 
     @DecimalMin(value = "0")
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "heating_area_factor", nullable = false, precision = 10, scale = 2)
     private BigDecimal heatingAreaFactor;
-
-
 }

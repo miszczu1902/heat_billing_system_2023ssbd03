@@ -17,16 +17,16 @@ import java.math.BigDecimal;
 public class PastQuarterHotWaterPayoff extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "past_quarter_hot_water_pay_off_id")
+    @Column(name = "id")
     private Long id;
 
     @Setter
     @Min(value = 0)
-    @Column(nullable = false)
+    @Column(name = "average_consumption", nullable = false)
     private BigDecimal averageConsumption;
 
     @Setter
     @Min(value = 0)
-    @Column(nullable = false)
+    @Column(name = "days_number_in_quarter", nullable = false)
     private Integer daysNumberInQuarter;
 }

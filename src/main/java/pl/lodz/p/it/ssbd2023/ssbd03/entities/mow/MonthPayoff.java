@@ -19,29 +19,29 @@ import java.time.LocalDate;
 public class MonthPayoff extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "month_pay_off_id")
+    @Column(name = "id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "payoff_date", nullable = false)
     private LocalDate payoffDate;
 
     @DecimalMin(value = "0")
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "water_heating_unit_cost", nullable = false, precision = 10, scale = 2)
     private BigDecimal waterHeatingUnitCost;
 
     @DecimalMin(value = "0")
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "central_heating_unit_cost", nullable = false, precision = 10, scale = 2)
     private BigDecimal centralHeatingUnitCost;
 
     @DecimalMin(value = "0")
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "hot_water_consumption", nullable = false, precision = 10, scale = 2)
     private BigDecimal hotWaterConsumption;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "place_id")
+    @JoinColumn(name = "place_id", referencedColumnName = "id")
     private Place place;
 }

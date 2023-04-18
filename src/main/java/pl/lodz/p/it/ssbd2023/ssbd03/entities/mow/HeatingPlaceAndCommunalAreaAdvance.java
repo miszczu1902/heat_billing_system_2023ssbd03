@@ -1,6 +1,8 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.entities.mow;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -19,19 +21,19 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "heating_place_and_communal_area_advance")
 public final class HeatingPlaceAndCommunalAreaAdvance extends Advance implements Serializable {
-    @Column(nullable = false)
+    @Column(name = "heating_place_advance_value", nullable = false)
     private BigDecimal heatingPlaceAdvanceValue;
 
     @DecimalMin(value = "0")
-    @Column(nullable = false)
+    @Column(name = "heating_communal_area_advance_value", nullable = false)
     private BigDecimal heatingCommunalAreaAdvanceValue;
 
     @Min(value = 0)
-    @Max(value = 1)
-    @Column(nullable = false)
-    private Float advanceChangeFactor;
+    @Max(value = 9)
+    @Column(name = "advance_change_factor", nullable = false)
+    private BigDecimal advanceChangeFactor;
 
-    public HeatingPlaceAndCommunalAreaAdvance(Long id, LocalDate date, Place place, BigDecimal heatingPlaceAdvanceValue, BigDecimal heatingCommunalAreaAdvanceValue, Float advanceChangeFactor) {
+    public HeatingPlaceAndCommunalAreaAdvance(Long id, LocalDate date, Place place, BigDecimal heatingPlaceAdvanceValue, BigDecimal heatingCommunalAreaAdvanceValue, BigDecimal advanceChangeFactor) {
         super(id, date, place);
         this.heatingPlaceAdvanceValue = heatingPlaceAdvanceValue;
         this.heatingCommunalAreaAdvanceValue = heatingCommunalAreaAdvanceValue;

@@ -19,30 +19,26 @@ import java.util.List;
 public class Building extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "building_id")
+    @Column(name = "id")
     private Long id;
 
     @DecimalMin(value = "0")
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "total_area", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalArea;
 
     @DecimalMin(value = "0")
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(name = "communal_area_aggregate", nullable = false, precision = 10, scale = 2)
     private BigDecimal communalAreaAggregate;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id")
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
     @OneToMany(mappedBy = "building")
     private List<Place> places;
 
     @ManyToOne()
-    @JoinColumn(name = "heat_distribution_centre_id")
+    @JoinColumn(name = "heat_distribution_centre_id", referencedColumnName = "id")
     private HeatDistributionCentre heatDistributionCentre;
-
-    public void addPlace(Place place) {
-
-    }
 
 }
