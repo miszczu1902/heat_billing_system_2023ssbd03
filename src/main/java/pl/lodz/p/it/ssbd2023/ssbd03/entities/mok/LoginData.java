@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.entities.mok;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
@@ -19,7 +20,7 @@ public class LoginData extends AbstractEntity implements Serializable {
     private Account id;
 
     @Setter
-    @Column(name = "last_valid_login_data", nullable = false)
+    @Column(name = "last_valid_login_date", nullable = false)
     private LocalDateTime lastValidLoginDate;
 
     @Setter
@@ -28,7 +29,7 @@ public class LoginData extends AbstractEntity implements Serializable {
     private String lastValidLogicAddress;
 
     @Setter
-    @Column(name = "last_invalid_login_data", nullable = false)
+    @Column(name = "last_invalid_login_date", nullable = false)
     private LocalDateTime lastInvalidLoginDate;
 
     @Setter
@@ -38,6 +39,7 @@ public class LoginData extends AbstractEntity implements Serializable {
 
     @Setter
     @Min(value = 0)
-    @Column(name = "invalid_login_counter", nullable = false, length = 4)
+    @Max(value = 3)
+    @Column(name = "invalid_login_counter", nullable = false)
     private int invalidLoginCounter;
 }

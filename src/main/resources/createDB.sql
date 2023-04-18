@@ -62,7 +62,7 @@ create table login_data (
     last_valid_logic_address VARCHAR(64) CHECK (last_valid_logic_address ~* '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'),
     last_invalid_login_date TIMESTAMP,
     last_invalid_logic_address VARCHAR(64) CHECK (last_invalid_logic_address ~* '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'),
-    invalid_login_counter SMALLINT NOT NULL,
+    invalid_login_counter SMALLINT NOT NULL CHECK (invalid_login_counter >= 0 AND invalid_login_counter <=3),
     version BIGINT NOT NULL
 );
 
@@ -174,7 +174,7 @@ create table heating_place_and_communal_area_advance (
     FOREIGN KEY (id) REFERENCES advance(id),
     heating_place_advance_value DECIMAL(10,2) NOT NULL CHECK (heating_place_advance_value >= 0),
     heating_communal_area_advance_value DECIMAL(10,2) NOT NULL CHECK (heating_communal_area_advance_value >= 0),
-    advance_change_factor DECIMAL(3,2) NOT NULL CHECK (advance_change_factor >= 0 && advance_change_factor <= 9),
+    advance_change_factor DECIMAL(3,2) NOT NULL CHECK (advance_change_factor >= 0 AND advance_change_factor <= 9),
     version BIGINT NOT NULL
 );
 

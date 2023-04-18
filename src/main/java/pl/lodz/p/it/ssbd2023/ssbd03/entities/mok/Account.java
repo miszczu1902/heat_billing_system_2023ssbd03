@@ -42,11 +42,11 @@ public abstract class Account extends AbstractEntity {
     protected Boolean isActive;
 
     @Setter
-    @Column(name = "register_data", nullable = false)
+    @Column(name = "register_date", nullable = false)
     protected LocalDateTime registerDate;
 
     @Setter
-    @Column(name = "langeage_", nullable = false, columnDefinition = "VARCHAR DEFAULT 'PL'")
+    @Column(name = "language_", nullable = false, columnDefinition = "VARCHAR DEFAULT 'PL'")
     protected String language_;
 
     @OneToOne(cascade = CascadeType.ALL)

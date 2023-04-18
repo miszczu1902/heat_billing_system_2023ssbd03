@@ -21,11 +21,11 @@ public class HeatDistributionCentrePayoff extends AbstractEntity implements Seri
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "data_", nullable = false)
+    @Column(name = "date_", nullable = false)
     private LocalDate date;
 
     @DecimalMin(value = "0")
-    @Column(name = "coonsumption", nullable = false, precision = 10, scale = 2)
+    @Column(name = "consumption", nullable = false, precision = 10, scale = 2)
     private BigDecimal consumption;
 
     @DecimalMin(value = "0")
