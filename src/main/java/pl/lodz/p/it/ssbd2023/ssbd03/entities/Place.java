@@ -1,10 +1,8 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.entities.mow;
+package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Owner;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -48,11 +46,16 @@ public class Place extends AbstractEntity implements Serializable {
     @JoinColumn(name = "building_id", referencedColumnName = "id")
     private Building building;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "past_quarter_hot_water_payoff_id", referencedColumnName = "id")
-    private PastQuarterHotWaterPayoff pastQuarterHotWaterPayoff;
-
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private Owner owner;
+
+    @OneToMany(mappedBy = "place")
+    private List<HotWaterEntry> hotWaterEntries;
+
+    @OneToMany(mappedBy = "place")
+    private List<MonthPayoff> monthPayoffs;
+
+    @OneToMany(mappedBy = "place")
+    private List<AnnualBalance> annualBalances;
 }

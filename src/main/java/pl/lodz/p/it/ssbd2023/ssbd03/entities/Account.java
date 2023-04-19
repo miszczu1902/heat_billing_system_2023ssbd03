@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.entities.mok;
+package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -26,7 +26,7 @@ public abstract class Account extends AbstractEntity {
 
     @Setter
     @Pattern(regexp = "^[a-zA-Z0-9_]{6,}$", message = "Username must be at least 6 characters long and can only contain letters, digits, and underscore")
-    @Column(name = "username", nullable = false, unique = true, length = 16)
+    @Column(name = "username", nullable = false, length = 16)
     protected String username;
 
     @Setter
@@ -49,11 +49,4 @@ public abstract class Account extends AbstractEntity {
     @Column(name = "language_", nullable = false, columnDefinition = "VARCHAR DEFAULT 'PL'")
     protected String language_;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "login_data_id", referencedColumnName = "id")
-    protected LoginData loginData;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "personal_data_id", referencedColumnName = "id")
-    protected PersonalData personalData;
 }

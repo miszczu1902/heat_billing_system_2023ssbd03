@@ -1,10 +1,8 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.entities.mow;
+package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Account;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -37,11 +35,11 @@ public class MonthPayoff extends AbstractEntity implements Serializable {
     @Column(name = "hot_water_consumption", nullable = false, precision = 10, scale = 2)
     private BigDecimal hotWaterConsumption;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "account_id", referencedColumnName = "id")
-    private Account account;
-
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "place_id", referencedColumnName = "id")
     private Place place;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
+    private Owner owner;
 }

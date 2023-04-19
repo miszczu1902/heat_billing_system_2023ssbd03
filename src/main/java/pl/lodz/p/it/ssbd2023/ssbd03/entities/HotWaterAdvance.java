@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.entities.mow;
+package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -1,9 +1,8 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.entities.mow;
+package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,9 +15,9 @@ import java.math.BigDecimal;
 @Table(name = "past_quarter_hot_water_pay_off")
 public class PastQuarterHotWaterPayoff extends AbstractEntity implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id", referencedColumnName = "id")
+    private Place id;
 
     @Setter
     @Min(value = 0)

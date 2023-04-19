@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.entities.mow;
+package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,6 +21,8 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "heating_place_and_communal_area_advance")
 public final class HeatingPlaceAndCommunalAreaAdvance extends Advance implements Serializable {
+
+    @DecimalMin(value = "0")
     @Column(name = "heating_place_advance_value", nullable = false)
     private BigDecimal heatingPlaceAdvanceValue;
 

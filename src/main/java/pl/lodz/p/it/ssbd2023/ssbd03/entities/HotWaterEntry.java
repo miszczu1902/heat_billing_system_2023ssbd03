@@ -1,9 +1,8 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.entities.mow;
+package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -29,4 +28,11 @@ public class HotWaterEntry extends AbstractEntity implements Serializable {
     @Column(name = "entry_value", nullable = false, precision = 10, scale = 2)
     private BigDecimal entryValue;
 
+    @ManyToOne()
+    @JoinColumn(name = "place_id", referencedColumnName = "id")
+    private Place place;
+
+    @ManyToOne()
+    @JoinColumn(name = "manager_id", referencedColumnName = "id")
+    private Manager manager;
 }

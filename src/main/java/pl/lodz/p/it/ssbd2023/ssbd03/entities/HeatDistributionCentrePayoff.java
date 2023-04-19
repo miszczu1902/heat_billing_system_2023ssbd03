@@ -1,9 +1,8 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.entities.mow;
+package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -35,4 +34,12 @@ public class HeatDistributionCentrePayoff extends AbstractEntity implements Seri
     @DecimalMin(value = "0")
     @Column(name = "heating_area_factor", nullable = false, precision = 10, scale = 2)
     private BigDecimal heatingAreaFactor;
+
+    @ManyToOne()
+    @JoinColumn(name = "heat_distribution_centre_id", referencedColumnName = "id")
+    private HeatDistributionCentre heatDistributionCentre;
+
+    @ManyToOne()
+    @JoinColumn(name = "manager_id", referencedColumnName = "id")
+    private Manager manager;
 }
