@@ -26,7 +26,7 @@ public abstract class Account extends AbstractEntity {
 
     @Setter
     @Pattern(regexp = "^[a-zA-Z0-9_]{6,}$", message = "Username must be at least 6 characters long and can only contain letters, digits, and underscore")
-    @Column(name = "username", nullable = false, length = 16)
+    @Column(name = "username", nullable = false, unique = true, length = 16)
     protected String username;
 
     @Setter

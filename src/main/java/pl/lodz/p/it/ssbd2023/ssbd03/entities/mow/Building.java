@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Address;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
