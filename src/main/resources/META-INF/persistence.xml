@@ -25,7 +25,6 @@
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Account</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AccessLevelMapping</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mow.Address</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Account</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.Admin</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.LoginData</class>

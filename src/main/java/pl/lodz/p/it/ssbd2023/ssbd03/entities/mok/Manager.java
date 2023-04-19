@@ -16,8 +16,6 @@ import java.io.Serializable;
 @DiscriminatorValue("MANAGER")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Manager extends AccessLevelMapping implements Serializable {
-
     @Column(name = "license", nullable = false, unique = true, length = 20)
     private String license;
-
 }

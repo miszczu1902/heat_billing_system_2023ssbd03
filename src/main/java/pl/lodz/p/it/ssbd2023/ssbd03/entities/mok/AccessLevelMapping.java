@@ -14,7 +14,6 @@ import java.io.Serializable;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, name = "access_level")
 public class AccessLevelMapping extends AbstractEntity implements Serializable {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -26,5 +25,4 @@ public class AccessLevelMapping extends AbstractEntity implements Serializable {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
-
 }

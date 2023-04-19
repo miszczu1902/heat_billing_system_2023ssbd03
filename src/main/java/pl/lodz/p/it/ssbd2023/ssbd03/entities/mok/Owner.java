@@ -17,8 +17,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Owner extends AccessLevelMapping implements Serializable {
-
     @Column(name = "phone_number", nullable = false, unique = true, length = 9)
     private String phoneNumber;
-
 }
