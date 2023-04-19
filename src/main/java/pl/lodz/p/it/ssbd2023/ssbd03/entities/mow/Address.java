@@ -1,8 +1,9 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.entities.mok;
+package pl.lodz.p.it.ssbd2023.ssbd03.entities.mow;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.mok.AbstractEntity;
 
 import java.io.Serializable;
 
