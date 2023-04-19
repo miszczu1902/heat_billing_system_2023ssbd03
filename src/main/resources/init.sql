@@ -50,3 +50,30 @@ GRANT SELECT,INSERT,UPDATE ON TABLE place TO ssbd03mow;
 GRANT SELECT,INSERT,UPDATE ON TABLE advance TO ssbd03mow;
 GRANT SELECT,INSERT,UPDATE ON TABLE hot_water_advance TO ssbd03mow;
 GRANT SELECT,INSERT,UPDATE ON TABLE heating_place_and_communal_area_advance TO ssbd03mow;
+
+GRANT SELECT,INSERT,DELETE,UPDATE ON SEQUENCE access_level_mapping_id_seq TO ssbd03admin;
+GRANT SELECT,INSERT,DELETE,UPDATE ON SEQUENCE account_id_seq TO ssbd03admin;
+GRANT SELECT,INSERT,DELETE,UPDATE ON SEQUENCE address_id_seq TO ssbd03admin;
+GRANT SELECT,INSERT,DELETE,UPDATE ON SEQUENCE advance_id_seq TO ssbd03admin;
+GRANT SELECT,INSERT,DELETE,UPDATE ON SEQUENCE annual_balance_id_seq TO ssbd03admin;
+GRANT SELECT,INSERT,DELETE,UPDATE ON SEQUENCE building_id_seq TO ssbd03admin;
+GRANT SELECT,INSERT,DELETE,UPDATE ON SEQUENCE heat_distribution_centre_id_seq TO ssbd03admin;
+GRANT SELECT,INSERT,DELETE,UPDATE ON SEQUENCE heat_distribution_centre_pay_off_id_seq TO ssbd03admin;
+GRANT SELECT,INSERT,DELETE,UPDATE ON SEQUENCE hot_water_entry_id_seq TO ssbd03admin;
+GRANT SELECT,INSERT,DELETE,UPDATE ON SEQUENCE month_pay_off_id_seq TO ssbd03admin;
+GRANT SELECT,INSERT,DELETE,UPDATE ON SEQUENCE past_quarter_hot_water_pay_off_id_seq TO ssbd03admin;
+GRANT SELECT,INSERT,DELETE,UPDATE ON SEQUENCE place_id_seq TO ssbd03admin;
+
+GRANT SELECT,UPDATE ON SEQUENCE access_level_mapping_id_seq TO ssbd03mok;
+GRANT SELECT,UPDATE ON SEQUENCE account_id_seq TO ssbd03mok;
+
+GRANT SELECT,UPDATE ON SEQUENCE address_id_seq TO ssbd03mow;
+GRANT SELECT,UPDATE ON SEQUENCE advance_id_seq TO ssbd03mow;
+GRANT SELECT,UPDATE ON SEQUENCE annual_balance_id_seq TO ssbd03mow;
+GRANT SELECT,UPDATE ON SEQUENCE building_id_seq TO ssbd03mow;
+GRANT SELECT,UPDATE ON SEQUENCE heat_distribution_centre_id_seq TO ssbd03mow;
+GRANT SELECT,UPDATE ON SEQUENCE heat_distribution_centre_pay_off_id_seq TO ssbd03mow;
+GRANT SELECT,UPDATE ON SEQUENCE hot_water_entry_id_seq TO ssbd03mow;
+GRANT SELECT,UPDATE ON SEQUENCE month_pay_off_id_seq TO ssbd03mow;
+GRANT SELECT,UPDATE ON SEQUENCE past_quarter_hot_water_pay_off_id_seq TO ssbd03mow;
+GRANT SELECT,UPDATE ON SEQUENCE place_id_seq TO ssbd03mow;
