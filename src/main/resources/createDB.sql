@@ -104,7 +104,7 @@ create table heat_distribution_centre (
 CREATE TABLE building (
     id BIGINT PRIMARY KEY,
     total_area DECIMAL(10,2) NOT NULL CHECK (total_area >= 0),
-    communalAreaAggregate DECIMAL(10,2) NOT NULL CHECK (communalAreaAggregate >= 0),
+    communal_area_aggregate DECIMAL(10,2) NOT NULL CHECK (communal_area_aggregate >= 0),
     address_id BIGINT NOT NULL,
     FOREIGN KEY (address_id) REFERENCES address(id),
     heat_distribution_centre_id BIGINT NOT NULL,
@@ -129,7 +129,7 @@ CREATE TABLE place (
 
 create table annual_balance (
     id BIGINT PRIMARY KEY,
-    year_ SMALLINT NOT NULL CHECK (year_ > 2022),
+    year_ SMALLINT NOT NULL CHECK (year_ >= 2021),
     total_hot_water_advance DECIMAL(10,2) NOT NULL CHECK (total_hot_water_advance >= 0),
     total_heating_place_advance DECIMAL(10,2) NOT NULL CHECK (total_heating_place_advance >= 0),
     total_heating_communal_area_advance DECIMAL(10,2) NOT NULL CHECK (total_heating_communal_area_advance >= 0),

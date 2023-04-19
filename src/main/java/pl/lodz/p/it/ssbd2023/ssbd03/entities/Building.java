@@ -38,5 +38,4 @@ public class Building extends AbstractEntity implements Serializable {
     @ManyToOne()
     @JoinColumn(name = "heat_distribution_centre_id", referencedColumnName = "id")
     private HeatDistributionCentre heatDistributionCentre;
-
 }
