@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@DiscriminatorValue("ADMIN")
 @Table(name = "admin")
+@DiscriminatorValue("ADMIN")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Admin extends AccessLevelMapping implements Serializable {
 }
