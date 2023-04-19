@@ -14,11 +14,7 @@ import java.io.Serializable;
 @Setter
 @DiscriminatorValue("OWNER")
 @Table(name = "owner")
-public class Owner extends AccessLevelMapping implements Serializable{
+public class Owner extends AccessLevelMapping implements Serializable {
     @Column(name = "phone_number", nullable = false, unique = true, length = 9)
     private String phoneNumber;
-
-    public Owner(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
 }
