@@ -56,8 +56,6 @@ create table personal_data (
     version BIGINT NOT NULL
 );
 
-CREATE INDEX personal_data_first_name ON personal_data (first_name);
-
 create table login_data (
     id BIGINT PRIMARY KEY,
     FOREIGN KEY (id) REFERENCES account(id),
