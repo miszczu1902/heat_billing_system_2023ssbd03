@@ -13,7 +13,11 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
 @Entity
-@Table(name = "building")
+@Table(name = "building",
+        indexes = {
+                @Index(name = "building_address_id", columnList = "address_id"),
+                @Index(name = "building_heat_distribution_centre_id", columnList = "heat_distribution_centre_id")
+        })
 public class Building extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

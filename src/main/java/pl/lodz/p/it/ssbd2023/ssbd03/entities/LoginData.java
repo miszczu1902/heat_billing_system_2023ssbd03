@@ -25,7 +25,7 @@ public class LoginData extends AbstractEntity implements Serializable {
 
     @Setter
     @Pattern(regexp = "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")
-    @Column(name = "last_valid_logic_address", nullable = false, length = 64)
+    @Column(name = "last_valid_logic_address", nullable = false, length = 15)
     private String lastValidLogicAddress;
 
     @Setter
@@ -34,7 +34,7 @@ public class LoginData extends AbstractEntity implements Serializable {
 
     @Setter
     @Pattern(regexp = "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")
-    @Column(name = "last_invalid_logic_address", nullable = false, length = 64)
+    @Column(name = "last_invalid_logic_address", nullable = false, length = 15)
     private String lastInvalidLogicAddress;
 
     @Setter

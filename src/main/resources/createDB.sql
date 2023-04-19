@@ -39,6 +39,7 @@ create table account (
     email VARCHAR(254) NOT NULL CHECK (email ~* '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{1,10}$'),
     constraint unique_email UNIQUE(email),
     username VARCHAR(16) NOT NULL CHECK (username ~* '^[a-zA-Z0-9_]{6,}$'),
+    constraint unique_username UNIQUE(username),
     password VARCHAR(60) NOT NULL,
     is_enable BOOLEAN NOT NULL DEFAULT FALSE,
     is_active BOOLEAN NOT NULL DEFAULT FALSE,
@@ -55,13 +56,15 @@ create table personal_data (
     version BIGINT NOT NULL
 );
 
+CREATE INDEX personal_data_first_name ON personal_data (first_name);
+
 create table login_data (
     id BIGINT PRIMARY KEY,
     FOREIGN KEY (id) REFERENCES account(id),
     last_valid_login_date TIMESTAMP,
-    last_valid_logic_address VARCHAR(64) CHECK (last_valid_logic_address ~* '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'),
+    last_valid_logic_address VARCHAR(15) CHECK (last_valid_logic_address ~* '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'),
     last_invalid_login_date TIMESTAMP,
-    last_invalid_logic_address VARCHAR(64) CHECK (last_invalid_logic_address ~* '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'),
+    last_invalid_logic_address VARCHAR(15) CHECK (last_invalid_logic_address ~* '^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$'),
     invalid_login_counter SMALLINT NOT NULL CHECK (invalid_login_counter >= 0 AND invalid_login_counter <=3),
     version BIGINT NOT NULL
 );
@@ -73,6 +76,8 @@ create table access_level_mapping (
     FOREIGN KEY (account_id) REFERENCES account(id),
     version BIGINT NOT NULL
 );
+
+CREATE INDEX access_level_mapping_account_id ON access_level_mapping (account_id);
 
 create table admin (
     id BIGINT PRIMARY KEY,
@@ -112,6 +117,10 @@ CREATE TABLE building (
     version BIGINT NOT NULL
 );
 
+CREATE INDEX building_address_id ON building (address_id);
+
+CREATE INDEX building_heat_distribution_centre_id ON building (heat_distribution_centre_id);
+
 CREATE TABLE place (
     id BIGINT PRIMARY KEY,
     area DECIMAL(10,2) NOT NULL CHECK (area >= 0),
@@ -127,6 +136,10 @@ CREATE TABLE place (
     version BIGINT NOT NULL
 );
 
+CREATE INDEX place_building_id ON place (building_id);
+
+CREATE INDEX place_owner_id ON place (owner_id);
+
 create table annual_balance (
     id BIGINT PRIMARY KEY,
     year_ SMALLINT NOT NULL CHECK (year_ >= 2021),
@@ -141,18 +154,24 @@ create table annual_balance (
     version BIGINT NOT NULL
 );
 
+CREATE INDEX annual_balance_place_id ON annual_balance (place_id);
+
 create table month_pay_off (
     id BIGINT PRIMARY KEY,
     payoff_date DATE NOT NULL,
     water_heating_unit_cost DECIMAL(10,2) NOT NULL CHECK (water_heating_unit_cost >= 0),
     central_heating_unit_cost DECIMAL(10,2) NOT NULL CHECK (central_heating_unit_cost >= 0),
     hot_water_consumption DECIMAL(10,2) NOT NULL CHECK (hot_water_consumption >= 0),
-    account_id BIGINT NOT NULL,
-    FOREIGN KEY (account_id) REFERENCES owner(id),
+    owner_id BIGINT NOT NULL,
+    FOREIGN KEY (owner_id) REFERENCES owner(id),
     place_id BIGINT NOT NULL,
     FOREIGN KEY (place_id) REFERENCES place(id),
     version BIGINT NOT NULL
 );
+
+CREATE INDEX month_pay_off_place_id ON month_pay_off (place_id);
+
+CREATE INDEX month_pay_off_owner_id ON month_pay_off (owner_id);
 
 create table advance (
     id BIGINT PRIMARY KEY,
@@ -161,6 +180,8 @@ create table advance (
     FOREIGN KEY (place_id) REFERENCES place(id),
     version BIGINT NOT NULL
 );
+
+CREATE INDEX advance_place_id ON advance (place_id);
 
 create table hot_water_advance (
     id BIGINT PRIMARY KEY,
@@ -191,6 +212,10 @@ create table heat_distribution_centre_pay_off (
     version BIGINT NOT NULL
 );
 
+CREATE INDEX heat_distribution_centre_pay_off_heat_distribution_centre_id ON heat_distribution_centre_pay_off (heat_distribution_centre_id);
+
+CREATE INDEX heat_distribution_centre_pay_off_manager_id ON heat_distribution_centre_pay_off (manager_id);
+
 create table hot_water_entry (
     id BIGINT PRIMARY KEY,
     date_ DATE NOT NULL ,
@@ -201,4 +226,8 @@ create table hot_water_entry (
     FOREIGN KEY (manager_id) REFERENCES manager(id),
     version BIGINT NOT NULL
 );
+
+CREATE INDEX hot_water_entry_place_id ON hot_water_entry (place_id);
+
+CREATE INDEX hot_water_entry_manager_id ON hot_water_entry (manager_id);
 
