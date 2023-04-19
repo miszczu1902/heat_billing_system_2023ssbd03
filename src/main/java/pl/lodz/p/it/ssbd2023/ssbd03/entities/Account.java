@@ -49,11 +49,4 @@ public abstract class Account extends AbstractEntity {
     @Column(name = "language_", nullable = false, columnDefinition = "VARCHAR DEFAULT 'PL'")
     protected String language_;
 
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "login_data_id", referencedColumnName = "id")
-//    protected LoginData loginData;
-//
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "personal_data_id", referencedColumnName = "id")
-//    protected PersonalData personalData;
 }
