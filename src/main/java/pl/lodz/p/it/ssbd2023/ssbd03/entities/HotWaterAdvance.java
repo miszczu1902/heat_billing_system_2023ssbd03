@@ -27,4 +27,5 @@ public final class HotWaterAdvance extends Advance implements Serializable {
         super(id, date, place);
         this.hotWaterAdvanceValue = hotWaterAdvanceValue;
     }
+
 }

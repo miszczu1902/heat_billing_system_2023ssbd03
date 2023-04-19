@@ -17,8 +17,4 @@ import java.io.Serializable;
 public class Manager extends AccessLevelMapping implements Serializable {
     @Column(name = "license", nullable = false, unique = true, length = 20)
     private String license;
-
-    public Manager(String license) {
-        this.license = license;
-    }
 }
