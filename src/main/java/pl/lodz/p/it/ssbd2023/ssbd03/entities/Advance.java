@@ -11,7 +11,10 @@ import java.time.LocalDate;
 @Inheritance(strategy = InheritanceType.JOINED)
 @EqualsAndHashCode
 @Entity
-@Table(name = "advance")
+@Table(name = "advance",
+        indexes = {
+                @Index(name = "advance_place_id", columnList = "place_id")
+        })
 public abstract class Advance extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -12,7 +12,10 @@ import java.io.Serializable;
 @DiscriminatorColumn(discriminatorType = DiscriminatorType.STRING, name = "access_level")
 @EqualsAndHashCode
 @Entity
-@Table(name = "access_level_mapping")
+@Table(name = "access_level_mapping",
+        indexes = {
+                @Index(name = "access_level_mapping_account_id", columnList = "account_id")
+        })
 public class AccessLevelMapping extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

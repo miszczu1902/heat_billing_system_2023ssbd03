@@ -13,7 +13,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
 @Entity
-@Table(name = "annual_balance")
+@Table(name = "annual_balance",
+        indexes = {
+                @Index(name = "annual_balance_place_id", columnList = "place_id")
+        })
 public class AnnualBalance extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

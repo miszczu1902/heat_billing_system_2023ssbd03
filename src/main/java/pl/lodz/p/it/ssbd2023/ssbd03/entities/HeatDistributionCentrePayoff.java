@@ -13,7 +13,11 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode
 @Entity
-@Table(name = "heat_distribution_centre_pay_off")
+@Table(name = "heat_distribution_centre_pay_off",
+        indexes = {
+                @Index(name = "heat_distribution_centre_pay_off_heat_distribution_centre_id", columnList = "heat_distribution_centre_id"),
+                @Index(name = "heat_distribution_centre_pay_off_manager_id", columnList = "manager_id")
+        })
 public class HeatDistributionCentrePayoff extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
