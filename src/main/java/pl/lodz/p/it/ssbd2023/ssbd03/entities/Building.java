@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -37,7 +38,7 @@ public class Building extends AbstractEntity implements Serializable {
     private Address address;
 
     @OneToMany(mappedBy = "building")
-    private List<Place> places;
+    private List<Place> places = new ArrayList<>();
 
     @ManyToOne()
     @JoinColumn(name = "heat_distribution_centre_id", referencedColumnName = "id")

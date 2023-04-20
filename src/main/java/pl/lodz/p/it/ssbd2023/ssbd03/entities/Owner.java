@@ -15,7 +15,7 @@ import java.io.Serializable;
 @DiscriminatorValue("OWNER")
 @Table(name = "owner",
         indexes = {
-                @Index(name = "unique_phoneNumber", columnList = "phoneNumber", unique = true)
+                @Index(name = "unique_phone_number", columnList = "phone_number", unique = true)
         }
 )
 public class Owner extends AccessLevelMapping implements Serializable {

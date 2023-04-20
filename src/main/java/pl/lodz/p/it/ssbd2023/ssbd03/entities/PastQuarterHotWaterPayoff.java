@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 
@@ -21,11 +22,12 @@ public class PastQuarterHotWaterPayoff extends AbstractEntity implements Seriali
 
     @Setter
     @Min(value = 0)
-    @Column(name = "average_consumption", nullable = false)
+    @Column(name = "average_consumption", nullable = false, precision = 10, scale = 2)
     private BigDecimal averageConsumption;
 
     @Setter
-    @Min(value = 0)
+    @Min(value = 90)
+    @Max(value = 92)
     @Column(name = "days_number_in_quarter", nullable = false)
     private Integer daysNumberInQuarter;
 }

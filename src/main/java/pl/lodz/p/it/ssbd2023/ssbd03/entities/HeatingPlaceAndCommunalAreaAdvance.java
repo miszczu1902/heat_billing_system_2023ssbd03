@@ -23,11 +23,11 @@ import java.time.LocalDate;
 public final class HeatingPlaceAndCommunalAreaAdvance extends Advance implements Serializable {
 
     @DecimalMin(value = "0")
-    @Column(name = "heating_place_advance_value", nullable = false)
+    @Column(name = "heating_place_advance_value", nullable = false, precision = 10, scale = 2)
     private BigDecimal heatingPlaceAdvanceValue;
 
     @DecimalMin(value = "0")
-    @Column(name = "heating_communal_area_advance_value", nullable = false)
+    @Column(name = "heating_communal_area_advance_value", nullable = false, precision = 10, scale = 2)
     private BigDecimal heatingCommunalAreaAdvanceValue;
 
     @Min(value = 0)

@@ -45,7 +45,7 @@ GRANT SELECT,UPDATE ON SEQUENCE place_id_seq TO ssbd03mow;
 
 INSERT INTO address (id, street, building_number, city, postal_code, version) VALUES (0, 'Main Street', 12, 'New York', '12-345', 1), (-1, 'Abbey Road', 7, 'London', '34-123', 1), (-2, 'Champs-Élysées', 15, 'Paris', '12-345', 1);
 
-INSERT INTO account (id, email, username, password, is_enable, is_active, register_date, language_, version) VALUES (0, 'johndoe@example.com', 'johndoe', '$2a$12$UDQ6JlncTHbDbOeATjGr8.zx0uj66K6hUDugJqjLF248FG.uPSLe.', TRUE, TRUE, NOW(), 'EN', 1), (-1, 'janekowalski@example.com', 'janekowalski', '$2a$12$7s7AjPDVjsCCpIHHwE0ZH.zG6opHvjO.YO8.cmZ2JiLZMs3.QAU/2', TRUE, TRUE, NOW(), 'PL', 1), (-2, 'maria.silva@example.com', 'mariasilva', '$2a$12$lSUDcv1i1j6IeSa7DzBnkOZm90e.hLalhip0r5rvMhAvWII5D4OBi', TRUE, TRUE, NOW(), 'PT', 1);
+INSERT INTO account (id, email, username, password, is_enable, is_active, register_date, language_, version) VALUES (0, 'johndoe@example.com', 'johndoe', '$2a$12$UDQ6JlncTHbDbOeATjGr8.zx0uj66K6hUDugJqjLF248FG.uPSLe.', TRUE, TRUE, NOW(), 'EN', 1), (-1, 'janekowalski@example.com', 'janekowalski', '$2a$12$7s7AjPDVjsCCpIHHwE0ZH.zG6opHvjO.YO8.cmZ2JiLZMs3.QAU/2', TRUE, TRUE, NOW(), 'PL', 1), (-2, 'maria.silva@example.com', 'mariasilva', '$2a$12$lSUDcv1i1j6IeSa7DzBnkOZm90e.hLalhip0r5rvMhAvWII5D4OBi', TRUE, TRUE, NOW(), 'PL', 1);
 
 INSERT INTO personal_data (id, first_name, surname, version) VALUES (0, 'John', 'Doe', 1), (-1, 'Jan', 'Kowalski', 1), (-2, 'Maria', 'Silva', 1);
 
