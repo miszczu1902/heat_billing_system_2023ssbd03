@@ -11,7 +11,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-@Table(name = "account")
+@Table(name = "account",
+        indexes = {
+                @Index(name = "unique_email", columnList = "email", unique = true),
+                @Index(name = "unique_username", columnList = "username", unique = true)
+}
+)
 public abstract class Account extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,12 +26,12 @@ public abstract class Account extends AbstractEntity {
     @Setter
     @Email
     @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{1,10}$", message = "Invalid email format")
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", nullable = false)
     protected String email;
 
     @Setter
     @Pattern(regexp = "^[a-zA-Z0-9_]{6,}$", message = "Username must be at least 6 characters long and can only contain letters, digits, and underscore")
-    @Column(name = "username", nullable = false, unique = true, length = 16)
+    @Column(name = "username", nullable = false, length = 16)
     protected String username;
 
     @Setter
