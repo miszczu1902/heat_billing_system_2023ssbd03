@@ -12,7 +12,8 @@ import java.sql.Connection;
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd03admin",
         password = "9LUoYTSMH",
-        portNumber = 5430,
+        serverName = "10.31.203.3",
+        portNumber = 5432,
         databaseName = "ssbd03",
         initialPoolSize = 1,
         minPoolSize = 0,
@@ -24,8 +25,9 @@ import java.sql.Connection;
         name = "java:app/jdbc/ssbd03auth",
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd03auth",
+        serverName = "10.31.203.3",
         password = "KHgXydJUv",
-        portNumber = 5430,
+        portNumber = 5432,
         databaseName = "ssbd03",
         isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
 
@@ -34,7 +36,8 @@ import java.sql.Connection;
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd03mok",
         password = "CHqZxv5R1",
-        portNumber = 5430,
+        serverName = "10.31.203.3",
+        portNumber = 5432,
         databaseName = "ssbd03",
         isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
 
@@ -43,7 +46,8 @@ import java.sql.Connection;
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd03mow",
         password = "obSjEBGaX",
-        portNumber = 5430,
+        serverName = "10.31.203.3",
+        portNumber = 5432,
         databaseName = "ssbd03",
         isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
 

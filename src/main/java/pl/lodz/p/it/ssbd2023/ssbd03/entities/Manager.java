@@ -9,7 +9,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @Entity
 @Getter
-@Setter
 @DiscriminatorValue("MANAGER")
 @Table(name = "manager",
         indexes = {
