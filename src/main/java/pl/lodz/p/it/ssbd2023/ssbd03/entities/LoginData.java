@@ -24,26 +24,26 @@ public class LoginData extends AbstractEntity implements Serializable {
     private Account id;
 
     @Setter
-    @Column(name = "last_valid_login_date", nullable = false)
+    @Column(name = "last_valid_login_date")
     private LocalDateTime lastValidLoginDate;
 
     @Setter
     @Pattern(regexp = "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")
-    @Column(name = "last_valid_logic_address", nullable = false, length = 15)
+    @Column(name = "last_valid_logic_address", length = 15)
     private String lastValidLogicAddress;
 
     @Setter
-    @Column(name = "last_invalid_login_date", nullable = false)
+    @Column(name = "last_invalid_login_date")
     private LocalDateTime lastInvalidLoginDate;
 
     @Setter
     @Pattern(regexp = "^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$")
-    @Column(name = "last_invalid_logic_address", nullable = false, length = 15)
+    @Column(name = "last_invalid_logic_address", length = 15)
     private String lastInvalidLogicAddress;
 
     @Setter
     @Min(value = 0)
     @Max(value = 3)
-    @Column(name = "invalid_login_counter", nullable = false)
+    @Column(name = "invalid_login_counter")
     private Integer invalidLoginCounter;
 }
