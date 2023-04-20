@@ -6,16 +6,13 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Getter
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -30,16 +27,10 @@ public final class HeatingPlaceAndCommunalAreaAdvance extends Advance implements
     @Column(name = "heating_communal_area_advance_value", nullable = false, precision = 10, scale = 2)
     private BigDecimal heatingCommunalAreaAdvanceValue;
 
+    // Zapytać czy tu nie musi być DecimalMin i DecimalMax
     @Min(value = 0)
     @Max(value = 9)
     @Column(name = "advance_change_factor", nullable = false)
     private BigDecimal advanceChangeFactor;
-
-    public HeatingPlaceAndCommunalAreaAdvance(Long id, LocalDate date, Place place, BigDecimal heatingPlaceAdvanceValue, BigDecimal heatingCommunalAreaAdvanceValue, BigDecimal advanceChangeFactor) {
-        super(id, date, place);
-        this.heatingPlaceAdvanceValue = heatingPlaceAdvanceValue;
-        this.heatingCommunalAreaAdvanceValue = heatingCommunalAreaAdvanceValue;
-        this.advanceChangeFactor = advanceChangeFactor;
-    }
 }
 

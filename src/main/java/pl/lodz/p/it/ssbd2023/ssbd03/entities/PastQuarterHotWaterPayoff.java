@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 public class PastQuarterHotWaterPayoff extends AbstractEntity implements Serializable {
     @Id
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", referencedColumnName = "id")
+    @JoinColumn(name = "id", updatable = false, referencedColumnName = "id")
     private Place id;
 
     @Setter

@@ -51,7 +51,7 @@ public class AnnualBalance extends AbstractEntity implements Serializable {
     @Column(name = "total_heating_communal_area_cost", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalHeatingCommunalAreaCost;
 
-    @ManyToOne()
-    @JoinColumn(name = "place_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "place_id", updatable = false, referencedColumnName = "id")
     private Place place;
 }

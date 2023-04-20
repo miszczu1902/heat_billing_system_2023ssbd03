@@ -32,11 +32,11 @@ public class HotWaterEntry extends AbstractEntity implements Serializable {
     @Column(name = "entry_value", nullable = false, precision = 10, scale = 2)
     private BigDecimal entryValue;
 
-    @ManyToOne()
-    @JoinColumn(name = "place_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "place_id", updatable = false, referencedColumnName = "id")
     private Place place;
 
-    @ManyToOne()
-    @JoinColumn(name = "manager_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "manager_id", updatable = false, referencedColumnName = "id")
     private Manager manager;
 }

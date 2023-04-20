@@ -34,13 +34,13 @@ public class Building extends AbstractEntity implements Serializable {
     private BigDecimal communalAreaAggregate;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    @JoinColumn(name = "address_id", updatable = false, referencedColumnName = "id")
     private Address address;
 
     @OneToMany(mappedBy = "building")
     private List<Place> places = new ArrayList<>();
 
-    @ManyToOne()
-    @JoinColumn(name = "heat_distribution_centre_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "heat_distribution_centre_id", updatable = false, referencedColumnName = "id")
     private HeatDistributionCentre heatDistributionCentre;
 }

@@ -26,6 +26,6 @@ public class AccessLevelMapping extends AbstractEntity implements Serializable {
     private String accessLevel;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    @JoinColumn(name = "account_id", updatable = false, referencedColumnName = "id")
     private Account account;
 }
