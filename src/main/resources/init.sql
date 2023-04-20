@@ -1,6 +1,6 @@
 CREATE OR REPLACE VIEW public.glassfish_auth_view AS SELECT username, password, access_level FROM account JOIN access_level_mapping ON account.id = access_level_mapping.account_id WHERE account.is_active = true AND account.is_enable = true;
 
-GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE glassfish_auth_view TO ssbd03auth;
+GRANT SELECT ON TABLE glassfish_auth_view TO ssbd03auth;
 
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE access_level_mapping TO ssbd03mok;
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE account TO ssbd03mok;
