@@ -29,8 +29,8 @@ create table address (
 
 create table past_quarter_hot_water_pay_off (
     id BIGINT PRIMARY KEY,
-    average_consumption DECIMAL(10,2) CHECK (average_consumption >= 0),
-    days_number_in_quarter SMALLINT,
+    average_consumption DECIMAL(10,2) NOT NULL CHECK (average_consumption >= 0),
+    days_number_in_quarter SMALLINT NOT NULL CHECK (days_number_in_quarter >= 90 AND days_number_in_quarter <= 92),
     version BIGINT NOT NULL
 );
 
@@ -202,7 +202,7 @@ create table heat_distribution_centre_pay_off (
     date_ DATE NOT NULL,
     consumption DECIMAL(10,2) NOT NULL CHECK (consumption >= 0),
     consumption_cost DECIMAL(10,2) NOT NULL CHECK (consumption_cost >= 0),
-    heating_area_factor DECIMAL(10, 2) NOT NULL CHECK (heating_area_factor > 0 AND heating_area_factor < 1),
+    heating_area_factor DECIMAL(3, 2) NOT NULL CHECK (heating_area_factor > 0 AND heating_area_factor < 1),
     heat_distribution_centre_id BIGINT NOT NULL,
     FOREIGN KEY (heat_distribution_centre_id) REFERENCES heat_distribution_centre(id),
     manager_id BIGINT NOT NULL,

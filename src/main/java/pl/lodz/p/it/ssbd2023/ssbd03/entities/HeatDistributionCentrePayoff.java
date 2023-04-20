@@ -36,7 +36,7 @@ public class HeatDistributionCentrePayoff extends AbstractEntity implements Seri
     private BigDecimal consumptionCost;
 
     @DecimalMin(value = "0")
-    @Column(name = "heating_area_factor", nullable = false, precision = 10, scale = 2)
+    @Column(name = "heating_area_factor", nullable = false, precision = 3, scale = 2)
     private BigDecimal heatingAreaFactor;
 
     @ManyToOne()
