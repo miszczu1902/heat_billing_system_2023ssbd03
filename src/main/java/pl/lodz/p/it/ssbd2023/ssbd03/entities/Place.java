@@ -47,12 +47,12 @@ public class Place extends AbstractEntity implements Serializable {
     @OneToMany(mappedBy = "place")
     private List<Advance> advances = new ArrayList<>();
 
-    @ManyToOne()
-    @JoinColumn(name = "building_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "building_id", updatable = false, referencedColumnName = "id")
     private Building building;
 
-    @ManyToOne()
-    @JoinColumn(name = "owner_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "owner_id", updatable = false, referencedColumnName = "id")
     private Owner owner;
 
     @OneToMany(mappedBy = "place")

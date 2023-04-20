@@ -39,11 +39,11 @@ public class HeatDistributionCentrePayoff extends AbstractEntity implements Seri
     @Column(name = "heating_area_factor", nullable = false, precision = 3, scale = 2)
     private BigDecimal heatingAreaFactor;
 
-    @ManyToOne()
-    @JoinColumn(name = "heat_distribution_centre_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "heat_distribution_centre_id", updatable = false, referencedColumnName = "id")
     private HeatDistributionCentre heatDistributionCentre;
 
-    @ManyToOne()
-    @JoinColumn(name = "manager_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "manager_id", updatable = false, referencedColumnName = "id")
     private Manager manager;
 }

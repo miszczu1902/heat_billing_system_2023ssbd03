@@ -39,11 +39,11 @@ public class MonthPayoff extends AbstractEntity implements Serializable {
     @Column(name = "hot_water_consumption", nullable = false, precision = 10, scale = 2)
     private BigDecimal hotWaterConsumption;
 
-    @ManyToOne()
-    @JoinColumn(name = "place_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "place_id", updatable = false, referencedColumnName = "id")
     private Place place;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id", referencedColumnName = "id")
+    @JoinColumn(name = "owner_id", updatable = false, referencedColumnName = "id")
     private Owner owner;
 }

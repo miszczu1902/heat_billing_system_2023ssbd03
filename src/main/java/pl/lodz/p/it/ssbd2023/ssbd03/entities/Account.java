@@ -53,5 +53,4 @@ public abstract class Account extends AbstractEntity {
     @Setter
     @Column(name = "language_", nullable = false, columnDefinition = "VARCHAR DEFAULT 'PL'")
     protected String language_;
-
 }
