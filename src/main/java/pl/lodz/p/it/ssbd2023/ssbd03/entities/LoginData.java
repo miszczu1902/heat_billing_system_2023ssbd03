@@ -41,5 +41,5 @@ public class LoginData extends AbstractEntity implements Serializable {
     @Min(value = 0)
     @Max(value = 3)
     @Column(name = "invalid_login_counter", nullable = false)
-    private int invalidLoginCounter;
+    private Integer invalidLoginCounter;
 }

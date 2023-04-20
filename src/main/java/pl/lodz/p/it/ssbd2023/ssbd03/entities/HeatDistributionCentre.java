@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -22,9 +23,9 @@ public class HeatDistributionCentre extends AbstractEntity implements Serializab
     private Long id;
 
     @OneToMany(mappedBy = "heatDistributionCentre")
-    private List<Building> buildings;
+    private List<Building> buildings = new ArrayList<>();
 
     @OneToMany(mappedBy = "heatDistributionCentre")
-    private List<HeatDistributionCentrePayoff> heatDistributionCentrePayoffs;
+    private List<HeatDistributionCentrePayoff> heatDistributionCentrePayoffs = new ArrayList<>();
 
 }
