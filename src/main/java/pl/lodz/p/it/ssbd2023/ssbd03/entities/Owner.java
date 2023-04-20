@@ -13,8 +13,12 @@ import java.io.Serializable;
 @Getter
 @Setter
 @DiscriminatorValue("OWNER")
-@Table(name = "owner")
+@Table(name = "owner",
+        indexes = {
+                @Index(name = "unique_phoneNumber", columnList = "phoneNumber", unique = true)
+        }
+)
 public class Owner extends AccessLevelMapping implements Serializable {
-    @Column(name = "phone_number", nullable = false, unique = true, length = 9)
+    @Column(name = "phone_number", nullable = false, length = 9)
     private String phoneNumber;
 }
