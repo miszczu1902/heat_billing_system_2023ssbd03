@@ -25,8 +25,8 @@ import java.sql.Connection;
         name = "java:app/jdbc/ssbd03auth",
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd03auth",
-        serverName = "database",
         password = "KHgXydJUv",
+        serverName = "database",
         portNumber = 5432,
         databaseName = "ssbd03",
         isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
