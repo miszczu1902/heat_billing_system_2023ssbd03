@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
                 @Index(name = "unique_username", columnList = "username", unique = true)
 }
 )
-public abstract class Account extends AbstractEntity {
+public class Account extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
