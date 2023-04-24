@@ -3,7 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mow.facade;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import pl.lodz.p.it.ssbd2023.ssbd03.config.AbstractFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 
 @Stateless
