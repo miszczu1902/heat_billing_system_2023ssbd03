@@ -26,26 +26,6 @@ public class AccountFacade extends AbstractFacade<Account> {
         return em;
     }
 
-    @Override
-    public void create(Account entity) {
-        super.create(entity);
-    }
-
-    @Override
-    public void edit(Account entity) {
-        super.edit(entity);
-    }
-
-    @Override
-    public void remove(Account entity) {
-        super.remove(entity);
-    }
-
-    @Override
-    public Account find(Object id) {
-        return super.find(id);
-    }
-
     public List<Account> findByLoginOrEmailOrPesel(String username, String email) {
         TypedQuery<Account> findQuery = em.createNamedQuery("Account.findByLoginOrEmailOrPesel", Account.class);
         findQuery.setParameter("username", username);

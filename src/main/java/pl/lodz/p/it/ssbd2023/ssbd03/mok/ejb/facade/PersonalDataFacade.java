@@ -22,24 +22,4 @@ public class PersonalDataFacade extends AbstractFacade<PersonalData> {
     protected EntityManager getEntityManager() {
         return this.em;
     }
-
-    @Override
-    public void create(PersonalData entity) {
-        super.create(entity);
-    }
-
-    @Override
-    public void edit(PersonalData entity) {
-        super.edit(entity);
-    }
-
-    @Override
-    public void remove(PersonalData entity) {
-        super.remove(entity);
-    }
-
-    @Override
-    public PersonalData find(Object id) {
-        return super.find(id);
-    }
 }

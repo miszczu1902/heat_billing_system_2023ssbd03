@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mok.cdi.endpoints;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityExistsException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
@@ -24,17 +25,29 @@ public class AccountEndpoint {
     @Path("register")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerOwner(@NotNull @Valid CreateOwnerDTO createOwnerDTO) {
-        if (!createOwnerDTO.getPassword().equals(createOwnerDTO.getRepeatedPassword())) {
+        try {
+            if (!createOwnerDTO.getPassword().equals(createOwnerDTO.getRepeatedPassword())) {
+                ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
+                        "Password does not match",
+                        Response.Status.BAD_REQUEST.getStatusCode(),
+                        "Passwords not same");
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(errorResponseDTO)
+                        .build();
+            }
+
+            accountService.createOwner(AccountConverter.createOwnerDTOToPersonalData(createOwnerDTO));
+            return Response.status(Response.Status.CREATED).build();
+        } catch (EntityExistsException e) {
             ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
-                    "Password does not match",
-                    Response.Status.BAD_REQUEST.getStatusCode(),
-                    "Passwords not same");
-            return Response.status(Response.Status.BAD_REQUEST)
+                    "Owner already exist",
+                    Response.Status.CONFLICT.getStatusCode(),
+                    "Owner with same username/email exist");
+            return Response.status(Response.Status.CONFLICT)
                     .entity(errorResponseDTO)
                     .build();
         }
-        accountService.createOwner(AccountConverter.createOwnerDTOToOwner(createOwnerDTO), createOwnerDTO.getPhoneNumber());
-        return Response.status(Response.Status.CREATED).build();
+
 
     }
 }

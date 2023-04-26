@@ -40,19 +40,4 @@ public class AccessLevelMappingFacade extends AbstractFacade<AccessLevelMapping>
 
     }
 
-    @Override
-    public void edit(AccessLevelMapping entity) {
-        super.edit(entity);
-    }
-
-    @Override
-    public void remove(AccessLevelMapping entity) {
-        super.remove(entity);
-    }
-
-    @Override
-    public AccessLevelMapping find(Object id) {
-        return super.find(id);
-    }
-
 }

@@ -4,6 +4,7 @@ import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
@@ -24,24 +25,18 @@ public class AccountServiceImpl implements AccountService {
     @Inject
     private PersonalDataFacade personalDataFacade;
 
-    @Inject
-    private AccessLevelMappingFacade accessLevelMappingFacade;
-
     @Override
-    public void createOwner(PersonalData personalData, String phoneNumber) {
+    public void createOwner(PersonalData personalData) {
         Account account = personalData.getId();
 
+        if (!accountFacade.findByLoginOrEmailOrPesel(account.getUsername(), account.getEmail()).isEmpty()) {
+            throw new EntityExistsException();
+        }
+
         account.setPassword(BcryptHashGenerator.generateHash(account.getPassword()));
-
-        AccessLevelMapping owner = new Owner(phoneNumber);
-        owner.setAccount(account);
-        owner.setAccessLevel("owner");
-
-        account.getAccessLevels().add(owner);
         account.setRegisterDate(LocalDateTime.now());
 
         accountFacade.create(account);
-        accessLevelMappingFacade.create(owner);
         personalDataFacade.create(personalData);
     }
 

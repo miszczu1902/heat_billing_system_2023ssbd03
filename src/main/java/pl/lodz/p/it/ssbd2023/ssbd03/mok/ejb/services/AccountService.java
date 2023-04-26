@@ -5,5 +5,5 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 
 @Local
 public interface AccountService {
-    void createOwner(PersonalData account, String phoneNumber);
+    void createOwner(PersonalData personalData);
 }
