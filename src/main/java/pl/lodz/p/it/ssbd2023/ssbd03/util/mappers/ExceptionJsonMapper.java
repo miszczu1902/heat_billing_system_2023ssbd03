@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.util.validation;
+package pl.lodz.p.it.ssbd2023.ssbd03.util.mappers;
 
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;

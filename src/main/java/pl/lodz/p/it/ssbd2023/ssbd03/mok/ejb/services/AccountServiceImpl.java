@@ -43,7 +43,6 @@ public class AccountServiceImpl implements AccountService {
         accountFacade.create(account);
         accessLevelMappingFacade.create(owner);
         personalDataFacade.create(personalData);
-
     }
 
 }
