@@ -47,7 +47,5 @@ public class AccountEndpoint {
                     .entity(errorResponseDTO)
                     .build();
         }
-
-
     }
 }

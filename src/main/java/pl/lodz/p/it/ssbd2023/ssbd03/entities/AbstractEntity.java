@@ -14,6 +14,5 @@ import lombok.NoArgsConstructor;
 @MappedSuperclass
 public abstract class AbstractEntity {
     @Version
-//    @Basic(optional = false)
     private Long version;
 }
