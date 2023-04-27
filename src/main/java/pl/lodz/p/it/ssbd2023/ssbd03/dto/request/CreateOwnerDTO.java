@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.AbstractDTO;
 
 import java.io.Serializable;
 
@@ -13,7 +12,7 @@ import java.io.Serializable;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateOwnerDTO extends AbstractDTO implements Serializable {
+public class CreateOwnerDTO implements Serializable {
     @NotNull
     @Size(max = 32, message = "Max length for first name is 32")
     private String firstName;

@@ -29,10 +29,6 @@ public abstract class AccessLevelMapping extends AbstractEntity implements Seria
     private Long id;
 
     @Setter
-    @Column(name = "access_level", nullable = false, length = 7)
-    private String accessLevel;
-
-    @Setter
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH})
     @JoinColumn(name = "account_id", updatable = false, referencedColumnName = "id")
     private Account account;

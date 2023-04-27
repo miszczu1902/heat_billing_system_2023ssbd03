@@ -28,11 +28,6 @@ public class PersonalData extends AbstractEntity implements Serializable {
     @Column(name = "surname", nullable = false, length = 32)
     private String surname;
 
-    public PersonalData(String firstName, String surname) {
-        this.firstName = firstName;
-        this.surname = surname;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
