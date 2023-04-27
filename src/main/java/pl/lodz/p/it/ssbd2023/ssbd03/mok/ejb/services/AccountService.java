@@ -6,4 +6,5 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 @Local
 public interface AccountService {
     void createOwner(PersonalData personalData);
+    String authenticate(String username, String password);
 }
