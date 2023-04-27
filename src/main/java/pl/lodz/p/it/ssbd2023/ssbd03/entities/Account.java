@@ -8,6 +8,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @AllArgsConstructor
@@ -17,8 +18,10 @@ import java.util.List;
         indexes = {
                 @Index(name = "unique_email", columnList = "email", unique = true),
                 @Index(name = "unique_username", columnList = "username", unique = true)
-}
-)
+        })
+@NamedQueries({
+        @NamedQuery(name = "Account.findByLoginOrEmailOrPesel", query = "SELECT a FROM Account a WHERE a.email = :email OR a.username = :username")
+})
 public class Account extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,6 +60,28 @@ public class Account extends AbstractEntity {
     private String language_;
 
     @Getter
-    @OneToMany(mappedBy = "account", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "account", cascade = CascadeType.REMOVE)
     private List<AccessLevelMapping> accessLevels = new ArrayList<>();
+
+    public Account(String email, String username, String password, Boolean isEnable, Boolean isActive, String language_) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.isEnable = isEnable;
+        this.isActive = isActive;
+        this.language_ = language_;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return Objects.equals(id, account.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
