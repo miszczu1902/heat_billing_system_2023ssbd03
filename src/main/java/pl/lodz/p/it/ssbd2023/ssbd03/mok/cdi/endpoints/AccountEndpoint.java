@@ -5,15 +5,18 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityExistsException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.AccountDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ErrorResponseDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.converters.AccountConverter;
+
+import java.security.Principal;
 
 @Path("accounts")
 @RequestScoped
@@ -47,5 +50,13 @@ public class AccountEndpoint {
                     .entity(errorResponseDTO)
                     .build();
         }
+    }
+
+    //path do zmiany, na ścieżkę po zalogowaniu użytkownika
+    @GET
+    @Path("self")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public AccountDTO getMyAccount(Principal principal) {
+        return AccountConverter.createOwnerDTOEntity((Owner) principal, accountService.getPersonalData((Owner) principal));
     }
 }

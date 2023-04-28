@@ -10,6 +10,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 
 import java.util.List;
+import java.util.Optional;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -32,5 +33,9 @@ public class AccountFacade extends AbstractFacade<Account> {
         findQuery.setParameter("email", email);
 
         return findQuery.getResultList();
+    }
+
+    public Optional<Account> find(Long id) {
+        return super.find(id);
     }
 }
