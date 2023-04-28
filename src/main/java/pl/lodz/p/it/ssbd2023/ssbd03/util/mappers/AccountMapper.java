@@ -9,6 +9,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 
 public class AccountMapper {
     public static Account createOwnerDTOToAccount(CreateOwnerDTO createOwnerDTO) {
+
         Account account = new Account(
                 createOwnerDTO.getEmail(),
                 createOwnerDTO.getUsername(),
@@ -35,4 +36,9 @@ public class AccountMapper {
                 account.getEmail(),
                 account.getUsername());
     }
+
+    public static OwnerDTO createOwnerDTOEntity(Owner owner, PersonalData personalData) {
+        return new OwnerDTO(owner.getId(), owner.getVersion(), owner.getAccount().getEmail(), owner.getAccount().getUsername(), personalData.getFirstName(), personalData.getSurname(), owner.getAccount().getLanguage_(), owner.getPhoneNumber());
+    }
+
 }
