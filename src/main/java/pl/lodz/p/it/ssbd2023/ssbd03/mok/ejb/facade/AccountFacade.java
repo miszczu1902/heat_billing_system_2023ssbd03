@@ -10,6 +10,9 @@ import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
+
+import java.util.List;
+import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
@@ -58,5 +61,9 @@ public class AccountFacade extends AbstractFacade<Account> {
         } catch (NoResultException e) {
             return null;
         }
+    }
+
+    public Optional<Account> find(Long id) {
+        return super.find(id);
     }
 }
