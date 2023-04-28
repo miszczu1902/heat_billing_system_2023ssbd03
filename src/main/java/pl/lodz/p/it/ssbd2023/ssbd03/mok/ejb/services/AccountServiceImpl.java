@@ -4,9 +4,6 @@ import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
-import jakarta.security.enterprise.credential.Password;
-import jakarta.security.enterprise.credential.UsernamePasswordCredential;
-import jakarta.security.enterprise.identitystore.CredentialValidationResult;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
@@ -34,6 +31,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Inject
     private AccountFacade accountFacade;
+
     @Override
     public void createOwner(PersonalData personalData) {
         Account account = personalData.getId();
@@ -48,8 +46,8 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         accessLevelMappingFacade.create(account.getAccessLevels().get(0));
         personalDataFacade.create(personalData);
     }
-    private final JwtGenerator jwtGenerator = new JwtGenerator();
 
+    private final JwtGenerator jwtGenerator = new JwtGenerator();
 
 
     @Override
@@ -58,13 +56,12 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         Account account = accountFacade.findByLogin(loginDTO.getUsername());
 
 
-        if(BcryptHashGenerator.generateHash(loginDTO.getPassword()).equals(account.getPassword()))
-        {
+        if (BcryptHashGenerator.generateHash(loginDTO.getPassword()).equals(account.getPassword())) {
 //            UsernamePasswordCredential usernamePasswordCredential = new UsernamePasswordCredential(loginDTO.getUsername(), new Password(loginDTO.getPassword()));
 //            CredentialValidationResult credentialValidationResult = identityStoreHandler.validate(usernamePasswordCredential);
-                String[] roles = {"ADMIN", "OWNER"};
-                return jwtGenerator.generateJWT(loginDTO.getUsername(), roles);
+            String[] roles = {"ADMIN", "OWNER"};
+            return jwtGenerator.generateJWT(loginDTO.getUsername(), roles);
         }
-        throw new IndexOutOfBoundsException();
+        throw new IllegalArgumentException();
     }
 }

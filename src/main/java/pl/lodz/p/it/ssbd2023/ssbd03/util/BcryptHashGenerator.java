@@ -8,22 +8,11 @@ import java.util.Properties;
 
 public class BcryptHashGenerator {
     public static String generateHash(String plainText) {
-        String salt = loadSaltFromConfig();
+        String salt = LoadConfig.loadSaltFromConfig("bcrypt.salt");
         return BCrypt.hashpw(plainText, salt);
     }
 
     public static boolean verifyPassword(String password, String hashedPassword) {
         return BCrypt.checkpw(password, hashedPassword);
-    }
-
-    private static String loadSaltFromConfig() {
-        try (InputStream input = BcryptHashGenerator.class.getClassLoader()
-                .getResourceAsStream("config.properties")) {
-            Properties properties = new Properties();
-            properties.load(input);
-            return properties.getProperty("bcrypt.salt");
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load config.properties", e);
-        }
     }
 }

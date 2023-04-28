@@ -11,16 +11,20 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
+
+import static java.lang.Long.parseLong;
 
 public class JwtGenerator {
-    private static final String SECRET = "f4h9t87t3g473HGufuJ8fFHU4j39j48fmu948cx48cu2j9fj";//przeniesc do config properties
-    private static final long timeout = 30*60*1000;//przeniesc do config properties - bcrypt hash generator sprawdzic
 
-    public String generateJWT(String login,String[] roles) {
+    private long timeout = parseLong(LoadConfig.loadSaltFromConfig("timeout"));
+    private String secret = LoadConfig.loadSaltFromConfig("secret");
+
+    public String generateJWT(String login, String[] roles) {
 
         return Jwts.builder()
 
-                .signWith(SignatureAlgorithm.HS512, SECRET)
+                .signWith(SignatureAlgorithm.HS512, secret)
                 .setSubject(login)
                 .setIssuedAt(new Date())
 //                .claim("role", roles)
@@ -31,7 +35,7 @@ public class JwtGenerator {
 
     public Jws<Claims> parseJWT(String jwt) {
         return Jwts.parser()
-                .setSigningKey(SECRET)
+                .setSigningKey(secret)
                 .parseClaimsJws(jwt);
     }
 }
