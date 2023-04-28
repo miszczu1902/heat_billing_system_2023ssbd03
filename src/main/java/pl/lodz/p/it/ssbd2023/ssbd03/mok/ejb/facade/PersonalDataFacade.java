@@ -8,6 +8,8 @@ import jakarta.persistence.PersistenceContext;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 
+import java.util.Optional;
+
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class PersonalDataFacade extends AbstractFacade<PersonalData> {
@@ -21,5 +23,9 @@ public class PersonalDataFacade extends AbstractFacade<PersonalData> {
     @Override
     protected EntityManager getEntityManager() {
         return this.em;
+    }
+
+    public Optional<PersonalData> find(Long id) {
+        return super.find(id);
     }
 }

@@ -17,16 +17,21 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccessLevelMappingFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.OwnerFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class AccountServiceImpl extends AbstractService implements AccountService {
+
+    @Inject
+    private AccountFacade accountFacade;
     @Inject
     private PersonalDataFacade personalDataFacade;
 
@@ -48,6 +53,10 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     public void createOwner(PersonalData personalData) {
         Account account = personalData.getId();
+
+//        if (!accountFacade.findByLoginOrEmailOrPesel(account.getUsername(), account.getEmail()).isEmpty()) {
+//            throw new EntityExistsException();
+//        }
 
         account.setPassword(BcryptHashGenerator.generateHash(account.getPassword()));
         account.setRegisterDate(LocalDateTime.now());
@@ -95,6 +104,20 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         } else {
             throw new IllegalArgumentException("The given number is taken by your account.");
         }
+    }
+
+    @Override
+    public PersonalData getPersonalData(Owner owner) {
+        Optional<PersonalData> optionalPersonalData = personalDataFacade.find(owner.getId());
+        if (optionalPersonalData.isPresent()) return optionalPersonalData.get();
+        else throw new IllegalArgumentException("Konto nie odnalezione");
+    }
+
+    @Override
+    public Account getAccount(Long id) {
+        Optional<Account> optAccount = accountFacade.find(id);
+        if (optAccount.isPresent()) return optAccount.get();
+        else throw new IllegalArgumentException("Konto nie odnalezione");
     }
 
 }

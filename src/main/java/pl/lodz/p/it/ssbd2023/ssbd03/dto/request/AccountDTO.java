@@ -16,4 +16,9 @@ public class AccountDTO extends AbstractDTO {
     private String password;
     private String repeatedPassword;
 
+    public AccountDTO(Long id, Long version, String email, String username) {
+        super(id, version);
+        this.email = email;
+        this.username = username;
+    }
 }
