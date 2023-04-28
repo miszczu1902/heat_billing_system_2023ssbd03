@@ -17,12 +17,14 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccessLevelMappingFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.OwnerFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -31,6 +33,8 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Inject
     private AccountFacade accountFacade;
 
+    @Inject
+    private AccountFacade accountFacade;
     @Inject
     private PersonalDataFacade personalDataFacade;
 
@@ -41,15 +45,17 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     private AccessLevelMappingFacade accessLevelMappingFacade;
 
     @Inject
+    private IdentityStoreHandler identityStoreHandler;
+
+    @Inject
+    private AccountFacade accountFacade;
+
+    @Inject
     private SecurityContext securityContext;
 
     @Override
     public void createOwner(PersonalData personalData) {
         Account account = personalData.getId();
-
-//        if (!accountFacade.findByLoginOrEmailOrPesel(account.getUsername(), account.getEmail()).isEmpty()) {
-//            throw new EntityExistsException();
-//        }
 
         account.setPassword(BcryptHashGenerator.generateHash(account.getPassword()));
         account.setRegisterDate(LocalDateTime.now());
