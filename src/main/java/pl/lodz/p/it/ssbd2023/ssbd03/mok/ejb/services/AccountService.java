@@ -5,6 +5,9 @@ import jakarta.persistence.NoResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 
 @Local
 public interface AccountService {
@@ -15,6 +18,10 @@ public interface AccountService {
     String authenticate(String username, String password);
 
     void changePhoneNumber(ChangePhoneNumberDTO changePhoneNumberDTO);
+
+    Account getAccount(Long id);
+
+    PersonalData getPersonalData(Owner owner);
 
     void editSelfPersonalData(String firstName, String surname);
 

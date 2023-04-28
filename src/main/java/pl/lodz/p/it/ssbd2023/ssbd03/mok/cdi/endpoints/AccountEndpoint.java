@@ -15,14 +15,19 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.AccountDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePasswordDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.AccountDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ErrorResponseDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.converters.AccountConverter;
+import java.security.Principal;
+
 
 @Path("/accounts")
 @RequestScoped
@@ -150,5 +155,13 @@ public class AccountEndpoint {
         } catch (NoResultException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+    }
+
+    //path do zmiany, na ścieżkę po zalogowaniu użytkownika
+    @GET
+    @Path("self")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public AccountDTO getMyAccount(Principal principal) {
+        return AccountConverter.createOwnerDTOEntity((Owner) principal, accountService.getPersonalData((Owner) principal));
     }
 }
