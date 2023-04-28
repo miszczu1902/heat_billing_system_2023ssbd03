@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.auth;
 
 import io.jsonwebtoken.Claims;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.JwtGenerator;
 
 
 import javax.enterprise.context.ApplicationScoped;

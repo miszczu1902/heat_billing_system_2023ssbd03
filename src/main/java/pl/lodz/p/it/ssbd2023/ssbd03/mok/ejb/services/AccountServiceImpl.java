@@ -6,11 +6,13 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.credential.Password;
 import jakarta.security.enterprise.credential.UsernamePasswordCredential;
+import jakarta.security.enterprise.identitystore.CredentialValidationResult;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.JwtGenerator;
+import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccessLevelMappingFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
@@ -48,16 +50,21 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
     private final JwtGenerator jwtGenerator = new JwtGenerator();
 
+
+
     @Override
-    public String authenticate(String username, String password) {
+    public String authenticate(LoginDTO loginDTO) {
+
+        Account account = accountFacade.findByLogin(loginDTO.getUsername());
 
 
-        if (accountFacade.findByLoginAndPassword(username,password) == null) {
-            throw new IndexOutOfBoundsException();
+        if(BcryptHashGenerator.generateHash(loginDTO.getPassword()).equals(account.getPassword()))
+        {
+//            UsernamePasswordCredential usernamePasswordCredential = new UsernamePasswordCredential(loginDTO.getUsername(), new Password(loginDTO.getPassword()));
+//            CredentialValidationResult credentialValidationResult = identityStoreHandler.validate(usernamePasswordCredential);
+                String[] roles = {"ADMIN", "OWNER"};
+                return jwtGenerator.generateJWT(loginDTO.getUsername(), roles);
         }
-        UsernamePasswordCredential usernamePasswordCredential = new UsernamePasswordCredential(username, new Password(password));
-//        CredentialValidationResult credentialValidationResult = identityStoreHandler.validate(usernamePasswordCredential);
-        String[] roles ={"ADMIN","OWNER"};
-        return jwtGenerator.generateJWT(username,roles);
+        throw new IndexOutOfBoundsException();
     }
 }

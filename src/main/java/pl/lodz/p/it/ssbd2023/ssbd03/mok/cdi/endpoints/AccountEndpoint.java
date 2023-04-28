@@ -24,6 +24,8 @@ public class AccountEndpoint {
     @Inject
     private AccountService accountService;
 
+
+
     @POST
     @Path("register")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -59,8 +61,8 @@ public class AccountEndpoint {
     @RolesAllowed("GUEST")
     public Response authenticate(@Valid LoginDTO loginDTO)
     {
-        String token = accountService.authenticate(loginDTO.getUsername(),loginDTO.getPassword());
-        return Response.ok().entity(token).build();
+        String token = accountService.authenticate(loginDTO);
+        return Response.ok().header("Bearer",token).build();
     }
 
     @GET
@@ -69,7 +71,6 @@ public class AccountEndpoint {
     @RolesAllowed("OWNER")
     public Response getTest()
     {
-
         return Response.ok().entity("token").build();
     }
 }
