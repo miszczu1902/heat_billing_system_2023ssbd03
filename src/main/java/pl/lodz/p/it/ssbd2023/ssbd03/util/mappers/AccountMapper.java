@@ -25,6 +25,7 @@ public class AccountMapper {
     }
 
     public static OwnerDTO createOwnerDTOEntity(Owner owner, PersonalData personalData) {
-        return new OwnerDTO(owner.getAccount().getEmail(), owner.getAccount().getUsername(), personalData.getFirstName(), personalData.getSurname(), owner.getAccount().getLanguage_(), owner.getPhoneNumber());
+        return new OwnerDTO(owner.getId(), owner.getVersion(), owner.getAccount().getEmail(), owner.getAccount().getUsername(), personalData.getFirstName(), personalData.getSurname(), owner.getAccount().getLanguage_(), owner.getPhoneNumber());
     }
+
 }
