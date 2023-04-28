@@ -2,6 +2,8 @@ package pl.lodz.p.it.ssbd2023.ssbd03.common;
 
 import jakarta.persistence.EntityManager;
 
+import java.util.Optional;
+
 public abstract class AbstractFacade<T> {
     public Class<T> entityClass;
 
@@ -26,7 +28,7 @@ public abstract class AbstractFacade<T> {
         getEntityManager().flush();
     }
 
-    public T find(Object id) {
-        return getEntityManager().find(entityClass, id);
+    public Optional<T> find(Object id) {
+        return Optional.ofNullable(getEntityManager().find(entityClass, id));
     }
 }

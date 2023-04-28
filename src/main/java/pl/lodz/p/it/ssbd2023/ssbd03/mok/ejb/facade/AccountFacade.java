@@ -9,6 +9,9 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
+
+import java.util.List;
+import java.util.Optional;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 
 @Stateless
@@ -40,5 +43,9 @@ public class AccountFacade extends AbstractFacade<Account> {
         } catch (NoResultException e) {
             return null;
         }
+    }
+
+    public Optional<Account> find(Long id) {
+        return super.find(id);
     }
 }
