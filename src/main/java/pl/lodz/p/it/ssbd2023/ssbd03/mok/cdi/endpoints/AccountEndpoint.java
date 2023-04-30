@@ -25,7 +25,6 @@ public class AccountEndpoint {
     @Inject
     private AccountService accountService;
 
-
     @POST
     @Path("register")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -53,7 +52,6 @@ public class AccountEndpoint {
                     .build();
         }
     }
-
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

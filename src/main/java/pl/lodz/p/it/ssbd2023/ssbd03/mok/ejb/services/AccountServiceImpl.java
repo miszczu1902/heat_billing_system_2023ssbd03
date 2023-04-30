@@ -39,7 +39,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     public void createOwner(PersonalData personalData) {
         Account account = personalData.getId();
 
-
         account.setPassword(BcryptHashGenerator.generateHash(account.getPassword()));
         account.setRegisterDate(LocalDateTime.now());
 
@@ -47,12 +46,11 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         personalDataFacade.create(personalData);
     }
 
-    private final JwtGenerator jwtGenerator = new JwtGenerator();
-
+    @Inject
+    private JwtGenerator jwtGenerator;
 
     @Override
     public String authenticate(LoginDTO loginDTO) {
-
         Account account = authenticateFacade.findByLogin(loginDTO.getUsername());
 
         if (BcryptHashGenerator.generateHash(loginDTO.getPassword()).equals(account.getPassword())) {

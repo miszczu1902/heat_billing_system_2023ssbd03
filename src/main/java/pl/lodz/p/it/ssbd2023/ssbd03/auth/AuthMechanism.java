@@ -15,12 +15,11 @@ import java.util.Set;
 
 @ApplicationScoped
 public class AuthMechanism implements HttpAuthenticationMechanism {
-
     @Inject
     private JwtGenerator generator;
 
-    private String bearer = LoadConfig.loadSaltFromConfig("bearer");
-    private String authorization = LoadConfig.loadSaltFromConfig("authorization");
+    private final String bearer = LoadConfig.loadSaltFromConfig("bearer");
+    private final String authorization = LoadConfig.loadSaltFromConfig("authorization");
 
     @Override
     public AuthenticationStatus validateRequest(HttpServletRequest httpServletRequest,

@@ -12,12 +12,10 @@ import java.util.List;
 import static java.lang.Long.parseLong;
 
 public class JwtGenerator {
-
-    private long timeout = parseLong(LoadConfig.loadSaltFromConfig("timeout"));
-    private String secret = LoadConfig.loadSaltFromConfig("secret");
+    private final long timeout = parseLong(LoadConfig.loadSaltFromConfig("timeout"));
+    private final String secret = LoadConfig.loadSaltFromConfig("secret");
 
     public String generateJWT(String login, List<String> roles) {
-
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .setSubject(login)
