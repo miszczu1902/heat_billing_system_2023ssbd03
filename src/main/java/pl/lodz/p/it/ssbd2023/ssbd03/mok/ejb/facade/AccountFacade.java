@@ -9,8 +9,6 @@ import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 
-import java.util.List;
-
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class AccountFacade extends AbstractFacade<Account> {
@@ -26,11 +24,9 @@ public class AccountFacade extends AbstractFacade<Account> {
         return em;
     }
 
-    public List<Account> findByLoginOrEmailOrPesel(String username, String email) {
-        TypedQuery<Account> findQuery = em.createNamedQuery("Account.findByLoginOrEmailOrPesel", Account.class);
-        findQuery.setParameter("username", username);
-        findQuery.setParameter("email", email);
-
-        return findQuery.getResultList();
+    public Account findByLogin(String login) {
+        TypedQuery<Account> tq = em.createNamedQuery("Account.findByLogin", Account.class);
+        tq.setParameter("login", login);
+        return tq.getSingleResult();
     }
 }

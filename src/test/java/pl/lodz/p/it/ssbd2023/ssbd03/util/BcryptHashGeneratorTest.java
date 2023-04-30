@@ -2,7 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.util;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BcryptHashGeneratorTest {
 
