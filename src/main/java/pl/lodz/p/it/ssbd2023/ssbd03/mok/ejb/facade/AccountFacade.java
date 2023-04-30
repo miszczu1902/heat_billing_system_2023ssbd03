@@ -26,14 +26,6 @@ public class AccountFacade extends AbstractFacade<Account> {
         return em;
     }
 
-    public List<Account> findByLoginOrEmailOrPesel(String username, String email) {
-        TypedQuery<Account> findQuery = em.createNamedQuery("Account.findByLoginOrEmailOrPesel", Account.class);
-        findQuery.setParameter("username", username);
-        findQuery.setParameter("email", email);
-
-        return findQuery.getResultList();
-    }
-
     public Account findByLogin(String login) {
         TypedQuery<Account> tq = em.createNamedQuery("Account.findByLogin", Account.class);
         tq.setParameter("login", login);

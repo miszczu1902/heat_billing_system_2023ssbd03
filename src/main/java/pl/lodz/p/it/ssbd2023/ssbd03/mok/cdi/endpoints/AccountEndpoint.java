@@ -12,6 +12,7 @@ import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ErrorResponseDTO;
@@ -57,7 +58,7 @@ public class AccountEndpoint {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("login")
-    @RolesAllowed("GUEST")
+    @RolesAllowed(Roles.GUEST)
     public Response authenticate(@Valid LoginDTO loginDTO) {
         String token = accountService.authenticate(loginDTO);
         return Response.ok().header("Bearer", token).build();
@@ -65,8 +66,8 @@ public class AccountEndpoint {
 
     @GET
     @Path("test")
-    @RolesAllowed("OWNER")
+    @RolesAllowed(Roles.ADMIN)
     public Response getTest() {
-        return Response.ok().entity("token").build();
+        return Response.ok().entity("test").build();
     }
 }

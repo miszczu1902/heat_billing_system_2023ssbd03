@@ -25,20 +25,24 @@ public class AuthMechanism implements HttpAuthenticationMechanism {
                                                 HttpServletResponse httpServletResponse,
                                                 HttpMessageContext httpMessageContext) {
         String header = httpServletRequest.getHeader(AUTHORIZATION);
-        Set<String> role = new HashSet<>();
+        Set<String> roles = new HashSet<>();
         if (header != null) {
             if (header.startsWith(BEARER)) {
                 try {
                     String token = header.replace(BEARER, "");
                     Claims claims = generator.parseJWT(token).getBody();
-                    role.add(claims.get("role", String.class));
-                    return httpMessageContext.notifyContainerAboutLogin(claims.getSubject(), role);
+                    String rolesString = claims.get("role", String.class);
+                    String[] rolesArray = rolesString.split(",");
+                    for (String role : rolesArray) {
+                        roles.add(role.trim());
+                    }
+                    return httpMessageContext.notifyContainerAboutLogin(claims.getSubject(), roles);
                 } catch (Exception e) {
                     return httpMessageContext.responseUnauthorized();
                 }
             }
         }
-        role.add("GUEST");
-        return httpMessageContext.notifyContainerAboutLogin("guest", role);
+        roles.add("GUEST");
+        return httpMessageContext.notifyContainerAboutLogin("guest", roles);
     }
 }

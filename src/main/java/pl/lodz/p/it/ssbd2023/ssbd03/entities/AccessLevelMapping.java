@@ -41,6 +41,9 @@ public abstract class AccessLevelMapping extends AbstractEntity implements Seria
         return Objects.equals(id, that.id);
     }
 
+    @Column(name = "access_level", updatable = false, insertable = false)
+    private String accessLevel;
+
     @Override
     public int hashCode() {
         return Objects.hash(id);
