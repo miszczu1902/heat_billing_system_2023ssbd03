@@ -1,21 +1,13 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.auth;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Properties;
-import java.util.stream.Collectors;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
+
+import java.util.Date;
+import java.util.List;
 
 import static java.lang.Long.parseLong;
 
