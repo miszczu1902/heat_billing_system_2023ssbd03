@@ -1,6 +1,9 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.common;
 
 import jakarta.persistence.EntityManager;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
+
+import java.util.Collection;
 
 public abstract class AbstractFacade<T> {
     public Class<T> entityClass;

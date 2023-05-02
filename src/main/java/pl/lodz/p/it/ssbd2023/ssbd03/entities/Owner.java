@@ -20,6 +20,9 @@ import java.util.Objects;
                 @Index(name = "unique_phone_number", columnList = "phone_number", unique = true)
         }
 )
+@NamedQueries({
+        @NamedQuery(name = "Owner.findByPhoneNumber", query = "SELECT d FROM Owner d WHERE d.phoneNumber = :phoneNumber")
+})
 public class Owner extends AccessLevelMapping implements Serializable {
     @Column(name = "phone_number", nullable = false, length = 9)
     private String phoneNumber;
