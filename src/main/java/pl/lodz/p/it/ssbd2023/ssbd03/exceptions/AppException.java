@@ -5,6 +5,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import lombok.Getter;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountExistsException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.PasswordsNotSameException;
 
 @ApplicationException(rollback = true)
 public class AppException extends WebApplicationException {
@@ -13,6 +14,8 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_OPTIMISTIC_LOCK = "ERROR_OPTIMISTIC_LOCK";
     protected final static String ERROR_ACCESS_DENIED = "ERROR_ACCESS_DENIED";
     protected final static String ERROR_TRANSACTION_ROLLEDBACK = "ERROR_TRANSACTION_ROLLEDBACK";
+    protected final static String ERROR_ACCOUNT_NOT_REGISTERED = "ERROR_ACCOUNT_NOT_REGISTERED";
+    protected final static String ERROR_PASSWORDS_NOT_SAME = "ERROR_PASSWORDS_NOT_SAME";
 
     @Getter
     private Throwable cause;
@@ -57,6 +60,14 @@ public class AppException extends WebApplicationException {
 
     public static DatabaseException createDatabaseException() {
         return new DatabaseException();
+    }
+
+    public static PasswordsNotSameException createPasswordsNotSameException() {
+        return new PasswordsNotSameException(Response.Status.CONFLICT, null);
+    }
+
+    public static MailNotSentException createMailNotSentException() {
+        return new MailNotSentException();
     }
 
     public static AccountExistsException createAccountExistsException(Throwable cause) {

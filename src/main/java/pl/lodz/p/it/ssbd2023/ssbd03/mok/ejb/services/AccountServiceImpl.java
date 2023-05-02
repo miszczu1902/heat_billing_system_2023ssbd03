@@ -51,7 +51,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         try {
             accountFacade.create(account);
             personalDataFacade.create(personalData);
-            mailSender.sendEmail(account.getEmail(), "Nie graj w szaczhy", "Ja wszystko widzę");
+            mailSender.sendEmail(account.getEmail(), "Test", "Test");
         } catch (AccountExistsException pe) {
             throw pe;
         }

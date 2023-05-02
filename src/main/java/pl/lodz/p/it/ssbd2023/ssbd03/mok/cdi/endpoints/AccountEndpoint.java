@@ -18,18 +18,18 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.converters.AccountConverter;
 
-@Path("accounts")
+@Path("/accounts")
 @RequestScoped
 public class AccountEndpoint {
     @Inject
     private AccountService accountService;
 
     @POST
-    @Path("register")
+    @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerOwner(@NotNull @Valid CreateOwnerDTO createOwnerDTO) {
         if (!createOwnerDTO.getPassword().equals(createOwnerDTO.getRepeatedPassword())) {
-            throw AppException.createAppException(null);
+            throw AppException.createPasswordsNotSameException();
         }
         accountService.createOwner(AccountConverter.createOwnerDTOToPersonalData(createOwnerDTO));
         return Response.status(Response.Status.CREATED).build();
@@ -37,7 +37,7 @@ public class AccountEndpoint {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("login")
+    @Path("/login")
     @RolesAllowed(Roles.GUEST)
     public Response authenticate(@Valid LoginDTO loginDTO) {
         String token = accountService.authenticate(loginDTO);
@@ -45,7 +45,7 @@ public class AccountEndpoint {
     }
 
     @GET
-    @Path("test")
+    @Path("/test")
     @RolesAllowed(Roles.ADMIN)
     public Response getTest() {
         return Response.ok().entity("test").build();

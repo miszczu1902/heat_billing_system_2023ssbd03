@@ -17,15 +17,10 @@ public class MailSender {
 
     @PostConstruct
     public void init() {
-//        properties.put("mail.smtp.host", LoadConfig.loadPropertyFromConfig("mail.smtp.host"));
-//        properties.put("mail.smtp.port", LoadConfig.loadPropertyFromConfig("mail.smtp.port"));
-//        properties.put("mail.smtp.starttls.enable", "true");
-////        properties.put("mail.smtp.ssl.enable", LoadConfig.loadPropertyFromConfig("mail.smtp.ssl.enable"));
-//        properties.put("mail.smtp.auth", LoadConfig.loadPropertyFromConfig("mail.smtp.auth"));
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
-        properties.put("mail.smtp.host", "smtp.gmail.com");
-        properties.put("mail.smtp.port", "587");
+        properties.put("mail.smtp.host", LoadConfig.loadPropertyFromConfig("mail.smtp.host"));
+        properties.put("mail.smtp.port", LoadConfig.loadPropertyFromConfig("mail.smtp.port"));
+        properties.put("mail.smtp.starttls.enable", LoadConfig.loadPropertyFromConfig("mail.smtp.starttls.enable"));
+        properties.put("mail.smtp.auth", LoadConfig.loadPropertyFromConfig("mail.smtp.auth"));
 
         session = Session.getInstance(properties, new Authenticator() {
             @Override
@@ -41,15 +36,12 @@ public class MailSender {
         try {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress("mail.login"));
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress("236710@edu.p.lodz.pl"));
-
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(subject);
             message.setText(content);
             Transport.send(message);
-
         } catch (MessagingException e) {
-            throw AppException.createGeneralException("Mail nie poszedł", e.getCause());
-//            throw new EmailNotSendException();
+            throw AppException.createMailNotSentException();
         }
     }
 }
