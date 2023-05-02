@@ -4,12 +4,12 @@ import jakarta.ejb.ApplicationException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import lombok.Getter;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountExistsException;
 
 @ApplicationException(rollback = true)
 public class AppException extends WebApplicationException {
     protected final static String ERROR_UNKNOWN = "ERROR_UNKNOWN";
     protected final static String ERROR_GENERAL_PERSISTENCE = "ERROR_GENERAL_PERSISTENCE";
-    protected final static String ERROR_ENTITY_NOT_FOUND = "ERROR_ENTITY_NOT_FOUND";
     protected final static String ERROR_OPTIMISTIC_LOCK = "ERROR_OPTIMISTIC_LOCK";
     protected final static String ERROR_ACCESS_DENIED = "ERROR_ACCESS_DENIED";
     protected final static String ERROR_TRANSACTION_ROLLEDBACK = "ERROR_TRANSACTION_ROLLEDBACK";
@@ -19,6 +19,11 @@ public class AppException extends WebApplicationException {
 
     protected AppException(Response.Status status, String key, Throwable cause) {
         super(Response.status(status).entity(key).build());
+        this.cause = cause;
+    }
+
+    public AppException(String message, Response.Status status, Throwable cause) {
+        super(message, status);
         this.cause = cause;
     }
 
@@ -50,8 +55,12 @@ public class AppException extends WebApplicationException {
         return new AppException(Response.Status.INTERNAL_SERVER_ERROR, ERROR_TRANSACTION_ROLLEDBACK);
     }
 
-    public static EntityNotExistException createEntityNotExistException() {
-        return new EntityNotExistException();
+    public static DatabaseException createDatabaseException() {
+        return new DatabaseException();
+    }
+
+    public static AccountExistsException createAccountExistsException(Throwable cause) {
+        return new AccountExistsException(Response.Status.CONFLICT, cause);
     }
 
     public static OptimisticLockAppException createOptimisticLockAppException() {

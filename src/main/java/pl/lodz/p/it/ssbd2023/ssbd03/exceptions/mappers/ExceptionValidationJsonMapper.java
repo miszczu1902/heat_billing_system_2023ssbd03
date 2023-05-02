@@ -18,6 +18,6 @@ public class ExceptionValidationJsonMapper implements ExceptionMapper<Validation
 
         return Response.status(Response.Status.BAD_REQUEST)
                 .entity(errorResponseDTO)
-                .type(MediaType.APPLICATION_JSON_TYPE).build();
+                .type(MediaType.APPLICATION_JSON).build();
     }
 }

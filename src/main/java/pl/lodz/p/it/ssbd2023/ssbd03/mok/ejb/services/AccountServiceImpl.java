@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -7,11 +8,12 @@ import jakarta.inject.Inject;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
+import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccessLevelMappingFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
@@ -27,7 +29,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     private PersonalDataFacade personalDataFacade;
 
     @Inject
-    private AccessLevelMappingFacade accessLevelMappingFacade;
+    private AccountFacade accountFacade;
 
     @Inject
     private IdentityStoreHandler identityStoreHandler;
@@ -36,14 +38,18 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     private AccountFacade authenticateFacade;
 
     @Override
+    @RolesAllowed(Roles.GUEST)
     public void createOwner(PersonalData personalData) {
         Account account = personalData.getId();
-
         account.setPassword(BcryptHashGenerator.generateHash(account.getPassword()));
         account.setRegisterDate(LocalDateTime.now());
 
-        accessLevelMappingFacade.create(account.getAccessLevels().get(0));
-        personalDataFacade.create(personalData);
+        try {
+            accountFacade.create(account);
+            personalDataFacade.create(personalData);
+        } catch (AccountExistsException pe) {
+            throw pe;
+        }
     }
 
     @Inject

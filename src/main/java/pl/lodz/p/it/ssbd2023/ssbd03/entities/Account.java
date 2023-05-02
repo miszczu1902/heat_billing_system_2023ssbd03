@@ -60,7 +60,7 @@ public class Account extends AbstractEntity {
     private String language_;
 
     @Getter
-    @OneToMany(mappedBy = "account", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "account", cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private List<AccessLevelMapping> accessLevels = new ArrayList<>();
 
     public Account(String email, String username, String password, Boolean isEnable, Boolean isActive, String language_) {
