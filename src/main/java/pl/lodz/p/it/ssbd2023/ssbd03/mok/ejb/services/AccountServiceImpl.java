@@ -41,6 +41,9 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Inject
     private MailSender mailSender;
 
+    @Inject
+    private JwtGenerator jwtGenerator;
+
     @Override
     @RolesAllowed(Roles.GUEST)
     public void createOwner(PersonalData personalData) {
@@ -57,10 +60,8 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         }
     }
 
-    @Inject
-    private JwtGenerator jwtGenerator;
-
     @Override
+    @RolesAllowed(Roles.GUEST)
     public String authenticate(LoginDTO loginDTO) {
         Account account = authenticateFacade.findByLogin(loginDTO.getUsername());
 

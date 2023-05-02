@@ -5,13 +5,11 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ActivateAccountFromEmailDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
@@ -33,6 +31,14 @@ public class AccountEndpoint {
         }
         accountService.createOwner(AccountConverter.createOwnerDTOToPersonalData(createOwnerDTO));
         return Response.status(Response.Status.CREATED).build();
+    }
+
+    @POST
+    @Path("/activate-from-email")
+    @RolesAllowed(Roles.GUEST)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response activateAccountFromEmail(ActivateAccountFromEmailDTO activationToken) {
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @POST
