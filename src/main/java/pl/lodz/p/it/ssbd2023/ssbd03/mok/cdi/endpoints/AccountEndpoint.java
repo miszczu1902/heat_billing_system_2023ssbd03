@@ -24,6 +24,7 @@ public class AccountEndpoint {
 
     @POST
     @Path("/register")
+    @RolesAllowed(Roles.GUEST)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerOwner(@NotNull @Valid CreateOwnerDTO createOwnerDTO) {
         if (!createOwnerDTO.getPassword().equals(createOwnerDTO.getRepeatedPassword())) {
