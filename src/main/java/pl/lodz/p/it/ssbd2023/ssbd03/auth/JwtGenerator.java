@@ -17,7 +17,7 @@ public class JwtGenerator {
 
     public String generateJWT(String login, List<String> roles) {
         return Jwts.builder()
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(SignatureAlgorithm.HS256, secret)
                 .setSubject(login)
                 .setIssuedAt(new Date())
                 .claim("role", String.join(",", roles))
