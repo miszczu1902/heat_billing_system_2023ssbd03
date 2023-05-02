@@ -17,6 +17,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.mail.MailSender;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,6 +38,9 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Inject
     private AccountFacade authenticateFacade;
 
+    @Inject
+    private MailSender mailSender;
+
     @Override
     @RolesAllowed(Roles.GUEST)
     public void createOwner(PersonalData personalData) {
@@ -47,6 +51,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         try {
             accountFacade.create(account);
             personalDataFacade.create(personalData);
+            mailSender.sendEmail(account.getEmail(), "Nie graj w szaczhy", "Ja wszystko widzę");
         } catch (AccountExistsException pe) {
             throw pe;
         }
