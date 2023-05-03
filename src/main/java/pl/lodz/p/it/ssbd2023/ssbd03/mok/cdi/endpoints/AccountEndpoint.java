@@ -10,6 +10,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.PersonalDataDTO;
@@ -67,6 +68,18 @@ public class AccountEndpoint {
         return Response.ok().entity("test").build();
     }
 
+    @PATCH
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/self/phone-number")
+    @RolesAllowed(Roles.OWNER)
+    public Response changePhoneNumber(@Valid ChangePhoneNumberDTO changePhoneNumberDTO) {
+        try {
+            accountService.changePhoneNumber(changePhoneNumberDTO);
+            return Response.ok("Phone number changed").build();
+        } catch (IllegalStateException ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex).build();
+        }
+    }
 
     @PATCH
     @Consumes(MediaType.APPLICATION_JSON)
