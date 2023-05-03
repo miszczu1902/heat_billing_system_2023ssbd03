@@ -6,6 +6,7 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
 import jakarta.persistence.TypedQuery;
@@ -15,6 +16,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -52,4 +54,13 @@ public class AccountFacade extends AbstractFacade<Account> {
         return tq.getSingleResult();
     }
 
+    public Owner findByPhoneNumber(String phoneNumber) {
+        TypedQuery<Owner> tq = em.createNamedQuery("Owner.findByPhoneNumber", Owner.class);
+        tq.setParameter("phoneNumber", phoneNumber);
+        try {
+            return tq.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 }
