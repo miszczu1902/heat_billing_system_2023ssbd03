@@ -86,7 +86,7 @@ public class AccountEndpoint {
             return Response.noContent().build();
         } catch (AccountPasswordException e) {
             final ErrorResponseDTO errorResponseDTO =
-                    new ErrorResponseDTO(e.getMessage(),
+                    new ErrorResponseDTO(
                             Response.Status.BAD_REQUEST.getStatusCode(),
                             e.getMessage());
             return Response.status(Response.Status.BAD_REQUEST).entity(errorResponseDTO).build();

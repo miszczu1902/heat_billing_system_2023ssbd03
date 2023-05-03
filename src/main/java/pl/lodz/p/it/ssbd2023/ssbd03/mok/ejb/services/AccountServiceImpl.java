@@ -20,7 +20,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccessLevelMappingFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.OwnerFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
@@ -88,9 +87,10 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed(Roles.OWNER)
     public void changePhoneNumber(ChangePhoneNumberDTO changePhoneNumberDTO) {
         final String username = securityContext.getCallerPrincipal().getName();
-        final Account account = accountFacade.findByLogin(username);
+        final Account account = accountFacade.findByUsername(username);
         Owner owner = (Owner) account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Owner)
                 .findFirst()
@@ -109,6 +109,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
     public void changePassword(String oldPassword, String newPassword, String newRepeatedPassword) throws AccountPasswordException {
         if (oldPassword.equals(newPassword)) {
             throw new AccountPasswordException("Old password and new password are the same.");
@@ -117,7 +118,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             throw new AccountPasswordException("New password and new repeated password are not the same.");
         }
         final String username = securityContext.getCallerPrincipal().getName();
-        final Account account = accountFacade.findByLogin(username);
+        final Account account = accountFacade.findByUsername(username);
         if (!BcryptHashGenerator.generateHash(oldPassword).equals(account.getPassword())) {
             throw new AccountPasswordException("Old password is incorrect");
         }

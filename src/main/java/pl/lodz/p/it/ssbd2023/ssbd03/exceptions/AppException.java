@@ -76,7 +76,7 @@ public class AppException extends WebApplicationException {
     }
 
     public static PasswordsNotSameException createPasswordsNotSameException() {
-        return new PasswordsNotSameException(ERROR_PASSWORDS_NOT_SAME_MESSAGE, Response.Status.CONFLICT, null);
+        return new PasswordsNotSameException(ERROR_PASSWORDS_NOT_SAME_MESSAGE, Response.Status.BAD_REQUEST, null);
     }
 
     public static MailNotSentException createMailNotSentException() {

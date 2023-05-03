@@ -11,7 +11,7 @@ public class AccountConverter {
                 createOwnerDTO.getEmail(),
                 createOwnerDTO.getUsername(),
                 createOwnerDTO.getPassword(),
-                false,
+                true,
                 false,
                 createOwnerDTO.getLanguage());
         Owner owner = new Owner(createOwnerDTO.getPhoneNumber());
