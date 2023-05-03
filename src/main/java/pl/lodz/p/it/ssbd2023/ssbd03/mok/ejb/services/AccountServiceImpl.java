@@ -101,7 +101,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     public void editPersonalData(PersonalDataDTO personalDataDTO) {
-        Account account = accountFacade.findByLogin(personalDataDTO.getUsername());
+        Account account = accountFacade.findByLogin(securityContext.getCallerPrincipal().getName());
         personalDataFacade.edit(AccountConverter.personalDataDTOToPersonalData(account, personalDataDTO));
     }
 }

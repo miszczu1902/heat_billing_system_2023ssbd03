@@ -12,9 +12,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PersonalDataDTO implements Serializable {
-    @Size(min = 6, max = 16,
-            message = "Max length for username is between 6 - 16 ")
-    private String username;
     @NotNull
     @Size(max = 32, message = "Max length for first name is 32")
     private String firstName;
