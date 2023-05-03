@@ -8,6 +8,7 @@ import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.PersonalDataDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
@@ -15,6 +16,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccessLevelMappingFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.converters.AccountConverter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -33,7 +35,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     private IdentityStoreHandler identityStoreHandler;
 
     @Inject
-    private AccountFacade authenticateFacade;
+    private AccountFacade accountFacade;
 
     @Override
     public void createOwner(PersonalData personalData) {
@@ -51,7 +53,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     public String authenticate(LoginDTO loginDTO) {
-        Account account = authenticateFacade.findByLogin(loginDTO.getUsername());
+        Account account = accountFacade.findByLogin(loginDTO.getUsername());
 
         if (BcryptHashGenerator.generateHash(loginDTO.getPassword()).equals(account.getPassword())) {
 //            UsernamePasswordCredential usernamePasswordCredential = new UsernamePasswordCredential(loginDTO.getUsername(), new Password(loginDTO.getPassword()));
@@ -66,4 +68,9 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         throw new IllegalArgumentException();
     }
 
+    @Override
+    public void editPersonalData(PersonalDataDTO personalDataDTO) {
+        Account account = accountFacade.findByLogin(personalDataDTO.getUsername());
+        personalDataFacade.edit(AccountConverter.personalDataDTOToPersonalData(account, personalDataDTO));
+    }
 }

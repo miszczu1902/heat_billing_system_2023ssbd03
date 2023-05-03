@@ -6,15 +6,13 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityExistsException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.PersonalDataDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ErrorResponseDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.converters.AccountConverter;
@@ -67,5 +65,15 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.ADMIN)
     public Response getTest() {
         return Response.ok().entity("test").build();
+    }
+
+
+    @PATCH
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("self/personal-data")
+    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
+    public Response editPersonalData(@Valid PersonalDataDTO personalDataDTO){
+        accountService.editPersonalData(personalDataDTO);
+        return Response.status(Response.Status.OK).build();
     }
 }
