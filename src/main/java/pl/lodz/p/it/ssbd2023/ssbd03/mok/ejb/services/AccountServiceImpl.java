@@ -34,8 +34,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     private AccountFacade accountFacade;
 
     @Inject
-    private AccountFacade accountFacade;
-    @Inject
     private PersonalDataFacade personalDataFacade;
 
     @Inject
@@ -46,9 +44,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Inject
     private IdentityStoreHandler identityStoreHandler;
-
-    @Inject
-    private AccountFacade accountFacade;
 
     @Inject
     private SecurityContext securityContext;
@@ -127,8 +122,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
         return owner;
     }
-
-    @Override
     public void changePassword(String oldPassword, String newPassword, String newRepeatedPassword) throws AccountPasswordException {
         if (oldPassword.equals(newPassword)) {
             throw new AccountPasswordException("Old password and new password are the same.");
@@ -144,7 +137,15 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         final String newPasswordHash = BcryptHashGenerator.generateHash(newPassword);
         account.setPassword(newPasswordHash);
         accountFacade.edit(account);
+
+    @Override
+    public Owner getOwner() {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Account account = accountFacade.findByLogin(username);
+        Owner owner = (Owner) account.getAccessLevels().stream()
+                .filter(accessLevel -> accessLevel instanceof Owner)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
+        return owner;
     }
-
-
 }
