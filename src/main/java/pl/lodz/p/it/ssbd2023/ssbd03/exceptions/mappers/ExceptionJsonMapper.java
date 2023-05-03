@@ -12,8 +12,7 @@ public class ExceptionJsonMapper implements ExceptionMapper<Throwable> {
     public Response toResponse(Throwable exception) {
         StringBuilder message = new StringBuilder()
                 .append(exception.getClass())
-                .append(exception.getCause()).append(":")
-                .append(exception.getCause().getMessage());
+                .append(exception.getMessage());
 
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
                 Response.Status.INTERNAL_SERVER_ERROR.toString(),
