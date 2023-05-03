@@ -67,9 +67,9 @@ public class AccountEndpoint {
         return Response.ok().entity("test").build();
     }
 
-    @PUT
+    @PATCH
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/changePhoneNumber")
+    @Path("/self/phone-number")
     @RolesAllowed(Roles.OWNER)
     public Response changePhoneNumber(@Valid ChangePhoneNumberDTO changePhoneNumberDTO) {
         try {
@@ -78,6 +78,5 @@ public class AccountEndpoint {
         } catch (IllegalStateException ex) {
             return Response.status(Response.Status.BAD_REQUEST).entity(ex).build();
         }
-
     }
 }

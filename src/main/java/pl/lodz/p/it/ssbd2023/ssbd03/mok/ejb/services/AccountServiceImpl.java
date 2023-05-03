@@ -40,7 +40,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     private IdentityStoreHandler identityStoreHandler;
 
     @Inject
-    private AccountFacade authenticateFacade;
+    private AccountFacade accountFacade;
 
     @Inject
     private SecurityContext securityContext;
@@ -61,7 +61,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     public String authenticate(LoginDTO loginDTO) {
-        Account account = authenticateFacade.findByLogin(loginDTO.getUsername());
+        Account account = accountFacade.findByLogin(loginDTO.getUsername());
 
         if (BcryptHashGenerator.generateHash(loginDTO.getPassword()).equals(account.getPassword())) {
 //            UsernamePasswordCredential usernamePasswordCredential = new UsernamePasswordCredential(loginDTO.getUsername(), new Password(loginDTO.getPassword()));
@@ -79,19 +79,21 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     public void changePhoneNumber(ChangePhoneNumberDTO changePhoneNumberDTO) {
         final String username = securityContext.getCallerPrincipal().getName();
-        final Account account = authenticateFacade.findByLogin(username);
+        final Account account = accountFacade.findByLogin(username);
         Owner owner = (Owner) account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Owner)
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
         final String newPhoneNumber = changePhoneNumberDTO.getPhoneNumber();
         if (!newPhoneNumber.equals(owner.getPhoneNumber())) {
-            if (authenticateFacade.findByPhoneNumber(newPhoneNumber) == null) {
+            if (accountFacade.findByPhoneNumber(newPhoneNumber) == null) {
                 owner.setPhoneNumber(newPhoneNumber);
                 ownerFacade.edit(owner);
             } else {
                 throw new IllegalArgumentException("Phone number is already taken.");
             }
+        } else {
+            throw new IllegalArgumentException("The given number is taken by your account.");
         }
     }
 
