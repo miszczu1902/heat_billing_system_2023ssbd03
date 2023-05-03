@@ -5,6 +5,7 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.SecurityContext;
+import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.security.enterprise.credential.Password;
 import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
@@ -149,6 +150,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
         return owner;
     }
+
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
     public void changePassword(String oldPassword, String newPassword, String newRepeatedPassword) throws AccountPasswordException {
         if (oldPassword.equals(newPassword)) {
@@ -165,16 +167,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         final String newPasswordHash = bcryptHashGenerator.generate(newPassword.toCharArray());
         account.setPassword(newPasswordHash);
         accountFacade.edit(account);
-
-    @Override
-    public Owner getOwner() {
-        final String username = securityContext.getCallerPrincipal().getName();
-        final Account account = accountFacade.findByLogin(username);
-        Owner owner = (Owner) account.getAccessLevels().stream()
-                .filter(accessLevel -> accessLevel instanceof Owner)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
-        return owner;
     }
     @Override
     public void editSelfPersonalData(String firstName, String surname) throws NoResultException {
