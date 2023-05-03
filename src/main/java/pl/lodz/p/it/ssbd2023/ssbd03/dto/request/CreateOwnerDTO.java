@@ -18,6 +18,7 @@ public class CreateOwnerDTO implements Serializable {
     @NotNull
     @Size(max = 32, message = "Max length for surname is 32")
     private String surname;
+
     @NotNull
     @Size(min = 6, max = 16,
             message = "Max length for username is between 6 - 16 ")
