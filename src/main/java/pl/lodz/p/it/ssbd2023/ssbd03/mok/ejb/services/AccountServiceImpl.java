@@ -5,7 +5,6 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.SecurityContext;
-import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
@@ -18,14 +17,12 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccessLevelMappingFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.OwnerFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.Optional;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -42,12 +39,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Inject
     private AccessLevelMappingFacade accessLevelMappingFacade;
-
-    @Inject
-    private IdentityStoreHandler identityStoreHandler;
-
-    @Inject
-    private AccountFacade accountFacade;
 
     @Inject
     private SecurityContext securityContext;
