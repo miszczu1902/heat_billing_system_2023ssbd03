@@ -23,7 +23,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.converters.AccountConverter;
 import java.security.Principal;
@@ -157,11 +156,12 @@ public class AccountEndpoint {
         }
     }
 
-    //path do zmiany, na ścieżkę po zalogowaniu użytkownika
     @GET
     @Path("self")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public AccountDTO getMyAccount(Principal principal) {
-        return AccountConverter.createOwnerDTOEntity((Owner) principal, accountService.getPersonalData((Owner) principal));
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed(Roles.OWNER)
+    public OwnerDTO getMyAccount() {
+        Owner owner = accountService.getOwner(accountService.getOwner().getId());
+        return AccountConverter.createOwnerDTOEntity(owner, accountService.getPersonalData(owner));
     }
 }

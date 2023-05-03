@@ -44,6 +44,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Inject
     private AccountFacade accountFacade;
+
     @Inject
     private PersonalDataFacade personalDataFacade;
 
