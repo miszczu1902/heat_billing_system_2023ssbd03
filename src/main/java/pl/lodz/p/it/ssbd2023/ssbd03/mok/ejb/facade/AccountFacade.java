@@ -14,11 +14,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors({TrackerInterceptor.class})
@@ -47,12 +42,6 @@ public class AccountFacade extends AbstractFacade<Account> {
 
             throw AppException.createDatabaseException();
         }
-    }
-
-    public List<Account> findAllUnconfirmedAccounts() {
-        TypedQuery<Account> query = em.createNamedQuery("Account.findAllUnconfirmedAccounts", Account.class);
-        query.setParameter("date", LocalDateTime.now().minusDays(1));
-        return Optional.of(query.getResultList()).orElse(Collections.emptyList());
     }
 
     public Account findByUsername(String username) {

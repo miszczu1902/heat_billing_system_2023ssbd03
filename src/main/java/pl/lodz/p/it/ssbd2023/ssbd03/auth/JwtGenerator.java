@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.ejb.Stateless;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 
 import java.util.Date;
@@ -11,6 +12,7 @@ import java.util.List;
 
 import static java.lang.Long.parseLong;
 
+@Stateless
 public class JwtGenerator {
     private long timeout = parseLong(LoadConfig.loadPropertyFromConfig("timeout"));
     private String secret = LoadConfig.loadPropertyFromConfig("secret");

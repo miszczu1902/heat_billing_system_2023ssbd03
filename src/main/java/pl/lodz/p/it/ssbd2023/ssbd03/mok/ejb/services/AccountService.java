@@ -9,6 +9,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 public interface AccountService {
     void createOwner(PersonalData personalData);
 
+    void confirmAccountFromActivationLink(String confirmationToken);
+
     String authenticate(LoginDTO loginDTO);
 
     void changePhoneNumber(ChangePhoneNumberDTO changePhoneNumberDTO);

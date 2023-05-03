@@ -51,7 +51,7 @@ INSERT INTO personal_data (id, first_name, surname, version) VALUES (0, 'John', 
 
 INSERT INTO login_data (id, last_valid_login_date, last_valid_logic_address, last_invalid_login_date, last_invalid_logic_address, invalid_login_counter, version) VALUES (0, NOW() - INTERVAL '1 day', '192.168.0.1', NOW() - INTERVAL '3 days', '192.168.0.2', 2, 1), (-1, NOW() - INTERVAL '5 days', '10.0.0.1', NOW() - INTERVAL '8 days', '10.0.0.2', 2, 1), (-2, NOW() - INTERVAL '2 days', '192.168.1.1', NOW() - INTERVAL '4 days', '192.168.1.2', 0, 1);
 
-INSERT INTO access_level_mapping (id, access_level, account_id, version) VALUES (0, 'admin', 0, 1), (-1, 'manager', -1, 1), (-2, 'owner', -2, 1);
+INSERT INTO access_level_mapping (id, access_level, account_id, version) VALUES (0, 'ADMIN', 0, 1), (-1, 'MANAGER', -1, 1), (-2, 'OWNER', -2, 1);
 
 INSERT INTO admin (id) VALUES (0);
 

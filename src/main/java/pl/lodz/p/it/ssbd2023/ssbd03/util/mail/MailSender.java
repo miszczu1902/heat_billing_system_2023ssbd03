@@ -32,13 +32,13 @@ public class MailSender {
         });
     }
 
-    public void sendEmail(String to, String subject, String content) {
+    public void sendLinkToActivateAccountToEmail(String to, String subject, String content) {
         try {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(LoadConfig.loadPropertyFromConfig("mail.login")));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(subject);
-            message.setText(content);
+            message.setText(LoadConfig.loadPropertyFromConfig("activation.url") + "?" + content);
             Transport.send(message);
         } catch (MessagingException e) {
             throw AppException.createMailNotSentException();

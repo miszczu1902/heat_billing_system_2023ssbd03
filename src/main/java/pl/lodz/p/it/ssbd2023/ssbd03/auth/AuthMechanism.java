@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.auth;
 
 import io.jsonwebtoken.Claims;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.AuthenticationStatus;
 import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
@@ -13,7 +12,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import java.util.HashSet;
 import java.util.Set;
 
-@ApplicationScoped
 public class AuthMechanism implements HttpAuthenticationMechanism {
     @Inject
     private JwtGenerator generator;

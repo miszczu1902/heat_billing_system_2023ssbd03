@@ -21,8 +21,6 @@ import java.util.Objects;
         })
 @NamedQueries({
         @NamedQuery(name = "Account.findByUsername", query = "SELECT k FROM Account k WHERE k.username = :username"),
-        @NamedQuery(name = "Account.findAllUnconfirmedAccounts",
-                query = "SELECT a FROM Account a WHERE a.isActive IS FALSE AND a.registerDate <= :date")
 })
 public class Account extends AbstractEntity {
     @Id
@@ -61,11 +59,9 @@ public class Account extends AbstractEntity {
     @Column(name = "language_", nullable = false, columnDefinition = "VARCHAR DEFAULT 'PL'")
     private String language_;
 
-    @Getter
     @OneToMany(mappedBy = "account", cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private List<AccessLevelMapping> accessLevels = new ArrayList<>();
 
-    @Getter
     @OneToOne(mappedBy = "id", cascade = CascadeType.REMOVE)
     private PersonalData personalData;
 

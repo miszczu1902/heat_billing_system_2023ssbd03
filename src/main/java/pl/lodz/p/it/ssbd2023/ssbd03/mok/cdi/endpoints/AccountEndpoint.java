@@ -38,7 +38,8 @@ public class AccountEndpoint {
     @Path("/activate-from-email")
     @RolesAllowed(Roles.GUEST)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response activateAccountFromEmail(ActivateAccountFromEmailDTO activationToken) {
+    public Response activateAccountFromEmail(@NotNull @Valid ActivateAccountFromEmailDTO activationTokenDTO) {
+        accountService.confirmAccountFromActivationLink(activationTokenDTO.getActivationToken());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 

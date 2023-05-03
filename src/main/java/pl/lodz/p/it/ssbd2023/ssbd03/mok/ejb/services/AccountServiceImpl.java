@@ -9,17 +9,16 @@ import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
+import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountConfirmationTokenFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.OwnerFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
@@ -44,7 +43,13 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     private AccountFacade accountFacade;
 
     @Inject
+    private AccountConfirmationTokenFacade accountConfirmationTokenFacade;
+
+    @Inject
     private MailSender mailSender;
+
+    @Inject
+    private ConfirmationTokenGenerator confirmationTokenGenerator;
 
     @Inject
     private JwtGenerator jwtGenerator;
@@ -65,7 +70,23 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         accountFacade.create(account);
         personalDataFacade.create(personalData);
 
-        mailSender.sendEmail(account.getEmail(), "Test", "Test");
+        AccountConfirmationToken accountConfirmationToken = new AccountConfirmationToken(
+                confirmationTokenGenerator.createAccountConfirmationToken(), account);
+        accountConfirmationTokenFacade.create(accountConfirmationToken);
+
+        mailSender.sendLinkToActivateAccountToEmail(account.getEmail(), "Activate account", accountConfirmationToken.getTokenValue());
+    }
+
+    @Override
+    @RolesAllowed(Roles.GUEST)
+    public void confirmAccountFromActivationLink(String confirmationToken) {
+        AccountConfirmationToken accountConfirmationToken = accountConfirmationTokenFacade.getActivationTokenByTokenValue(confirmationToken);
+
+        Account accountToActivate = accountConfirmationToken.getAccount();
+        accountToActivate.setIsActive(true);
+        accountFacade.edit(accountToActivate);
+
+        accountConfirmationTokenFacade.remove(accountConfirmationToken);
     }
 
     @Override
