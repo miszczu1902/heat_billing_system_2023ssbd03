@@ -15,7 +15,9 @@ public interface AccountService {
 
     void changePhoneNumber(ChangePhoneNumberDTO changePhoneNumberDTO);
 
-    Account getAccount(Long id);
+    Owner getOwner();
+
+    Owner getOwner(Long id);
 
     PersonalData getPersonalData(Owner owner);
 

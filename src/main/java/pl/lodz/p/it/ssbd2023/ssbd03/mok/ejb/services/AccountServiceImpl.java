@@ -33,6 +33,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Inject
     private AccountFacade accountFacade;
+
     @Inject
     private PersonalDataFacade personalDataFacade;
 
@@ -54,6 +55,10 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     public void createOwner(PersonalData personalData) {
         Account account = personalData.getId();
+
+//        if (!accountFacade.findByLoginOrEmailOrPesel(account.getUsername(), account.getEmail()).isEmpty()) {
+//            throw new EntityExistsException();
+//        }
 
         account.setPassword(BcryptHashGenerator.generateHash(account.getPassword()));
         account.setRegisterDate(LocalDateTime.now());
@@ -105,16 +110,25 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     public PersonalData getPersonalData(Owner owner) {
-        Optional<PersonalData> optionalPersonalData = personalDataFacade.find(owner.getId());
-        if (optionalPersonalData.isPresent()) return optionalPersonalData.get();
-        else throw new IllegalArgumentException("Konto nie odnalezione");
+        return personalDataFacade.find(owner.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Dane osobowe nie odnalezione"));
     }
 
     @Override
-    public Account getAccount(Long id) {
-        Optional<Account> optAccount = accountFacade.find(id);
-        if (optAccount.isPresent()) return optAccount.get();
-        else throw new IllegalArgumentException("Konto nie odnalezione");
+    public Owner getOwner(Long id) {
+        return ownerFacade.find(id)
+                .orElseThrow(() -> new IllegalArgumentException("Dane osobowe nie odnalezione"));
+    }
+
+    @Override
+    public Owner getOwner() {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Account account = accountFacade.findByLogin(username);
+        Owner owner = (Owner) account.getAccessLevels().stream()
+                .filter(accessLevel -> accessLevel instanceof Owner)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
+        return owner;
     }
 
     @Override
@@ -134,5 +148,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         account.setPassword(newPasswordHash);
         accountFacade.edit(account);
     }
+
 
 }

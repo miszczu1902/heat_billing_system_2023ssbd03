@@ -108,8 +108,10 @@ public class AccountEndpoint {
     //path do zmiany, na ścieżkę po zalogowaniu użytkownika
     @GET
     @Path("self")
-    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public AccountDTO getMyAccount(Principal principal) {
-        return AccountConverter.createOwnerDTOEntity((Owner) principal, accountService.getPersonalData((Owner) principal));
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed(Roles.OWNER)
+    public OwnerDTO getMyAccount() {
+        Owner owner = accountService.getOwner(accountService.getOwner().getId());
+        return AccountConverter.createOwnerDTOEntity(owner, accountService.getPersonalData(owner));
     }
 }
