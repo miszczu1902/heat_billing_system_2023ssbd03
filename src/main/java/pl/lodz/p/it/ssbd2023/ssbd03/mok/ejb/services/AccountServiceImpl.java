@@ -14,6 +14,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccessLevelMappingFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.OwnerFacade;
@@ -95,6 +96,24 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         } else {
             throw new IllegalArgumentException("The given number is taken by your account.");
         }
+    }
+
+    @Override
+    public void changePassword(String oldPassword, String newPassword, String newRepeatedPassword) throws AccountPasswordException {
+        if (oldPassword.equals(newPassword)) {
+            throw new AccountPasswordException("Old password and new password are the same.");
+        }
+        if (!newPassword.equals(newRepeatedPassword)) {
+            throw new AccountPasswordException("New password and new repeated password are not the same.");
+        }
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Account account = accountFacade.findByLogin(username);
+        if (!BcryptHashGenerator.generateHash(oldPassword).equals(account.getPassword())) {
+            throw new AccountPasswordException("Old password is incorrect");
+        }
+        final String newPasswordHash = BcryptHashGenerator.generateHash(newPassword);
+        account.setPassword(newPasswordHash);
+        accountFacade.edit(account);
     }
 
 }
