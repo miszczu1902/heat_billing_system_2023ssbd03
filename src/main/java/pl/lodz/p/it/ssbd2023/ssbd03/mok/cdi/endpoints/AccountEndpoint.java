@@ -6,13 +6,11 @@ import jakarta.inject.Inject;
 import jakarta.persistence.EntityExistsException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ErrorResponseDTO;
@@ -67,5 +65,18 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.ADMIN)
     public Response getTest() {
         return Response.ok().entity("test").build();
+    }
+
+    @PATCH
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/self/phone-number")
+    @RolesAllowed(Roles.OWNER)
+    public Response changePhoneNumber(@Valid ChangePhoneNumberDTO changePhoneNumberDTO) {
+        try {
+            accountService.changePhoneNumber(changePhoneNumberDTO);
+            return Response.ok("Phone number changed").build();
+        } catch (IllegalStateException ex) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(ex).build();
+        }
     }
 }
