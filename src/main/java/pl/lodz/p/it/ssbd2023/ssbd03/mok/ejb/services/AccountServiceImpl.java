@@ -1,13 +1,9 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services;
 
-import jakarta.annotation.security.RolesAllowed;
-import jakarta.ejb.SessionSynchronization;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
-import jakarta.interceptor.Interceptors;
-import jakarta.persistence.NoResultException;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.credential.Password;
 import jakarta.security.enterprise.credential.UsernamePasswordCredential;
@@ -132,6 +128,27 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    public PersonalData getPersonalData(Owner owner) {
+        return personalDataFacade.find(owner.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Dane osobowe nie odnalezione"));
+    }
+
+    @Override
+    public Owner getOwner(Long id) {
+        return ownerFacade.find(id)
+                .orElseThrow(() -> new IllegalArgumentException("Dane osobowe nie odnalezione"));
+    }
+
+    @Override
+    public Owner getOwner() {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Account account = accountFacade.findByLogin(username);
+        Owner owner = (Owner) account.getAccessLevels().stream()
+                .filter(accessLevel -> accessLevel instanceof Owner)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
+        return owner;
+    }
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
     public void changePassword(String oldPassword, String newPassword, String newRepeatedPassword) throws AccountPasswordException {
         if (oldPassword.equals(newPassword)) {
@@ -148,8 +165,17 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         final String newPasswordHash = bcryptHashGenerator.generate(newPassword.toCharArray());
         account.setPassword(newPasswordHash);
         accountFacade.edit(account);
-    }
 
+    @Override
+    public Owner getOwner() {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Account account = accountFacade.findByLogin(username);
+        Owner owner = (Owner) account.getAccessLevels().stream()
+                .filter(accessLevel -> accessLevel instanceof Owner)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
+        return owner;
+    }
     @Override
     public void editSelfPersonalData(String firstName, String surname) throws NoResultException {
         try {
