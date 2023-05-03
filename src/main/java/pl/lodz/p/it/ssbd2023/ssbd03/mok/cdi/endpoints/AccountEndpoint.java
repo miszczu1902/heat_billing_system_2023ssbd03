@@ -9,10 +9,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ErrorResponseDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.converters.AccountConverter;
 
