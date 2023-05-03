@@ -12,4 +12,6 @@ public interface AccountService {
     String authenticate(LoginDTO loginDTO);
 
     void changePhoneNumber(ChangePhoneNumberDTO changePhoneNumberDTO);
+
+    void changePassword(String oldPassword, String newPassword, String newReapetedPassowrd);
 }
