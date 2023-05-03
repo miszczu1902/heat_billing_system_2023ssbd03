@@ -6,9 +6,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 
 @ApplicationException(rollback = true)
 public class PasswordsNotSameException extends AppException {
-    private static String MESSAGE = "Passwords are not the same"; //TODO tu trzeba zrobić resource bundle
-
-    public PasswordsNotSameException(Response.Status status, Throwable cause) {
-        super(MESSAGE, status, cause);
+    public PasswordsNotSameException(String message, Response.Status status, Throwable cause) {
+        super(message, status, cause);
     }
 }

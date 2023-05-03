@@ -4,15 +4,17 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
+import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
+@Interceptors({TrackerInterceptor.class})
 public class PersonalDataFacade extends AbstractFacade<PersonalData> {
     @PersistenceContext(unitName = "ssbd03mokPU")
     private EntityManager em;
@@ -29,10 +31,6 @@ public class PersonalDataFacade extends AbstractFacade<PersonalData> {
     @Override
     @RolesAllowed(Roles.GUEST)
     public void create(PersonalData entity) {
-        try {
-            super.create(entity);
-        } catch (RuntimeException e) {
-            throw AppException.createAccountExistsException(e.getCause());
-        }
+        super.create(entity);
     }
 }

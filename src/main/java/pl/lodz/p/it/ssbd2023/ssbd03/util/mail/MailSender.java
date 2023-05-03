@@ -12,8 +12,8 @@ import java.util.Properties;
 
 @Stateless
 public class MailSender {
-    Properties properties = new Properties();
-    Session session;
+    private Properties properties = new Properties();
+    private Session session;
 
     @PostConstruct
     public void init() {
@@ -35,7 +35,7 @@ public class MailSender {
     public void sendEmail(String to, String subject, String content) {
         try {
             MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("mail.login"));
+            message.setFrom(new InternetAddress(LoadConfig.loadPropertyFromConfig("mail.login")));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(subject);
             message.setText(content);

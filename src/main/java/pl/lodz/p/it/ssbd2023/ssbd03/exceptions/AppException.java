@@ -4,8 +4,11 @@ import jakarta.ejb.ApplicationException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import lombok.Getter;
+import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.PasswordsNotSameException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.DatabaseException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
 
 @ApplicationException(rollback = true)
 public class AppException extends WebApplicationException {
@@ -16,6 +19,11 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_TRANSACTION_ROLLEDBACK = "ERROR_TRANSACTION_ROLLEDBACK";
     protected final static String ERROR_ACCOUNT_NOT_REGISTERED = "ERROR_ACCOUNT_NOT_REGISTERED";
     protected final static String ERROR_PASSWORDS_NOT_SAME = "ERROR_PASSWORDS_NOT_SAME";
+    protected final static String ERROR_EMAIL_NOT_UNIQUE = "Email not unique"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_USERNAME_NOT_UNIQUE = "Username not unique"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_PHONE_NUMBER_NOT_UNIQUE = "Phone number not unique"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_ACCOUNT_EXISTS = "Account already exists"; //TODO - tu trzeba zrobić resource bundle
+
 
     @Getter
     private Throwable cause;
@@ -63,7 +71,7 @@ public class AppException extends WebApplicationException {
     }
 
     public static PasswordsNotSameException createPasswordsNotSameException() {
-        return new PasswordsNotSameException(Response.Status.CONFLICT, null);
+        return new PasswordsNotSameException(ERROR_PASSWORDS_NOT_SAME, Response.Status.CONFLICT, null);
     }
 
     public static MailNotSentException createMailNotSentException() {
@@ -71,7 +79,17 @@ public class AppException extends WebApplicationException {
     }
 
     public static AccountExistsException createAccountExistsException(Throwable cause) {
-        return new AccountExistsException(Response.Status.CONFLICT, cause);
+        if (cause instanceof ConstraintViolationException) {
+            if (((ConstraintViolationException) cause).getConstraintName().contains("unique_email")) {
+                return new AccountExistsException(AppException.ERROR_EMAIL_NOT_UNIQUE, Response.Status.CONFLICT, cause);
+            } else if (((ConstraintViolationException) cause).getConstraintName().contains("unique_username")) {
+                return new AccountExistsException(AppException.ERROR_USERNAME_NOT_UNIQUE, Response.Status.CONFLICT, cause);
+            } else {
+                return new AccountExistsException(AppException.ERROR_PHONE_NUMBER_NOT_UNIQUE, Response.Status.CONFLICT, cause);
+            }
+        } else {
+            return new AccountExistsException(ERROR_ACCOUNT_EXISTS, Response.Status.CONFLICT, cause);
+        }
     }
 
     public static OptimisticLockAppException createOptimisticLockAppException() {

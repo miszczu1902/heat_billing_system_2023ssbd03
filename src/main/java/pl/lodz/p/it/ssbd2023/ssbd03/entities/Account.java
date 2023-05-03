@@ -20,7 +20,7 @@ import java.util.Objects;
                 @Index(name = "unique_username", columnList = "username", unique = true)
         })
 @NamedQueries({
-        @NamedQuery(name = "Account.findByLogin", query = "SELECT k FROM Account k WHERE k.username = :login"),
+        @NamedQuery(name = "Account.findByUsername", query = "SELECT k FROM Account k WHERE k.username = :username"),
 })
 public class Account extends AbstractEntity {
     @Id
