@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class AccountServiceImpl extends AbstractService implements AccountService {
-
     @Inject
     private AccountFacade accountFacade;
 
@@ -46,10 +45,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     public void createOwner(PersonalData personalData) {
         Account account = personalData.getId();
-
-//        if (!accountFacade.findByLoginOrEmailOrPesel(account.getUsername(), account.getEmail()).isEmpty()) {
-//            throw new EntityExistsException();
-//        }
 
         account.setPassword(BcryptHashGenerator.generateHash(account.getPassword()));
         account.setRegisterDate(LocalDateTime.now());
@@ -121,24 +116,4 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
         return owner;
     }
-
-    @Override
-    public void changePassword(String oldPassword, String newPassword, String newRepeatedPassword) throws AccountPasswordException {
-        if (oldPassword.equals(newPassword)) {
-            throw new AccountPasswordException("Old password and new password are the same.");
-        }
-        if (!newPassword.equals(newRepeatedPassword)) {
-            throw new AccountPasswordException("New password and new repeated password are not the same.");
-        }
-        final String username = securityContext.getCallerPrincipal().getName();
-        final Account account = accountFacade.findByLogin(username);
-        if (!BcryptHashGenerator.generateHash(oldPassword).equals(account.getPassword())) {
-            throw new AccountPasswordException("Old password is incorrect");
-        }
-        final String newPasswordHash = BcryptHashGenerator.generateHash(newPassword);
-        account.setPassword(newPasswordHash);
-        accountFacade.edit(account);
-    }
-
-
 }
