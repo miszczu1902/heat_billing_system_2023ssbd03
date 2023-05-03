@@ -12,7 +12,6 @@ public class ExceptionValidationJsonMapper implements ExceptionMapper<Validation
     @Override
     public Response toResponse(ValidationException exception) {
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
-                Response.Status.BAD_REQUEST.toString().toUpperCase().replace(" ", "_"),
                 Response.Status.BAD_REQUEST.getStatusCode(),
                 exception.getMessage());
 

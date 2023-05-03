@@ -20,30 +20,26 @@ public class ExceptionJsonMapper implements ExceptionMapper<Throwable> {
 
     @Override
     public Response toResponse(Throwable exception) {
-        AppException exceptionToJson = getAppExceptionToThrow(exception);
-
-        int statusCode = exceptionToJson.getResponse().getStatus();
-        String message = exceptionToJson.getMessage();
-        Response.Status status = Response.Status.fromStatusCode(statusCode);
-        String title = status.toString().toUpperCase().replace(" ", "_");
-
-        return Response.status(status)
-                .entity(new ErrorResponseDTO(title, statusCode, message))
-                .type(MediaType.APPLICATION_JSON).build();
-    }
-
-    private AppException getAppExceptionToThrow(Throwable exception) {
         try {
-            throw exception;
-        } catch (ForbiddenException | EJBAccessException | AccessLocalException fe) {
-            return AppException.createAccessDeniedException(fe.getCause());
-        } catch (AppException ae) {
-            return ae;
-        } catch (WebApplicationException wae) {
-            return AppException.createAppException(wae.getMessage(), wae.getCause());
-        } catch (Throwable throwable) {
-            logger.log(Level.SEVERE, "ERROR_UNKNOWN", throwable);
-            return AppException.createAppException(throwable.getCause());
+            try {
+                throw exception;
+            } catch (ForbiddenException | EJBAccessException | AccessLocalException fe) {
+                throw AppException.createAccessDeniedException(fe.getCause());
+            } catch (AppException ae) {
+                throw ae;
+            } catch (WebApplicationException wae) {
+                throw AppException.createAppException(wae.getMessage(), wae.getCause());
+            } catch (Throwable throwable) {
+                logger.log(Level.SEVERE, "ERROR_UNKNOWN", throwable);
+                throw AppException.createAppException(throwable.getCause());
+            }
+        } catch (AppException exceptionToJson) {
+            int statusCode = exceptionToJson.getResponse().getStatus();
+            Response.Status status = Response.Status.fromStatusCode(statusCode);
+
+            return Response.status(status)
+                    .entity(new ErrorResponseDTO(statusCode, exceptionToJson.getMessage()))
+                    .type(MediaType.APPLICATION_JSON).build();
         }
     }
 }
