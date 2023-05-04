@@ -3,11 +3,13 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services;
 import jakarta.ejb.Local;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 
 @Local
 public interface AccountService {
-    void createOwner(PersonalData personalData);
+    void createOwner(Account account);
+
+    void confirmAccountFromActivationLink(String confirmationToken);
 
     String authenticate(LoginDTO loginDTO);
 

@@ -1,23 +1,30 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services;
 
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.SessionSynchronization;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptors;
 import jakarta.persistence.NoResultException;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.ws.rs.ForbiddenException;
+import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
+import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccessLevelMappingFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountConfirmationTokenFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.OwnerFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.mail.MailSender;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
 
 import java.time.LocalDateTime;
@@ -26,7 +33,8 @@ import java.util.stream.Collectors;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-public class AccountServiceImpl extends AbstractService implements AccountService {
+@Interceptors({TrackerInterceptor.class})
+public class AccountServiceImpl extends AbstractService implements AccountService, SessionSynchronization {
     @Inject
     private PersonalDataFacade personalDataFacade;
 
@@ -34,34 +42,57 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     private OwnerFacade ownerFacade;
 
     @Inject
-    private AccessLevelMappingFacade accessLevelMappingFacade;
+    private AccountFacade accountFacade;
+
+    @Inject
+    private AccountConfirmationTokenFacade accountConfirmationTokenFacade;
+
+    @Inject
+    private MailSender mailSender;
+
+    @Inject
+    private ConfirmationTokenGenerator confirmationTokenGenerator;
+
+    @Inject
+    private JwtGenerator jwtGenerator;
 
     @Inject
     private IdentityStoreHandler identityStoreHandler;
 
     @Inject
-    private AccountFacade accountFacade;
-
-    @Inject
     private SecurityContext securityContext;
 
     @Override
-    public void createOwner(PersonalData personalData) {
-        Account account = personalData.getId();
-
+    @RolesAllowed(Roles.GUEST)
+    public void createOwner(Account account) {
         account.setPassword(BcryptHashGenerator.generateHash(account.getPassword()));
         account.setRegisterDate(LocalDateTime.now());
 
-        accessLevelMappingFacade.create(account.getAccessLevels().get(0));
-        personalDataFacade.create(personalData);
+        accountFacade.create(account);
+
+        AccountConfirmationToken accountConfirmationToken = new AccountConfirmationToken(
+                confirmationTokenGenerator.createAccountConfirmationToken(), account);
+        accountConfirmationTokenFacade.create(accountConfirmationToken);
+
+        mailSender.sendLinkToActivateAccountToEmail(account.getEmail(), "Activate account", accountConfirmationToken.getTokenValue());
     }
 
-    @Inject
-    private JwtGenerator jwtGenerator;
+    @Override
+    @RolesAllowed(Roles.GUEST)
+    public void confirmAccountFromActivationLink(String confirmationToken) {
+        AccountConfirmationToken accountConfirmationToken = accountConfirmationTokenFacade.getActivationTokenByTokenValue(confirmationToken);
+
+        Account accountToActivate = accountConfirmationToken.getAccount();
+        accountToActivate.setIsActive(true);
+        accountFacade.edit(accountToActivate);
+
+        accountConfirmationTokenFacade.remove(accountConfirmationToken);
+    }
 
     @Override
+    @RolesAllowed(Roles.GUEST)
     public String authenticate(LoginDTO loginDTO) {
-        Account account = accountFacade.findByLogin(loginDTO.getUsername());
+        Account account = accountFacade.findByUsername(loginDTO.getUsername());
 
         if (BcryptHashGenerator.generateHash(loginDTO.getPassword()).equals(account.getPassword())) {
 //            UsernamePasswordCredential usernamePasswordCredential = new UsernamePasswordCredential(loginDTO.getUsername(), new Password(loginDTO.getPassword()));
@@ -77,9 +108,10 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed(Roles.OWNER)
     public void changePhoneNumber(ChangePhoneNumberDTO changePhoneNumberDTO) {
         final String username = securityContext.getCallerPrincipal().getName();
-        final Account account = accountFacade.findByLogin(username);
+        final Account account = accountFacade.findByUsername(username);
         Owner owner = (Owner) account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Owner)
                 .findFirst()
@@ -98,6 +130,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
     public void changePassword(String oldPassword, String newPassword, String newRepeatedPassword) throws AccountPasswordException {
         if (oldPassword.equals(newPassword)) {
             throw new AccountPasswordException("Old password and new password are the same.");
@@ -106,7 +139,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             throw new AccountPasswordException("New password and new repeated password are not the same.");
         }
         final String username = securityContext.getCallerPrincipal().getName();
-        final Account account = accountFacade.findByLogin(username);
+        final Account account = accountFacade.findByUsername(username);
         if (!BcryptHashGenerator.generateHash(oldPassword).equals(account.getPassword())) {
             throw new AccountPasswordException("Old password is incorrect");
         }

@@ -3,7 +3,6 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mok.cdi.endpoints;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.NoResultException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -11,53 +10,43 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePasswordDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.PersonalDataDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ErrorResponseDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.converters.AccountConverter;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AccountMapper;
 
-@Path("accounts")
+@Path("/accounts")
 @RequestScoped
 public class AccountEndpoint {
     @Inject
     private AccountService accountService;
 
     @POST
-    @Path("register")
+    @Path("/register")
+    @RolesAllowed(Roles.GUEST)
     @Consumes(MediaType.APPLICATION_JSON)
     public Response registerOwner(@NotNull @Valid CreateOwnerDTO createOwnerDTO) {
-        try {
-            if (!createOwnerDTO.getPassword().equals(createOwnerDTO.getRepeatedPassword())) {
-                ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
-                        "Password does not match",
-                        Response.Status.BAD_REQUEST.getStatusCode(),
-                        "Passwords not same");
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(errorResponseDTO)
-                        .build();
-            }
-
-            accountService.createOwner(AccountConverter.createOwnerDTOToPersonalData(createOwnerDTO));
-            return Response.status(Response.Status.CREATED).build();
-        } catch (EntityExistsException e) {
-            ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
-                    "Owner already exist",
-                    Response.Status.CONFLICT.getStatusCode(),
-                    "Owner with same username/email exist");
-            return Response.status(Response.Status.CONFLICT)
-                    .entity(errorResponseDTO)
-                    .build();
+        if (!createOwnerDTO.getPassword().equals(createOwnerDTO.getRepeatedPassword())) {
+            throw AppException.createPasswordsNotSameException();
         }
+        accountService.createOwner(AccountMapper.createOwnerDTOToAccount(createOwnerDTO));
+        return Response.status(Response.Status.CREATED).build();
+    }
+
+    @POST
+    @Path("/activate-from-email")
+    @RolesAllowed(Roles.GUEST)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response activateAccountFromEmail(@NotNull @Valid ActivateAccountFromEmailDTO activationTokenDTO) {
+        accountService.confirmAccountFromActivationLink(activationTokenDTO.getActivationToken());
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("login")
+    @Path("/login")
     @RolesAllowed(Roles.GUEST)
     public Response authenticate(@Valid LoginDTO loginDTO) {
         String token = accountService.authenticate(loginDTO);
@@ -65,7 +54,7 @@ public class AccountEndpoint {
     }
 
     @GET
-    @Path("test")
+    @Path("/test")
     @RolesAllowed(Roles.ADMIN)
     public Response getTest() {
         return Response.ok().entity("test").build();
@@ -95,7 +84,7 @@ public class AccountEndpoint {
             return Response.noContent().build();
         } catch (AccountPasswordException e) {
             final ErrorResponseDTO errorResponseDTO =
-                    new ErrorResponseDTO(e.getMessage(),
+                    new ErrorResponseDTO(
                             Response.Status.BAD_REQUEST.getStatusCode(),
                             e.getMessage());
             return Response.status(Response.Status.BAD_REQUEST).entity(errorResponseDTO).build();
