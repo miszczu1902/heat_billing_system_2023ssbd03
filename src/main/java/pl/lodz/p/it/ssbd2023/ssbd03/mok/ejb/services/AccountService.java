@@ -15,4 +15,6 @@ public interface AccountService {
     void changePhoneNumber(ChangePhoneNumberDTO changePhoneNumberDTO);
 
     void editPersonalData(PersonalDataDTO personalDataDTO);
+
+    void changePassword(String oldPassword, String newPassword, String newReapetedPassowrd);
 }
