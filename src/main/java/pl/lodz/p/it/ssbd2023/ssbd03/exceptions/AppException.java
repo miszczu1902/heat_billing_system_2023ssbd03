@@ -6,6 +6,7 @@ import jakarta.ws.rs.core.Response;
 import lombok.Getter;
 import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountExistsException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountNotExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.PasswordsNotSameException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.DatabaseException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
@@ -25,6 +26,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_USERNAME_NOT_UNIQUE_MESSAGE = "Username not unique"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_PHONE_NUMBER_NOT_UNIQUE_MESSAGE = "Phone number not unique"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_EXISTS_MESSAGE = "Account already exists"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_ACCOUNT_NOT_EXISTS_MESSAGE = "Account with provided data not exists"; //TODO - tu trzeba zrobić resource bundle
 
     @Getter
     private Throwable cause;
@@ -95,6 +97,10 @@ public class AppException extends WebApplicationException {
         } else {
             return new AccountExistsException(ERROR_ACCOUNT_EXISTS_MESSAGE, Response.Status.CONFLICT, cause);
         }
+    }
+
+    public static AccountNotExistsException createAccountNotExistsException(Throwable cause) {
+        return new AccountNotExistsException(AppException.ERROR_ACCOUNT_NOT_EXISTS_MESSAGE, Response.Status.NOT_FOUND, cause);
     }
 
     public static OptimisticLockAppException createOptimisticLockAppException() {
