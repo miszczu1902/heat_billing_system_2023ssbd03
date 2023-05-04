@@ -22,7 +22,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.OwnerFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.converters.AccountConverter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -124,8 +123,10 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         try {
             final String username = securityContext.getCallerPrincipal().getName();
             PersonalData personalData = personalDataFacade.findByLogin(username);
+
             personalData.setFirstName(personalDataDTO.getFirstName());
             personalData.setSurname(personalDataDTO.getSurname());
+
             personalDataFacade.edit(personalData);
         } catch (NoResultException e) {
             throw new NoResultException(e.getMessage());
