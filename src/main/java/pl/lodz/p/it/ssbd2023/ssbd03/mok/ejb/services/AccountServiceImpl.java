@@ -168,12 +168,12 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
-    public void blockUserAccount(String username) throws NoResultException {
+    public void disableUserAccount(String username) throws NoResultException {
         editUserEnableFlag(username, false);
     }
 
     @Override
-    public void unblockUserAccount(String username) throws NoResultException {
+    public void enableUserAccount(String username) throws NoResultException {
         editUserEnableFlag(username, true);
     }
 

@@ -107,11 +107,11 @@ public class AccountEndpoint {
 
     @PATCH
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/{username}/enable")
+    @Path("/{username}/disable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public Response blockUserAccount(@PathParam("username") String username) {
+    public Response disableUserAccount(@PathParam("username") String username) {
         try {
-            accountService.blockUserAccount(username);
+            accountService.disableUserAccount(username);
             return Response.status(Response.Status.OK).build();
         } catch (NoResultException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -120,11 +120,11 @@ public class AccountEndpoint {
 
     @PATCH
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/{username}/disable")
+    @Path("/{username}/enable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public Response unblockUserAccount(@PathParam("username") String username) {
+    public Response enableUserAccount(@PathParam("username") String username) {
         try {
-            accountService.unblockUserAccount(username);
+            accountService.enableUserAccount(username);
             return Response.status(Response.Status.OK).build();
         } catch (NoResultException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
