@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Getter
-@Builder
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor

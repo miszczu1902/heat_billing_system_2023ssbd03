@@ -108,7 +108,7 @@ public class AccountEndpoint {
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
     public Response editPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO){
         try {
-        accountService.editPersonalData(personalDataDTO);
+        accountService.editPersonalData(personalDataDTO.getFirstName(), personalDataDTO.getSurname());
         return Response.status(Response.Status.OK).build();
         }
         catch (NoResultException e) {

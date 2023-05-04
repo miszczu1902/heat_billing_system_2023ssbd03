@@ -119,13 +119,13 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
-    public void editPersonalData(PersonalDataDTO personalDataDTO) throws NoResultException {
+    public void editPersonalData(String firstName, String surname) throws NoResultException {
         try {
             final String username = securityContext.getCallerPrincipal().getName();
             PersonalData personalData = personalDataFacade.findByLogin(username);
 
-            personalData.setFirstName(personalDataDTO.getFirstName());
-            personalData.setSurname(personalDataDTO.getSurname());
+            personalData.setFirstName(firstName);
+            personalData.setSurname(surname);
 
             personalDataFacade.edit(personalData);
         } catch (NoResultException e) {
