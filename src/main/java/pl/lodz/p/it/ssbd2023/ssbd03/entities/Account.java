@@ -20,7 +20,7 @@ import java.util.Objects;
                 @Index(name = "unique_username", columnList = "username", unique = true)
         })
 @NamedQueries({
-        @NamedQuery(name = "Account.findByLogin", query = "SELECT k FROM Account k WHERE k.username = :login")
+        @NamedQuery(name = "Account.findByUsername", query = "SELECT k FROM Account k WHERE k.username = :username"),
 })
 public class Account extends AbstractEntity {
     @Id
@@ -59,9 +59,15 @@ public class Account extends AbstractEntity {
     @Column(name = "language_", nullable = false, columnDefinition = "VARCHAR DEFAULT 'PL'")
     private String language_;
 
-    @Getter
-    @OneToMany(mappedBy = "account", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "account", cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private List<AccessLevelMapping> accessLevels = new ArrayList<>();
+
+    @Setter
+    @OneToOne(mappedBy = "id", cascade = {CascadeType.ALL, CascadeType.REMOVE})
+    private PersonalData personalData;
+
+    @OneToOne(mappedBy = "id", cascade = CascadeType.ALL)
+    private LoginData loginData;
 
     public Account(String email, String username, String password, Boolean isEnable, Boolean isActive, String language_) {
         this.email = email;
@@ -70,6 +76,7 @@ public class Account extends AbstractEntity {
         this.isEnable = isEnable;
         this.isActive = isActive;
         this.language_ = language_;
+        this.loginData = new LoginData(this);
     }
 
     @Override

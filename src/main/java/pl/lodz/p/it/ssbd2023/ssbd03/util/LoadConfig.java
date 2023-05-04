@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class LoadConfig {
-    public static String loadSaltFromConfig(String variable) {
+    public static String loadPropertyFromConfig(String variable) {
         try (InputStream input = BcryptHashGenerator.class.getClassLoader()
                 .getResourceAsStream("config.properties")) {
             Properties properties = new Properties();

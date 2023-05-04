@@ -1,25 +1,24 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.auth;
 
 import io.jsonwebtoken.Claims;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.AuthenticationStatus;
 import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticationMechanism;
 import jakarta.security.enterprise.authentication.mechanism.http.HttpMessageContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@ApplicationScoped
 public class AuthMechanism implements HttpAuthenticationMechanism {
     @Inject
     private JwtGenerator generator;
 
-    private final String bearer = LoadConfig.loadSaltFromConfig("bearer");
-    private final String authorization = LoadConfig.loadSaltFromConfig("authorization");
+    private final String bearer = LoadConfig.loadPropertyFromConfig("bearer");
+    private final String authorization = LoadConfig.loadPropertyFromConfig("authorization");
 
     @Override
     public AuthenticationStatus validateRequest(HttpServletRequest httpServletRequest,
@@ -43,7 +42,7 @@ public class AuthMechanism implements HttpAuthenticationMechanism {
                 }
             }
         }
-        roles.add("GUEST");
+        roles.add(Roles.GUEST);
         return httpMessageContext.notifyContainerAboutLogin("guest", roles);
     }
 }

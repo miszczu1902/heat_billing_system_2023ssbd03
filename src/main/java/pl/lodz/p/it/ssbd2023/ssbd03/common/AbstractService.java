@@ -39,7 +39,7 @@ public abstract class AbstractService {
 
     public void afterCompletion(boolean committed) {
         lastTransactionRollback = !committed;
-        LOGGER.log(Level.INFO, "Transakcja TXid={0} zakończona w {1} poprzez {3}, tożsamość {2}",
+        LOGGER.log(Level.INFO, "Transakcja TXid={0} zakończona w {1} poprzez {3}, tożsamość: {2}",
                 new Object[]{transactionId, this.getClass().getName(), sctx.getCallerPrincipal().getName(),
                 committed ? "ZATWIERDZENIE" : "ODWOŁANIE"});
     }

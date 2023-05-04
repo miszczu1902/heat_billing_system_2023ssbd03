@@ -4,12 +4,14 @@ import jakarta.ejb.Local;
 import jakarta.persistence.NoResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
-
 
 @Local
 public interface AccountService {
-    void createOwner(PersonalData personalData);
+    void createOwner(Account account);
+
+    void confirmAccountFromActivationLink(String confirmationToken);
 
     String authenticate(LoginDTO loginDTO);
 
