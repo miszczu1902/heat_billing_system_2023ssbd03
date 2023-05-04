@@ -7,6 +7,7 @@ import jakarta.security.enterprise.authentication.mechanism.http.HttpAuthenticat
 import jakarta.security.enterprise.authentication.mechanism.http.HttpMessageContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 
 import java.util.HashSet;
@@ -16,8 +17,8 @@ public class AuthMechanism implements HttpAuthenticationMechanism {
     @Inject
     private JwtGenerator generator;
 
-    private String bearer = LoadConfig.loadPropertyFromConfig("bearer");
-    private String authorization = LoadConfig.loadPropertyFromConfig("authorization");
+    private final String bearer = LoadConfig.loadPropertyFromConfig("bearer");
+    private final String authorization = LoadConfig.loadPropertyFromConfig("authorization");
 
     @Override
     public AuthenticationStatus validateRequest(HttpServletRequest httpServletRequest,
@@ -41,7 +42,7 @@ public class AuthMechanism implements HttpAuthenticationMechanism {
                 }
             }
         }
-        roles.add("GUEST");
+        roles.add(Roles.GUEST);
         return httpMessageContext.notifyContainerAboutLogin("guest", roles);
     }
 }

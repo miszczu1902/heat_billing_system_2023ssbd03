@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.util.cleaner;
+package pl.lodz.p.it.ssbd2023.ssbd03.system;
 
 import jakarta.annotation.security.RunAs;
 import jakarta.ejb.*;
@@ -14,7 +14,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 @RunAs(Roles.ADMIN)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @Interceptors(TrackerInterceptor.class)
-public class SystemCleaner {
+public class SystemScheduler {
     @Inject
     private AccountConfirmationTokenFacade accountConfirmationTokenFacade;
 
@@ -30,5 +30,4 @@ public class SystemCleaner {
             });
         }
     }
-
 }

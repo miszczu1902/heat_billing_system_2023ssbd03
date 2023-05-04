@@ -2,8 +2,8 @@ package pl.lodz.p.it.ssbd2023.ssbd03.exceptions.mappers;
 
 import jakarta.ejb.AccessLocalException;
 import jakarta.ejb.EJBAccessException;
-import jakarta.ws.rs.ForbiddenException;
-import jakarta.ws.rs.WebApplicationException;
+import jakarta.ws.rs.ClientErrorException;
+import jakarta.ws.rs.NotAllowedException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
@@ -23,12 +23,10 @@ public class ExceptionJsonMapper implements ExceptionMapper<Throwable> {
         try {
             try {
                 throw exception;
-            } catch (ForbiddenException | EJBAccessException | AccessLocalException fe) {
+            } catch (EJBAccessException | AccessLocalException fe) {
                 throw AppException.createAccessDeniedException(fe.getCause());
             } catch (AppException ae) {
                 throw ae;
-            } catch (WebApplicationException wae) {
-                throw AppException.createAppException(wae.getMessage(), wae.getCause());
             } catch (Throwable throwable) {
                 logger.log(Level.SEVERE, "ERROR_UNKNOWN", throwable);
                 throw AppException.createAppException(throwable.getCause());

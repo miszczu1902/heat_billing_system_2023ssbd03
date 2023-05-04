@@ -19,7 +19,6 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ACCESS_DENIED = "ERROR_ACCESS_DENIED";
     protected final static String ERROR_TRANSACTION_ROLLEDBACK = "ERROR_TRANSACTION_ROLLEDBACK";
     protected final static String ERROR_ACCOUNT_NOT_REGISTERED = "ERROR_ACCOUNT_NOT_REGISTERED";
-    protected final static String ERROR_VALIDATION_FAILED = "ERROR_VALIDATION_FAILED";
 
     protected final static String ERROR_PASSWORDS_NOT_SAME_MESSAGE = "Passwords are not the same"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_EMAIL_NOT_UNIQUE_MESSAGE = "Email not unique"; //TODO - tu trzeba zrobić resource bundle
@@ -69,10 +68,6 @@ public class AppException extends WebApplicationException {
         return new AppException(Response.Status.INTERNAL_SERVER_ERROR, ERROR_TRANSACTION_ROLLEDBACK);
     }
 
-    public static AppException createValidationException(Throwable cause) {
-        return new AppException(Response.Status.BAD_REQUEST, ERROR_VALIDATION_FAILED, cause);
-    }
-
     public static DatabaseException createDatabaseException() {
         return new DatabaseException();
     }
@@ -106,5 +101,4 @@ public class AppException extends WebApplicationException {
     public static OptimisticLockAppException createOptimisticLockAppException() {
         return new OptimisticLockAppException();
     }
-
 }

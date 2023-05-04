@@ -79,7 +79,6 @@ public class Account extends AbstractEntity {
         this.loginData = new LoginData(this);
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

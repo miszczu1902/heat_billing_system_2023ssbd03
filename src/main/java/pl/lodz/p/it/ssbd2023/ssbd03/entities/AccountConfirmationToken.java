@@ -15,7 +15,8 @@ import java.util.Objects;
 @NoArgsConstructor
 @Table(name = "account_confirmation_token")
 @NamedQueries({
-        @NamedQuery(name = "AccountConfirmationToken.getActivationTokenByTokenValue", query = "SELECT t FROM AccountConfirmationToken t WHERE tokenValue = :tokenValue"),
+        @NamedQuery(name = "AccountConfirmationToken.getActivationTokenByTokenValue",
+                query = "SELECT t FROM AccountConfirmationToken t WHERE tokenValue = :tokenValue"),
         @NamedQuery(name = "AccountConfirmationToken.findAllUnconfirmedAccounts",
                 query = "SELECT t FROM AccountConfirmationToken t WHERE t.account.isActive IS FALSE AND t.account.registerDate <= :date")
 })

@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.util.mail;
+package pl.lodz.p.it.ssbd2023.ssbd03.mok.mail;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.Stateless;

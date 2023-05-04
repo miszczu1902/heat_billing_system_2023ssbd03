@@ -1,10 +1,10 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.dto.request;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
-@ToString
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ActivateAccountFromEmailDTO {

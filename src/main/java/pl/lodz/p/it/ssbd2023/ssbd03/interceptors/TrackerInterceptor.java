@@ -17,6 +17,7 @@ public class TrackerInterceptor {
     public Object traceInvoke(InvocationContext ictx) throws Exception {
         StringBuilder message = new StringBuilder("Przechwycone wywołanie metody: ");
         Object result;
+
         try {
             try {
                 message.append(ictx.getMethod().toString());
@@ -41,10 +42,7 @@ public class TrackerInterceptor {
         }
 
         message.append(" wartość zwrócona: ").append(result).append(" ");
-
         logger.info(message.toString());
-
         return result;
     }
-
 }

@@ -15,7 +15,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ErrorResponseDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.converters.AccountConverter;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AccountMapper;
 
 @Path("/accounts")
 @RequestScoped
@@ -31,7 +31,7 @@ public class AccountEndpoint {
         if (!createOwnerDTO.getPassword().equals(createOwnerDTO.getRepeatedPassword())) {
             throw AppException.createPasswordsNotSameException();
         }
-        accountService.createOwner(AccountConverter.createOwnerDTOToAccount(createOwnerDTO));
+        accountService.createOwner(AccountMapper.createOwnerDTOToAccount(createOwnerDTO));
         return Response.status(Response.Status.CREATED).build();
     }
 
