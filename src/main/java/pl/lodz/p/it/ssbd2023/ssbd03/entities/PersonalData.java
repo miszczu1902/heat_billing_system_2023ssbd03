@@ -12,6 +12,9 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "personal_data")
+@NamedQueries({
+        @NamedQuery(name = "PersonalData.findByLogin", query = "SELECT k FROM PersonalData k WHERE k.id.username = :login")
+})
 public class PersonalData extends AbstractEntity implements Serializable {
     @Id
     @OneToOne(cascade = CascadeType.ALL)

@@ -4,6 +4,7 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.NoResultException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
@@ -85,8 +86,13 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("self/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public Response editPersonalData(@Valid PersonalDataDTO personalDataDTO){
+    public Response editPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO){
+        try {
         accountService.editPersonalData(personalDataDTO);
         return Response.status(Response.Status.OK).build();
+        }
+        catch (NoResultException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
     }
 }

@@ -4,6 +4,7 @@ import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.persistence.NoResultException;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
@@ -100,8 +101,15 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
-    public void editPersonalData(PersonalDataDTO personalDataDTO) {
-        Account account = accountFacade.findByLogin(securityContext.getCallerPrincipal().getName());
-        personalDataFacade.edit(AccountConverter.personalDataDTOToPersonalData(account, personalDataDTO));
+    public void editPersonalData(PersonalDataDTO personalDataDTO) throws NoResultException {
+        try {
+            final String username = securityContext.getCallerPrincipal().getName();
+            PersonalData personalData = personalDataFacade.findByLogin(username);
+            personalData.setFirstName(personalDataDTO.getFirstName());
+            personalData.setSurname(personalDataDTO.getSurname());
+            personalDataFacade.edit(personalData);
+        } catch (NoResultException e) {
+            throw new NoResultException(e.getMessage());
+        }
     }
 }

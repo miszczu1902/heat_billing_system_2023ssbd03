@@ -20,12 +20,4 @@ public class AccountConverter {
         account.getAccessLevels().add(owner);
         return new PersonalData(account, createOwnerDTO.getFirstName(), createOwnerDTO.getSurname());
     }
-
-    public static PersonalData personalDataDTOToPersonalData(Account account,PersonalDataDTO personalDataDTO) {
-        return PersonalData.builder()
-                .id(account)
-                .firstName(personalDataDTO.getFirstName())
-                .surname(personalDataDTO.getSurname())
-                .build();
-    }
 }
