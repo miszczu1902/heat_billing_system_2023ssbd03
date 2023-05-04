@@ -12,12 +12,17 @@ import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.ws.rs.ForbiddenException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
+import jakarta.ws.rs.ForbiddenException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountConfirmationTokenFacade;
@@ -181,6 +186,48 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             personalData.setSurname(surname);
 
             personalDataFacade.edit(personalData);
+        } catch (NoResultException e) {
+            throw new NoResultException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void disableUserAccount(String username) throws NoResultException {
+        editUserEnableFlag(username, false);
+    }
+
+    @Override
+    public void enableUserAccount(String username) throws NoResultException {
+        editUserEnableFlag(username, true);
+    }
+
+    private void editUserEnableFlag(String username, boolean flag) throws NoResultException {
+        try {
+            final String editor = securityContext.getCallerPrincipal().getName();
+            final Account editorAccount = accountFacade.findByUsername(editor);
+            final Account editableAccount = accountFacade.findByUsername(username);
+
+            if(editorAccount.equals(editableAccount)) {
+                throw new ForbiddenException("Cannot edit yours enable flag.");
+            }
+
+            if(editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
+                setUserEnableFlag(username, flag);
+            } else if (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
+                setUserEnableFlag(username, flag);
+            } else {
+                throw new ForbiddenException("Cannot edit other user enable flag due to not supported role.");
+            }
+        } catch (NoResultException e) {
+            throw new NoResultException(e.getMessage());
+        }
+    }
+
+    private void setUserEnableFlag(String username, boolean flag) throws NoResultException {
+        try {
+            final Account editableAccount = accountFacade.findByUsername(username);
+            editableAccount.setIsEnable(flag);
+            accountFacade.edit(editableAccount);
         } catch (NoResultException e) {
             throw new NoResultException(e.getMessage());
         }

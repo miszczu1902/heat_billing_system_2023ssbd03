@@ -119,4 +119,30 @@ public class AccountEndpoint {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
+
+    @PATCH
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{username}/disable")
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public Response disableUserAccount(@PathParam("username") String username) {
+        try {
+            accountService.disableUserAccount(username);
+            return Response.status(Response.Status.OK).build();
+        } catch (NoResultException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @PATCH
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{username}/enable")
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public Response enableUserAccount(@PathParam("username") String username) {
+        try {
+            accountService.enableUserAccount(username);
+            return Response.status(Response.Status.OK).build();
+        } catch (NoResultException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
 }
