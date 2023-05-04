@@ -1,6 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.exceptions.mappers;
 
-import jakarta.validation.ValidationException;
+import jakarta.ws.rs.ClientErrorException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
@@ -8,17 +8,16 @@ import jakarta.ws.rs.ext.Provider;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ErrorResponseDTO;
 
 @Provider
-public class ExceptionValidationMapper implements ExceptionMapper<ValidationException> {
+public class ExceptionClientErrorJsonMapper implements ExceptionMapper<ClientErrorException> {
     @Override
-    public Response toResponse(ValidationException exception) {
+    public Response toResponse(ClientErrorException exception) {
+        int statusCode = exception.getResponse().getStatus();
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(
-                Response.Status.BAD_REQUEST.toString(),
-                Response.Status.BAD_REQUEST.getStatusCode(),
+                statusCode,
                 exception.getMessage());
 
-        return Response.status(Response.Status.BAD_REQUEST)
+        return Response.status(statusCode)
                 .entity(errorResponseDTO)
-                .type(MediaType.APPLICATION_JSON_TYPE).build();
-
+                .type(MediaType.APPLICATION_JSON).build();
     }
 }

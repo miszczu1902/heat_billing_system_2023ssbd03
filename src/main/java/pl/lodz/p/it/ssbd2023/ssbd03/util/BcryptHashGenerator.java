@@ -4,7 +4,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class BcryptHashGenerator {
     public static String generateHash(String plainText) {
-        String salt = LoadConfig.loadSaltFromConfig("bcrypt.salt");
+        String salt = LoadConfig.loadPropertyFromConfig("bcrypt.salt");
         return BCrypt.hashpw(plainText, salt);
     }
 
