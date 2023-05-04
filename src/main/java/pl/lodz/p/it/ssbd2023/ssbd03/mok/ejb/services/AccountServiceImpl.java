@@ -7,11 +7,11 @@ import jakarta.inject.Inject;
 import jakarta.persistence.NoResultException;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
+import jakarta.ws.rs.ForbiddenException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.PersonalDataDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
@@ -130,6 +130,53 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             personalDataFacade.edit(personalData);
         } catch (NoResultException e) {
             throw new NoResultException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void blockUserAccount(String username) throws IllegalArgumentException, NoResultException {
+        editUserEnableFlag(username, false, "Cannot block already blocked user");
+    }
+
+    @Override
+    public void unblockUserAccount(String username) throws IllegalArgumentException, NoResultException {
+        editUserEnableFlag(username, true, "Cannot unblock already unblocked user");
+    }
+
+    private void editUserEnableFlag(String username, Boolean flag, String message) throws IllegalArgumentException, NoResultException {
+        try {
+            final String editor = securityContext.getCallerPrincipal().getName();
+            final Account editorAccount = accountFacade.findByLogin(editor);
+            final Account editableAccount = accountFacade.findByLogin(username);
+
+            if(editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
+                setUserEnableFlag(username, flag, message);
+            } else if ((editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("MANAGER")))
+                    && ((editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))))) {
+                setUserEnableFlag(username, flag, message);
+            } else {
+                throw new ForbiddenException("Cannot edit other user enable flag due to not supported role");
+            }
+        } catch (NoResultException e) {
+            throw new NoResultException(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
+    }
+
+    private void setUserEnableFlag(String username, Boolean flag, String message) throws IllegalArgumentException, NoResultException {
+        try {
+            final Account editableAccount = accountFacade.findByLogin(username);
+            if (editableAccount.getIsActive().equals(!flag)) {
+                editableAccount.setIsEnable(flag);
+                accountFacade.edit(editableAccount);
+            } else {
+                throw new IllegalArgumentException(message);
+            }
+        } catch (NoResultException e) {
+            throw new NoResultException(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
         }
     }
 }

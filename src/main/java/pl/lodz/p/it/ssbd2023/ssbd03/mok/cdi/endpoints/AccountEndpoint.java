@@ -115,4 +115,34 @@ public class AccountEndpoint {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
+
+    @PATCH
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{username}/block")
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public Response blockUserAccount(@PathParam("username") String username) {
+        try {
+            accountService.blockUserAccount(username);
+            return Response.status(Response.Status.OK).build();
+        } catch (NoResultException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
+
+    @PATCH
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{username}/unblock")
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public Response unblockUserAccount(@PathParam("username") String username) {
+        try {
+            accountService.unblockUserAccount(username);
+            return Response.status(Response.Status.OK).build();
+        } catch (NoResultException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
 }
