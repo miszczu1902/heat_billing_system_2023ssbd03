@@ -149,13 +149,17 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             final Account editorAccount = accountFacade.findByLogin(editor);
             final Account editableAccount = accountFacade.findByLogin(username);
 
+            if(editorAccount.equals(editableAccount)) {
+                throw new ForbiddenException("Cannot edit yours enable flag.");
+            }
+
             if(editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
                 setUserEnableFlag(username, flag);
             } else if ((editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("MANAGER")))
                     && ((editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))))) {
                 setUserEnableFlag(username, flag);
             } else {
-                throw new ForbiddenException("Cannot edit other user enable flag due to not supported role");
+                throw new ForbiddenException("Cannot edit other user enable flag due to not supported role.");
             }
         } catch (NoResultException e) {
             throw new NoResultException(e.getMessage());
