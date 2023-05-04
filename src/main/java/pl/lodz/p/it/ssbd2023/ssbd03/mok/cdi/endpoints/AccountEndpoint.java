@@ -104,7 +104,7 @@ public class AccountEndpoint {
 
     @PATCH
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("self/personal-data")
+    @Path("/self/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
     public Response editPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO){
         try {
@@ -118,7 +118,7 @@ public class AccountEndpoint {
 
     @PATCH
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("{username}/personal-data")
+    @Path("/{username}/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response editUserPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO, @PathParam("username") String username){
         try {
