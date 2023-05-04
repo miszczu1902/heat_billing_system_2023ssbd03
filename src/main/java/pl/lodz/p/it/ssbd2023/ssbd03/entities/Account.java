@@ -62,8 +62,12 @@ public class Account extends AbstractEntity {
     @OneToMany(mappedBy = "account", cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private List<AccessLevelMapping> accessLevels = new ArrayList<>();
 
-    @OneToOne(mappedBy = "id", cascade = CascadeType.REMOVE)
+    @Setter
+    @OneToOne(mappedBy = "id", cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private PersonalData personalData;
+
+    @OneToOne(mappedBy = "id", cascade = CascadeType.ALL)
+    private LoginData loginData;
 
     public Account(String email, String username, String password, Boolean isEnable, Boolean isActive, String language_) {
         this.email = email;
@@ -72,7 +76,9 @@ public class Account extends AbstractEntity {
         this.isEnable = isEnable;
         this.isActive = isActive;
         this.language_ = language_;
+        this.loginData = new LoginData(this);
     }
+
 
     @Override
     public boolean equals(Object o) {

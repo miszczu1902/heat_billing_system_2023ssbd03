@@ -6,7 +6,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 
 public class AccountConverter {
-    public static PersonalData createOwnerDTOToPersonalData(CreateOwnerDTO createOwnerDTO) {
+    public static Account createOwnerDTOToAccount(CreateOwnerDTO createOwnerDTO) {
+
         Account account = new Account(
                 createOwnerDTO.getEmail(),
                 createOwnerDTO.getUsername(),
@@ -14,9 +15,11 @@ public class AccountConverter {
                 true,
                 false,
                 createOwnerDTO.getLanguage());
+        PersonalData personalData = new PersonalData(account, createOwnerDTO.getFirstName(), createOwnerDTO.getSurname());
         Owner owner = new Owner(createOwnerDTO.getPhoneNumber());
         owner.setAccount(account);
         account.getAccessLevels().add(owner);
-        return new PersonalData(account, createOwnerDTO.getFirstName(), createOwnerDTO.getSurname());
+        account.setPersonalData(personalData);
+        return account;
     }
 }

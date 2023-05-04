@@ -30,7 +30,7 @@ public class AccountEndpoint {
         if (!createOwnerDTO.getPassword().equals(createOwnerDTO.getRepeatedPassword())) {
             throw AppException.createPasswordsNotSameException();
         }
-        accountService.createOwner(AccountConverter.createOwnerDTOToPersonalData(createOwnerDTO));
+        accountService.createOwner(AccountConverter.createOwnerDTOToAccount(createOwnerDTO));
         return Response.status(Response.Status.CREATED).build();
     }
 

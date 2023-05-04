@@ -15,13 +15,15 @@ import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccountConfirmationToken;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountConfirmationTokenFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.OwnerFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mail.MailSender;
 
@@ -33,9 +35,6 @@ import java.util.stream.Collectors;
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors({TrackerInterceptor.class})
 public class AccountServiceImpl extends AbstractService implements AccountService, SessionSynchronization {
-    @Inject
-    private PersonalDataFacade personalDataFacade;
-
     @Inject
     private OwnerFacade ownerFacade;
 
@@ -62,13 +61,11 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed(Roles.GUEST)
-    public void createOwner(PersonalData personalData) {
-        Account account = personalData.getId();
+    public void createOwner(Account account) {
         account.setPassword(BcryptHashGenerator.generateHash(account.getPassword()));
         account.setRegisterDate(LocalDateTime.now());
 
         accountFacade.create(account);
-        personalDataFacade.create(personalData);
 
         AccountConfirmationToken accountConfirmationToken = new AccountConfirmationToken(
                 confirmationTokenGenerator.createAccountConfirmationToken(), account);
