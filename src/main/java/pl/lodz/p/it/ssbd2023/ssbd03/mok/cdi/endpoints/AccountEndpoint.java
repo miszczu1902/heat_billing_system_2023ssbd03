@@ -107,6 +107,21 @@ public class AccountEndpoint {
 
     @PATCH
     @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{username}/personal-data")
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public Response editUserPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO, @PathParam("username") String username){
+        try {
+            accountService.editUserPersonalData(username, personalDataDTO.getFirstName(), personalDataDTO.getSurname());
+            return Response.status(Response.Status.OK).build();
+        } catch (NoResultException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (ForbiddenException e) {
+            return Response.status(Response.Status.FORBIDDEN).build();
+        }
+    }
+
+    @PATCH
+    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/disable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response disableUserAccount(@PathParam("username") String username) {
