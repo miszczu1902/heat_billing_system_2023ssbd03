@@ -7,6 +7,7 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
+import jakarta.persistence.NoResultException;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
@@ -15,6 +16,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.PersonalDataDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccountConfirmationToken;
@@ -145,4 +147,18 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         accountFacade.edit(account);
     }
 
+    @Override
+    public void editPersonalData(String firstName, String surname) throws NoResultException {
+        try {
+            final String username = securityContext.getCallerPrincipal().getName();
+            PersonalData personalData = personalDataFacade.findByLogin(username);
+
+            personalData.setFirstName(firstName);
+            personalData.setSurname(surname);
+
+            personalDataFacade.edit(personalData);
+        } catch (NoResultException e) {
+            throw new NoResultException(e.getMessage());
+        }
+    }
 }

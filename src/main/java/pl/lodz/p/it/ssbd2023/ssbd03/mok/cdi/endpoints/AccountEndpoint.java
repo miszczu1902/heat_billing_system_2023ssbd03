@@ -3,6 +3,8 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mok.cdi.endpoints;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.NoResultException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
@@ -10,6 +12,11 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePasswordDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.PersonalDataDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ErrorResponseDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
@@ -87,6 +94,20 @@ public class AccountEndpoint {
                             Response.Status.BAD_REQUEST.getStatusCode(),
                             e.getMessage());
             return Response.status(Response.Status.BAD_REQUEST).entity(errorResponseDTO).build();
+        }
+    }
+
+    @PATCH
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("self/personal-data")
+    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
+    public Response editPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO){
+        try {
+        accountService.editPersonalData(personalDataDTO.getFirstName(), personalDataDTO.getSurname());
+        return Response.status(Response.Status.OK).build();
+        }
+        catch (NoResultException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 }

@@ -1,10 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -14,6 +11,9 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "personal_data")
+@NamedQueries({
+        @NamedQuery(name = "PersonalData.findByLogin", query = "SELECT k FROM PersonalData k WHERE k.id.username = :login")
+})
 public class PersonalData extends AbstractEntity implements Serializable {
     @Id
     @OneToOne(cascade = CascadeType.ALL)
