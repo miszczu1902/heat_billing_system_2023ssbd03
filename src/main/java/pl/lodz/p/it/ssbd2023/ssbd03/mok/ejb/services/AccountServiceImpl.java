@@ -180,8 +180,8 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     private void editUserEnableFlag(String username, Boolean flag) throws NoResultException {
         try {
             final String editor = securityContext.getCallerPrincipal().getName();
-            final Account editorAccount = accountFacade.findByLogin(editor);
-            final Account editableAccount = accountFacade.findByLogin(username);
+            final Account editorAccount = accountFacade.findByUsername(editor);
+            final Account editableAccount = accountFacade.findByUsername(username);
 
             if(editorAccount.equals(editableAccount)) {
                 throw new ForbiddenException("Cannot edit yours enable flag.");
@@ -202,7 +202,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     private void setUserEnableFlag(String username, Boolean flag) throws NoResultException {
         try {
-            final Account editableAccount = accountFacade.findByLogin(username);
+            final Account editableAccount = accountFacade.findByUsername(username);
             editableAccount.setIsEnable(flag);
             accountFacade.edit(editableAccount);
         } catch (NoResultException e) {
