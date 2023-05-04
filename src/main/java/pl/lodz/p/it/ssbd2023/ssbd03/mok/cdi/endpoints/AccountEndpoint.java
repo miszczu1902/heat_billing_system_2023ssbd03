@@ -97,11 +97,26 @@ public class AccountEndpoint {
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
     public Response editPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO){
         try {
-        accountService.editPersonalData(personalDataDTO.getFirstName(), personalDataDTO.getSurname());
+        accountService.editSelfPersonalData(personalDataDTO.getFirstName(), personalDataDTO.getSurname());
         return Response.status(Response.Status.OK).build();
         }
         catch (NoResultException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @PATCH
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{username}/personal-data")
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public Response editUserPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO, @PathParam("username") String username){
+        try {
+            accountService.editUserPersonalData(username, personalDataDTO.getFirstName(), personalDataDTO.getSurname());
+            return Response.status(Response.Status.OK).build();
+        } catch (NoResultException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } catch (ForbiddenException e) {
+            return Response.status(Response.Status.FORBIDDEN).build();
         }
     }
 }

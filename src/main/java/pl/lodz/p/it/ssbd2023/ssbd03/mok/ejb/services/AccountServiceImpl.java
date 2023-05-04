@@ -10,6 +10,7 @@ import jakarta.interceptor.Interceptors;
 import jakarta.persistence.NoResultException;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
+import jakarta.ws.rs.ForbiddenException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
@@ -148,9 +149,32 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
-    public void editPersonalData(String firstName, String surname) throws NoResultException {
+    public void editSelfPersonalData(String firstName, String surname) throws NoResultException {
         try {
             final String username = securityContext.getCallerPrincipal().getName();
+            editPersonalData(username, firstName, surname);
+        } catch (NoResultException e) {
+            throw new NoResultException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void editUserPersonalData(String username, String firstName, String surname) throws ForbiddenException {
+        final String editor = securityContext.getCallerPrincipal().getName();
+        final Account editorAccount = accountFacade.findByUsername(editor);
+        final Account editableAccount = accountFacade.findByUsername(username);
+
+        if(editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
+            editPersonalData(username, firstName, surname);
+        } else if (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
+            editPersonalData(username, firstName, surname);
+        } else {
+            throw new ForbiddenException("Cannot edit other user personal data due to not supported role");
+        }
+    }
+
+    private void editPersonalData(String username, String firstName, String surname) {
+        try {
             PersonalData personalData = personalDataFacade.findByLogin(username);
 
             personalData.setFirstName(firstName);
