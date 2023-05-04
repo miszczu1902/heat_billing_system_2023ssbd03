@@ -7,15 +7,13 @@ import jakarta.inject.Inject;
 import jakarta.persistence.NoResultException;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
+import jakarta.ws.rs.ForbiddenException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.PersonalDataDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccessLevelMappingFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
@@ -119,9 +117,33 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
-    public void editPersonalData(String firstName, String surname) throws NoResultException {
+    public void editSelfPersonalData(String firstName, String surname) throws NoResultException {
         try {
             final String username = securityContext.getCallerPrincipal().getName();
+            editPersonalData(username, firstName, surname);
+        } catch (NoResultException e) {
+            throw new NoResultException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void editUserPersonalData(String username, String firstName, String surname) throws ForbiddenException {
+        final String editor = securityContext.getCallerPrincipal().getName();
+        final Account editorAccount = accountFacade.findByLogin(editor);
+        final Account editableAccount = accountFacade.findByLogin(username);
+
+        if(editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("admin"))) {
+            editPersonalData(username, firstName, surname);
+        } else if ((editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("manager")))
+        && ((editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("admin"))))) {
+            editPersonalData(username, firstName, surname);
+        } else {
+            throw new ForbiddenException("Cannot edit other user personal data due to not supported role");
+        }
+    }
+
+    private void editPersonalData(String username, String firstName, String surname) {
+        try {
             PersonalData personalData = personalDataFacade.findByLogin(username);
 
             personalData.setFirstName(firstName);
