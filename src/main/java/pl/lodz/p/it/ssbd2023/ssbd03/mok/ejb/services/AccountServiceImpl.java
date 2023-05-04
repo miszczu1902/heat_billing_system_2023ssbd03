@@ -161,8 +161,8 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     public void editUserPersonalData(String username, String firstName, String surname) throws ForbiddenException {
         final String editor = securityContext.getCallerPrincipal().getName();
-        final Account editorAccount = accountFacade.findByLogin(editor);
-        final Account editableAccount = accountFacade.findByLogin(username);
+        final Account editorAccount = accountFacade.findByUsername(editor);
+        final Account editableAccount = accountFacade.findByUsername(username);
 
         if(editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
             editPersonalData(username, firstName, surname);
