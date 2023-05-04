@@ -25,7 +25,7 @@ public class AccountConfirmationToken extends AbstractEntity implements Serializ
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "token_value", nullable = false, length = 10, updatable = false)
+    @Column(name = "token_value", nullable = false, length = 10, updatable = false, unique = true)
     private String tokenValue;
 
     @Column(name = "expiration_date", nullable = false, updatable = false)
