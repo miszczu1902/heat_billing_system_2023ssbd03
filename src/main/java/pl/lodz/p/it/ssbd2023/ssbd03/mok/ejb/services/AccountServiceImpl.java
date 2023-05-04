@@ -177,7 +177,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         editUserEnableFlag(username, true);
     }
 
-    private void editUserEnableFlag(String username, Boolean flag) throws NoResultException {
+    private void editUserEnableFlag(String username, boolean flag) throws NoResultException {
         try {
             final String editor = securityContext.getCallerPrincipal().getName();
             final Account editorAccount = accountFacade.findByUsername(editor);
@@ -189,8 +189,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
             if(editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
                 setUserEnableFlag(username, flag);
-            } else if ((editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("MANAGER")))
-                    && ((editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))))) {
+            } else if (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
                 setUserEnableFlag(username, flag);
             } else {
                 throw new ForbiddenException("Cannot edit other user enable flag due to not supported role.");
@@ -200,7 +199,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         }
     }
 
-    private void setUserEnableFlag(String username, Boolean flag) throws NoResultException {
+    private void setUserEnableFlag(String username, boolean flag) throws NoResultException {
         try {
             final Account editableAccount = accountFacade.findByUsername(username);
             editableAccount.setIsEnable(flag);

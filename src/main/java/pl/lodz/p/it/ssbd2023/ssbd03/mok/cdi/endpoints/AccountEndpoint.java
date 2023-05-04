@@ -107,7 +107,7 @@ public class AccountEndpoint {
 
     @PATCH
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/{username}/block")
+    @Path("/{username}/enable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response blockUserAccount(@PathParam("username") String username) {
         try {
@@ -120,7 +120,7 @@ public class AccountEndpoint {
 
     @PATCH
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/{username}/unblock")
+    @Path("/{username}/disable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response unblockUserAccount(@PathParam("username") String username) {
         try {
