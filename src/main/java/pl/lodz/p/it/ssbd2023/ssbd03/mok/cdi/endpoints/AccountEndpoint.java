@@ -126,8 +126,6 @@ public class AccountEndpoint {
             return Response.status(Response.Status.OK).build();
         } catch (NoResultException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
 
@@ -141,8 +139,6 @@ public class AccountEndpoint {
             return Response.status(Response.Status.OK).build();
         } catch (NoResultException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
-        } catch (IllegalArgumentException e) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
 }

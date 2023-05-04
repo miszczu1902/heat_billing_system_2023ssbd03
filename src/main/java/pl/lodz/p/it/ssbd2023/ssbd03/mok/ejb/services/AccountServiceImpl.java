@@ -134,49 +134,41 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
-    public void blockUserAccount(String username) throws IllegalArgumentException, NoResultException {
-        editUserEnableFlag(username, false, "Cannot block already blocked user");
+    public void blockUserAccount(String username) throws NoResultException {
+        editUserEnableFlag(username, false);
     }
 
     @Override
-    public void unblockUserAccount(String username) throws IllegalArgumentException, NoResultException {
-        editUserEnableFlag(username, true, "Cannot unblock already unblocked user");
+    public void unblockUserAccount(String username) throws NoResultException {
+        editUserEnableFlag(username, true);
     }
 
-    private void editUserEnableFlag(String username, Boolean flag, String message) throws IllegalArgumentException, NoResultException {
+    private void editUserEnableFlag(String username, Boolean flag) throws NoResultException {
         try {
             final String editor = securityContext.getCallerPrincipal().getName();
             final Account editorAccount = accountFacade.findByLogin(editor);
             final Account editableAccount = accountFacade.findByLogin(username);
 
             if(editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
-                setUserEnableFlag(username, flag, message);
+                setUserEnableFlag(username, flag);
             } else if ((editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("MANAGER")))
                     && ((editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))))) {
-                setUserEnableFlag(username, flag, message);
+                setUserEnableFlag(username, flag);
             } else {
                 throw new ForbiddenException("Cannot edit other user enable flag due to not supported role");
             }
         } catch (NoResultException e) {
             throw new NoResultException(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e.getMessage());
         }
     }
 
-    private void setUserEnableFlag(String username, Boolean flag, String message) throws IllegalArgumentException, NoResultException {
+    private void setUserEnableFlag(String username, Boolean flag) throws NoResultException {
         try {
             final Account editableAccount = accountFacade.findByLogin(username);
-            if (editableAccount.getIsActive().equals(!flag)) {
-                editableAccount.setIsEnable(flag);
-                accountFacade.edit(editableAccount);
-            } else {
-                throw new IllegalArgumentException(message);
-            }
+            editableAccount.setIsEnable(flag);
+            accountFacade.edit(editableAccount);
         } catch (NoResultException e) {
             throw new NoResultException(e.getMessage());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e.getMessage());
         }
     }
 }
