@@ -8,8 +8,10 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceException;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
+import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
@@ -179,7 +181,13 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         personalData.setFirstName(firstName);
         personalData.setSurname(surname);
 
-        personalDataFacade.edit(personalData);
+        try {
+            personalDataFacade.edit(personalData);
+        } catch (PersistenceException pe) {
+            if (pe.getCause() instanceof ConstraintViolationException) {
+                throw AppException.createPersonalDataConstraintViolationException();
+            }
+        }
     }
 
     @Override

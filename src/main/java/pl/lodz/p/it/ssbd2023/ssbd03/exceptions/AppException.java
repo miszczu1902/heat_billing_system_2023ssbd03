@@ -10,6 +10,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountNotExistsException
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.PasswordsNotSameException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.DatabaseException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.personalData.PersonalDataConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
 
@@ -30,6 +31,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ACCOUNT_NOT_EXISTS_MESSAGE = "Account with provided data not exists"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_RESULT_NOT_FOUND = "Query result not found"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACTION_NOT_ALLOWED = "Action is not allowed with this privileges"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_PERSONAL_DATA_VALIDATION = "Each element of personal data can have up to 32 characters"; //TODO - tu trzeba zrobić resource bundle
 
     @Getter
     private Throwable cause;
@@ -104,6 +106,10 @@ public class AppException extends WebApplicationException {
         } else {
             return new AccountExistsException(ERROR_ACCOUNT_EXISTS_MESSAGE, Response.Status.CONFLICT, cause);
         }
+    }
+
+    public static PersonalDataConstraintViolationException createPersonalDataConstraintViolationException() {
+        return new PersonalDataConstraintViolationException();
     }
 
     public static AccountNotExistsException createAccountNotExistsException(Throwable cause) {
