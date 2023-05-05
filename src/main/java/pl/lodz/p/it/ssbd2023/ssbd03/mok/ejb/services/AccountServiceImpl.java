@@ -10,9 +10,7 @@ import jakarta.interceptor.Interceptors;
 import jakarta.persistence.NoResultException;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
-import jakarta.ws.rs.ForbiddenException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
-import jakarta.ws.rs.ForbiddenException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
@@ -23,6 +21,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountConfirmationTokenFacade;
@@ -154,17 +153,13 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
-    public void editSelfPersonalData(String firstName, String surname) throws NoResultException {
-        try {
-            final String username = securityContext.getCallerPrincipal().getName();
-            editPersonalData(username, firstName, surname);
-        } catch (NoResultException e) {
-            throw new NoResultException(e.getMessage());
-        }
+    public void editSelfPersonalData(String firstName, String surname) {
+        final String username = securityContext.getCallerPrincipal().getName();
+        editPersonalData(username, firstName, surname);
     }
 
     @Override
-    public void editUserPersonalData(String username, String firstName, String surname) throws ForbiddenException {
+    public void editUserPersonalData(String username, String firstName, String surname) {
         final String editor = securityContext.getCallerPrincipal().getName();
         final Account editorAccount = accountFacade.findByUsername(editor);
         final Account editableAccount = accountFacade.findByUsername(username);
@@ -174,21 +169,17 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         } else if (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
             editPersonalData(username, firstName, surname);
         } else {
-            throw new ForbiddenException("Cannot edit other user personal data due to not supported role");
+            throw AppException.createNotAllowedActionException();
         }
     }
 
     private void editPersonalData(String username, String firstName, String surname) {
-        try {
-            PersonalData personalData = personalDataFacade.findByLogin(username);
+        PersonalData personalData = personalDataFacade.findByUsername(username);
 
-            personalData.setFirstName(firstName);
-            personalData.setSurname(surname);
+        personalData.setFirstName(firstName);
+        personalData.setSurname(surname);
 
-            personalDataFacade.edit(personalData);
-        } catch (NoResultException e) {
-            throw new NoResultException(e.getMessage());
-        }
+        personalDataFacade.edit(personalData);
     }
 
     @Override
@@ -202,34 +193,26 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     private void editUserEnableFlag(String username, boolean flag) throws NoResultException {
-        try {
-            final String editor = securityContext.getCallerPrincipal().getName();
-            final Account editorAccount = accountFacade.findByUsername(editor);
-            final Account editableAccount = accountFacade.findByUsername(username);
+        final String editor = securityContext.getCallerPrincipal().getName();
+        final Account editorAccount = accountFacade.findByUsername(editor);
+        final Account editableAccount = accountFacade.findByUsername(username);
 
-            if(editorAccount.equals(editableAccount)) {
-                throw new ForbiddenException("Cannot edit yours enable flag.");
-            }
+        if(editorAccount.equals(editableAccount)) {
+            throw AppException.createNotAllowedActionException();
+        }
 
-            if(editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
-                setUserEnableFlag(username, flag);
-            } else if (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
-                setUserEnableFlag(username, flag);
-            } else {
-                throw new ForbiddenException("Cannot edit other user enable flag due to not supported role.");
-            }
-        } catch (NoResultException e) {
-            throw new NoResultException(e.getMessage());
+        if(editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
+            setUserEnableFlag(username, flag);
+        } else if (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
+            setUserEnableFlag(username, flag);
+        } else {
+            throw AppException.createNotAllowedActionException();
         }
     }
 
-    private void setUserEnableFlag(String username, boolean flag) throws NoResultException {
-        try {
-            final Account editableAccount = accountFacade.findByUsername(username);
-            editableAccount.setIsEnable(flag);
-            accountFacade.edit(editableAccount);
-        } catch (NoResultException e) {
-            throw new NoResultException(e.getMessage());
-        }
+    private void setUserEnableFlag(String username, boolean flag) {
+        final Account editableAccount = accountFacade.findByUsername(username);
+        editableAccount.setIsEnable(flag);
+        accountFacade.edit(editableAccount);
     }
 }

@@ -5,12 +5,11 @@ import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.interceptor.Interceptors;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccountConfirmationToken;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 
 import java.time.LocalDateTime;
@@ -45,6 +44,14 @@ public class AccountConfirmationTokenFacade extends AbstractFacade<AccountConfir
     public AccountConfirmationToken getActivationTokenByTokenValue(String tokenValue) {
         TypedQuery<AccountConfirmationToken> query = em.createNamedQuery("AccountConfirmationToken.getActivationTokenByTokenValue", AccountConfirmationToken.class);
         query.setParameter("tokenValue", tokenValue);
-        return query.getSingleResult();
+        try {
+            return query.getSingleResult();
+        } catch (PersistenceException pe) {
+            if (pe.getCause() instanceof NoResultException) {
+                throw AppException.createNoResultException(pe.getCause());
+            }
+
+            throw AppException.createDatabaseException();
+        }
     }
 }
