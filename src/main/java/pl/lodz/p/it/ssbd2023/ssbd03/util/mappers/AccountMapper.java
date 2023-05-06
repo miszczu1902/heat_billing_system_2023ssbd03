@@ -28,8 +28,8 @@ public class AccountMapper {
         return new GetAccountForListDTO(
                 account.getId(),
                 account.getVersion(),
-                account.getUsername(),
                 account.getEmail(),
+                account.getUsername(),
                 account.getAccessLevels().stream().map(AccessLevelMapping::getAccessLevel).toList());
     }
 }
