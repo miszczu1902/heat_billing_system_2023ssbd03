@@ -153,7 +153,7 @@ public class AccountEndpoint {
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response getListOfAccounts(@DefaultValue("username") @QueryParam("sortBy") String sortBy,
                                       @DefaultValue("0") @QueryParam("pageNumber") int pageNumber) {
-        List<AccountForListDTO> listOfAccounts = accountService.getListOfAccounts(sortBy, pageNumber)
+        final List<AccountForListDTO> listOfAccounts = accountService.getListOfAccounts(sortBy, pageNumber)
                 .stream()
                 .map(AccountMapper::accountToAccountForListDTO)
                 .toList();

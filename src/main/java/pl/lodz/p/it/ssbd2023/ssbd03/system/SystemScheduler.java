@@ -26,7 +26,7 @@ public class SystemScheduler {
 
     @Schedule(hour = "*", minute = "*/1", persistent = false)
     private void cleanUnconfirmedAccounts() {
-        List<AccountConfirmationToken> allUnconfirmedAccounts = accountConfirmationTokenFacade.findAllUnconfirmedAccounts();
+        final List<AccountConfirmationToken> allUnconfirmedAccounts = accountConfirmationTokenFacade.findAllUnconfirmedAccounts();
         if (!allUnconfirmedAccounts.isEmpty()) {
             allUnconfirmedAccounts.forEach(accountConfirmationToken -> {
                 accountFacade.remove(accountConfirmationToken.getAccount());
