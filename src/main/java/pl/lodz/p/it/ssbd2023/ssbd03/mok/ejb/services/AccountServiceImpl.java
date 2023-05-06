@@ -19,8 +19,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccountConfirmationToken;
@@ -35,9 +33,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
