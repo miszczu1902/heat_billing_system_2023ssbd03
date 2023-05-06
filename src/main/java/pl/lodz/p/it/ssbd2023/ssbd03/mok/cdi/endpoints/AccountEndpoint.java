@@ -49,7 +49,7 @@ public class AccountEndpoint {
     @Path("/login")
     @RolesAllowed(Roles.GUEST)
     public Response authenticate(@Valid LoginDTO loginDTO) {
-        String token = accountService.authenticate(loginDTO.getUsername(),loginDTO.getPassword());
+        final String token = accountService.authenticate(loginDTO.getUsername(), loginDTO.getPassword());
         return Response.ok().header("Bearer", token).build();
     }
 
@@ -95,12 +95,11 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/self/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public Response editPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO){
+    public Response editPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO) {
         try {
-        accountService.editSelfPersonalData(personalDataDTO.getFirstName(), personalDataDTO.getSurname());
-        return Response.status(Response.Status.OK).build();
-        }
-        catch (NoResultException e) {
+            accountService.editSelfPersonalData(personalDataDTO.getFirstName(), personalDataDTO.getSurname());
+            return Response.status(Response.Status.OK).build();
+        } catch (NoResultException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
@@ -109,7 +108,7 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public Response editUserPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO, @PathParam("username") String username){
+    public Response editUserPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO, @PathParam("username") String username) {
         try {
             accountService.editUserPersonalData(username, personalDataDTO.getFirstName(), personalDataDTO.getSurname());
             return Response.status(Response.Status.OK).build();

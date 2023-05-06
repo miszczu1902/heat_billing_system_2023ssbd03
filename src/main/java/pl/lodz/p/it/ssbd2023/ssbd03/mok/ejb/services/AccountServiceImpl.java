@@ -100,13 +100,13 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     @RolesAllowed(Roles.GUEST)
     public String authenticate(String username, String password) {
-        UsernamePasswordCredential usernamePasswordCredential = new UsernamePasswordCredential(username, new Password(password));
-        CredentialValidationResult credentialValidationResult = identityStoreHandler.validate(usernamePasswordCredential);
-        if (credentialValidationResult.getStatus() == CredentialValidationResult.Status.VALID) {
-            Set<String> roles = credentialValidationResult.getCallerGroups();
+        final UsernamePasswordCredential usernamePasswordCredential = new UsernamePasswordCredential(username, new Password(password));
+        final CredentialValidationResult credentialValidationResult = identityStoreHandler.validate(usernamePasswordCredential);
+        if (credentialValidationResult.getStatus().equals(CredentialValidationResult.Status.VALID)) {
+            final Set<String> roles = credentialValidationResult.getCallerGroups();
             return jwtGenerator.generateJWT(username, roles);
         }
-            throw AppException.invalidCredentialsException();
+        throw AppException.invalidCredentialsException();
     }
 
     @Override

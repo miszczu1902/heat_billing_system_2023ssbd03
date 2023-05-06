@@ -12,8 +12,8 @@ class BcryptHashGeneratorTest {
 
     @Test
     void generateHash() {
-        String plainText = "password123";
-        String generated = bcryptHashGenerator.generate(plainText.toCharArray());
+        final String plainText = "password123";
+        final String generated = bcryptHashGenerator.generate(plainText.toCharArray());
         assertTrue(bcryptHashGenerator.verify(plainText.toCharArray(), generated));
     }
 }

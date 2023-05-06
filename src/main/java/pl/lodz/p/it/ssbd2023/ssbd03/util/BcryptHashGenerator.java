@@ -13,7 +13,7 @@ public class BcryptHashGenerator implements PasswordHash {
 
     @Override
     public String generate(char[] chars) {
-        String salt = LoadConfig.loadPropertyFromConfig("bcrypt.salt");
+        final String salt = LoadConfig.loadPropertyFromConfig("bcrypt.salt");
         return BCrypt.hashpw(new String(chars), salt);
     }
 
