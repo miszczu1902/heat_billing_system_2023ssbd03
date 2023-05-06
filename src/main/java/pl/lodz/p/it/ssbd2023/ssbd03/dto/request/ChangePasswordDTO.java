@@ -14,7 +14,7 @@ public class ChangePasswordDTO {
     private String oldPassword;
     @NotNull
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
-            message = "Restrictions for password is: 8 characters length, at least one upper and lower case, number and special digit")
+            message = "Restrictions for password is: at least 8 characters length, at least one upper and lower case, number and special digit")
     private String newPassword;
     @NotNull
     private String repeatedNewPassword;
