@@ -8,7 +8,7 @@ import jakarta.ejb.Stateless;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import static java.lang.Long.parseLong;
 
@@ -17,7 +17,7 @@ public class JwtGenerator {
     private long timeout = parseLong(LoadConfig.loadPropertyFromConfig("timeout"));
     private String secret = LoadConfig.loadPropertyFromConfig("secret");
 
-    public String generateJWT(String login, List<String> roles) {
+    public String generateJWT(String login, Set<String> roles) {
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS256, secret)
                 .setSubject(login)

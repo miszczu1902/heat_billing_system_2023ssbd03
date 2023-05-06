@@ -1,14 +1,24 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.util;
 
+import jakarta.security.enterprise.identitystore.PasswordHash;
 import org.mindrot.jbcrypt.BCrypt;
 
-public class BcryptHashGenerator {
-    public static String generateHash(String plainText) {
-        String salt = LoadConfig.loadPropertyFromConfig("bcrypt.salt");
-        return BCrypt.hashpw(plainText, salt);
+import java.util.Map;
+
+public class BcryptHashGenerator implements PasswordHash {
+    @Override
+    public void initialize(Map<String, String> parameters) {
+        PasswordHash.super.initialize(parameters);
     }
 
-    public static boolean verifyPassword(String password, String hashedPassword) {
-        return BCrypt.checkpw(password, hashedPassword);
+    @Override
+    public String generate(char[] chars) {
+        String salt = LoadConfig.loadPropertyFromConfig("bcrypt.salt");
+        return BCrypt.hashpw(new String(chars), salt);
+    }
+
+    @Override
+    public boolean verify(char[] chars, String hashedPassword) {
+        return BCrypt.checkpw(new String(chars), hashedPassword);
     }
 }

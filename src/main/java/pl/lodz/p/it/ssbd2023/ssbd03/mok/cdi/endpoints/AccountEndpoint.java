@@ -49,8 +49,16 @@ public class AccountEndpoint {
     @Path("/login")
     @RolesAllowed(Roles.GUEST)
     public Response authenticate(@Valid LoginDTO loginDTO) {
-        String token = accountService.authenticate(loginDTO);
+        try{
+        String token = accountService.authenticate(loginDTO.getUsername(),loginDTO.getPassword());
         return Response.ok().header("Bearer", token).build();
+        } catch (AccountPasswordException e) {
+            final ErrorResponseDTO errorResponseDTO =
+                    new ErrorResponseDTO(
+                            Response.Status.BAD_REQUEST.getStatusCode(),
+                            e.getMessage());
+            return Response.status(Response.Status.BAD_REQUEST).entity(errorResponseDTO).build();
+        }
     }
 
     @GET
