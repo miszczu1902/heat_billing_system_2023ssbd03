@@ -21,6 +21,7 @@ public class AccountDTO extends AbstractDTO {
         this.email = email;
         this.username = username;
     }
+
     public AccountDTO(String email, String username) {
         this.email = email;
         this.username = username;

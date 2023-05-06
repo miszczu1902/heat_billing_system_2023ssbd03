@@ -10,15 +10,9 @@ import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccessLevelMappingFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.OwnerFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
 
 import java.time.LocalDateTime;
@@ -36,6 +30,12 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Inject
     private OwnerFacade ownerFacade;
+
+    @Inject
+    private ManagerFacade managerFacade;
+
+    @Inject
+    private AdminFacade adminFacade;
 
     @Inject
     private AccessLevelMappingFacade accessLevelMappingFacade;
@@ -101,24 +101,70 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     public PersonalData getPersonalData(Owner owner) {
         return personalDataFacade.find(owner.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Dane osobowe nie odnalezione"));
+                .orElseThrow(() -> new IllegalArgumentException("Personal data not found"));
+    }
+
+    @Override
+    public PersonalData getPersonalData(Manager manager) {
+        return personalDataFacade.find(manager.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Personal data not found"));
+    }
+
+    @Override
+    public PersonalData getPersonalData(Admin admin) {
+        return personalDataFacade.find(admin.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Personal data not found"));
     }
 
     @Override
     public Owner getOwner(Long id) {
         return ownerFacade.find(id)
-                .orElseThrow(() -> new IllegalArgumentException("Dane osobowe nie odnalezione"));
+                .orElseThrow(() -> new IllegalArgumentException("Owner data not found."));
+    }
+
+    @Override
+    public Manager getManager(Long id) {
+        return managerFacade.find(id)
+                .orElseThrow(() -> new IllegalArgumentException("Manager data not found."));
+    }
+
+    @Override
+    public Admin getAdmin(Long id) {
+        return adminFacade.find(id)
+                .orElseThrow(() -> new IllegalArgumentException("Admin data not found."));
     }
 
     @Override
     public Owner getOwner() {
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByLogin(username);
-        Owner owner = (Owner) account.getAccessLevels().stream()
+        final Owner owner = (Owner) account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Owner)
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
         return owner;
+    }
+
+    @Override
+    public Manager getManager() {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Account account = accountFacade.findByLogin(username);
+        final Manager manager = (Manager) account.getAccessLevels().stream()
+                .filter(accessLevel -> accessLevel instanceof Manager)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
+        return manager;
+    }
+
+    @Override
+    public Admin getAdmin() {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Account account = accountFacade.findByLogin(username);
+        final Admin admin = (Admin) account.getAccessLevels().stream()
+                .filter(accessLevel -> accessLevel instanceof Admin)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
+        return admin;
     }
 
     @Override
@@ -138,6 +184,4 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         account.setPassword(newPasswordHash);
         accountFacade.edit(account);
     }
-
-
 }
