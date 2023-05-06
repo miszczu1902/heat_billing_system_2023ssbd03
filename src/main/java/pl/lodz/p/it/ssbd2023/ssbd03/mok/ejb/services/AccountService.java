@@ -6,6 +6,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 
@@ -21,13 +23,25 @@ public interface AccountService {
 
     Owner getOwner();
 
+    Manager getManager();
+
+    Admin getAdmin();
+
     Owner getOwner(Long id);
+
+    Manager getManager(Long id);
+
+    Admin getAdmin(Long id);
 
     PersonalData getPersonalData(Owner owner);
 
     void editSelfPersonalData(String firstName, String surname);
 
     void editUserPersonalData(String username, String firstName, String surname);
+
+    PersonalData getPersonalData(Manager manager);
+
+    PersonalData getPersonalData(Admin admin);
 
     void changePassword(String oldPassword, String newPassword, String newReapetedPassowrd);
 

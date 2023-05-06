@@ -62,8 +62,4 @@ public class AccountFacade extends AbstractFacade<Account> {
             return null;
         }
     }
-
-    public Optional<Account> find(Long id) {
-        return super.find(id);
-    }
 }
