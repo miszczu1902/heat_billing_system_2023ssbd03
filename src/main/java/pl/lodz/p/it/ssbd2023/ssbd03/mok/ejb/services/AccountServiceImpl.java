@@ -169,7 +169,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         final Account editorAccount = accountFacade.findByUsername(editor);
         final Account editableAccount = accountFacade.findByUsername(username);
 
-        if(editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
+        if (editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
             editPersonalData(username, firstName, surname);
         } else if (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
             editPersonalData(username, firstName, surname);
@@ -207,11 +207,11 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             final Account editorAccount = accountFacade.findByUsername(editor);
             final Account editableAccount = accountFacade.findByUsername(username);
 
-            if(editorAccount.equals(editableAccount)) {
+            if (editorAccount.equals(editableAccount)) {
                 throw new ForbiddenException("Cannot edit yours enable flag.");
             }
 
-            if(editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
+            if (editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
                 setUserEnableFlag(username, flag);
             } else if (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
                 setUserEnableFlag(username, flag);
@@ -231,5 +231,10 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         } catch (NoResultException e) {
             throw new NoResultException(e.getMessage());
         }
+    }
+
+    @Override
+    public List<Account> getListOfAccounts(String sortBy, boolean ascOrder, long size) {
+        return null;
     }
 }

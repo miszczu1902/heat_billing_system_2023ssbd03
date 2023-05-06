@@ -76,6 +76,10 @@ public class Account extends AbstractEntity {
         this.isEnable = isEnable;
         this.isActive = isActive;
         this.language_ = language_;
+    }
+
+    @PrePersist
+    private void init() {
         this.loginData = new LoginData(this);
     }
 

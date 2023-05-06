@@ -12,10 +12,13 @@ import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ErrorResponseDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.GetAccountForListDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AccountMapper;
+
+import java.util.List;
 
 @Path("/accounts")
 @RequestScoped
@@ -95,12 +98,11 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/self/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public Response editPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO){
+    public Response editPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO) {
         try {
-        accountService.editSelfPersonalData(personalDataDTO.getFirstName(), personalDataDTO.getSurname());
-        return Response.status(Response.Status.OK).build();
-        }
-        catch (NoResultException e) {
+            accountService.editSelfPersonalData(personalDataDTO.getFirstName(), personalDataDTO.getSurname());
+            return Response.status(Response.Status.OK).build();
+        } catch (NoResultException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
@@ -109,7 +111,7 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public Response editUserPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO, @PathParam("username") String username){
+    public Response editUserPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO, @PathParam("username") String username) {
         try {
             accountService.editUserPersonalData(username, personalDataDTO.getFirstName(), personalDataDTO.getSurname());
             return Response.status(Response.Status.OK).build();
@@ -144,5 +146,18 @@ public class AccountEndpoint {
         } catch (NoResultException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public Response getListOfAccounts(@QueryParam("sortBy") String sortBy,
+                                      @QueryParam("ascOrder") boolean ascOrder,
+                                      @QueryParam("size") long size) {
+        List<GetAccountForListDTO> listOfAccounts = accountService.getListOfAccounts(sortBy, ascOrder, size != 0 ? size : 10)
+                .stream()
+                .map(AccountMapper::accountToGetAccountForListDTO)
+                .toList();
+        return Response.ok().entity(listOfAccounts).build();
     }
 }
