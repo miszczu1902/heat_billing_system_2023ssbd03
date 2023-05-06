@@ -34,6 +34,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.mok.mail.MailSender;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 @Stateful
@@ -71,7 +72,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     private BcryptHashGenerator bcryptHashGenerator;
 
     @Override
-    @RolesAllowed(Roles.GUEST)
     public void createOwner(Account account) {
         account.setPassword(bcryptHashGenerator.generate(account.getPassword().toCharArray()));
         account.setRegisterDate(LocalDateTime.now());
@@ -86,7 +86,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
-    @RolesAllowed(Roles.GUEST)
     public void confirmAccountFromActivationLink(String confirmationToken) {
         AccountConfirmationToken accountConfirmationToken = accountConfirmationTokenFacade.getActivationTokenByTokenValue(confirmationToken);
 
@@ -228,5 +227,10 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         } catch (NoResultException e) {
             throw new NoResultException(e.getMessage());
         }
+    }
+
+    @Override
+    public List<Account> getListOfAccounts(String sortBy, int pageNumber) {
+        return accountFacade.getListOfAccountsWithFilterParams(sortBy, pageNumber);
     }
 }
