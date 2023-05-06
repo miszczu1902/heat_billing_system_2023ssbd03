@@ -19,7 +19,7 @@ public abstract class AbstractEntity {
     @Column(name = "creation_date_time", nullable = false, updatable = false)
     private LocalDateTime creationDateTime;
 
-    @Column(name = "last_modification_date_time", nullable = false)
+    @Column(name = "last_modification_date_time")
     private LocalDateTime lastModificationDateTime;
 
     @PrePersist
