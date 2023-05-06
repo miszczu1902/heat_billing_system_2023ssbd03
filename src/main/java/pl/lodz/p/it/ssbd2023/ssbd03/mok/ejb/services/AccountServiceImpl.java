@@ -1,23 +1,24 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services;
 
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.SessionSynchronization;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.interceptor.Interceptors;
+import jakarta.persistence.NoResultException;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.security.enterprise.credential.Password;
 import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
-import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.ws.rs.ForbiddenException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
@@ -29,16 +30,12 @@ import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountConfirmationTokenFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.OwnerFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.mail.MailSender;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
 
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.Optional;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -181,7 +178,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     public Owner getOwner() {
         final String username = securityContext.getCallerPrincipal().getName();
-        final Account account = accountFacade.findByLogin(username);
+        final Account account = accountFacade.findByUsername(username);
         final Owner owner = (Owner) account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Owner)
                 .findFirst()
@@ -192,7 +189,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     public Manager getManager() {
         final String username = securityContext.getCallerPrincipal().getName();
-        final Account account = accountFacade.findByLogin(username);
+        final Account account = accountFacade.findByUsername(username);
         final Manager manager = (Manager) account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Manager)
                 .findFirst()
@@ -203,7 +200,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     public Admin getAdmin() {
         final String username = securityContext.getCallerPrincipal().getName();
-        final Account account = accountFacade.findByLogin(username);
+        final Account account = accountFacade.findByUsername(username);
         final Admin admin = (Admin) account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Admin)
                 .findFirst()
