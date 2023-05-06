@@ -2,8 +2,6 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services;
 
 import jakarta.ejb.Local;
 import jakarta.persistence.NoResultException;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 
 import java.util.List;
