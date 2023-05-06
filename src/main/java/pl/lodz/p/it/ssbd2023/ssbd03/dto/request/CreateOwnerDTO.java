@@ -34,6 +34,8 @@ public class CreateOwnerDTO implements Serializable {
     private String email;
 
     @NotNull
+    @Size(min = 8,
+            message = "Min length for password is 8")
     @ToString.Exclude
     private String password;
 

@@ -21,6 +21,10 @@ import java.util.Objects;
         })
 @NamedQueries({
         @NamedQuery(name = "Account.findByUsername", query = "SELECT k FROM Account k WHERE k.username = :username"),
+        @NamedQuery(name = "Account.getListOfAccountsByUsername",
+                query = "SELECT k FROM Account k ORDER BY k.username"),
+        @NamedQuery(name = "Account.getListOfAccountsByEmail",
+                query = "SELECT k FROM Account k ORDER BY k.email"),
 })
 public class Account extends AbstractEntity {
     @Id
@@ -59,7 +63,7 @@ public class Account extends AbstractEntity {
     @Column(name = "language_", nullable = false, columnDefinition = "VARCHAR DEFAULT 'PL'")
     private String language_;
 
-    @OneToMany(mappedBy = "account", cascade = {CascadeType.ALL, CascadeType.REMOVE})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private List<AccessLevelMapping> accessLevels = new ArrayList<>();
 
     @Setter

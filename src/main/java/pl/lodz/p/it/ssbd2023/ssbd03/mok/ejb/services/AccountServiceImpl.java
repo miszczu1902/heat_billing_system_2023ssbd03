@@ -12,7 +12,6 @@ import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.ws.rs.ForbiddenException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
-import jakarta.ws.rs.ForbiddenException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
@@ -68,7 +67,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     private SecurityContext securityContext;
 
     @Override
-    @RolesAllowed(Roles.GUEST)
     public void createOwner(Account account) {
         account.setPassword(BcryptHashGenerator.generateHash(account.getPassword()));
         account.setRegisterDate(LocalDateTime.now());
@@ -83,7 +81,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
-    @RolesAllowed(Roles.GUEST)
     public void confirmAccountFromActivationLink(String confirmationToken) {
         AccountConfirmationToken accountConfirmationToken = accountConfirmationTokenFacade.getActivationTokenByTokenValue(confirmationToken);
 
@@ -234,7 +231,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
-    public List<Account> getListOfAccounts(String sortBy, boolean ascOrder, long size) {
-        return null;
+    public List<Account> getListOfAccounts(String sortBy, int pageNumber) {
+        return accountFacade.getListOfAccountsWithFilterParams(sortBy, pageNumber);
     }
 }

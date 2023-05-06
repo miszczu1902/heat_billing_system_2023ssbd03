@@ -29,5 +29,5 @@ public interface AccountService {
 
     void enableUserAccount(String username) throws IllegalArgumentException, NoResultException;
 
-    List<Account> getListOfAccounts(String sortBy, boolean ascOrder, long size);
+    List<Account> getListOfAccounts(String sortBy, int pageNumber);
 }
