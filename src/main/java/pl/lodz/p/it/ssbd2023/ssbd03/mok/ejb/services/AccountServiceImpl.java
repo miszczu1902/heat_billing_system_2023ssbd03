@@ -23,6 +23,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountConfirmationTokenFacade;
@@ -102,10 +103,10 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         UsernamePasswordCredential usernamePasswordCredential = new UsernamePasswordCredential(username, new Password(password));
         CredentialValidationResult credentialValidationResult = identityStoreHandler.validate(usernamePasswordCredential);
         if (credentialValidationResult.getStatus() == CredentialValidationResult.Status.VALID) {
-            Set<String> rolesSet = credentialValidationResult.getCallerGroups();
-            return jwtGenerator.generateJWT(username, rolesSet);
+            Set<String> roles = credentialValidationResult.getCallerGroups();
+            return jwtGenerator.generateJWT(username, roles);
         }
-        throw new AccountPasswordException("Password is incorrect");
+            throw AppException.invalidCredentialsException();
     }
 
     @Override
