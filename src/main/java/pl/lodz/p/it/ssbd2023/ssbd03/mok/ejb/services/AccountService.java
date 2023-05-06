@@ -15,7 +15,7 @@ public interface AccountService {
 
     void confirmAccountFromActivationLink(String confirmationToken);
 
-    String authenticate(LoginDTO loginDTO);
+    String authenticate(String username, String password);
 
     void changePhoneNumber(ChangePhoneNumberDTO changePhoneNumberDTO);
 

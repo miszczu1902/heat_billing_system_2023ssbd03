@@ -9,6 +9,9 @@ import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.persistence.NoResultException;
 import jakarta.security.enterprise.SecurityContext;
+import jakarta.security.enterprise.credential.Password;
+import jakarta.security.enterprise.credential.UsernamePasswordCredential;
+import jakarta.security.enterprise.identitystore.CredentialValidationResult;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.ws.rs.ForbiddenException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
@@ -16,12 +19,11 @@ import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountConfirmationTokenFacade;
@@ -32,8 +34,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.mok.mail.MailSender;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -66,9 +67,12 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Inject
     private SecurityContext securityContext;
 
+    @Inject
+    private BcryptHashGenerator bcryptHashGenerator;
+
     @Override
     public void createOwner(Account account) {
-        account.setPassword(BcryptHashGenerator.generateHash(account.getPassword()));
+        account.setPassword(bcryptHashGenerator.generate(account.getPassword().toCharArray()));
         account.setRegisterDate(LocalDateTime.now());
 
         accountFacade.create(account);
@@ -93,20 +97,14 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed(Roles.GUEST)
-    public String authenticate(LoginDTO loginDTO) {
-        Account account = accountFacade.findByUsername(loginDTO.getUsername());
-
-        if (BcryptHashGenerator.generateHash(loginDTO.getPassword()).equals(account.getPassword())) {
-//            UsernamePasswordCredential usernamePasswordCredential = new UsernamePasswordCredential(loginDTO.getUsername(), new Password(loginDTO.getPassword()));
-//            CredentialValidationResult credentialValidationResult = identityStoreHandler.validate(usernamePasswordCredential);
-
-            List<String> roles = account.getAccessLevels().stream()
-                    .map(AccessLevelMapping::getAccessLevel)
-                    .collect(Collectors.toList());
-
-            return jwtGenerator.generateJWT(loginDTO.getUsername(), roles);
+    public String authenticate(String username, String password) {
+        final UsernamePasswordCredential usernamePasswordCredential = new UsernamePasswordCredential(username, new Password(password));
+        final CredentialValidationResult credentialValidationResult = identityStoreHandler.validate(usernamePasswordCredential);
+        if (credentialValidationResult.getStatus().equals(CredentialValidationResult.Status.VALID)) {
+            final Set<String> roles = credentialValidationResult.getCallerGroups();
+            return jwtGenerator.generateJWT(username, roles);
         }
-        throw new IllegalArgumentException();
+        throw AppException.invalidCredentialsException();
     }
 
     @Override
@@ -142,10 +140,10 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         }
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
-        if (!BcryptHashGenerator.generateHash(oldPassword).equals(account.getPassword())) {
+        if (!bcryptHashGenerator.generate(oldPassword.toCharArray()).equals(account.getPassword())) {
             throw new AccountPasswordException("Old password is incorrect");
         }
-        final String newPasswordHash = BcryptHashGenerator.generateHash(newPassword);
+        final String newPasswordHash = bcryptHashGenerator.generate(newPassword.toCharArray());
         account.setPassword(newPasswordHash);
         accountFacade.edit(account);
     }
