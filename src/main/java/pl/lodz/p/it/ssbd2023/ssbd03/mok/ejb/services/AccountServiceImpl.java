@@ -18,6 +18,9 @@ import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccountConfirmationToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
@@ -25,15 +28,14 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountConfirmationTokenFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.OwnerFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.mail.MailSender;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.Set;
 
 @Stateful
@@ -48,6 +50,12 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Inject
     private AccountFacade accountFacade;
+
+    @Inject
+    private ManagerFacade managerFacade;
+
+    @Inject
+    private AdminFacade adminFacade;
 
     @Inject
     private AccountConfirmationTokenFacade accountConfirmationTokenFacade;
@@ -221,6 +229,96 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             final Account editableAccount = accountFacade.findByUsername(username);
             editableAccount.setIsEnable(flag);
             accountFacade.edit(editableAccount);
+        } catch (NoResultException e) {
+            throw new NoResultException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void addAccessLevelManager(String username, String license) throws NoResultException{
+        try {
+            Account account = accountFacade.findByUsername(username);
+            if (!account.getAccessLevels().contains(Roles.MANAGER)) {
+                Manager manager = new Manager(license);
+                manager.setAccount(account);
+                account.getAccessLevels().add(manager);
+            }
+        } catch (NoResultException e) {
+            throw new NoResultException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void addAccessLevelOwner(String username, String phoneNumber) throws NoResultException{
+        try {
+            Account account = accountFacade.findByUsername(username);
+            if (!account.getAccessLevels().contains(Roles.OWNER)) {
+                Owner owner = new Owner(phoneNumber);
+                owner.setAccount(account);
+                account.getAccessLevels().add(owner);
+            }
+        } catch (NoResultException e) {
+            throw new NoResultException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void addAccessLevelAdmin(String username) throws NoResultException{
+        try {
+            Account account = accountFacade.findByUsername(username);
+            if (!account.getAccessLevels().contains(Roles.ADMIN)) {
+                Admin admin = new Admin();
+                admin.setAccount(account);
+                account.getAccessLevels().add(admin);
+            }
+        } catch (NoResultException e) {
+            throw new NoResultException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void revokeAccessLevel(String username, String access) throws NoResultException{
+        try {
+            Account account = accountFacade.findByUsername(username);
+            if(access.equals(Roles.MANAGER)) {
+                    Manager manager = account.getAccessLevels().stream()
+                            .filter(accessLevel -> accessLevel instanceof Manager)
+                            .map(accessLevel -> (Manager) accessLevel)
+                            .findAny()
+                            .orElseThrow(() -> new IllegalStateException("Account is not an Manager."));
+                    final int index1 = IntStream.range(0, account.getAccessLevels().size())
+                            .filter(i -> account.getAccessLevels().get(i) == manager)
+                            .findFirst()
+                            .orElse(-1);
+                    account.getAccessLevels().remove(index1);
+                    managerFacade.remove(manager);
+            }
+            if(access.equals(Roles.ADMIN)) {
+                Admin admin = account.getAccessLevels().stream()
+                        .filter(accessLevel -> accessLevel instanceof Admin)
+                        .map(accessLevel -> (Admin) accessLevel)
+                        .findAny()
+                        .orElseThrow(() -> new IllegalStateException("Account is not an Admin."));
+                final int index = IntStream.range(0, account.getAccessLevels().size())
+                        .filter(i -> account.getAccessLevels().get(i) == admin)
+                        .findFirst()
+                        .orElse(-1);
+                account.getAccessLevels().remove(index);
+                adminFacade.remove(admin);
+            }
+            if(access.equals(Roles.OWNER)) {
+                Owner owner = account.getAccessLevels().stream()
+                        .filter(accessLevel -> accessLevel instanceof Owner)
+                        .map(accessLevel -> (Owner) accessLevel)
+                        .findAny()
+                        .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
+                final int index = IntStream.range(0, account.getAccessLevels().size())
+                        .filter(i -> account.getAccessLevels().get(i) == owner)
+                        .findFirst()
+                        .orElse(-1);
+                account.getAccessLevels().remove(index);
+                ownerFacade.remove(owner);
+            }
         } catch (NoResultException e) {
             throw new NoResultException(e.getMessage());
         }
