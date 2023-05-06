@@ -51,7 +51,7 @@ public class AccountConfirmationToken extends AbstractEntity implements Serializ
 
     public AccountConfirmationToken(String tokenValue, Account account) {
         this.tokenValue = tokenValue;
-        this.expirationDate = account.getRegisterDate().plusDays(1);
+        this.expirationDate = this.account.getRegisterDate().plusDays(1);
         this.account = account;
     }
 }
