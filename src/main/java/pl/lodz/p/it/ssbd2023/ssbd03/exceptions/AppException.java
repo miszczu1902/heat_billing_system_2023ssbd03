@@ -7,6 +7,7 @@ import lombok.Getter;
 import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountExistsException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountNotExistsException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.InvalidCredentialsException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.PasswordsNotSameException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.DatabaseException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
@@ -32,6 +33,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_RESULT_NOT_FOUND = "Query result not found"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACTION_NOT_ALLOWED = "Action is not allowed with this privileges"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_PERSONAL_DATA_VALIDATION = "Each element of personal data can have up to 32 characters"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_INVALID_CREDENTIALS = "Invalid username or password"; //TODO - tu trzeba zrobić resource bundle
 
     @Getter
     private Throwable cause;
@@ -42,6 +44,11 @@ public class AppException extends WebApplicationException {
     }
 
     public AppException(String message, Response.Status status, Throwable cause) {
+        super(message, status);
+        this.cause = cause;
+    }
+
+    public AppException(String message, Response.Status status) {
         super(message, status);
         this.cause = cause;
     }
@@ -114,6 +121,9 @@ public class AppException extends WebApplicationException {
 
     public static AccountNotExistsException createAccountNotExistsException(Throwable cause) {
         return new AccountNotExistsException(AppException.ERROR_ACCOUNT_NOT_EXISTS_MESSAGE, Response.Status.NOT_FOUND, cause);
+    }
+    public static InvalidCredentialsException invalidCredentialsException() {
+        return new InvalidCredentialsException(AppException.ERROR_INVALID_CREDENTIALS, Response.Status.UNAUTHORIZED);
     }
 
     public static OptimisticLockAppException createOptimisticLockAppException() {

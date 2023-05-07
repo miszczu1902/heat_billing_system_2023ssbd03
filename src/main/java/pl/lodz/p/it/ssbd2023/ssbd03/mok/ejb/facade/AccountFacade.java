@@ -1,6 +1,5 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade;
 
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -8,11 +7,12 @@ import jakarta.interceptor.Interceptors;
 import jakarta.persistence.*;
 import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
+
+import java.util.List;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -31,7 +31,6 @@ public class AccountFacade extends AbstractFacade<Account> {
     }
 
     @Override
-    @RolesAllowed(Roles.GUEST)
     public void create(Account entity) {
         try {
             super.create(entity);
@@ -71,4 +70,18 @@ public class AccountFacade extends AbstractFacade<Account> {
             throw AppException.createDatabaseException();
         }
     }
+
+    public List<Account> getListOfAccountsWithFilterParams(String sortBy, int pageNumber) {
+        TypedQuery<Account> tq;
+        if (sortBy.equals("email")) tq = em.createNamedQuery("Account.getListOfAccountsByEmail", Account.class);
+        else tq = em.createNamedQuery("Account.getListOfAccountsByUsername", Account.class);
+
+        if (pageNumber != 0) {
+            tq.setFirstResult((pageNumber - 1) * 10);
+            tq.setMaxResults(pageNumber * 10);
+        }
+
+        return tq.getResultList();
+    }
 }
+
