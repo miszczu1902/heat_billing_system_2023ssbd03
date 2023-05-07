@@ -33,6 +33,7 @@ import java.util.List;
 @Path("/accounts")
 @RequestScoped
 public class AccountEndpoint {
+
     @Inject
     private AccountService accountService;
 
