@@ -151,12 +151,14 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
     public void editSelfPersonalData(String firstName, String surname) {
         final String username = securityContext.getCallerPrincipal().getName();
         editPersonalData(username, firstName, surname);
     }
 
     @Override
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public void editUserPersonalData(String username, String firstName, String surname) {
         final String editor = securityContext.getCallerPrincipal().getName();
         final Account editorAccount = accountFacade.findByUsername(editor);
@@ -187,11 +189,13 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public void disableUserAccount(String username) throws NoResultException {
         editUserEnableFlag(username, false);
     }
 
     @Override
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public void enableUserAccount(String username) throws NoResultException {
         editUserEnableFlag(username, true);
     }
@@ -212,6 +216,12 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         } else {
             throw AppException.createNotAllowedActionException();
         }
+        if(flag) {
+            mailSender.sendInformationAccountEnabled(editableAccount.getEmail());
+        } else {
+            mailSender.sendInformationAccountDisabled(editableAccount.getEmail());
+        }
+
     }
 
     private void setUserEnableFlag(String username, boolean flag) {

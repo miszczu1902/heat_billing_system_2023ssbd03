@@ -33,12 +33,37 @@ public class MailSender {
     }
 
     public void sendLinkToActivateAccountToEmail(String to, String subject, String content) {
+        sendEmail(to, subject, content, "activation.url");
+    }
+     public void sendInformationAccountDisabled(String to) {
+        sendEmail(to, "Account has been disabled",
+                "Dear User, \n" +
+                        "Your account has been disabled", null);
+     }
+
+     public void sendInformationAccountEnabled(String to) {
+         sendEmail(to, "Account has been disabled",
+                 "Dear User, \n" +
+                         "Your account has been enabled", null);
+     }
+
+    public void sendInformationAccountActivated(String to) {
+        sendEmail(to, "Account has been disabled",
+                "Dear User, \n" +
+                        "Your account has been activated", null);
+    }
+
+    private void sendEmail(String to, String subject, String content, String propertyFromConfig) {
         try {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(LoadConfig.loadPropertyFromConfig("mail.login")));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(subject);
-            message.setText(LoadConfig.loadPropertyFromConfig("activation.url") + "?" + content);
+            if(propertyFromConfig != null) {
+                message.setText(LoadConfig.loadPropertyFromConfig(propertyFromConfig) + "?" + content);
+            } else {
+                message.setText(content);
+            }
             Transport.send(message);
         } catch (MessagingException e) {
             throw AppException.createMailNotSentException();
