@@ -298,7 +298,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 throw AppException.accountIsNotActivated();
             }
         } else {
-            throw AppException.revokeAnAccessLevelToTheSameAdminAccount();
+            throw AppException.addingAnAccessLevelToTheSameAdminAccount();
         }
     }
 
@@ -324,7 +324,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 throw AppException.accountIsNotActivated();
             }
         } else {
-            throw AppException.revokeAnAccessLevelToTheSameAdminAccount();
+            throw AppException.addingAnAccessLevelToTheSameAdminAccount();
         }
     }
 
@@ -346,7 +346,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 throw AppException.accountIsNotActivated();
             }
         } else {
-            throw AppException.revokeAnAccessLevelToTheSameAdminAccount();
+            throw AppException.addingAnAccessLevelToTheSameAdminAccount();
         }
     }
 
