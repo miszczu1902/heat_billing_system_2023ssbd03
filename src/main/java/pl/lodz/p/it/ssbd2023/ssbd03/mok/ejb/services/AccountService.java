@@ -27,21 +27,11 @@ public interface AccountService {
 
     Admin getAdmin();
 
-    Owner getOwner(Long id);
-
-    Manager getManager(Long id);
-
-    Admin getAdmin(Long id);
-
-    PersonalData getPersonalData(Owner owner);
+    PersonalData getPersonalData();
 
     void editSelfPersonalData(String firstName, String surname);
 
     void editUserPersonalData(String username, String firstName, String surname);
-
-    PersonalData getPersonalData(Manager manager);
-
-    PersonalData getPersonalData(Admin admin);
 
     void changePassword(String oldPassword, String newPassword, String newReapetedPassowrd);
 

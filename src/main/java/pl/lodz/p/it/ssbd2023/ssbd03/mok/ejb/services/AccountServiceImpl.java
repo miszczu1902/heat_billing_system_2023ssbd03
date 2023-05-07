@@ -25,7 +25,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountConfirmationTokenFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
@@ -50,12 +49,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Inject
     private OwnerFacade ownerFacade;
-
-    @Inject
-    private ManagerFacade managerFacade;
-
-    @Inject
-    private AdminFacade adminFacade;
 
     @Inject
     private AccountConfirmationTokenFacade accountConfirmationTokenFacade;
@@ -140,70 +133,48 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
-    public PersonalData getPersonalData(Owner owner) {
-        return personalDataFacade.find(owner.getId())
+    public PersonalData getPersonalData() {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Account account = accountFacade.findByUsername(username);
+        return personalDataFacade.find(account.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Personal data not found"));
     }
 
     @Override
-    public PersonalData getPersonalData(Manager manager) {
-        return personalDataFacade.find(manager.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Personal data not found"));
-    }
-
-    @Override
-    public PersonalData getPersonalData(Admin admin) {
-        return personalDataFacade.find(admin.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Personal data not found"));
-    }
-
-    @Override
-    public Owner getOwner(Long id) {
-        return ownerFacade.find(id)
-                .orElseThrow(() -> new IllegalArgumentException("Owner data not found."));
-    }
-
-    @Override
-    public Manager getManager(Long id) {
-        return managerFacade.find(id)
-                .orElseThrow(() -> new IllegalArgumentException("Manager data not found."));
-    }
-
-    @Override
-    public Admin getAdmin(Long id) {
-        return adminFacade.find(id)
-                .orElseThrow(() -> new IllegalArgumentException("Admin data not found."));
-    }
-
-    @Override
+    @RolesAllowed(Roles.OWNER)
     public Owner getOwner() {
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
         final Owner owner = (Owner) account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Owner)
+                .map(accessLevel -> (Owner) accessLevel)
                 .findAny()
                 .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
         return owner;
     }
 
     @Override
+    @RolesAllowed(Roles.MANAGER)
     public Manager getManager() {
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
         final Manager manager = (Manager) account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Manager)
+                .map(accessLevel -> (Manager) accessLevel)
                 .findAny()
                 .orElseThrow(() -> new IllegalStateException("Account is not an Manager."));
         return manager;
     }
 
     @Override
+    @RolesAllowed(Roles.ADMIN)
     public Admin getAdmin() {
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
         final Admin admin = (Admin) account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Admin)
-                .findFirst()
+                .map(accessLevel -> (Admin) accessLevel)
+                .findAny()
                 .orElseThrow(() -> new IllegalStateException("Account is not an Admin."));
         return admin;
     }

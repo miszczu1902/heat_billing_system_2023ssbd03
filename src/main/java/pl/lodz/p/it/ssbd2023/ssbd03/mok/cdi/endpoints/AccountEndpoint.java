@@ -154,8 +154,8 @@ public class AccountEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.OWNER)
     public OwnerDTO getMyOwnerAccount() {
-        Owner owner = accountService.getOwner(accountService.getOwner().getId());
-        return AccountConverter.createOwnerDTOEntity(owner, accountService.getPersonalData(owner));
+        Owner owner = accountService.getOwner();
+        return AccountConverter.createOwnerDTOEntity(owner, accountService.getPersonalData());
     }
 
     @GET
@@ -163,8 +163,8 @@ public class AccountEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.MANAGER)
     public ManagerDTO getMyManagerAccount() {
-        Manager manager = accountService.getManager(accountService.getManager().getId());
-        return AccountConverter.createManagerDTOEntity(manager, accountService.getPersonalData(manager));
+        Manager manager = accountService.getManager();
+        return AccountConverter.createManagerDTOEntity(manager, accountService.getPersonalData());
     }
 
     @GET
@@ -172,7 +172,7 @@ public class AccountEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.ADMIN)
     public AdminDTO getMyAdminAccount() {
-        Admin admin = accountService.getAdmin(accountService.getAdmin().getId());
-        return AccountConverter.createAdminDTOEntity(admin, accountService.getPersonalData(admin));
+        Admin admin = accountService.getAdmin();
+        return AccountConverter.createAdminDTOEntity(admin, accountService.getPersonalData());
     }
 }
