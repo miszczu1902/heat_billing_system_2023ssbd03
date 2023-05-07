@@ -179,6 +179,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
+    @Override
     public void changePassword(String oldPassword, String newPassword, String newRepeatedPassword) throws AccountPasswordException {
         if (oldPassword.equals(newPassword)) {
             throw new AccountPasswordException("Old password and new password are the same.");
