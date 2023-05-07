@@ -69,7 +69,7 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.OWNER)
     public Response changePhoneNumber(@Valid ChangePhoneNumberDTO changePhoneNumberDTO) {
         accountService.changePhoneNumber(changePhoneNumberDTO.getPhoneNumber());
-        return Response.status(Response.Status.OK).build();
+        return Response.noContent().build();
     }
 
     @PATCH
