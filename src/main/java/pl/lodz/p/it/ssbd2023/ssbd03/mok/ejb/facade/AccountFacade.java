@@ -48,7 +48,11 @@ public class AccountFacade extends AbstractFacade<Account> {
     public Account findByUsername(String username) {
         TypedQuery<Account> tq = em.createNamedQuery("Account.findByUsername", Account.class);
         tq.setParameter("username", username);
-        return tq.getSingleResult();
+        try {
+            return tq.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     public List<Account> getListOfAccountsWithFilterParams(String sortBy, int pageNumber) {

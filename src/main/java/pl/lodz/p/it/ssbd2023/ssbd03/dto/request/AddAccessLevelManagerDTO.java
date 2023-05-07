@@ -13,6 +13,7 @@ public class AddAccessLevelManagerDTO {
     @Size(min = 6, max = 16,
         message = "Max length for username is between 6 - 16 ")
     private String username;
-    @Length(max = 20)
+    @Length(min = 20, max = 20,
+            message = "License length must be 20 characters")
     private String license;
 }

@@ -13,6 +13,7 @@ public class AddAccessLevelOwnerDTO {
     @Size(min = 6, max = 16,
             message = "Max length for username is between 6 - 16 ")
     private String username;
-    @Length(min = 9, max = 9)
+    @Length(min = 9, max = 9,
+            message = "Phone number length must be 9 digits")
     private String phoneNumber;
 }
