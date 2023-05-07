@@ -68,12 +68,8 @@ public class AccountEndpoint {
     @Path("/self/phone-number")
     @RolesAllowed(Roles.OWNER)
     public Response changePhoneNumber(@Valid ChangePhoneNumberDTO changePhoneNumberDTO) {
-        try {
-            accountService.changePhoneNumber(changePhoneNumberDTO);
-            return Response.ok("Phone number changed").build();
-        } catch (IllegalStateException ex) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(ex).build();
-        }
+        accountService.changePhoneNumber(changePhoneNumberDTO.getPhoneNumber());
+        return Response.noContent().build();
     }
 
     @PATCH
