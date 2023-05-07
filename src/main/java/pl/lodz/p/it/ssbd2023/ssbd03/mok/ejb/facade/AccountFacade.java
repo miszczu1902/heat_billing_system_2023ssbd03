@@ -4,10 +4,7 @@ import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.interceptor.Interceptors;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.PersistenceException;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
@@ -48,7 +45,14 @@ public class AccountFacade extends AbstractFacade<Account> {
     public Account findByUsername(String username) {
         TypedQuery<Account> tq = em.createNamedQuery("Account.findByUsername", Account.class);
         tq.setParameter("username", username);
-        return tq.getSingleResult();
+        try {
+            return tq.getSingleResult();
+        } catch (PersistenceException pe) {
+            if (pe.getCause() instanceof NoResultException) {
+                throw AppException.createNoResultException(pe.getCause());
+            }
+            throw AppException.createDatabaseException();
+        }
     }
 
     public List<Account> getListOfAccountsWithFilterParams(String sortBy, int pageNumber) {

@@ -26,5 +26,13 @@ public interface AccountService {
 
     void enableUserAccount(String username) throws IllegalArgumentException, NoResultException;
 
+    void addAccessLevelManager(String username, String license);
+
+    void addAccessLevelOwner(String username, String phoneNumber);
+
+    void addAccessLevelAdmin(String username);
+
+    void revokeAccessLevel(String username, String accessLevel);
+
     List<Account> getListOfAccounts(String sortBy, int pageNumber);
 }
