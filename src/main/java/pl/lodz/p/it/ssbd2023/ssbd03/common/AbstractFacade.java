@@ -1,6 +1,8 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.common;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.OptimisticLockException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 
 public abstract class AbstractFacade<T> {
     public Class<T> entityClass;
@@ -12,21 +14,37 @@ public abstract class AbstractFacade<T> {
     }
 
     public void create(T entity) {
+        try {
         getEntityManager().persist(entity);
         getEntityManager().flush();
+        } catch (OptimisticLockException e) {
+            throw AppException.createOptimisticLockAppException();
+        }
     }
 
     public void edit(T entity) {
-        getEntityManager().merge(entity);
-        getEntityManager().flush();
+        try {
+            getEntityManager().merge(entity);
+            getEntityManager().flush();
+        } catch (OptimisticLockException e) {
+            throw AppException.createOptimisticLockAppException();
+        }
     }
 
     public void remove(T entity) {
-        getEntityManager().remove(getEntityManager().merge(entity));
-        getEntityManager().flush();
+        try {
+            getEntityManager().remove(getEntityManager().merge(entity));
+            getEntityManager().flush();
+        } catch (OptimisticLockException e) {
+            throw AppException.createOptimisticLockAppException();
+        }
     }
 
     public T find(Object id) {
-        return getEntityManager().find(entityClass, id);
+        try {
+            return getEntityManager().find(entityClass, id);
+        } catch (OptimisticLockException e) {
+            throw AppException.createOptimisticLockAppException();
+        }
     }
 }
