@@ -19,9 +19,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccountConfirmationToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
@@ -111,23 +110,21 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed(Roles.OWNER)
-    public void changePhoneNumber(ChangePhoneNumberDTO changePhoneNumberDTO) {
+    public void changePhoneNumber(String newPhoneNumber) {
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
-        Owner owner = (Owner) account.getAccessLevels().stream()
+        Owner owner = account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Owner)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
-        final String newPhoneNumber = changePhoneNumberDTO.getPhoneNumber();
-        if (!newPhoneNumber.equals(owner.getPhoneNumber())) {
-            if (accountFacade.findByPhoneNumber(newPhoneNumber) == null) {
+                .map(accessLevel -> (Owner) accessLevel)
+                .findAny()
+                .orElseThrow(AppException::createAccountIsNotOwnerException);
+        if (newPhoneNumber.equals(owner.getPhoneNumber())) {
+            throw AppException.createCurrentPhoneNumberException();
+        } else {
+            if (!ownerFacade.checkIfAnOwnerExistsByPhoneNumber(newPhoneNumber)) {
                 owner.setPhoneNumber(newPhoneNumber);
                 ownerFacade.edit(owner);
-            } else {
-                throw new IllegalArgumentException("Phone number is already taken.");
             }
-        } else {
-            throw new IllegalArgumentException("The given number is taken by your account.");
         }
     }
 

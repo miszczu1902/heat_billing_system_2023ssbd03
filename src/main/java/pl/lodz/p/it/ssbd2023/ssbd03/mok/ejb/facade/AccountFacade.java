@@ -4,11 +4,13 @@ import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.interceptor.Interceptors;
-import jakarta.persistence.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.PersistenceException;
+import jakarta.persistence.TypedQuery;
 import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 
@@ -46,20 +48,6 @@ public class AccountFacade extends AbstractFacade<Account> {
     public Account findByUsername(String username) {
         TypedQuery<Account> tq = em.createNamedQuery("Account.findByUsername", Account.class);
         tq.setParameter("username", username);
-        try {
-            return tq.getSingleResult();
-        } catch (PersistenceException pe) {
-            if (pe.getCause() instanceof NoResultException) {
-                throw AppException.createNoResultException(pe.getCause());
-            }
-
-            throw AppException.createDatabaseException();
-        }
-    }
-
-    public Owner findByPhoneNumber(String phoneNumber) {
-        TypedQuery<Owner> tq = em.createNamedQuery("Owner.findByPhoneNumber", Owner.class);
-        tq.setParameter("phoneNumber", phoneNumber);
         try {
             return tq.getSingleResult();
         } catch (PersistenceException pe) {
