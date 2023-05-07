@@ -29,13 +29,14 @@ public class ManagerFacade extends AbstractFacade<Manager> {
         return this.em;
     }
 
-    public Manager findByLicense(String license) {
+    public boolean findByLicense(String license) {
         TypedQuery<Manager> tq = em.createNamedQuery("Owner.findByLicense", Manager.class);
         tq.setParameter("license", license);
         try {
-            return tq.getSingleResult();
+            tq.getSingleResult();
+            return true;
         } catch (NoResultException e) {
-            return null;
+            return false;
         }
     }
 }

@@ -4,10 +4,7 @@ import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.interceptor.Interceptors;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.PersistenceException;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
@@ -50,8 +47,11 @@ public class AccountFacade extends AbstractFacade<Account> {
         tq.setParameter("username", username);
         try {
             return tq.getSingleResult();
-        } catch (NoResultException e) {
-            return null;
+        } catch (PersistenceException pe) {
+            if (pe.getCause() instanceof NoResultException) {
+                throw AppException.createNoResultException(pe.getCause());
+            }
+            throw AppException.createDatabaseException();
         }
     }
 
