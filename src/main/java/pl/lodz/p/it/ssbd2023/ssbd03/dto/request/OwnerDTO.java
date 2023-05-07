@@ -7,6 +7,7 @@ public class OwnerDTO extends AccountDTO {
     public String surname;
 
     public String language;
+
     public String phoneNumber;
 
     public OwnerDTO(String email, String username, String firstName, String surname, String language, String phoneNumber) {

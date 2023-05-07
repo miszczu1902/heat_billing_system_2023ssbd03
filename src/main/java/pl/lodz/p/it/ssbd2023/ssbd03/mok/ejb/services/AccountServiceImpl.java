@@ -181,7 +181,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         final Account account = accountFacade.findByUsername(username);
         final Owner owner = (Owner) account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Owner)
-                .findFirst()
+                .findAny()
                 .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
         return owner;
     }
@@ -192,8 +192,8 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         final Account account = accountFacade.findByUsername(username);
         final Manager manager = (Manager) account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Manager)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("Account is not an Manager."));
         return manager;
     }
 
@@ -204,7 +204,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         final Admin admin = (Admin) account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Admin)
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
+                .orElseThrow(() -> new IllegalStateException("Account is not an Admin."));
         return admin;
     }
 
