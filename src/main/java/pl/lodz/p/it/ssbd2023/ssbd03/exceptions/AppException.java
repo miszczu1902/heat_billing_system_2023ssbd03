@@ -131,7 +131,7 @@ public class AppException extends WebApplicationException {
         return new AccountWithNumberExistsException(AppException.ERROR_PHONE_NUMBER_NOT_UNIQUE_MESSAGE, Response.Status.CONFLICT);
     }
 
-    public static AccessLevelToTheSameAdminAccountException addingAnAccessLevelToTheSameAdminAccount() {
+    public static AccessLevelToTheSameAdminAccountException revokeAnAccessLevelToTheSameAdminAccount() {
         return new AccessLevelToTheSameAdminAccountException(AppException.ERROR_ADDING_AN_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT ,Response.Status.FORBIDDEN);
     }
 
