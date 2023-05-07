@@ -1,10 +1,13 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.dto.request;
 
+import lombok.Data;
+
+@Data
 public class ManagerDTO extends AccountDTO {
-    public String firstName;
-    public String surname;
-    public String language;
-    public String license;
+    private String firstName;
+    private String surname;
+    private String language;
+    private String license;
 
     public ManagerDTO(String email, String username, String firstName, String surname, String language, String license) {
         super(email, username);

@@ -25,10 +25,6 @@ public class AccountMapper {
         return account;
     }
 
-    public static OwnerDTO createOwnerDTOEntity(Owner owner, PersonalData personalData) {
-        return new OwnerDTO(owner.getAccount().getEmail(), owner.getAccount().getUsername(), personalData.getFirstName(), personalData.getSurname(), owner.getAccount().getLanguage_(), owner.getPhoneNumber());
-    }
-
     public static AccountForListDTO accountToAccountForListDTO(Account account) {
         return new AccountForListDTO(
                 account.getId(),
@@ -36,9 +32,4 @@ public class AccountMapper {
                 account.getEmail(),
                 account.getUsername());
     }
-
-    public static OwnerDTO createOwnerDTOEntity(Owner owner, PersonalData personalData) {
-        return new OwnerDTO(owner.getId(), owner.getVersion(), owner.getAccount().getEmail(), owner.getAccount().getUsername(), personalData.getFirstName(), personalData.getSurname(), owner.getAccount().getLanguage_(), owner.getPhoneNumber());
-    }
-
 }
