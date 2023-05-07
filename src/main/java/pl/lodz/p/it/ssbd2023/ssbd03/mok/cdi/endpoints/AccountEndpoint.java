@@ -153,8 +153,8 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.ADMIN)
     public Response addAccessLevelManager(@NotNull @Valid AddAccessLevelManagerDTO addAccessLevelManagerDTO) {
-      accountService.addAccessLevelManager(addAccessLevelManagerDTO.getUsername(), addAccessLevelManagerDTO.getLicense());
-      return Response.status(Response.Status.OK).build();
+        accountService.addAccessLevelManager(addAccessLevelManagerDTO.getUsername(), addAccessLevelManagerDTO.getLicense());
+        return Response.noContent().build();
     }
 
     @PATCH
@@ -163,7 +163,7 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.ADMIN)
     public Response addAccessLevelOwner(@NotNull @Valid AddAccessLevelOwnerDTO addAccessLevelOwnerDTO) {
         accountService.addAccessLevelOwner(addAccessLevelOwnerDTO.getUsername(), addAccessLevelOwnerDTO.getPhoneNumber());
-        return Response.status(Response.Status.OK).build();
+        return Response.noContent().build();
     }
 
     @PATCH
@@ -172,7 +172,7 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.ADMIN)
     public Response addAccessLevelAdmin(@NotNull @Valid AddAccessLevelAdminDTO addAccessLevelAdminDTO) {
         accountService.addAccessLevelAdmin(addAccessLevelAdminDTO.getUsername());
-        return Response.status(Response.Status.OK).build();
+        return Response.noContent().build();
     }
 
     @PATCH
@@ -181,7 +181,7 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.ADMIN)
     public Response revokeAccessLevel(@NotNull @Valid RevokeAccessLevelDTO revokeAccessLevelDTO) {
         accountService.revokeAccessLevel(revokeAccessLevelDTO.getUsername(), revokeAccessLevelDTO.getAccessLevel());
-        return Response.status(Response.Status.OK).build();
+        return Response.noContent().build();
     }
 
     @GET

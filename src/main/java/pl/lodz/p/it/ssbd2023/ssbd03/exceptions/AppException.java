@@ -30,12 +30,12 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_INVALID_CREDENTIALS = "Invalid username or password"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ADDING_AN_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT = "Adding permission to your account"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_REVOKE_THE_ONLY_LEVEL_OF_ACCESS = "One level of access cannot be taken away"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_ACCOUNT_IS_NOT_OWNER = "This account is not the owner"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_IS_NOT_ADMIN = "This account is not the admin"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_IS_NOT_MANAGER = "This account is not the manager"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCESS_LEVEL_IS_ALREADY_GRANTED = "This account already has this level of access"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_LICENSE_NOT_UNIQUE_MESSAGE = "License not unique"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_IS_NOT_ACTIVATED = "This account is not activated"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_RESULT_NOT_FOUND = "Query result not found"; //TODO - tu trzeba zrobić resource bundle
 
     @Getter
     private Throwable cause;
@@ -140,9 +140,6 @@ public class AppException extends WebApplicationException {
         return new TheOnlyLevelOfAccess(AppException.ERROR_REVOKE_THE_ONLY_LEVEL_OF_ACCESS ,Response.Status.FORBIDDEN);
     }
 
-    public static AccountIsNotOwnerException createAccountIsNotOwnerException() {
-        return new AccountIsNotOwnerException(AppException.ERROR_ACCOUNT_IS_NOT_OWNER, Response.Status.FORBIDDEN);
-    }
     public static AccountIsNotAdminException createAccountIsNotAdminException() {
         return new AccountIsNotAdminException(AppException.ERROR_ACCOUNT_IS_NOT_ADMIN, Response.Status.FORBIDDEN);
     }
@@ -155,15 +152,15 @@ public class AppException extends WebApplicationException {
         return new AccessLevelisAlreadyGranted(AppException.ERROR_ACCESS_LEVEL_IS_ALREADY_GRANTED, Response.Status.FORBIDDEN);
     }
 
-    public static AccountWithNumberExistsException createAccountWithNumberExistsException() {
-        return new AccountWithNumberExistsException(AppException.ERROR_PHONE_NUMBER_NOT_UNIQUE_MESSAGE, Response.Status.CONFLICT);
-    }
-
     public static AccountWithLicenseExistsException createAccountWithLicenseExistsException() {
         return new AccountWithLicenseExistsException(AppException.ERROR_LICENSE_NOT_UNIQUE_MESSAGE, Response.Status.CONFLICT);
     }
 
     public static AccountIsNotActivated accountIsNotActivated() {
         return new AccountIsNotActivated(AppException.ERROR_ACCOUNT_IS_NOT_ACTIVATED, Response.Status.CONFLICT);
+    }
+
+    public static NoQueryResultException createNoResultException(Throwable cause) {
+        return new NoQueryResultException(ERROR_RESULT_NOT_FOUND, Response.Status.NOT_FOUND, cause);
     }
 }
