@@ -147,57 +147,37 @@ public class AccountEndpoint {
     @PATCH
     @Path("/add-access-level-manager")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.ADMIN)
-    public Response addAccessLevelManager(AddAccessLevelManagerDTO addAccessLevelManagerDTO) {
-      try {
-          accountService.addAccessLevelManager(addAccessLevelManagerDTO.getUsername(), addAccessLevelManagerDTO.getLicense());
-          return Response.status(Response.Status.OK).build();
-      } catch (NoResultException e) {
-          return Response.status(Response.Status.NOT_FOUND).build();
-      }
+    public Response addAccessLevelManager(@NotNull @Valid AddAccessLevelManagerDTO addAccessLevelManagerDTO) {
+      accountService.addAccessLevelManager(addAccessLevelManagerDTO.getUsername(), addAccessLevelManagerDTO.getLicense());
+      return Response.status(Response.Status.OK).build();
     }
 
     @PATCH
     @Path("/add-access-level-owner")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.ADMIN)
-    public Response addAccessLevelOwner(AddAccessLevelOwnerDTO addAccessLevelOwnerDTO) {
-        try {
-            accountService.addAccessLevelOwner(addAccessLevelOwnerDTO.getUsername(), addAccessLevelOwnerDTO.getPhoneNumber());
-            return Response.status(Response.Status.OK).build();
-        } catch (NoResultException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public Response addAccessLevelOwner(@NotNull @Valid AddAccessLevelOwnerDTO addAccessLevelOwnerDTO) {
+        accountService.addAccessLevelOwner(addAccessLevelOwnerDTO.getUsername(), addAccessLevelOwnerDTO.getPhoneNumber());
+        return Response.status(Response.Status.OK).build();
     }
 
     @PATCH
     @Path("/add-access-level-admin")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.ADMIN)
-    public Response addAccessLevelAdmin(AddAccessLevelAdminDTO addAccessLevelAdminDTO) {
-        try {
-            accountService.addAccessLevelAdmin(addAccessLevelAdminDTO.getUsername());
-            return Response.status(Response.Status.OK).build();
-        } catch (NoResultException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public Response addAccessLevelAdmin(@NotNull @Valid AddAccessLevelAdminDTO addAccessLevelAdminDTO) {
+        accountService.addAccessLevelAdmin(addAccessLevelAdminDTO.getUsername());
+        return Response.status(Response.Status.OK).build();
     }
 
     @PATCH
     @Path("/revoke-access-level")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.ADMIN)
-    public Response revokeAccessLevel(RevokeAccessLevelDTO revokeAccessLevelDTO) {
-        try {
-            accountService.revokeAccessLevel(revokeAccessLevelDTO.getUsername(), revokeAccessLevelDTO.getAccessLevel());
-            return Response.status(Response.Status.OK).build();
-        } catch (NoResultException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+    public Response revokeAccessLevel(@NotNull @Valid RevokeAccessLevelDTO revokeAccessLevelDTO) {
+        accountService.revokeAccessLevel(revokeAccessLevelDTO.getUsername(), revokeAccessLevelDTO.getAccessLevel());
+        return Response.status(Response.Status.OK).build();
     }
 
     @GET

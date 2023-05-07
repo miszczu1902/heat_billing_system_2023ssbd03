@@ -21,7 +21,7 @@ import java.util.Objects;
         }
 )
 @NamedQueries({
-        @NamedQuery(name = "Owner.findByPhoneNumber", query = "SELECT d FROM Owner d WHERE d.phoneNumber = :phoneNumber")
+        @NamedQuery(name = "Owner.findByPhoneNumber", query = "SELECT d FROM Owner d WHERE d.phoneNumber = :phoneNumber"),
 })
 public class Owner extends AccessLevelMapping implements Serializable {
     @Column(name = "phone_number", nullable = false, length = 9)
