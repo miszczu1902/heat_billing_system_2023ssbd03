@@ -35,7 +35,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_LICENSE_NOT_UNIQUE_MESSAGE = "License not unique"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_IS_NOT_ACTIVATED = "This account is not activated"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_RESULT_NOT_FOUND = "Query result not found"; //TODO - tu trzeba zrobić resource bundle
-
+    protected final static String ERROR_REVOKE_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT = "You cannot take away your permissions"; //TODO - tu trzeba zrobić resource bundle
     @Getter
     private Throwable cause;
 
@@ -111,6 +111,7 @@ public class AppException extends WebApplicationException {
     public static AccountNotExistsException createAccountNotExistsException(Throwable cause) {
         return new AccountNotExistsException(AppException.ERROR_ACCOUNT_NOT_EXISTS_MESSAGE, Response.Status.NOT_FOUND, cause);
     }
+
     public static InvalidCredentialsException invalidCredentialsException() {
         return new InvalidCredentialsException(AppException.ERROR_INVALID_CREDENTIALS, Response.Status.UNAUTHORIZED);
     }
@@ -131,12 +132,12 @@ public class AppException extends WebApplicationException {
         return new AccountWithNumberExistsException(AppException.ERROR_PHONE_NUMBER_NOT_UNIQUE_MESSAGE, Response.Status.CONFLICT);
     }
 
-    public static AccessLevelToTheSameAdminAccountException revokeAnAccessLevelToTheSameAdminAccount() {
-        return new AccessLevelToTheSameAdminAccountException(AppException.ERROR_ADDING_AN_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT ,Response.Status.FORBIDDEN);
+    public static AccessLevelToTheSameAdminAccountException addingAnAccessLevelToTheSameAdminAccount() {
+        return new AccessLevelToTheSameAdminAccountException(AppException.ERROR_ADDING_AN_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT, Response.Status.FORBIDDEN);
     }
 
     public static TheOnlyLevelOfAccessException revokeTheOnlyLevelOfAccess() {
-        return new TheOnlyLevelOfAccessException(AppException.ERROR_REVOKE_THE_ONLY_LEVEL_OF_ACCESS ,Response.Status.FORBIDDEN);
+        return new TheOnlyLevelOfAccessException(AppException.ERROR_REVOKE_THE_ONLY_LEVEL_OF_ACCESS, Response.Status.FORBIDDEN);
     }
 
     public static AccountIsNotAdminException createAccountIsNotAdminException() {
@@ -161,5 +162,9 @@ public class AppException extends WebApplicationException {
 
     public static NoQueryResultException createNoResultException(Throwable cause) {
         return new NoQueryResultException(ERROR_RESULT_NOT_FOUND, Response.Status.NOT_FOUND, cause);
+    }
+
+    public static RevokeAccessLevelToTheSameAdminAccountException revokeAnAccessLevelToTheSameAdminAccount() {
+        return new RevokeAccessLevelToTheSameAdminAccountException(AppException.ERROR_REVOKE_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT, Response.Status.FORBIDDEN);
     }
 }
