@@ -14,8 +14,8 @@ import static java.lang.Long.parseLong;
 
 @Stateless
 public class JwtGenerator {
-    private long timeout = parseLong(LoadConfig.loadPropertyFromConfig("timeout"));
-    private String secret = LoadConfig.loadPropertyFromConfig("secret");
+    private final long timeout = parseLong(LoadConfig.loadPropertyFromConfig("timeout"));
+    private final String secret = LoadConfig.loadPropertyFromConfig("secret");
 
     public String generateJWT(String login, Set<String> roles) {
         return Jwts.builder()

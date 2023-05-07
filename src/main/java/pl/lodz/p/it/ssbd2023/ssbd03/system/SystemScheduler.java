@@ -5,9 +5,12 @@ import jakarta.ejb.*;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccountConfirmationToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountConfirmationTokenFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
+
+import java.util.List;
 
 @Startup
 @Singleton
@@ -23,8 +26,9 @@ public class SystemScheduler {
 
     @Schedule(hour = "*", minute = "*/1", persistent = false)
     private void cleanUnconfirmedAccounts() {
-        if (!accountConfirmationTokenFacade.findAllUnconfirmedAccounts().isEmpty()) {
-            accountConfirmationTokenFacade.findAllUnconfirmedAccounts().forEach(accountConfirmationToken -> {
+        final List<AccountConfirmationToken> allUnconfirmedAccounts = accountConfirmationTokenFacade.findAllUnconfirmedAccounts();
+        if (!allUnconfirmedAccounts.isEmpty()) {
+            allUnconfirmedAccounts.forEach(accountConfirmationToken -> {
                 accountFacade.remove(accountConfirmationToken.getAccount());
                 accountConfirmationTokenFacade.remove(accountConfirmationToken);
             });

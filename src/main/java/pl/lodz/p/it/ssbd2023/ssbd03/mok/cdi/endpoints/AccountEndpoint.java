@@ -11,6 +11,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountForListDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ErrorResponseDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
@@ -20,6 +21,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.converters.AccountConverter;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AccountMapper;
+
+import java.util.List;
 
 @Path("/accounts")
 @RequestScoped
@@ -147,6 +150,18 @@ public class AccountEndpoint {
         } catch (NoResultException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public Response getListOfAccounts(@DefaultValue("username") @QueryParam("sortBy") String sortBy,
+                                      @DefaultValue("0") @QueryParam("pageNumber") int pageNumber) {
+        final List<AccountForListDTO> listOfAccounts = accountService.getListOfAccounts(sortBy, pageNumber)
+                .stream()
+                .map(AccountMapper::accountToAccountForListDTO)
+                .toList();
+        return Response.ok().entity(listOfAccounts).build();
     }
 
     @GET
