@@ -19,7 +19,7 @@ import java.io.Serializable;
         }
 )
 @NamedQueries({
-        @NamedQuery(name = "Owner.findByLicense", query = "SELECT d FROM Manager d WHERE d.license = :license"),
+        @NamedQuery(name = "Owner.findByLicense", query = "SELECT d FROM Manager d WHERE d.license = :license")
 })
 public class Manager extends AccessLevelMapping implements Serializable {
     @Column(name = "license", nullable = false, length = 20)

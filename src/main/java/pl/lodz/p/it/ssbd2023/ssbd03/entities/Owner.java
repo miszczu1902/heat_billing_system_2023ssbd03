@@ -2,9 +2,8 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -12,8 +11,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Getter
-@Setter
+@Data
 @DiscriminatorValue("OWNER")
 @Table(name = "owner",
         indexes = {
@@ -21,7 +19,7 @@ import java.util.Objects;
         }
 )
 @NamedQueries({
-        @NamedQuery(name = "Owner.findByPhoneNumber", query = "SELECT d FROM Owner d WHERE d.phoneNumber = :phoneNumber"),
+        @NamedQuery(name = "Owner.findByPhoneNumber", query = "SELECT d FROM Owner d WHERE d.phoneNumber = :phoneNumber")
 })
 public class Owner extends AccessLevelMapping implements Serializable {
     @Column(name = "phone_number", nullable = false, length = 9)

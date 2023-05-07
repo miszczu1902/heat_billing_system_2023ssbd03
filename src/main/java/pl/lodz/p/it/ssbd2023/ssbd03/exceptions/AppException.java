@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.exceptions;
 
 import jakarta.ejb.ApplicationException;
-import jakarta.persistence.NoResultException;
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import lombok.Getter;
@@ -28,7 +27,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ACCOUNT_EXISTS_MESSAGE = "Account already exists"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_NOT_EXISTS_MESSAGE = "Account with provided data not exists"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_INVALID_CREDENTIALS = "Invalid username or password"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_ADDING_AN_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT = "Adding permission to your account"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_ADDING_AN_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT = "You can't give yourself permissions"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_REVOKE_THE_ONLY_LEVEL_OF_ACCESS = "One level of access cannot be taken away"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_IS_NOT_ADMIN = "This account is not the admin"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_IS_NOT_MANAGER = "This account is not the manager"; //TODO - tu trzeba zrobić resource bundle
@@ -132,12 +131,12 @@ public class AppException extends WebApplicationException {
         return new AccountWithNumberExistsException(AppException.ERROR_PHONE_NUMBER_NOT_UNIQUE_MESSAGE, Response.Status.CONFLICT);
     }
 
-    public static AccessLevelToTheSameAdminAccount addingAnAccessLevelToTheSameAdminAccount() {
-        return new AccessLevelToTheSameAdminAccount(AppException.ERROR_ADDING_AN_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT ,Response.Status.FORBIDDEN);
+    public static AccessLevelToTheSameAdminAccountException addingAnAccessLevelToTheSameAdminAccount() {
+        return new AccessLevelToTheSameAdminAccountException(AppException.ERROR_ADDING_AN_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT ,Response.Status.FORBIDDEN);
     }
 
-    public static TheOnlyLevelOfAccess revokeTheOnlyLevelOfAccess() {
-        return new TheOnlyLevelOfAccess(AppException.ERROR_REVOKE_THE_ONLY_LEVEL_OF_ACCESS ,Response.Status.FORBIDDEN);
+    public static TheOnlyLevelOfAccessException revokeTheOnlyLevelOfAccess() {
+        return new TheOnlyLevelOfAccessException(AppException.ERROR_REVOKE_THE_ONLY_LEVEL_OF_ACCESS ,Response.Status.FORBIDDEN);
     }
 
     public static AccountIsNotAdminException createAccountIsNotAdminException() {
@@ -148,16 +147,16 @@ public class AppException extends WebApplicationException {
         return new AccountIsNotManagerException(AppException.ERROR_ACCOUNT_IS_NOT_MANAGER, Response.Status.FORBIDDEN);
     }
 
-    public static AccessLevelisAlreadyGranted theAccessLevelisAlreadyGranted() {
-        return new AccessLevelisAlreadyGranted(AppException.ERROR_ACCESS_LEVEL_IS_ALREADY_GRANTED, Response.Status.FORBIDDEN);
+    public static AccessLevelIsAlreadyGrantedException theAccessLevelisAlreadyGranted() {
+        return new AccessLevelIsAlreadyGrantedException(AppException.ERROR_ACCESS_LEVEL_IS_ALREADY_GRANTED, Response.Status.FORBIDDEN);
     }
 
     public static AccountWithLicenseExistsException createAccountWithLicenseExistsException() {
         return new AccountWithLicenseExistsException(AppException.ERROR_LICENSE_NOT_UNIQUE_MESSAGE, Response.Status.CONFLICT);
     }
 
-    public static AccountIsNotActivated accountIsNotActivated() {
-        return new AccountIsNotActivated(AppException.ERROR_ACCOUNT_IS_NOT_ACTIVATED, Response.Status.CONFLICT);
+    public static AccountIsNotActivatedException accountIsNotActivated() {
+        return new AccountIsNotActivatedException(AppException.ERROR_ACCOUNT_IS_NOT_ACTIVATED, Response.Status.CONFLICT);
     }
 
     public static NoQueryResultException createNoResultException(Throwable cause) {
