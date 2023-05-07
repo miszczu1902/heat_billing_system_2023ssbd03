@@ -7,7 +7,6 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
-import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceException;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.credential.Password;
@@ -161,9 +160,9 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         final Account editorAccount = accountFacade.findByUsername(editor);
         final Account editableAccount = accountFacade.findByUsername(username);
 
-        if (editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
+        if (editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) {
             editPersonalData(username, firstName, surname);
-        } else if (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
+        } else if (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) {
             editPersonalData(username, firstName, surname);
         } else {
             throw AppException.createNotAllowedActionException();
@@ -187,17 +186,17 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public void disableUserAccount(String username) throws NoResultException {
+    public void disableUserAccount(String username) {
         editUserEnableFlag(username, false);
     }
 
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public void enableUserAccount(String username) throws NoResultException {
+    public void enableUserAccount(String username) {
         editUserEnableFlag(username, true);
     }
 
-    private void editUserEnableFlag(String username, boolean flag) throws NoResultException {
+    private void editUserEnableFlag(String username, boolean flag) {
         final String editor = securityContext.getCallerPrincipal().getName();
         final Account editorAccount = accountFacade.findByUsername(editor);
         final Account editableAccount = accountFacade.findByUsername(username);
@@ -206,9 +205,9 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             throw AppException.createNotAllowedActionException();
         }
 
-        if (editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
+        if (editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) {
             setUserEnableFlag(username, flag);
-        } else if (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
+        } else if (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) {
             setUserEnableFlag(username, flag);
         } else {
             throw AppException.createNotAllowedActionException();
