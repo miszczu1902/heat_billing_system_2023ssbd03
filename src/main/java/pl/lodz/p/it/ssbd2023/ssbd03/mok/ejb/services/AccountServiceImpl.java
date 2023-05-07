@@ -119,11 +119,9 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 .findAny()
                 .orElseThrow(AppException::createAccountIsNotOwnerException);
         if (newPhoneNumber.equals(owner.getPhoneNumber())) {
-            throw AppException.createCurrentPhoneNumberException();}
-        else {
-            if(ownerFacade.findByPhoneNumber(newPhoneNumber) != null) {
-                throw AppException.createAccountWithNumberExistsException();
-            } else {
+            throw AppException.createCurrentPhoneNumberException();
+        } else {
+            if (!ownerFacade.checkIfAnOwnerExistsByPhoneNumber(newPhoneNumber)) {
                 owner.setPhoneNumber(newPhoneNumber);
                 ownerFacade.edit(owner);
             }
