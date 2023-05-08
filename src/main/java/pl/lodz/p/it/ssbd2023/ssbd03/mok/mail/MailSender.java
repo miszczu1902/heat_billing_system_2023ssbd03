@@ -42,13 +42,13 @@ public class MailSender {
      }
 
      public void sendInformationAccountEnabled(String to) {
-         sendEmail(to, "Account has been disabled",
+         sendEmail(to, "Account has been enabled",
                  "Dear User, \n" +
                          "Your account has been enabled", null);
      }
 
     public void sendInformationAccountActivated(String to) {
-        sendEmail(to, "Account has been disabled",
+        sendEmail(to, "Account has been activated",
                 "Dear User, \n" +
                         "Your account has been activated", null);
     }
