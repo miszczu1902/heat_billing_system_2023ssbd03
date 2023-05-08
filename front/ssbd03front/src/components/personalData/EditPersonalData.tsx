@@ -17,8 +17,11 @@ const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtaXN6Y3p1MjEzNyIsImlhdCI6MTY4MzU2
 
 export default function EditPersonalData() {
   const [open, setOpen] = React.useState(false);
+  const [confirmOpen, setConfirmOpen] = React.useState(false);
   var [name, setName] = React.useState("");
   var [surname, setSurname] = React.useState("");
+  var [newName, setNewName] = React.useState("");
+  var [newSurname, setNewSurname] = React.useState("");
   var [nameError, setNameError] = React.useState("");
   var [surnameError, setSurnameError] = React.useState("");
 
@@ -28,7 +31,7 @@ export default function EditPersonalData() {
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (validator.isAlpha(event.target.value) && event.target.value.length <= 32) {
       setNameError("");
-      name = event.target.value;
+      newName = event.target.value;
     } else {
       setNameError("Imię może zawierać tylko litery i musi mieć długość do 32 znaków");
     }
@@ -37,7 +40,7 @@ export default function EditPersonalData() {
   const handleSurnameChange = (event: React.ChangeEvent<HTMLInputElement>) => { 
     if (validator.isAlpha(event.target.value) && event.target.value.length <= 32) {
       setSurnameError("");
-      surname = event.target.value;
+      newSurname = event.target.value;
     } else {
       setSurnameError("Nazwisko może zawierać tylko litery i musi mieć długość do 32 znaków");
     } 
@@ -65,10 +68,19 @@ export default function EditPersonalData() {
     }
   };
 
-  const handleConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+  const handleConfirmClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
     if (reason !== 'backdropClick') {
-      setOpen(false);
+      setConfirmOpen(false);
+      handleClose(event, reason);
     }
+  }
+
+  const handleConfirmConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+    if (reason !== 'backdropClick') {
+      setConfirmOpen(false);
+    }
+    setName(newName);
+    setSurname(newSurname);
     if(nameError === "" && surnameError === "") {
       const data = { firstName: name, surname: surname};
       axios.patch(GET_DATA_URL, {
@@ -78,13 +90,16 @@ export default function EditPersonalData() {
         data: data
       })
       .then(response => {
-        setName(response.data.firstName.toString());
-        setSurname(response.data.surname.toString());
       })
       .catch(error => {
         console.log(error);
       });
     }
+    
+  }
+
+  const handleConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+    setConfirmOpen(true);
   };
 
   return (
@@ -132,6 +147,15 @@ export default function EditPersonalData() {
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
           <Button onClick={handleConfirm}>Ok</Button>
+        </DialogActions>
+      </Dialog>
+
+
+      <Dialog disableEscapeKeyDown open={confirmOpen} onClose={handleConfirmClose}>
+        <DialogTitle>Czy na pewno chcesz zmienić dane osobowe użytkownika?</DialogTitle>
+        <DialogActions>
+          <Button onClick={handleConfirmClose}>Tak</Button>
+          <Button onClick={handleConfirmConfirm}>Nie</Button>
         </DialogActions>
       </Dialog>
     </div>
