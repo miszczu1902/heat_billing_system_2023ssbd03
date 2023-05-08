@@ -13,9 +13,7 @@ import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.security.enterprise.credential.Password;
 import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
-import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import org.hibernate.exception.ConstraintViolationException;
-import jakarta.ws.rs.ForbiddenException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
@@ -136,8 +134,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     public PersonalData getPersonalData() {
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
-        return personalDataFacade.find(account.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Personal data not found"));
+        return personalDataFacade.find(account.getId());
     }
 
     @Override
