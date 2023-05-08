@@ -15,9 +15,9 @@ import { useState, useEffect } from 'react';
 
 const user = "miszczu2137";
 const GET_DATA_URL = 'http://localhost:8080/api/accounts/'+ user +'/personal-data';
-const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNjgzNTY1OTQ4LCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODM1Njc3NDh9.PU0nwMWvmTHd1pTAOVS9ka7TQaiffLJLnUjXPorCKyM';
+const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNjgzNTY3MzY4LCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODM1NjkxNjh9.WKjuCzJH2buOrVzuvTtyZ4MVUECMF5ka5lSzkPntFrM';
 
-export default function EditPersonalData() {
+export default function EditUserPersonalData() {
   const [open, setOpen] = React.useState(false);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   var [name, setName] = React.useState("");
