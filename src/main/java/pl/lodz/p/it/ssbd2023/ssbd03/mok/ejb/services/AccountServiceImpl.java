@@ -185,4 +185,9 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             throw new NoResultException(e.getMessage());
         }
     }
+
+    @Override
+    public PersonalData getUserPersonalData(String username) {
+        return personalDataFacade.findByLogin(username);
+    }
 }
