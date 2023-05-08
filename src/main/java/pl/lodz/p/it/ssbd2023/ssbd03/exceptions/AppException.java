@@ -5,9 +5,7 @@ import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import lombok.Getter;
 import org.hibernate.exception.ConstraintViolationException;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountExistsException;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountNotExistsException;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.PasswordsNotSameException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.DatabaseException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
 
@@ -24,8 +22,11 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_EMAIL_NOT_UNIQUE_MESSAGE = "Email not unique"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_USERNAME_NOT_UNIQUE_MESSAGE = "Username not unique"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_PHONE_NUMBER_NOT_UNIQUE_MESSAGE = "Phone number not unique"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_CURRENT_PHONE_NUMBER = "This is your current phone number"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_ACCOUNT_IS_NOT_OWNER = "This account is not the owner"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_EXISTS_MESSAGE = "Account already exists"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_NOT_EXISTS_MESSAGE = "Account with provided data not exists"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_INVALID_CREDENTIALS = "Invalid username or password"; //TODO - tu trzeba zrobić resource bundle
 
     @Getter
     private Throwable cause;
@@ -36,6 +37,11 @@ public class AppException extends WebApplicationException {
     }
 
     public AppException(String message, Response.Status status, Throwable cause) {
+        super(message, status);
+        this.cause = cause;
+    }
+
+    public AppException(String message, Response.Status status) {
         super(message, status);
         this.cause = cause;
     }
@@ -97,8 +103,23 @@ public class AppException extends WebApplicationException {
     public static AccountNotExistsException createAccountNotExistsException(Throwable cause) {
         return new AccountNotExistsException(AppException.ERROR_ACCOUNT_NOT_EXISTS_MESSAGE, Response.Status.NOT_FOUND, cause);
     }
+    public static InvalidCredentialsException invalidCredentialsException() {
+        return new InvalidCredentialsException(AppException.ERROR_INVALID_CREDENTIALS, Response.Status.UNAUTHORIZED);
+    }
 
     public static OptimisticLockAppException createOptimisticLockAppException() {
         return new OptimisticLockAppException();
+    }
+
+    public static AccountIsNotOwnerException createAccountIsNotOwnerException() {
+        return new AccountIsNotOwnerException(AppException.ERROR_ACCOUNT_IS_NOT_OWNER, Response.Status.FORBIDDEN);
+    }
+
+    public static CurrentPhoneNumberException createCurrentPhoneNumberException() {
+        return new CurrentPhoneNumberException(AppException.ERROR_CURRENT_PHONE_NUMBER, Response.Status.CONFLICT);
+    }
+
+    public static AccountWithNumberExistsException createAccountWithNumberExistsException() {
+        return new AccountWithNumberExistsException(AppException.ERROR_PHONE_NUMBER_NOT_UNIQUE_MESSAGE, Response.Status.CONFLICT);
     }
 }
