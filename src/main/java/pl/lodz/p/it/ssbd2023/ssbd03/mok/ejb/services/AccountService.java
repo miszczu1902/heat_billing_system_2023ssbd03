@@ -18,7 +18,11 @@ public interface AccountService {
 
     String authenticate(String username, String password);
 
+    void updateLoginData(String username, boolean flag);
+
     void changePhoneNumber(String newPhoneNumber);
+
+    void adminLoggedInEmail(String email);
 
     Owner getOwner();
 

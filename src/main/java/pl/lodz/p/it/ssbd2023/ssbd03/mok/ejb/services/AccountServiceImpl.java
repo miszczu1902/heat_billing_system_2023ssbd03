@@ -13,6 +13,7 @@ import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.security.enterprise.credential.Password;
 import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.ForbiddenException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
@@ -27,6 +28,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.mok.mail.MailSender;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.IntStream;
@@ -71,6 +73,12 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Inject
     private BcryptHashGenerator bcryptHashGenerator;
 
+    @Inject
+    private LoginDataFacade loginDataFacade;
+
+    @Inject
+    private HttpServletRequest httpServletRequest;
+
     @Override
     public void createOwner(Account account) {
         account.setPassword(bcryptHashGenerator.generate(account.getPassword().toCharArray()));
@@ -106,6 +114,37 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             return jwtGenerator.generateJWT(username, roles);
         }
         throw AppException.invalidCredentialsException();
+    }
+
+    @Override
+    public void updateLoginData(String username, boolean flag) {
+        try {
+            Account account = accountFacade.findByUsername(username);
+            LoginData loginData = loginDataFacade.findById(account);
+            if (!account.getUsername().equals(username)) {
+                throw AppException.invalidCredentialsException();
+            }
+            if (flag) {
+                if (account.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) {
+                    adminLoggedInEmail(account.getEmail());
+                }
+                loginData.setInvalidLoginCounter(0);
+                loginData.setLastValidLogicAddress(httpServletRequest.getRemoteAddr());
+                loginData.setLastValidLoginDate(LocalDateTime.now(ZoneId.of("Europe/Warsaw")));
+            } else {
+                loginData.setInvalidLoginCounter(loginData.getInvalidLoginCounter() + 1);
+                loginData.setLastInvalidLogicAddress(httpServletRequest.getRemoteAddr());
+                loginData.setLastInvalidLoginDate(LocalDateTime.now(ZoneId.of("Europe/Warsaw")));
+            }
+            loginDataFacade.edit(loginData);
+        } catch (Exception ex) {
+            throw AppException.invalidCredentialsException();
+        }
+    }
+
+    @Override
+    public void adminLoggedInEmail(String email) {
+        mailSender.sendInformationAdminLoggedIn(email, httpServletRequest.getRemoteAddr());
     }
 
     @Override

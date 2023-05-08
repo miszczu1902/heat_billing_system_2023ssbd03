@@ -80,7 +80,7 @@ public class Account extends AbstractEntity {
         this.isEnable = isEnable;
         this.isActive = isActive;
         this.language_ = language_;
-        this.loginData = new LoginData(this);
+        this.loginData = new LoginData(this,0);
     }
 
     @Override
