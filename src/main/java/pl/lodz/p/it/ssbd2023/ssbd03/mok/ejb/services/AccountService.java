@@ -9,6 +9,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 
 import java.util.List;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 
 @Local
 public interface AccountService {
@@ -27,6 +28,8 @@ public interface AccountService {
     Admin getAdmin();
 
     PersonalData getPersonalData();
+
+    PersonalData getUserPersonalData(String username);
 
     void editSelfPersonalData(String firstName, String surname);
 
