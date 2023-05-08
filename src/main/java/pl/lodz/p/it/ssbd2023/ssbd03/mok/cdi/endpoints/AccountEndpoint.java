@@ -8,13 +8,21 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountForListDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePasswordDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ErrorResponseDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.converters.AccountConverter;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AccountMapper;
 
 import java.util.List;
@@ -171,5 +179,32 @@ public class AccountEndpoint {
                 .map(AccountMapper::accountToAccountForListDTO)
                 .toList();
         return Response.ok().entity(listOfAccounts).build();
+    }
+
+    @GET
+    @Path("/self/owner")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed(Roles.OWNER)
+    public OwnerDTO getMyOwnerAccount() {
+        Owner owner = accountService.getOwner();
+        return AccountConverter.createOwnerDTOEntity(owner, accountService.getPersonalData());
+    }
+
+    @GET
+    @Path("/self/manager")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed(Roles.MANAGER)
+    public ManagerDTO getMyManagerAccount() {
+        Manager manager = accountService.getManager();
+        return AccountConverter.createManagerDTOEntity(manager, accountService.getPersonalData());
+    }
+
+    @GET
+    @Path("/self/admin")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed(Roles.ADMIN)
+    public AdminDTO getMyAdminAccount() {
+        Admin admin = accountService.getAdmin();
+        return AccountConverter.createAdminDTOEntity(admin, accountService.getPersonalData());
     }
 }
