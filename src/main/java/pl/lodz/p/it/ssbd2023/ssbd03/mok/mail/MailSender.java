@@ -33,26 +33,22 @@ public class MailSender {
     }
 
     public void sendLinkToActivateAccountToEmail(String to, String subject, String content) {
-        sendEmail(to, subject, content, "activation.url");
+        sendEmail(to, subject, LoadConfig.loadPropertyFromConfig("activation.url") + "?" + content);
     }
 
     public void sendInformationAdminLoggedIn(String to, String ipAddress) {
         sendEmail(to, "Security Alert!",
                 "Someone from ip address: " + ipAddress +
-                        " just logged in to your account", null);
+                        " just logged in to your account");//TODO - tu trzeba zrobić resource bundle
     }
 
-    private void sendEmail(String to, String subject, String content, String propertyFromConfig) {
+    private void sendEmail(String to, String subject, String content) {
         try {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(LoadConfig.loadPropertyFromConfig("mail.login")));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(subject);
-            if(propertyFromConfig != null) {
-                message.setText(LoadConfig.loadPropertyFromConfig(propertyFromConfig) + "?" + content);
-            } else {
-                message.setText(content);
-            }
+            message.setText(content);
             Transport.send(message);
         } catch (MessagingException e) {
             throw AppException.createMailNotSentException();

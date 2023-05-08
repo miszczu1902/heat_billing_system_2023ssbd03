@@ -26,6 +26,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.mail.MailSender;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -119,22 +120,19 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     public void updateLoginData(String username, boolean flag) {
         try {
-            Account account = accountFacade.findByUsername(username);
-            LoginData loginData = loginDataFacade.findById(account);
-            if (!account.getUsername().equals(username)) {
-                throw AppException.invalidCredentialsException();
-            }
+            final Account account = accountFacade.findByUsername(username);
+            final LoginData loginData = loginDataFacade.findById(account);
             if (flag) {
                 if (account.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) {
                     adminLoggedInEmail(account.getEmail());
                 }
                 loginData.setInvalidLoginCounter(0);
                 loginData.setLastValidLogicAddress(httpServletRequest.getRemoteAddr());
-                loginData.setLastValidLoginDate(LocalDateTime.now(ZoneId.of("Europe/Warsaw")));
+                loginData.setLastValidLoginDate(LocalDateTime.now(ZoneId.of(LoadConfig.loadPropertyFromConfig("zone"))));
             } else {
                 loginData.setInvalidLoginCounter(loginData.getInvalidLoginCounter() + 1);
                 loginData.setLastInvalidLogicAddress(httpServletRequest.getRemoteAddr());
-                loginData.setLastInvalidLoginDate(LocalDateTime.now(ZoneId.of("Europe/Warsaw")));
+                loginData.setLastInvalidLoginDate(LocalDateTime.now(ZoneId.of(LoadConfig.loadPropertyFromConfig("zone"))));
             }
             loginDataFacade.edit(loginData);
         } catch (Exception ex) {
