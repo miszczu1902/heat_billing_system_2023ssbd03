@@ -18,23 +18,18 @@ import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccountConfirmationToken;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountConfirmationTokenFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.OwnerFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.PersonalDataFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.mail.MailSender;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -48,6 +43,12 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Inject
     private AccountFacade accountFacade;
+
+    @Inject
+    private ManagerFacade managerFacade;
+
+    @Inject
+    private AdminFacade adminFacade;
 
     @Inject
     private AccountConfirmationTokenFacade accountConfirmationTokenFacade;
@@ -123,6 +124,8 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             if (!ownerFacade.checkIfAnOwnerExistsByPhoneNumber(newPhoneNumber)) {
                 owner.setPhoneNumber(newPhoneNumber);
                 ownerFacade.edit(owner);
+            } else {
+                throw AppException.createAccountWithNumberExistsException();
             }
         }
     }
@@ -224,6 +227,138 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         final Account editableAccount = accountFacade.findByUsername(username);
         editableAccount.setIsEnable(flag);
         accountFacade.edit(editableAccount);
+    }
+
+    @Override
+    public void addAccessLevelManager(String username, String license) {
+        final String adminUsername = securityContext.getCallerPrincipal().getName();
+        if (!username.equals(adminUsername)) {
+            Account account = accountFacade.findByUsername(username);
+            if (account.getIsActive()) {
+                if (managerFacade.findByLicense(license)) {
+                    throw AppException.createAccountWithLicenseExistsException();
+                } else {
+                    if (account.getAccessLevels().stream()
+                            .noneMatch(accessLevel -> accessLevel.getAccessLevel().equals(Roles.MANAGER))) {
+                        Manager manager = new Manager(license);
+                        manager.setAccount(account);
+                        account.getAccessLevels().add(manager);
+                    } else {
+                        throw AppException.theAccessLevelisAlreadyGranted();
+                    }
+                }
+            } else {
+                throw AppException.accountIsNotActivated();
+            }
+        } else {
+            throw AppException.addingAnAccessLevelToTheSameAdminAccount();
+        }
+    }
+
+    @Override
+    public void addAccessLevelOwner(String username, String phoneNumber) {
+        final String adminUsername = securityContext.getCallerPrincipal().getName();
+        if (!username.equals(adminUsername)) {
+            Account account = accountFacade.findByUsername(username);
+            if (account.getIsActive()) {
+                if (!ownerFacade.checkIfAnOwnerExistsByPhoneNumber(phoneNumber)) {
+                    if (account.getAccessLevels().stream()
+                            .noneMatch(accessLevel -> accessLevel.getAccessLevel().equals(Roles.OWNER))) {
+                        Owner owner = new Owner(phoneNumber);
+                        owner.setAccount(account);
+                        account.getAccessLevels().add(owner);
+                    } else {
+                        throw AppException.theAccessLevelisAlreadyGranted();
+                    }
+                } else {
+                    throw AppException.createAccountWithNumberExistsException();
+                }
+            } else {
+                throw AppException.accountIsNotActivated();
+            }
+        } else {
+            throw AppException.addingAnAccessLevelToTheSameAdminAccount();
+        }
+    }
+
+    @Override
+    public void addAccessLevelAdmin(String username) {
+        final String adminUsername = securityContext.getCallerPrincipal().getName();
+        if (!username.equals(adminUsername)) {
+            Account account = accountFacade.findByUsername(username);
+            if (account.getIsActive()) {
+                if (account.getAccessLevels().stream()
+                        .noneMatch(accessLevel -> accessLevel.getAccessLevel().equals(Roles.ADMIN))) {
+                    Admin admin = new Admin();
+                    admin.setAccount(account);
+                    account.getAccessLevels().add(admin);
+                } else {
+                    throw AppException.theAccessLevelisAlreadyGranted();
+                }
+            } else {
+                throw AppException.accountIsNotActivated();
+            }
+        } else {
+            throw AppException.addingAnAccessLevelToTheSameAdminAccount();
+        }
+    }
+
+    @Override
+    public void revokeAccessLevel(String username, String access) {
+        final String adminUsername = securityContext.getCallerPrincipal().getName();
+        if (!username.equals(adminUsername)) {
+            Account account = accountFacade.findByUsername(username);
+            if (account.getIsActive()) {
+                final int size = account.getAccessLevels().size();
+                if (size > 1) {
+                    if (access.equals(Roles.MANAGER)) {
+                        Manager manager = account.getAccessLevels().stream()
+                                .filter(accessLevel -> accessLevel instanceof Manager)
+                                .map(accessLevel -> (Manager) accessLevel)
+                                .findAny()
+                                .orElseThrow(AppException::createAccountIsNotManagerException);
+                        final int index1 = IntStream.range(0, account.getAccessLevels().size())
+                                .filter(i -> account.getAccessLevels().get(i) == manager)
+                                .findFirst()
+                                .orElse(-1);
+                        account.getAccessLevels().remove(index1);
+                        managerFacade.remove(manager);
+                    }
+                    if (access.equals(Roles.ADMIN)) {
+                        Admin admin = account.getAccessLevels().stream()
+                                .filter(accessLevel -> accessLevel instanceof Admin)
+                                .map(accessLevel -> (Admin) accessLevel)
+                                .findAny()
+                                .orElseThrow(AppException::createAccountIsNotAdminException);
+                        final int index = IntStream.range(0, account.getAccessLevels().size())
+                                .filter(i -> account.getAccessLevels().get(i) == admin)
+                                .findFirst()
+                                .orElse(-1);
+                        account.getAccessLevels().remove(index);
+                        adminFacade.remove(admin);
+                    }
+                    if (access.equals(Roles.OWNER)) {
+                        Owner owner = account.getAccessLevels().stream()
+                                .filter(accessLevel -> accessLevel instanceof Owner)
+                                .map(accessLevel -> (Owner) accessLevel)
+                                .findAny()
+                                .orElseThrow(AppException::createAccountIsNotOwnerException);
+                        final int index = IntStream.range(0, account.getAccessLevels().size())
+                                .filter(i -> account.getAccessLevels().get(i) == owner)
+                                .findFirst()
+                                .orElse(-1);
+                        account.getAccessLevels().remove(index);
+                        ownerFacade.remove(owner);
+                    }
+                } else {
+                    throw AppException.revokeTheOnlyLevelOfAccess();
+                }
+            } else {
+                throw AppException.accountIsNotActivated();
+            }
+        } else {
+            throw AppException.revokeAnAccessLevelToTheSameAdminAccount();
+        }
     }
 
     @Override
