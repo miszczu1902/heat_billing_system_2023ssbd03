@@ -7,9 +7,7 @@ import lombok.*;
 
 import java.io.Serializable;
 
-@Getter
-@Setter
-@ToString
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateOwnerDTO implements Serializable {
@@ -20,7 +18,6 @@ public class CreateOwnerDTO implements Serializable {
     @NotNull
     @Size(max = 32, message = "Max length for surname is 32")
     private String surname;
-
     @NotNull
     @Size(min = 6, max = 16,
             message = "Max length for username is between 6 - 16 ")
@@ -34,6 +31,8 @@ public class CreateOwnerDTO implements Serializable {
     private String email;
 
     @NotNull
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+    message = "Restrictions for password is: at least 8 characters length, at least one upper and lower case, number and special digit")
     @ToString.Exclude
     private String password;
 

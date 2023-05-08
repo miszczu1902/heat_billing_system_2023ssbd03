@@ -10,6 +10,6 @@ import org.hibernate.validator.constraints.Length;
 @NoArgsConstructor
 public class ChangePhoneNumberDTO {
     @Length(min = 9, max = 9,
-            message = "The lenght of the phone number must be 9")
+            message = "The length of the phone number must be 9")
     private String phoneNumber;
 }

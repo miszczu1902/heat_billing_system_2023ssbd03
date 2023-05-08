@@ -9,14 +9,25 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountForListDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePasswordDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ErrorResponseDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.converters.AccountConverter;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AccountMapper;
+
+import java.util.List;
 
 @Path("/accounts")
 @RequestScoped
@@ -50,7 +61,7 @@ public class AccountEndpoint {
     @Path("/login")
     @RolesAllowed(Roles.GUEST)
     public Response authenticate(@Valid LoginDTO loginDTO) {
-        String token = accountService.authenticate(loginDTO);
+        final String token = accountService.authenticate(loginDTO.getUsername(), loginDTO.getPassword());
         return Response.ok().header("Bearer", token).build();
     }
 
@@ -66,12 +77,8 @@ public class AccountEndpoint {
     @Path("/self/phone-number")
     @RolesAllowed(Roles.OWNER)
     public Response changePhoneNumber(@Valid ChangePhoneNumberDTO changePhoneNumberDTO) {
-        try {
-            accountService.changePhoneNumber(changePhoneNumberDTO);
-            return Response.ok("Phone number changed").build();
-        } catch (IllegalStateException ex) {
-            return Response.status(Response.Status.BAD_REQUEST).entity(ex).build();
-        }
+        accountService.changePhoneNumber(changePhoneNumberDTO.getPhoneNumber());
+        return Response.noContent().build();
     }
 
     @PATCH
@@ -96,12 +103,11 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/self/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public Response editPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO){
+    public Response editPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO) {
         try {
-        accountService.editSelfPersonalData(personalDataDTO.getFirstName(), personalDataDTO.getSurname());
-        return Response.status(Response.Status.OK).build();
-        }
-        catch (NoResultException e) {
+            accountService.editSelfPersonalData(personalDataDTO.getFirstName(), personalDataDTO.getSurname());
+            return Response.status(Response.Status.OK).build();
+        } catch (NoResultException e) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
@@ -119,7 +125,7 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public Response editUserPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO, @PathParam("username") String username){
+    public Response editUserPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO, @PathParam("username") String username) {
         try {
             accountService.editUserPersonalData(username, personalDataDTO.getFirstName(), personalDataDTO.getSurname());
             return Response.status(Response.Status.OK).build();
@@ -128,5 +134,106 @@ public class AccountEndpoint {
         } catch (ForbiddenException e) {
             return Response.status(Response.Status.FORBIDDEN).build();
         }
+    }
+
+    @PATCH
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{username}/disable")
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public Response disableUserAccount(@PathParam("username") String username) {
+        try {
+            accountService.disableUserAccount(username);
+            return Response.status(Response.Status.OK).build();
+        } catch (NoResultException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @PATCH
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{username}/enable")
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public Response enableUserAccount(@PathParam("username") String username) {
+        try {
+            accountService.enableUserAccount(username);
+            return Response.status(Response.Status.OK).build();
+        } catch (NoResultException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @PATCH
+    @Path("/add-access-level-manager")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed(Roles.ADMIN)
+    public Response addAccessLevelManager(@NotNull @Valid AddAccessLevelManagerDTO addAccessLevelManagerDTO) {
+        accountService.addAccessLevelManager(addAccessLevelManagerDTO.getUsername(), addAccessLevelManagerDTO.getLicense());
+        return Response.noContent().build();
+    }
+
+    @PATCH
+    @Path("/add-access-level-owner")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed(Roles.ADMIN)
+    public Response addAccessLevelOwner(@NotNull @Valid AddAccessLevelOwnerDTO addAccessLevelOwnerDTO) {
+        accountService.addAccessLevelOwner(addAccessLevelOwnerDTO.getUsername(), addAccessLevelOwnerDTO.getPhoneNumber());
+        return Response.noContent().build();
+    }
+
+    @PATCH
+    @Path("/add-access-level-admin")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed(Roles.ADMIN)
+    public Response addAccessLevelAdmin(@NotNull @Valid AddAccessLevelAdminDTO addAccessLevelAdminDTO) {
+        accountService.addAccessLevelAdmin(addAccessLevelAdminDTO.getUsername());
+        return Response.noContent().build();
+    }
+
+    @PATCH
+    @Path("/revoke-access-level")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed(Roles.ADMIN)
+    public Response revokeAccessLevel(@NotNull @Valid RevokeAccessLevelDTO revokeAccessLevelDTO) {
+        accountService.revokeAccessLevel(revokeAccessLevelDTO.getUsername(), revokeAccessLevelDTO.getAccessLevel());
+        return Response.noContent().build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public Response getListOfAccounts(@DefaultValue("username") @QueryParam("sortBy") String sortBy,
+                                      @DefaultValue("0") @QueryParam("pageNumber") int pageNumber) {
+        final List<AccountForListDTO> listOfAccounts = accountService.getListOfAccounts(sortBy, pageNumber)
+                .stream()
+                .map(AccountMapper::accountToAccountForListDTO)
+                .toList();
+        return Response.ok().entity(listOfAccounts).build();
+    }
+
+    @GET
+    @Path("/self/owner")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed(Roles.OWNER)
+    public OwnerDTO getMyOwnerAccount() {
+        Owner owner = accountService.getOwner();
+        return AccountConverter.createOwnerDTOEntity(owner, accountService.getPersonalData());
+    }
+
+    @GET
+    @Path("/self/manager")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed(Roles.MANAGER)
+    public ManagerDTO getMyManagerAccount() {
+        Manager manager = accountService.getManager();
+        return AccountConverter.createManagerDTOEntity(manager, accountService.getPersonalData());
+    }
+
+    @GET
+    @Path("/self/admin")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed(Roles.ADMIN)
+    public AdminDTO getMyAdminAccount() {
+        Admin admin = accountService.getAdmin();
+        return AccountConverter.createAdminDTOEntity(admin, accountService.getPersonalData());
     }
 }

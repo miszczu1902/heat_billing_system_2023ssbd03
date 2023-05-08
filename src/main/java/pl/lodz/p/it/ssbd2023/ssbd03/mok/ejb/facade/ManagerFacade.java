@@ -3,23 +3,24 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
-import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.interceptor.Interceptors;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors({TrackerInterceptor.class})
-public class PersonalDataFacade extends AbstractFacade<PersonalData> {
+public class ManagerFacade extends AbstractFacade<Manager> {
     @PersistenceContext(unitName = "ssbd03mokPU")
     private EntityManager em;
 
-    public PersonalDataFacade() {
-        super(PersonalData.class);
+    public ManagerFacade() {
+        super(Manager.class);
     }
 
     @Override
@@ -27,9 +28,14 @@ public class PersonalDataFacade extends AbstractFacade<PersonalData> {
         return this.em;
     }
 
-    public PersonalData findByLogin(String login) {
-        TypedQuery<PersonalData> tq = em.createNamedQuery("PersonalData.findByLogin", PersonalData.class);
-        tq.setParameter("login", login);
-        return tq.getSingleResult();
+    public boolean findByLicense(String license) {
+        TypedQuery<Manager> tq = em.createNamedQuery("Owner.findByLicense", Manager.class);
+        tq.setParameter("license", license);
+        try {
+            tq.getSingleResult();
+            return true;
+        } catch (NoResultException e) {
+            return false;
+        }
     }
 }
