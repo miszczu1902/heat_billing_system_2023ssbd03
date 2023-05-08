@@ -9,10 +9,10 @@ import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.persistence.NoResultException;
 import jakarta.security.enterprise.SecurityContext;
+import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.security.enterprise.credential.Password;
 import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
-import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.ws.rs.ForbiddenException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
@@ -131,7 +131,54 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    public PersonalData getPersonalData() {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Account account = accountFacade.findByUsername(username);
+        return personalDataFacade.find(account.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Personal data not found"));
+    }
+
+    @Override
+    @RolesAllowed(Roles.OWNER)
+    public Owner getOwner() {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Account account = accountFacade.findByUsername(username);
+        final Owner owner = (Owner) account.getAccessLevels().stream()
+                .filter(accessLevel -> accessLevel instanceof Owner)
+                .map(accessLevel -> (Owner) accessLevel)
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
+        return owner;
+    }
+
+    @Override
+    @RolesAllowed(Roles.MANAGER)
+    public Manager getManager() {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Account account = accountFacade.findByUsername(username);
+        final Manager manager = (Manager) account.getAccessLevels().stream()
+                .filter(accessLevel -> accessLevel instanceof Manager)
+                .map(accessLevel -> (Manager) accessLevel)
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("Account is not an Manager."));
+        return manager;
+    }
+
+    @Override
+    @RolesAllowed(Roles.ADMIN)
+    public Admin getAdmin() {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Account account = accountFacade.findByUsername(username);
+        final Admin admin = (Admin) account.getAccessLevels().stream()
+                .filter(accessLevel -> accessLevel instanceof Admin)
+                .map(accessLevel -> (Admin) accessLevel)
+                .findAny()
+                .orElseThrow(() -> new IllegalStateException("Account is not an Admin."));
+        return admin;
+    }
+
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
+    @Override
     public void changePassword(String oldPassword, String newPassword, String newRepeatedPassword) throws AccountPasswordException {
         if (oldPassword.equals(newPassword)) {
             throw new AccountPasswordException("Old password and new password are the same.");
