@@ -13,6 +13,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountForListDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ErrorResponseDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
@@ -88,6 +89,15 @@ public class AccountEndpoint {
                             e.getMessage());
             return Response.status(Response.Status.BAD_REQUEST).entity(errorResponseDTO).build();
         }
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/self/personal-data")
+    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
+    public Response getPersonalData() {
+        PersonalData personalData = accountService.getPersonalData();
+        return Response.ok().entity(new PersonalDataDTO(personalData.getFirstName(), personalData.getSurname())).build();
     }
 
     @PATCH

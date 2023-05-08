@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services;
 import jakarta.ejb.Local;
 import jakarta.persistence.NoResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 
 import java.util.List;
 
@@ -15,6 +16,8 @@ public interface AccountService {
     String authenticate(String username, String password);
 
     void changePhoneNumber(String newPhoneNumber);
+
+    PersonalData getPersonalData();
 
     void editSelfPersonalData(String firstName, String surname);
 

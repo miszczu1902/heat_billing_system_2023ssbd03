@@ -9,13 +9,31 @@ import NavbarPanel from '../navigation/NavbarPanel';
 import { TextField } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import Divider from '@mui/material/Divider';
+import axios from 'axios'; 
 
-export default function DialogSelect() {
+const GET_DATA_URL = 'http://localhost:8080/api/data';
+
+export default function EditPersonalData() {
   const [open, setOpen] = React.useState(false);
   var [name, setName] = React.useState('');
   var [surname, setSurname] = React.useState('');
+
+  axios.get('/api/data', {
+    headers: {
+      Authorization: 'Bearer ' + ""
+    },
+    params: {
+      limit: 10,
+      offset: 0
+    }
+  })
+  .then(response => {
+    // handle response data
+  })
+  .catch(error => {
+    // handle error
+  });
+  
 
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

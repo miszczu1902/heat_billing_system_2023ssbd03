@@ -230,4 +230,10 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     public List<Account> getListOfAccounts(String sortBy, int pageNumber) {
         return accountFacade.getListOfAccountsWithFilterParams(sortBy, pageNumber);
     }
+
+    @Override
+    public PersonalData getPersonalData() {
+        final String username = securityContext.getCallerPrincipal().getName();
+        return personalDataFacade.findByLogin(username);
+    }
 }
