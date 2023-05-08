@@ -11,9 +11,10 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import axios from 'axios'; 
 import validator from "validator";
+import { useState, useEffect } from 'react';
 
 const GET_DATA_URL = 'http://localhost:8080/api/accounts/self/personal-data';
-const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtaXN6Y3p1MjEzNyIsImlhdCI6MTY4MzU2MDcyNCwicm9sZSI6Ik9XTkVSIiwiZXhwIjoxNjgzNTYyNTI0fQ.DjIMxOxZ_cliph6fzYVuZZdL3cUDY_scPHloMhy8L5A';
+const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtaXN6Y3p1MjEzNyIsImlhdCI6MTY4MzU2NTAxNywicm9sZSI6Ik9XTkVSIiwiZXhwIjoxNjgzNTY2ODE3fQ.ddfkn394c0xhJsY2d58P5uQGJD7Lu4iY3Of7stt9NgI';
 
 export default function EditPersonalData() {
   const [open, setOpen] = React.useState(false);
@@ -24,6 +25,21 @@ export default function EditPersonalData() {
   var [newSurname, setNewSurname] = React.useState("");
   var [nameError, setNameError] = React.useState("");
   var [surnameError, setSurnameError] = React.useState("");
+
+  useEffect(() => {
+    axios.get(GET_DATA_URL, {
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
+    })
+    .then(response => {
+      setName(response.data.firstName.toString());
+      setSurname(response.data.surname.toString());
+    })
+    .catch(error => {
+      // handle error
+    });
+  }, []);
 
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -71,7 +87,6 @@ export default function EditPersonalData() {
   const handleConfirmClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
     if (reason !== 'backdropClick') {
       setConfirmOpen(false);
-      handleClose(event, reason);
     }
   }
 
@@ -95,7 +110,7 @@ export default function EditPersonalData() {
         console.log(error);
       });
     }
-    
+    handleClose(event, reason);
   }
 
   const handleConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
@@ -154,8 +169,8 @@ export default function EditPersonalData() {
       <Dialog disableEscapeKeyDown open={confirmOpen} onClose={handleConfirmClose}>
         <DialogTitle>Czy na pewno chcesz zmienić dane osobowe użytkownika?</DialogTitle>
         <DialogActions>
-          <Button onClick={handleConfirmClose}>Tak</Button>
-          <Button onClick={handleConfirmConfirm}>Nie</Button>
+          <Button onClick={handleConfirmClose}>Nie</Button>
+          <Button onClick={handleConfirmConfirm}>Tak</Button>
         </DialogActions>
       </Dialog>
     </div>
