@@ -324,7 +324,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 } else {
                     if (account.getAccessLevels().stream()
                             .noneMatch(accessLevel -> accessLevel.getAccessLevel().equals(Roles.MANAGER))) {
-                        Manager manager = new Manager(license);
+                        final Manager manager = new Manager(license);
                         manager.setAccount(account);
                         account.getAccessLevels().add(manager);
                         mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "manager");
@@ -349,7 +349,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 if (!ownerFacade.checkIfAnOwnerExistsByPhoneNumber(phoneNumber)) {
                     if (account.getAccessLevels().stream()
                             .noneMatch(accessLevel -> accessLevel.getAccessLevel().equals(Roles.OWNER))) {
-                        Owner owner = new Owner(phoneNumber);
+                        final Owner owner = new Owner(phoneNumber);
                         owner.setAccount(account);
                         account.getAccessLevels().add(owner);
                         mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "owner");
@@ -375,7 +375,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             if (account.getIsActive()) {
                 if (account.getAccessLevels().stream()
                         .noneMatch(accessLevel -> accessLevel.getAccessLevel().equals(Roles.ADMIN))) {
-                    Admin admin = new Admin();
+                    final Admin admin = new Admin();
                     admin.setAccount(account);
                     account.getAccessLevels().add(admin);
                     mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "admin");
