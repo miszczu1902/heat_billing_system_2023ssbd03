@@ -15,7 +15,7 @@ import jakarta.security.enterprise.identitystore.CredentialValidationResult;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.ForbiddenException;
-import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
+import pl.lodz.p.it.ssbd2023.ssbd03.auth.TokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
@@ -57,10 +57,13 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     private AccountConfirmationTokenFacade accountConfirmationTokenFacade;
 
     @Inject
+    private ResetPasswordTokenFacade resetPasswordTokenFacade;
+
+    @Inject
     private MailSender mailSender;
 
     @Inject
-    private ConfirmationTokenGenerator confirmationTokenGenerator;
+    private TokenGenerator tokenGenerator;
 
     @Inject
     private JwtGenerator jwtGenerator;
@@ -88,7 +91,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         accountFacade.create(account);
 
         AccountConfirmationToken accountConfirmationToken = new AccountConfirmationToken(
-                confirmationTokenGenerator.createAccountConfirmationToken(), account);
+                tokenGenerator.createAccountConfirmationToken(), account);
         accountConfirmationTokenFacade.create(accountConfirmationToken);
 
         mailSender.sendLinkToActivateAccountToEmail(account.getEmail(), "Activate account", accountConfirmationToken.getTokenValue());
@@ -242,7 +245,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         if (!newPassword.equals(newRepeatedPassword)) {
             throw AppException.createPasswordsNotSameException();
         }
-        final Account account = accountFacade.findByUsername(username); //rzuca 500 jak nie istnieje
+        final Account account = accountFacade.findByUsername(username);
         final char[] newPasswordCharArray = newPassword.toCharArray();
         if (bcryptHashGenerator.verify(newPasswordCharArray, account.getPassword())) {
             throw AppException.createSameOldAndNewPasswordException();
@@ -250,6 +253,16 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         final String newPasswordHash = bcryptHashGenerator.generate(newPasswordCharArray);
         account.setPassword(newPasswordHash);
         accountFacade.edit(account);
+        String token = tokenGenerator.createResetPasswordToken();
+        while (resetPasswordTokenFacade.checkIfResetPasswordTokenExistsByTokenValue(token)) {
+            token = tokenGenerator.createResetPasswordToken();
+        }
+        final ResetPasswordToken resetPasswordToken = new ResetPasswordToken(
+                token, account);
+        resetPasswordTokenFacade.create(resetPasswordToken);
+
+//        mailSender.sendLinkToActivateAccountToEmail(account.getEmail(), "Activate account", accountConfirmationToken.getTokenValue());
+
     }
 
     @Override
