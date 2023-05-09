@@ -193,6 +193,13 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public Account getAccount(String username) {
+        final Account account = accountFacade.findByUsername(username);
+        return account;
+    }
+
+    @Override
     @RolesAllowed(Roles.OWNER)
     public Owner getOwner() {
         final String username = securityContext.getCallerPrincipal().getName();

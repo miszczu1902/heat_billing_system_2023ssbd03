@@ -1,10 +1,11 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.util.mappers;
 
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.AdminDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ManagerDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.OwnerDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccounInfoDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountForListDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AdminDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ManagerDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.OwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 
 public class AccountMapper {
@@ -30,6 +31,38 @@ public class AccountMapper {
                 account.getVersion(),
                 account.getEmail(),
                 account.getUsername());
+    }
+
+    public static AccounInfoDTO createAccountInfoDTOEntity(Account account) {
+        final String phoneNumber = account.getAccessLevels().stream()
+                .filter(accessLevel -> accessLevel instanceof Owner)
+                .map(accessLevel -> (Owner) accessLevel)
+                .findAny()
+                .map(Owner::getPhoneNumber)
+                .orElse(null);
+
+        final String license = account.getAccessLevels().stream()
+                .filter(accessLevel -> accessLevel instanceof Manager)
+                .map(accessLevel -> (Manager) accessLevel)
+                .findAny()
+                .map(Manager::getLicense)
+                .orElse(null);
+
+        return new AccounInfoDTO(
+                account.getId(),
+                account.getVersion(),
+                account.getEmail(),
+                account.getUsername(),
+                account.getIsEnable(),
+                account.getIsActive(),
+                account.getRegisterDate().toString(),
+                account.getAccessLevels().stream()
+                        .map(accessLevel -> (String) accessLevel.getAccessLevel())
+                        .toList(),
+                account.getPersonalData().getFirstName(),
+                account.getPersonalData().getSurname(),
+                phoneNumber,
+                license);
     }
 
     public static OwnerDTO createOwnerDTOEntity(Owner owner, PersonalData personalData) {

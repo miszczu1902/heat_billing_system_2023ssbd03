@@ -210,6 +210,16 @@ public class AccountEndpoint {
     }
 
     @GET
+    @Path("/{username}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public Response getAccount(@PathParam("username") String username) {
+        final Account account = accountService.getAccount(username);
+        final AccounInfoDTO accounInfoDTO = AccountMapper.createAccountInfoDTOEntity(account);
+        return Response.ok().entity(accounInfoDTO).build();
+    }
+
+    @GET
     @Path("/self/owner")
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.OWNER)
