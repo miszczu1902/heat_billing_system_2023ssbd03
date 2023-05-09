@@ -94,7 +94,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 tokenGenerator.createAccountConfirmationToken(), account);
         accountConfirmationTokenFacade.create(accountConfirmationToken);
 
-        mailSender.sendLinkToActivateAccountToEmail(account.getEmail(), "Activate account", accountConfirmationToken.getTokenValue());
+        mailSender.sendLinkToActivateAccount(account.getEmail(), "Activate account", accountConfirmationToken.getTokenValue());
     }
 
     @Override
@@ -261,8 +261,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 token, account);
         resetPasswordTokenFacade.create(resetPasswordToken);
 
-//        mailSender.sendLinkToActivateAccountToEmail(account.getEmail(), "Activate account", accountConfirmationToken.getTokenValue());
-
+        mailSender.sendInformationAboutChangedPasswordByAdmin(account.getEmail(), token);
     }
 
     @Override
