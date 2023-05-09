@@ -51,7 +51,7 @@ public class MailSender {
     public void sendInformationRevokeAnAccessLevel(String to, String role) {
         sendEmail(to, "Security Alert!",
                 "The " + role +
-                        " access level has been removed form your account.");//TODO - tu trzeba zrobić resource bundle
+                        " access level has been removed from your account.");//TODO - tu trzeba zrobić resource bundle
     }
 
     private void sendEmail(String to, String subject, String content) {
