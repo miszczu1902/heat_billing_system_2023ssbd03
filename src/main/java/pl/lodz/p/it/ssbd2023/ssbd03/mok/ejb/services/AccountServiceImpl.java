@@ -317,7 +317,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     public void addAccessLevelManager(String username, String license) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
         if (!username.equals(adminUsername)) {
-            Account account = accountFacade.findByUsername(username);
+            final Account account = accountFacade.findByUsername(username);
             if (account.getIsActive()) {
                 if (managerFacade.findByLicense(license)) {
                     throw AppException.createAccountWithLicenseExistsException();
@@ -344,7 +344,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     public void addAccessLevelOwner(String username, String phoneNumber) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
         if (!username.equals(adminUsername)) {
-            Account account = accountFacade.findByUsername(username);
+            final Account account = accountFacade.findByUsername(username);
             if (account.getIsActive()) {
                 if (!ownerFacade.checkIfAnOwnerExistsByPhoneNumber(phoneNumber)) {
                     if (account.getAccessLevels().stream()
@@ -371,7 +371,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     public void addAccessLevelAdmin(String username) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
         if (!username.equals(adminUsername)) {
-            Account account = accountFacade.findByUsername(username);
+            final Account account = accountFacade.findByUsername(username);
             if (account.getIsActive()) {
                 if (account.getAccessLevels().stream()
                         .noneMatch(accessLevel -> accessLevel.getAccessLevel().equals(Roles.ADMIN))) {
@@ -394,12 +394,12 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     public void revokeAccessLevel(String username, String access) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
         if (!username.equals(adminUsername)) {
-            Account account = accountFacade.findByUsername(username);
+            final Account account = accountFacade.findByUsername(username);
             if (account.getIsActive()) {
                 final int size = account.getAccessLevels().size();
                 if (size > 1) {
                     if (access.equals(Roles.MANAGER)) {
-                        Manager manager = account.getAccessLevels().stream()
+                        final Manager manager = account.getAccessLevels().stream()
                                 .filter(accessLevel -> accessLevel instanceof Manager)
                                 .map(accessLevel -> (Manager) accessLevel)
                                 .findAny()
@@ -413,7 +413,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                         mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "manager");
                     }
                     if (access.equals(Roles.ADMIN)) {
-                        Admin admin = account.getAccessLevels().stream()
+                        final Admin admin = account.getAccessLevels().stream()
                                 .filter(accessLevel -> accessLevel instanceof Admin)
                                 .map(accessLevel -> (Admin) accessLevel)
                                 .findAny()
@@ -427,7 +427,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                         mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "admin");
                     }
                     if (access.equals(Roles.OWNER)) {
-                        Owner owner = account.getAccessLevels().stream()
+                        final Owner owner = account.getAccessLevels().stream()
                                 .filter(accessLevel -> accessLevel instanceof Owner)
                                 .map(accessLevel -> (Owner) accessLevel)
                                 .findAny()
