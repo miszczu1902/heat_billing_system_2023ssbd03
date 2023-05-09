@@ -24,6 +24,8 @@ public interface AccountService {
 
     void adminLoggedInEmail(String email);
 
+    Account getAccount(String username);
+
     Owner getOwner();
 
     Manager getManager();

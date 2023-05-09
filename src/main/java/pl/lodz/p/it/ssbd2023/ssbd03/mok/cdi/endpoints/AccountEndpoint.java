@@ -11,19 +11,20 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccounInfoDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountForListDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePasswordDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ErrorResponseDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.converters.AccountConverter;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AccountMapper;
 
 import java.util.List;
@@ -200,12 +201,26 @@ public class AccountEndpoint {
     }
 
     @GET
+    @Path("/{username}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public Response getAccount(@PathParam("username") String username) {
+        try {
+            final Account account = accountService.getAccount(username);
+            final AccounInfoDTO accounInfoDTO = AccountMapper.createAccountInfoDTOEntity(account);
+            return Response.ok().entity(accounInfoDTO).build();
+        } catch (NoResultException e) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+    }
+
+    @GET
     @Path("/self/owner")
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.OWNER)
     public OwnerDTO getMyOwnerAccount() {
         Owner owner = accountService.getOwner();
-        return AccountConverter.createOwnerDTOEntity(owner, accountService.getPersonalData());
+        return AccountMapper.createOwnerDTOEntity(owner, accountService.getPersonalData());
     }
 
     @GET
@@ -214,7 +229,7 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.MANAGER)
     public ManagerDTO getMyManagerAccount() {
         Manager manager = accountService.getManager();
-        return AccountConverter.createManagerDTOEntity(manager, accountService.getPersonalData());
+        return AccountMapper.createManagerDTOEntity(manager, accountService.getPersonalData());
     }
 
     @GET
@@ -223,6 +238,6 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.ADMIN)
     public AdminDTO getMyAdminAccount() {
         Admin admin = accountService.getAdmin();
-        return AccountConverter.createAdminDTOEntity(admin, accountService.getPersonalData());
+        return AccountMapper.createAdminDTOEntity(admin, accountService.getPersonalData());
     }
 }
