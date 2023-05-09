@@ -9,10 +9,10 @@ import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.persistence.NoResultException;
 import jakarta.security.enterprise.SecurityContext;
-import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.security.enterprise.credential.Password;
 import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
+import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.ForbiddenException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
@@ -327,6 +327,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                         Manager manager = new Manager(license);
                         manager.setAccount(account);
                         account.getAccessLevels().add(manager);
+                        mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "manager");
                     } else {
                         throw AppException.theAccessLevelisAlreadyGranted();
                     }
@@ -351,6 +352,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                         Owner owner = new Owner(phoneNumber);
                         owner.setAccount(account);
                         account.getAccessLevels().add(owner);
+                        mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "owner");
                     } else {
                         throw AppException.theAccessLevelisAlreadyGranted();
                     }
@@ -376,6 +378,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                     Admin admin = new Admin();
                     admin.setAccount(account);
                     account.getAccessLevels().add(admin);
+                    mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "admin");
                 } else {
                     throw AppException.theAccessLevelisAlreadyGranted();
                 }
@@ -407,6 +410,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                                 .orElse(-1);
                         account.getAccessLevels().remove(index1);
                         managerFacade.remove(manager);
+                        mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "manager");
                     }
                     if (access.equals(Roles.ADMIN)) {
                         Admin admin = account.getAccessLevels().stream()
@@ -420,6 +424,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                                 .orElse(-1);
                         account.getAccessLevels().remove(index);
                         adminFacade.remove(admin);
+                        mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "admin");
                     }
                     if (access.equals(Roles.OWNER)) {
                         Owner owner = account.getAccessLevels().stream()
@@ -433,6 +438,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                                 .orElse(-1);
                         account.getAccessLevels().remove(index);
                         ownerFacade.remove(owner);
+                        mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "owner");
                     }
                 } else {
                     throw AppException.revokeTheOnlyLevelOfAccess();

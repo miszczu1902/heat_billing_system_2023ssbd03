@@ -42,6 +42,18 @@ public class MailSender {
                         " just logged in to your account");//TODO - tu trzeba zrobić resource bundle
     }
 
+    public void sendInformationAddingAnAccessLevel(String to, String role) {
+        sendEmail(to, "Security Alert!",
+                "The " + role +
+                        " access level has been added to your account.");//TODO - tu trzeba zrobić resource bundle
+    }
+
+    public void sendInformationRevokeAnAccessLevel(String to, String role) {
+        sendEmail(to, "Security Alert!",
+                "The " + role +
+                        " access level has been received for your account.");//TODO - tu trzeba zrobić resource bundle
+    }
+
     private void sendEmail(String to, String subject, String content) {
         try {
             MimeMessage message = new MimeMessage(session);
