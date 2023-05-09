@@ -114,7 +114,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             throw AppException.createPasswordsNotSameException();
         }
         final ResetPasswordToken resetPasswordToken = resetPasswordTokenFacade.getResetPasswordByTokenValue(token);
-        Account accountToChangePassword = resetPasswordToken.getAccount();
+        final Account accountToChangePassword = resetPasswordToken.getAccount();
         changePassword(accountToChangePassword, newPassword);
 
         resetPasswordTokenFacade.remove(resetPasswordToken);

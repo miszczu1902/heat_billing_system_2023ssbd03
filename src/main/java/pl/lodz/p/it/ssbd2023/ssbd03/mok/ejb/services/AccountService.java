@@ -15,6 +15,7 @@ public interface AccountService {
     void createOwner(Account account);
 
     void confirmAccountFromActivationLink(String confirmationToken);
+
     void changePasswordFromResetPasswordLink(String resetPasswordToken, String newPassword, String newRepeatedPassword);
 
     String authenticate(String username, String password);

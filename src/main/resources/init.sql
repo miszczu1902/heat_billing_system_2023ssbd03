@@ -34,6 +34,8 @@ GRANT SELECT,INSERT,UPDATE ON TABLE heating_place_and_communal_area_advance TO s
 
 GRANT SELECT,UPDATE ON SEQUENCE access_level_mapping_id_seq TO ssbd03mok;
 GRANT SELECT,UPDATE ON SEQUENCE account_id_seq TO ssbd03mok;
+GRANT SELECT,UPDATE ON SEQUENCE reset_password_token_id_seq TO ssbd03mok;
+GRANT SELECT,UPDATE ON SEQUENCE account_confirmation_token_id_seq TO ssbd03mok;
 
 GRANT SELECT,UPDATE ON SEQUENCE address_id_seq TO ssbd03mow;
 GRANT SELECT,UPDATE ON SEQUENCE advance_id_seq TO ssbd03mow;

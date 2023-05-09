@@ -9,7 +9,7 @@ import java.util.Properties;
 
 @Stateless
 public class TokenGenerator {
-    private Properties properties = new Properties();
+    private final Properties properties = new Properties();
 
     @PostConstruct
     public void init() {

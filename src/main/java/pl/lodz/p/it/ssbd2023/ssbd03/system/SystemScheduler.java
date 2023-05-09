@@ -10,6 +10,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccountConfirmationToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountConfirmationTokenFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.ResetPasswordTokenFacade;
 
 import java.util.List;
 
@@ -23,6 +24,9 @@ public class SystemScheduler {
     private AccountConfirmationTokenFacade accountConfirmationTokenFacade;
 
     @Inject
+    private ResetPasswordTokenFacade resetPasswordTokenFacade;
+
+    @Inject
     private AccountFacade accountFacade;
 
     @Schedule(hour = "*", minute = "*/1", persistent = false)
@@ -34,6 +38,11 @@ public class SystemScheduler {
                 accountConfirmationTokenFacade.remove(accountConfirmationToken);
             });
         }
+    }
+
+    @Schedule(hour = "*", minute = "*/1", persistent = false)
+    private void deleteResetPasswordExpiredTokens() {
+        resetPasswordTokenFacade.deleteExpiredResetPasswordToken();
     }
 
     @Schedule(hour = "*", minute = "*/1", persistent = false)

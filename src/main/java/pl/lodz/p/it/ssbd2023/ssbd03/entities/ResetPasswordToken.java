@@ -17,8 +17,10 @@ import java.util.Objects;
 @NamedQueries({
         @NamedQuery(name = "ResetPasswordToken.getResetPasswordTokenByTokenValue",
                 query = "SELECT t FROM ResetPasswordToken t WHERE tokenValue = :tokenValue"),
-        @NamedQuery(name = "ResetPasswordToken.findAllWithAvailableAccounts",
-                query = "SELECT t FROM ResetPasswordToken t WHERE t.account.isActive IS TRUE AND t.account.isEnable IS TRUE")
+        @NamedQuery(
+                name = "ResetPasswordToken.getOlderResetPasswordToken",
+                query = "SELECT token FROM AccountConfirmationToken token WHERE token.expirationDate < :currentTime"
+        )
 })
 public class ResetPasswordToken extends AbstractEntity implements Serializable {
     @Id
@@ -51,7 +53,7 @@ public class ResetPasswordToken extends AbstractEntity implements Serializable {
 
     public ResetPasswordToken(String tokenValue, Account account) {
         this.tokenValue = tokenValue;
-        this.expirationDate = account.getRegisterDate().plusDays(1);
+        this.expirationDate = LocalDateTime.now().plusMinutes(20);
         this.account = account;
     }
 }
