@@ -36,7 +36,9 @@ public interface AccountService {
 
     void editUserPersonalData(String username, String firstName, String surname);
 
-    void changePassword(String oldPassword, String newPassword, String newRepeatedPassword);
+    void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword);
+
+    void changeUserPassword(String username, String newPassword, String newRepeatedPassword);
 
     void disableUserAccount(String username) throws IllegalArgumentException, NoResultException;
 

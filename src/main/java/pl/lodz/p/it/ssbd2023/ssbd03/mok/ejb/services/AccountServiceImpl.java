@@ -219,7 +219,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
     @Override
-    public void changePassword(String oldPassword, String newPassword, String newRepeatedPassword) throws AccountPasswordException {
+    public void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword) throws AccountPasswordException {
         if (oldPassword.equals(newPassword)) {
             throw new AccountPasswordException("Old password and new password are the same.");
         }
@@ -232,6 +232,22 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             throw new AccountPasswordException("Old password is incorrect");
         }
         final String newPasswordHash = bcryptHashGenerator.generate(newPassword.toCharArray());
+        account.setPassword(newPasswordHash);
+        accountFacade.edit(account);
+    }
+
+    @RolesAllowed({Roles.ADMIN})
+    @Override
+    public void changeUserPassword(String username, String newPassword, String newRepeatedPassword) {
+        if (!newPassword.equals(newRepeatedPassword)) {
+            throw AppException.createPasswordsNotSameException();
+        }
+        final Account account = accountFacade.findByUsername(username); //rzuca 500 jak nie istnieje
+        final char[] newPasswordCharArray = newPassword.toCharArray();
+        if (bcryptHashGenerator.verify(newPasswordCharArray, account.getPassword())) {
+            throw AppException.createSameOldAndNewPasswordException();
+        }
+        final String newPasswordHash = bcryptHashGenerator.generate(newPasswordCharArray);
         account.setPassword(newPasswordHash);
         accountFacade.edit(account);
     }

@@ -53,7 +53,7 @@ public class AccountFacade extends AbstractFacade<Account> {
         try {
             return tq.getSingleResult();
         } catch (PersistenceException pe) {
-            if (pe.getCause() instanceof NoResultException) {
+            if (pe instanceof NoResultException) {
                 throw AppException.createNoResultException(pe.getCause());
             }
             throw AppException.createDatabaseException();
