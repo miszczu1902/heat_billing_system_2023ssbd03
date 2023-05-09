@@ -37,6 +37,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ACCESS_LEVEL_IS_ALREADY_GRANTED = "This account already has this level of access"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_LICENSE_NOT_UNIQUE_MESSAGE = "License not unique"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_IS_NOT_ACTIVATED = "This account is not activated"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_ACCOUNT_IS_BLOCKED = "This account is blocked"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_REVOKE_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT = "You cannot take away your permissions"; //TODO - tu trzeba zrobić resource bundle
 
     @Getter
@@ -167,8 +168,12 @@ public class AppException extends WebApplicationException {
         return new AccountWithLicenseExistsException(AppException.ERROR_LICENSE_NOT_UNIQUE_MESSAGE, Response.Status.CONFLICT);
     }
 
-    public static AccountIsNotActivatedException accountIsNotActivated() {
+    public static AccountIsNotActivatedException createAccountIsNotActivatedException() {
         return new AccountIsNotActivatedException(AppException.ERROR_ACCOUNT_IS_NOT_ACTIVATED, Response.Status.CONFLICT);
+    }
+
+    public static AccountIsBlockedException createAccountIsBlockedException() {
+        return new AccountIsBlockedException(AppException.ERROR_ACCOUNT_IS_BLOCKED, Response.Status.CONFLICT);
     }
 
     public static RevokeAccessLevelToTheSameAdminAccountException revokeAnAccessLevelToTheSameAdminAccount() {

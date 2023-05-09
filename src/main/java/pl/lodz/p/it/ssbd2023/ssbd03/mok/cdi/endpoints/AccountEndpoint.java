@@ -110,6 +110,16 @@ public class AccountEndpoint {
     }
 
     @PATCH
+    @Path("/reset-password-from-email")
+    @RolesAllowed(Roles.GUEST)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response ResetPasswordFromEmail(@NotNull @Valid ResetPasswordFromEmailDTO resetPasswordTokenDTO) {
+        accountService.changePasswordFromResetPasswordLink(resetPasswordTokenDTO.getResetPasswordToken(),
+                resetPasswordTokenDTO.getNewPassword(), resetPasswordTokenDTO.getRepeatedNewPassword());
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @PATCH
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/self/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})

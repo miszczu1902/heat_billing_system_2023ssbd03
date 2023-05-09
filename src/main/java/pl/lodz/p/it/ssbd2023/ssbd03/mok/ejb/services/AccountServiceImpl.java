@@ -109,6 +109,18 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    public void changePasswordFromResetPasswordLink(String token, String newPassword, String newRepeatedPassword) {
+        if (!newPassword.equals(newRepeatedPassword)) {
+            throw AppException.createPasswordsNotSameException();
+        }
+        final ResetPasswordToken resetPasswordToken = resetPasswordTokenFacade.getResetPasswordByTokenValue(token);
+        Account accountToChangePassword = resetPasswordToken.getAccount();
+        changePassword(accountToChangePassword, newPassword);
+
+        resetPasswordTokenFacade.remove(resetPasswordToken);
+    }
+
+    @Override
     @RolesAllowed(Roles.GUEST)
     public String authenticate(String username, String password) {
         final UsernamePasswordCredential usernamePasswordCredential = new UsernamePasswordCredential(username, new Password(password));
@@ -245,23 +257,18 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         if (!newPassword.equals(newRepeatedPassword)) {
             throw AppException.createPasswordsNotSameException();
         }
-        final Account account = accountFacade.findByUsername(username);
-        final char[] newPasswordCharArray = newPassword.toCharArray();
-        if (bcryptHashGenerator.verify(newPasswordCharArray, account.getPassword())) {
-            throw AppException.createSameOldAndNewPasswordException();
-        }
-        final String newPasswordHash = bcryptHashGenerator.generate(newPasswordCharArray);
-        account.setPassword(newPasswordHash);
-        accountFacade.edit(account);
+        final Account accountToChangePassword = accountFacade.findByUsername(username);
+        changePassword(accountToChangePassword, newPassword);
+
         String token = tokenGenerator.createResetPasswordToken();
         while (resetPasswordTokenFacade.checkIfResetPasswordTokenExistsByTokenValue(token)) {
             token = tokenGenerator.createResetPasswordToken();
         }
         final ResetPasswordToken resetPasswordToken = new ResetPasswordToken(
-                token, account);
+                token, accountToChangePassword);
         resetPasswordTokenFacade.create(resetPasswordToken);
 
-        mailSender.sendInformationAboutChangedPasswordByAdmin(account.getEmail(), token);
+        mailSender.sendInformationAboutChangedPasswordByAdmin(accountToChangePassword.getEmail(), token);
     }
 
     @Override
@@ -364,7 +371,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                     }
                 }
             } else {
-                throw AppException.accountIsNotActivated();
+                throw AppException.createAccountIsNotActivatedException();
             }
         } else {
             throw AppException.addingAnAccessLevelToTheSameAdminAccount();
@@ -391,7 +398,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                     throw AppException.createAccountWithNumberExistsException();
                 }
             } else {
-                throw AppException.accountIsNotActivated();
+                throw AppException.createAccountIsNotActivatedException();
             }
         } else {
             throw AppException.addingAnAccessLevelToTheSameAdminAccount();
@@ -414,7 +421,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                     throw AppException.theAccessLevelisAlreadyGranted();
                 }
             } else {
-                throw AppException.accountIsNotActivated();
+                throw AppException.createAccountIsNotActivatedException();
             }
         } else {
             throw AppException.addingAnAccessLevelToTheSameAdminAccount();
@@ -475,7 +482,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                     throw AppException.revokeTheOnlyLevelOfAccess();
                 }
             } else {
-                throw AppException.accountIsNotActivated();
+                throw AppException.createAccountIsNotActivatedException();
             }
         } else {
             throw AppException.revokeAnAccessLevelToTheSameAdminAccount();
@@ -485,5 +492,21 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     public List<Account> getListOfAccounts(String sortBy, int pageNumber) {
         return accountFacade.getListOfAccountsWithFilterParams(sortBy, pageNumber);
+    }
+
+    private void changePassword(Account account, String newPassword) {
+        if (!account.getIsActive()) {
+            throw AppException.createAccountIsNotActivatedException();
+        }
+        if (!account.getIsEnable()) {
+            throw AppException.createAccountIsBlockedException();
+        }
+        final char[] newPasswordCharArray = newPassword.toCharArray();
+        if (bcryptHashGenerator.verify(newPasswordCharArray, account.getPassword())) {
+            throw AppException.createSameOldAndNewPasswordException();
+        }
+        final String newPasswordHash = bcryptHashGenerator.generate(newPasswordCharArray);
+        account.setPassword(newPasswordHash);
+        accountFacade.edit(account);
     }
 }
