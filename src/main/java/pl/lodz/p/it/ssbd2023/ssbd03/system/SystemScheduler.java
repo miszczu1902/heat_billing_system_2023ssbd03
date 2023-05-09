@@ -6,7 +6,6 @@ import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccountConfirmationToken;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.LoginData;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountConfirmationTokenFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
@@ -24,9 +23,6 @@ public class SystemScheduler {
 
     @Inject
     private AccountFacade accountFacade;
-
-    @Inject
-    private LoginData loginData;
 
     @Schedule(hour = "*", minute = "*/1", persistent = false)
     private void cleanUnconfirmedAccounts() {
