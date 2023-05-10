@@ -75,7 +75,7 @@ public class AccountFacade extends AbstractFacade<Account> {
 
     public List<Account> findAllLockedAccounts() {
         TypedQuery<Account> query = em.createNamedQuery("Account.findAllBlocked", Account.class);
-        query.setParameter("date", LocalDateTime.now(ZoneId.of(LoadConfig.loadPropertyFromConfig("zone"))).minusMinutes(2));
+        query.setParameter("date", LocalDateTime.now(ZoneId.of(LoadConfig.loadPropertyFromConfig("zone"))).minusDays(1));
         return Optional.of(query.getResultList()).orElse(Collections.emptyList());
     }
 }
