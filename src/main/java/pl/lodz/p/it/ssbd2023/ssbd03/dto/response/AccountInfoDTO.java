@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class AccounInfoDTO extends AbstractDTO {
+public class AccountInfoDTO extends AbstractDTO {
     private String email;
     private String username;
     private Boolean isEnable;
@@ -24,7 +24,7 @@ public class AccounInfoDTO extends AbstractDTO {
     private String phoneNumber;
     private String license;
 
-    public AccounInfoDTO(Long id, Long version, String email, String username, Boolean isEnable, Boolean isActive, String registerDate, List<String> accessLevels, String firstName, String surname, String phoneNumber, String license) {
+    public AccountInfoDTO(Long id, Long version, String email, String username, Boolean isEnable, Boolean isActive, String registerDate, List<String> accessLevels, String firstName, String surname, String phoneNumber, String license) {
         super(id, version);
         this.email = email;
         this.username = username;

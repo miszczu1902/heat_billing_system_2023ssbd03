@@ -11,7 +11,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccounInfoDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountInfoDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountForListDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePasswordDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
@@ -205,13 +205,9 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response getAccount(@PathParam("username") String username) {
-        try {
-            final Account account = accountService.getAccount(username);
-            final AccounInfoDTO accounInfoDTO = AccountMapper.createAccountInfoDTOEntity(account);
-            return Response.ok().entity(accounInfoDTO).build();
-        } catch (NoResultException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        final Account account = accountService.getAccount(username);
+        final AccountInfoDTO accountInfoDTO = AccountMapper.createAccountInfoDTOEntity(account);
+        return Response.ok().entity(accountInfoDTO).build();
     }
 
     @GET

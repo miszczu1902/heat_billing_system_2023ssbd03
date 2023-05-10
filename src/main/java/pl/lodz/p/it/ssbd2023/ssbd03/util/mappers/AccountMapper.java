@@ -4,7 +4,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.AdminDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ManagerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.OwnerDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccounInfoDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountInfoDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountForListDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 
@@ -33,7 +33,7 @@ public class AccountMapper {
                 account.getUsername());
     }
 
-    public static AccounInfoDTO createAccountInfoDTOEntity(Account account) {
+    public static AccountInfoDTO createAccountInfoDTOEntity(Account account) {
         final String phoneNumber = account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Owner)
                 .map(accessLevel -> (Owner) accessLevel)
@@ -48,7 +48,7 @@ public class AccountMapper {
                 .map(Manager::getLicense)
                 .orElse(null);
 
-        return new AccounInfoDTO(
+        return new AccountInfoDTO(
                 account.getId(),
                 account.getVersion(),
                 account.getEmail(),
