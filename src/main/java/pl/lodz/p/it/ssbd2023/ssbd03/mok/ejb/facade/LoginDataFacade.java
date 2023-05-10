@@ -1,11 +1,19 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade;
 
+import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
+import jakarta.interceptor.Interceptors;
 import jakarta.persistence.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.LoginData;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 
+@Stateless
+@TransactionAttribute(TransactionAttributeType.MANDATORY)
+@Interceptors({TrackerInterceptor.class})
 public class LoginDataFacade extends AbstractFacade<LoginData> {
     @PersistenceContext(unitName = "ssbd03mokPU")
     private EntityManager em;

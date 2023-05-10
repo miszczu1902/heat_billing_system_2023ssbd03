@@ -5,6 +5,7 @@ import jakarta.ejb.*;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccountConfirmationToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountConfirmationTokenFacade;
@@ -31,6 +32,18 @@ public class SystemScheduler {
             allUnconfirmedAccounts.forEach(accountConfirmationToken -> {
                 accountFacade.remove(accountConfirmationToken.getAccount());
                 accountConfirmationTokenFacade.remove(accountConfirmationToken);
+            });
+        }
+    }
+
+    @Schedule(hour = "*", minute = "*/1", persistent = false)
+    public void unlockAccounts() {
+        final List<Account> accounts = accountFacade.findAllBlockedAccounts();
+        if (!accounts.isEmpty()) {
+            accounts.forEach(account -> {
+                account.setIsEnable(true);
+                account.getLoginData().setInvalidLoginCounter(0);
+                accountFacade.edit(account);
             });
         }
     }

@@ -3,9 +3,9 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
+import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import jakarta.interceptor.Interceptors;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
@@ -29,7 +29,7 @@ public class ManagerFacade extends AbstractFacade<Manager> {
     }
 
     public boolean findByLicense(String license) {
-        TypedQuery<Manager> tq = em.createNamedQuery("Owner.findByLicense", Manager.class);
+        TypedQuery<Manager> tq = em.createNamedQuery("Manager.findByLicense", Manager.class);
         tq.setParameter("license", license);
         try {
             tq.getSingleResult();

@@ -133,6 +133,9 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 loginData.setInvalidLoginCounter(loginData.getInvalidLoginCounter() + 1);
                 loginData.setLastInvalidLogicAddress(httpServletRequest.getRemoteAddr());
                 loginData.setLastInvalidLoginDate(LocalDateTime.now(ZoneId.of(LoadConfig.loadPropertyFromConfig("zone"))));
+                if (loginData.getInvalidLoginCounter() == 3) {
+                    account.setIsEnable(false);
+                }
             }
             loginDataFacade.edit(loginData);
         } catch (Exception ex) {
