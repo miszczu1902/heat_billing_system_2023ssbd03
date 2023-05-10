@@ -271,6 +271,28 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         mailSender.sendInformationAboutChangedPasswordByAdmin(accountToChangePassword.getEmail(), token);
     }
 
+    @RolesAllowed({Roles.GUEST})
+    @Override
+    public void resetPassword(String username) {
+        final Account accountToChangePassword = accountFacade.findByUsername(username);
+        if (!accountToChangePassword.getIsActive()) {
+            throw AppException.createAccountIsNotActivatedException();
+        }
+        if (!accountToChangePassword.getIsEnable()) {
+            throw AppException.createAccountIsBlockedException();
+        }
+
+        String token = tokenGenerator.createResetPasswordToken();
+        while (resetPasswordTokenFacade.checkIfResetPasswordTokenExistsByTokenValue(token)) {
+            token = tokenGenerator.createResetPasswordToken();
+        }
+        final ResetPasswordToken resetPasswordToken = new ResetPasswordToken(
+                token, accountToChangePassword);
+        resetPasswordTokenFacade.create(resetPasswordToken);
+
+        mailSender.sendInformationAboutResettingPassword(accountToChangePassword.getEmail(), token);
+    }
+
     @Override
     public void editSelfPersonalData(String firstName, String surname) throws NoResultException {
         try {

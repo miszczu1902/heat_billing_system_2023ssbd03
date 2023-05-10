@@ -17,6 +17,10 @@ public class MailSender {
             Click on the link to reset your password
             %s?%s
             """;
+    private static final String RESET_PASSWORD_CONTENT_MESSAGE = """
+            Click on the link to reset your password
+            %s?%s
+            """;
     private final Properties properties = new Properties();
     private Session session;
 
@@ -52,6 +56,11 @@ public class MailSender {
     public void sendInformationAboutChangedPasswordByAdmin(String to, String token) {
         sendEmail(to, "Password changed!",
                 CHANGED_PASSWORD_BY_ADMIN_CONTENT_MESSAGE.formatted(properties.getProperty("reset.password.url"), token));
+    }
+
+    public void sendInformationAboutResettingPassword(String to, String token) {
+        sendEmail(to, "Reset password",
+                RESET_PASSWORD_CONTENT_MESSAGE.formatted(properties.getProperty("reset.password.url"), token));
     }
 
     public void sendInformationAddingAnAccessLevel(String to, String role) {

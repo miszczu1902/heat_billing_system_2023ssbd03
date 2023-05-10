@@ -109,6 +109,15 @@ public class AccountEndpoint {
         return Response.noContent().build();
     }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/reset-password")
+    @RolesAllowed({Roles.GUEST})
+    public Response resetPassword(@NotNull @Valid ResetPasswordDTO resetPasswordDTO) {
+        accountService.resetPassword(resetPasswordDTO.getUsername());
+        return Response.noContent().build();
+    }
+
     @PATCH
     @Path("/reset-password-from-email")
     @RolesAllowed(Roles.GUEST)

@@ -42,6 +42,8 @@ public interface AccountService {
 
     void changeUserPassword(String username, String newPassword, String newRepeatedPassword);
 
+    void resetPassword(String username);
+
     void disableUserAccount(String username) throws IllegalArgumentException, NoResultException;
 
     void enableUserAccount(String username) throws IllegalArgumentException, NoResultException;
