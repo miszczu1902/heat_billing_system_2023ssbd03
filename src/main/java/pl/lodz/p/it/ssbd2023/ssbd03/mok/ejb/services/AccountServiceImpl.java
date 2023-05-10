@@ -201,7 +201,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 .filter(accessLevel -> accessLevel instanceof Owner)
                 .map(accessLevel -> (Owner) accessLevel)
                 .findAny()
-                .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
+                .orElseThrow(AppException::createAccountIsNotOwnerException);
         return owner;
     }
 
@@ -214,7 +214,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 .filter(accessLevel -> accessLevel instanceof Manager)
                 .map(accessLevel -> (Manager) accessLevel)
                 .findAny()
-                .orElseThrow(() -> new IllegalStateException("Account is not an Manager."));
+                .orElseThrow(AppException::createAccountIsNotManagerException);
         return manager;
     }
 
@@ -227,7 +227,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 .filter(accessLevel -> accessLevel instanceof Admin)
                 .map(accessLevel -> (Admin) accessLevel)
                 .findAny()
-                .orElseThrow(() -> new IllegalStateException("Account is not an Admin."));
+                .orElseThrow(AppException::createAccountIsNotAdminException);
         return admin;
     }
 
@@ -361,7 +361,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         } else {
             mailSender.sendInformationAccountDisabled(editableAccount.getEmail());
         }
-
     }
 
     private void setUserEnableFlag(String username, boolean flag) {
