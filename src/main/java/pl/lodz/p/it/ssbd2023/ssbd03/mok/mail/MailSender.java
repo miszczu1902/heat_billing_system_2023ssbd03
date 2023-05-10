@@ -75,6 +75,24 @@ public class MailSender {
                         " access level has been removed from your account.");//TODO - tu trzeba zrobić resource bundle
     }
 
+    public void sendInformationAccountDisabled(String to) {
+        sendEmail(to, "Account has been disabled",
+                "Dear User, \n" +
+                        "Your account has been disabled");
+    }
+
+    public void sendInformationAccountEnabled(String to) {
+        sendEmail(to, "Account has been enabled",
+                "Dear User, \n" +
+                        "Your account has been enabled");
+    }
+
+    public void sendInformationAccountActivated(String to) {
+        sendEmail(to, "Account has been activated",
+                "Dear User, \n" +
+                        "Your account has been activated");
+    }
+
     private void sendEmail(String to, String subject, String content) {
         try {
             MimeMessage message = new MimeMessage(session);

@@ -56,6 +56,7 @@ public class AccountFacade extends AbstractFacade<Account> {
             if (pe instanceof NoResultException) {
                 throw AppException.createNoResultException(pe.getCause());
             }
+
             throw AppException.createDatabaseException();
         }
     }
