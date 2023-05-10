@@ -189,8 +189,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     public PersonalData getPersonalData() {
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
-        return personalDataFacade.find(account.getId())
-                .orElseThrow(AppException::createPersonalDataNotExistsException);
+        return personalDataFacade.find(account.getId());
     }
 
     @Override

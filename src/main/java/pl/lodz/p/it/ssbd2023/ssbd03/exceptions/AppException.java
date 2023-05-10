@@ -31,7 +31,6 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ACCOUNT_IS_NOT_OWNER = "This account is not the owner"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_EXISTS_MESSAGE = "Account already exists"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_NOT_EXISTS_MESSAGE = "Account with provided data not exists"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_PERSONAL_DATA_NOT_EXISTS_MESSAGE = "Personal data with provided data not exists"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_RESULT_NOT_FOUND = "Query result not found"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACTION_NOT_ALLOWED = "Action is not allowed with this privileges"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_PERSONAL_DATA_VALIDATION = "Each element of personal data can have up to 32 characters"; //TODO - tu trzeba zrobić resource bundle
@@ -144,10 +143,6 @@ public class AppException extends WebApplicationException {
 
     public static AccountIsNotOwnerException createAccountIsNotOwnerException() {
         return new AccountIsNotOwnerException(AppException.ERROR_ACCOUNT_IS_NOT_OWNER, Response.Status.FORBIDDEN);
-    }
-
-    public static PersonalDataNotExistsException createPersonalDataNotExistsException() {
-        return new PersonalDataNotExistsException(AppException.ERROR_PERSONAL_DATA_NOT_EXISTS_MESSAGE, Response.Status.FORBIDDEN);
     }
 
     public static CurrentPhoneNumberException createCurrentPhoneNumberException() {
