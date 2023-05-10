@@ -1,11 +1,11 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.util.mappers;
 
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.AdminDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ManagerDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.OwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountInfoDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountForListDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AdminDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.OwnerDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ManagerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 
 public class AccountMapper {
