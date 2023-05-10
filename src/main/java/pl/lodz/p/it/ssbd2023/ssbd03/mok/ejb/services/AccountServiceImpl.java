@@ -172,7 +172,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
         return personalDataFacade.find(account.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Personal data not found"));
+                .orElseThrow(AppException::createPersonalDataNotExistsException);
     }
 
     @Override
@@ -184,7 +184,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 .filter(accessLevel -> accessLevel instanceof Owner)
                 .map(accessLevel -> (Owner) accessLevel)
                 .findAny()
-                .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
+                .orElseThrow(AppException::createAccountIsNotOwnerException);
         return owner;
     }
 
@@ -197,7 +197,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 .filter(accessLevel -> accessLevel instanceof Manager)
                 .map(accessLevel -> (Manager) accessLevel)
                 .findAny()
-                .orElseThrow(() -> new IllegalStateException("Account is not an Manager."));
+                .orElseThrow(AppException::createAccountIsNotManagerException);
         return manager;
     }
 
@@ -210,7 +210,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 .filter(accessLevel -> accessLevel instanceof Admin)
                 .map(accessLevel -> (Admin) accessLevel)
                 .findAny()
-                .orElseThrow(() -> new IllegalStateException("Account is not an Admin."));
+                .orElseThrow(AppException::createAccountIsNotAdminException);
         return admin;
     }
 

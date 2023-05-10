@@ -26,6 +26,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ACCOUNT_IS_NOT_OWNER = "This account is not the owner"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_EXISTS_MESSAGE = "Account already exists"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_NOT_EXISTS_MESSAGE = "Account with provided data not exists"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_PERSONAL_DATA_NOT_EXISTS_MESSAGE = "Personal data with provided data not exists"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_INVALID_CREDENTIALS = "Invalid username or password"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ADDING_AN_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT = "You can't give yourself permissions"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_REVOKE_THE_ONLY_LEVEL_OF_ACCESS = "One level of access cannot be taken away"; //TODO - tu trzeba zrobić resource bundle
@@ -123,6 +124,10 @@ public class AppException extends WebApplicationException {
 
     public static AccountIsNotOwnerException createAccountIsNotOwnerException() {
         return new AccountIsNotOwnerException(AppException.ERROR_ACCOUNT_IS_NOT_OWNER, Response.Status.FORBIDDEN);
+    }
+
+    public static PersonalDataNotExistsException createPersonalDataNotExistsException() {
+        return new PersonalDataNotExistsException(AppException.ERROR_PERSONAL_DATA_NOT_EXISTS_MESSAGE, Response.Status.FORBIDDEN);
     }
 
     public static CurrentPhoneNumberException createCurrentPhoneNumberException() {

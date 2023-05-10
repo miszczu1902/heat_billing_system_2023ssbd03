@@ -202,8 +202,8 @@ public class AccountEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.OWNER)
     public Response getMyOwnerAccount() {
-        Owner owner = accountService.getOwner();
-        OwnerDTO ownerDTO = AccountMapper.createOwnerDTOEntity(owner, accountService.getPersonalData());
+        final Owner owner = accountService.getOwner();
+        final OwnerDTO ownerDTO = AccountMapper.createOwnerDTOEntity(owner, accountService.getPersonalData());
         return Response.ok().entity(ownerDTO).build();
     }
 
@@ -212,8 +212,8 @@ public class AccountEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.MANAGER)
     public Response getMyManagerAccount() {
-        Manager manager = accountService.getManager();
-        ManagerDTO managerDTO = AccountMapper.createManagerDTOEntity(manager, accountService.getPersonalData());
+        final Manager manager = accountService.getManager();
+        final ManagerDTO managerDTO = AccountMapper.createManagerDTOEntity(manager, accountService.getPersonalData());
         return Response.ok().entity(managerDTO).build();
     }
 
@@ -222,8 +222,8 @@ public class AccountEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.ADMIN)
     public Response getMyAdminAccount() {
-        Admin admin = accountService.getAdmin();
-        AdminDTO adminDTO = AccountMapper.createAdminDTOEntity(admin, accountService.getPersonalData());
+        final Admin admin = accountService.getAdmin();
+        final AdminDTO adminDTO = AccountMapper.createAdminDTOEntity(admin, accountService.getPersonalData());
         return Response.ok().entity(adminDTO).build();
     }
 }
