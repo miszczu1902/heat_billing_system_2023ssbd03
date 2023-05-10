@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
+
 @Getter
 @Entity
 @AllArgsConstructor
@@ -19,7 +21,7 @@ import java.util.Objects;
                 query = "SELECT t FROM ResetPasswordToken t WHERE tokenValue = :tokenValue"),
         @NamedQuery(
                 name = "ResetPasswordToken.getOlderResetPasswordToken",
-                query = "SELECT token FROM AccountConfirmationToken token WHERE token.expirationDate < :currentTime"
+                query = "SELECT token FROM ResetPasswordToken token WHERE token.expirationDate < :currentTime"
         )
 })
 public class ResetPasswordToken extends AbstractEntity implements Serializable {
@@ -53,7 +55,7 @@ public class ResetPasswordToken extends AbstractEntity implements Serializable {
 
     public ResetPasswordToken(String tokenValue, Account account) {
         this.tokenValue = tokenValue;
-        this.expirationDate = LocalDateTime.now().plusMinutes(20);
+        this.expirationDate = LocalDateTime.now(TIME_ZONE).plusMinutes(20);
         this.account = account;
     }
 }

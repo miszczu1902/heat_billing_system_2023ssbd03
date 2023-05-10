@@ -43,11 +43,9 @@ public class SystemScheduler {
 
     @Schedule(hour = "*", minute = "*/1", persistent = false)
     private void deleteResetPasswordExpiredTokens() {
-        List<ResetPasswordToken> resetPasswordTokens = resetPasswordTokenFacade.getExpiredResetPasswordTokensList();
+        final List<ResetPasswordToken> resetPasswordTokens = resetPasswordTokenFacade.getExpiredResetPasswordTokensList();
         if (!resetPasswordTokens.isEmpty()) {
-            resetPasswordTokens.forEach(resetPasswordToken -> {
-                resetPasswordTokenFacade.remove(resetPasswordToken);
-            });
+            resetPasswordTokens.forEach(resetPasswordToken -> resetPasswordTokenFacade.remove(resetPasswordToken));
         }
     }
 

@@ -54,7 +54,6 @@ public class ResetPasswordTokenFacade extends AbstractFacade<ResetPasswordToken>
         }
     }
 
-    @RolesAllowed({Roles.GUEST, Roles.ADMIN})
     public List<ResetPasswordToken> getExpiredResetPasswordTokensList() {
         TypedQuery<ResetPasswordToken> query = em.createNamedQuery("ResetPasswordToken.getOlderResetPasswordToken", ResetPasswordToken.class);
         query.setParameter("currentTime", LocalDateTime.now(TIME_ZONE));

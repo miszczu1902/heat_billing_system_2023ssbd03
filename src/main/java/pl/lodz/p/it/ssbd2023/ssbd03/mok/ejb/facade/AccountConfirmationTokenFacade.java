@@ -34,7 +34,6 @@ public class AccountConfirmationTokenFacade extends AbstractFacade<AccountConfir
         super(AccountConfirmationToken.class);
     }
 
-    @RolesAllowed({Roles.GUEST, Roles.ADMIN})
     public List<AccountConfirmationToken> findAllUnconfirmedAccounts() {
         TypedQuery<AccountConfirmationToken> query = em.createNamedQuery("AccountConfirmationToken.findAllUnconfirmedAccounts", AccountConfirmationToken.class);
         query.setParameter("date", LocalDateTime.now().minusDays(1));
