@@ -11,6 +11,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppExcepti
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.personalData.PersonalDataConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
 
 @ApplicationException(rollback = true)
 public class AppException extends WebApplicationException {
@@ -22,6 +23,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ACCOUNT_NOT_REGISTERED = "ERROR_ACCOUNT_NOT_REGISTERED";
 
     protected final static String ERROR_PASSWORDS_NOT_SAME_MESSAGE = "Passwords are not the same"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_PASSWORDS_OLD_AND_NEW_SAME_EXCEPTION = "Old and new passwords are the same"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_EMAIL_NOT_UNIQUE_MESSAGE = "Email not unique"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_USERNAME_NOT_UNIQUE_MESSAGE = "Username not unique"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_PHONE_NUMBER_NOT_UNIQUE_MESSAGE = "Phone number not unique"; //TODO - tu trzeba zrobić resource bundle
@@ -40,6 +42,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ACCESS_LEVEL_IS_ALREADY_GRANTED = "This account already has this level of access"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_LICENSE_NOT_UNIQUE_MESSAGE = "License not unique"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_IS_NOT_ACTIVATED = "This account is not activated"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_ACCOUNT_IS_BLOCKED = "This account is blocked"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_REVOKE_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT = "You cannot take away your permissions"; //TODO - tu trzeba zrobić resource bundle
 
     @Getter
@@ -98,6 +101,10 @@ public class AppException extends WebApplicationException {
 
     public static PasswordsNotSameException createPasswordsNotSameException() {
         return new PasswordsNotSameException(ERROR_PASSWORDS_NOT_SAME_MESSAGE, Response.Status.BAD_REQUEST, null);
+    }
+
+    public static PasswordsOldAndNewSameException createSameOldAndNewPasswordException() {
+        return new PasswordsOldAndNewSameException(ERROR_PASSWORDS_OLD_AND_NEW_SAME_EXCEPTION, Response.Status.CONFLICT, null);
     }
 
     public static MailNotSentException createMailNotSentException() {
@@ -170,10 +177,13 @@ public class AppException extends WebApplicationException {
         return new AccountWithLicenseExistsException(AppException.ERROR_LICENSE_NOT_UNIQUE_MESSAGE, Response.Status.CONFLICT);
     }
 
-    public static AccountIsNotActivatedException accountIsNotActivated() {
+    public static AccountIsNotActivatedException createAccountIsNotActivatedException() {
         return new AccountIsNotActivatedException(AppException.ERROR_ACCOUNT_IS_NOT_ACTIVATED, Response.Status.CONFLICT);
     }
 
+    public static AccountIsBlockedException createAccountIsBlockedException() {
+        return new AccountIsBlockedException(AppException.ERROR_ACCOUNT_IS_BLOCKED, Response.Status.CONFLICT);
+    }
 
     public static RevokeAccessLevelToTheSameAdminAccountException revokeAnAccessLevelToTheSameAdminAccount() {
         return new RevokeAccessLevelToTheSameAdminAccountException(AppException.ERROR_REVOKE_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT, Response.Status.FORBIDDEN);

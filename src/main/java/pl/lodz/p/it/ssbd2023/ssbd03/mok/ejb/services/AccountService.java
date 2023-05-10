@@ -16,6 +16,8 @@ public interface AccountService {
 
     void confirmAccountFromActivationLink(String confirmationToken);
 
+    void changePasswordFromResetPasswordLink(String resetPasswordToken, String newPassword, String newRepeatedPassword);
+
     String authenticate(String username, String password);
 
     void updateLoginData(String username, boolean flag);
@@ -36,7 +38,11 @@ public interface AccountService {
 
     void editUserPersonalData(String username, String firstName, String surname);
 
-    void changePassword(String oldPassword, String newPassword, String newRepeatedPassword);
+    void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword);
+
+    void changeUserPassword(String username, String newPassword, String newRepeatedPassword);
+
+    void resetPassword(String username);
 
     void disableUserAccount(String username) throws IllegalArgumentException, NoResultException;
 
