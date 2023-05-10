@@ -35,8 +35,6 @@ public interface AccountService {
 
     PersonalData getPersonalData();
 
-    PersonalData getUserPersonalData(String username);
-
     void editSelfPersonalData(String firstName, String surname);
 
     void editUserPersonalData(String username, String firstName, String surname);

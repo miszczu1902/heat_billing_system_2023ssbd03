@@ -20,7 +20,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ErrorResponseDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
@@ -135,15 +134,6 @@ public class AccountEndpoint {
     public Response editPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO) {
         accountService.editSelfPersonalData(personalDataDTO.getFirstName(), personalDataDTO.getSurname());
         return Response.status(Response.Status.NO_CONTENT).build();
-    }
-
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{username}/personal-data")
-    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public Response getUserPersonalData(@PathParam("username") String username) {
-        PersonalData personalData = accountService.getUserPersonalData(username);
-        return Response.ok().entity(new PersonalDataDTO(personalData.getFirstName(), personalData.getSurname())).build();
     }
 
     @PATCH
