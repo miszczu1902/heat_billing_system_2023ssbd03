@@ -7,14 +7,14 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
-import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceException;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.credential.Password;
 import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.ForbiddenException;
+import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.TokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
@@ -189,8 +189,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     public PersonalData getPersonalData() {
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
-        return personalDataFacade.find(account.getId())
-                .orElseThrow(() -> new IllegalArgumentException("Personal data not found"));
+        return personalDataFacade.find(account.getId());
     }
 
     @Override
@@ -294,83 +293,81 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
-    public void editSelfPersonalData(String firstName, String surname) throws NoResultException {
-        try {
-            final String username = securityContext.getCallerPrincipal().getName();
-            editPersonalData(username, firstName, surname);
-        } catch (NoResultException e) {
-            throw new NoResultException(e.getMessage());
-        }
+    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
+    public void editSelfPersonalData(String firstName, String surname) {
+        final String username = securityContext.getCallerPrincipal().getName();
+        editPersonalData(username, firstName, surname);
     }
 
     @Override
-    public void editUserPersonalData(String username, String firstName, String surname) throws ForbiddenException {
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public void editUserPersonalData(String username, String firstName, String surname) {
         final String editor = securityContext.getCallerPrincipal().getName();
         final Account editorAccount = accountFacade.findByUsername(editor);
         final Account editableAccount = accountFacade.findByUsername(username);
 
-        if (editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
+        if (editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) {
             editPersonalData(username, firstName, surname);
-        } else if (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
+        } else if (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) {
             editPersonalData(username, firstName, surname);
         } else {
-            throw new ForbiddenException("Cannot edit other user personal data due to not supported role");
+            throw AppException.createNotAllowedActionException();
         }
     }
 
     private void editPersonalData(String username, String firstName, String surname) {
+        PersonalData personalData = personalDataFacade.findByUsername(username);
+
+        personalData.setFirstName(firstName);
+        personalData.setSurname(surname);
+
         try {
-            PersonalData personalData = personalDataFacade.findByLogin(username);
-
-            personalData.setFirstName(firstName);
-            personalData.setSurname(surname);
-
             personalDataFacade.edit(personalData);
-        } catch (NoResultException e) {
-            throw new NoResultException(e.getMessage());
+        } catch (PersistenceException pe) {
+            if (pe.getCause() instanceof ConstraintViolationException) {
+                throw AppException.createPersonalDataConstraintViolationException();
+            }
         }
     }
 
     @Override
-    public void disableUserAccount(String username) throws NoResultException {
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public void disableUserAccount(String username) {
         editUserEnableFlag(username, false);
     }
 
     @Override
-    public void enableUserAccount(String username) throws NoResultException {
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public void enableUserAccount(String username) {
         editUserEnableFlag(username, true);
     }
 
-    private void editUserEnableFlag(String username, boolean flag) throws NoResultException {
-        try {
-            final String editor = securityContext.getCallerPrincipal().getName();
-            final Account editorAccount = accountFacade.findByUsername(editor);
-            final Account editableAccount = accountFacade.findByUsername(username);
+    private void editUserEnableFlag(String username, boolean flag) {
+        final String editor = securityContext.getCallerPrincipal().getName();
+        final Account editorAccount = accountFacade.findByUsername(editor);
+        final Account editableAccount = accountFacade.findByUsername(username);
 
-            if (editorAccount.equals(editableAccount)) {
-                throw new ForbiddenException("Cannot edit yours enable flag.");
-            }
-
-            if (editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
-                setUserEnableFlag(username, flag);
-            } else if (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("ADMIN"))) {
-                setUserEnableFlag(username, flag);
-            } else {
-                throw new ForbiddenException("Cannot edit other user enable flag due to not supported role.");
-            }
-        } catch (NoResultException e) {
-            throw new NoResultException(e.getMessage());
+        if (editorAccount.equals(editableAccount)) {
+            throw AppException.createNotAllowedActionException();
         }
+
+        if ((editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) || (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN)))) {
+            setUserEnableFlag(username, flag);
+        } else {
+            throw AppException.createNotAllowedActionException();
+        }
+        if (flag) {
+            mailSender.sendInformationAccountEnabled(editableAccount.getEmail());
+        } else {
+            mailSender.sendInformationAccountDisabled(editableAccount.getEmail());
+        }
+
     }
 
-    private void setUserEnableFlag(String username, boolean flag) throws NoResultException {
-        try {
-            final Account editableAccount = accountFacade.findByUsername(username);
-            editableAccount.setIsEnable(flag);
-            accountFacade.edit(editableAccount);
-        } catch (NoResultException e) {
-            throw new NoResultException(e.getMessage());
-        }
+    private void setUserEnableFlag(String username, boolean flag) {
+        final Account editableAccount = accountFacade.findByUsername(username);
+        editableAccount.setIsEnable(flag);
+        accountFacade.edit(editableAccount);
     }
 
     @Override

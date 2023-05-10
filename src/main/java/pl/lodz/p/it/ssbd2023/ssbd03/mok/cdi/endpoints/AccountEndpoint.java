@@ -3,7 +3,6 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mok.cdi.endpoints;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.persistence.NoResultException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -133,12 +132,8 @@ public class AccountEndpoint {
     @Path("/self/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
     public Response editPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO) {
-        try {
-            accountService.editSelfPersonalData(personalDataDTO.getFirstName(), personalDataDTO.getSurname());
-            return Response.status(Response.Status.OK).build();
-        } catch (NoResultException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        accountService.editSelfPersonalData(personalDataDTO.getFirstName(), personalDataDTO.getSurname());
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @PATCH
@@ -146,14 +141,8 @@ public class AccountEndpoint {
     @Path("/{username}/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response editUserPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO, @PathParam("username") String username) {
-        try {
-            accountService.editUserPersonalData(username, personalDataDTO.getFirstName(), personalDataDTO.getSurname());
-            return Response.status(Response.Status.OK).build();
-        } catch (NoResultException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        } catch (ForbiddenException e) {
-            return Response.status(Response.Status.FORBIDDEN).build();
-        }
+        accountService.editUserPersonalData(username, personalDataDTO.getFirstName(), personalDataDTO.getSurname());
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @PATCH
@@ -161,12 +150,8 @@ public class AccountEndpoint {
     @Path("/{username}/disable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response disableUserAccount(@PathParam("username") String username) {
-        try {
-            accountService.disableUserAccount(username);
-            return Response.status(Response.Status.OK).build();
-        } catch (NoResultException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        accountService.disableUserAccount(username);
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @PATCH
@@ -174,12 +159,8 @@ public class AccountEndpoint {
     @Path("/{username}/enable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response enableUserAccount(@PathParam("username") String username) {
-        try {
-            accountService.enableUserAccount(username);
-            return Response.status(Response.Status.OK).build();
-        } catch (NoResultException e) {
-            return Response.status(Response.Status.NOT_FOUND).build();
-        }
+        accountService.enableUserAccount(username);
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @PATCH

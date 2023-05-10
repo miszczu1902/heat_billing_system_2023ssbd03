@@ -8,6 +8,9 @@ import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.DatabaseException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.personalData.PersonalDataConstraintViolationException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
 
 @ApplicationException(rollback = true)
@@ -29,6 +32,8 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ACCOUNT_EXISTS_MESSAGE = "Account already exists"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_NOT_EXISTS_MESSAGE = "Account with provided data not exists"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_RESULT_NOT_FOUND = "Query result not found"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_ACTION_NOT_ALLOWED = "Action is not allowed with this privileges"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_PERSONAL_DATA_VALIDATION = "Each element of personal data can have up to 32 characters"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_INVALID_CREDENTIALS = "Invalid username or password"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ADDING_AN_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT = "You can't give yourself permissions"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_REVOKE_THE_ONLY_LEVEL_OF_ACCESS = "One level of access cannot be taken away"; //TODO - tu trzeba zrobić resource bundle
@@ -74,10 +79,6 @@ public class AppException extends WebApplicationException {
         return new AppException(Response.Status.INTERNAL_SERVER_ERROR, key, cause);
     }
 
-    public static AppException createAccessDeniedException(Throwable cause) {
-        return new AppException(Response.Status.FORBIDDEN, ERROR_ACCESS_DENIED, cause);
-    }
-
     public static AppException createPersistenceException(Throwable cause) {
         return new AppException(Response.Status.INTERNAL_SERVER_ERROR, ERROR_GENERAL_PERSISTENCE, cause);
     }
@@ -88,6 +89,10 @@ public class AppException extends WebApplicationException {
 
     public static NoQueryResultException createNoResultException(Throwable cause) {
         return new NoQueryResultException(ERROR_RESULT_NOT_FOUND, Response.Status.NOT_FOUND, cause);
+    }
+
+    public static NotAllowedActionException createNotAllowedActionException() {
+        return new NotAllowedActionException(Response.Status.METHOD_NOT_ALLOWED, ERROR_ACTION_NOT_ALLOWED);
     }
 
     public static DatabaseException createDatabaseException() {
@@ -118,6 +123,10 @@ public class AppException extends WebApplicationException {
         } else {
             return new AccountExistsException(ERROR_ACCOUNT_EXISTS_MESSAGE, Response.Status.CONFLICT, cause);
         }
+    }
+
+    public static PersonalDataConstraintViolationException createPersonalDataConstraintViolationException() {
+        return new PersonalDataConstraintViolationException();
     }
 
     public static AccountNotExistsException createAccountNotExistsException(Throwable cause) {
