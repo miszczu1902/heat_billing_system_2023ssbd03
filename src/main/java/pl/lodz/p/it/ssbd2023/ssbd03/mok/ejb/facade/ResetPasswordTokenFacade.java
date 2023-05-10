@@ -11,14 +11,13 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccountConfirmationToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.ResetPasswordToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+
+import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -55,15 +54,10 @@ public class ResetPasswordTokenFacade extends AbstractFacade<ResetPasswordToken>
         }
     }
 
-    @RolesAllowed({Roles.ADMIN})
-    public void deleteExpiredResetPasswordToken() {
-        TypedQuery<AccountConfirmationToken> query = em.createNamedQuery("ResetPasswordToken.getOlderResetPasswordToken", AccountConfirmationToken.class);
-        query.setParameter("currentTime", LocalDateTime.now());
-        List<AccountConfirmationToken> tokens = query.getResultList();
-        tokens.forEach(token -> {
-            if (token.getExpirationDate().isBefore(LocalDateTime.now())) {
-                em.remove(token);
-            }
-        });
+    @RolesAllowed({Roles.GUEST, Roles.ADMIN})
+    public List<ResetPasswordToken> getExpiredResetPasswordTokensList() {
+        TypedQuery<ResetPasswordToken> query = em.createNamedQuery("ResetPasswordToken.getOlderResetPasswordToken", ResetPasswordToken.class);
+        query.setParameter("currentTime", LocalDateTime.now(TIME_ZONE));
+        return query.getResultList();
     }
 }

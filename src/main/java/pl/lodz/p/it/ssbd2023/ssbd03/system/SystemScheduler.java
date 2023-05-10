@@ -7,6 +7,7 @@ import jakarta.interceptor.Interceptors;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccountConfirmationToken;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.ResetPasswordToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountConfirmationTokenFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
@@ -42,7 +43,12 @@ public class SystemScheduler {
 
     @Schedule(hour = "*", minute = "*/1", persistent = false)
     private void deleteResetPasswordExpiredTokens() {
-        resetPasswordTokenFacade.deleteExpiredResetPasswordToken();
+        List<ResetPasswordToken> resetPasswordTokens = resetPasswordTokenFacade.getExpiredResetPasswordTokensList();
+        if (!resetPasswordTokens.isEmpty()) {
+            resetPasswordTokens.forEach(resetPasswordToken -> {
+                resetPasswordTokenFacade.remove(resetPasswordToken);
+            });
+        }
     }
 
     @Schedule(hour = "*", minute = "*/1", persistent = false)
