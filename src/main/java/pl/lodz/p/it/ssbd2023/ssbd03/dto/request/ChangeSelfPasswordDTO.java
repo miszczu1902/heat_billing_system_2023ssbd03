@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChangePasswordDTO {
+public class ChangeSelfPasswordDTO {
     @NotNull
     private String oldPassword;
     @NotNull
@@ -17,5 +17,7 @@ public class ChangePasswordDTO {
             message = "Restrictions for password is: at least 8 characters length, at least one upper and lower case, number and special digit")
     private String newPassword;
     @NotNull
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+            message = "Restrictions for password is: at least 8 characters length, at least one upper and lower case, number and special digit")
     private String repeatedNewPassword;
 }

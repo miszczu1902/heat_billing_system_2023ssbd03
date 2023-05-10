@@ -9,13 +9,13 @@ import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.persistence.NoResultException;
 import jakarta.security.enterprise.SecurityContext;
-import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.security.enterprise.credential.Password;
 import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
+import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.ForbiddenException;
-import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
+import pl.lodz.p.it.ssbd2023.ssbd03.auth.TokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
@@ -57,10 +57,13 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     private AccountConfirmationTokenFacade accountConfirmationTokenFacade;
 
     @Inject
+    private ResetPasswordTokenFacade resetPasswordTokenFacade;
+
+    @Inject
     private MailSender mailSender;
 
     @Inject
-    private ConfirmationTokenGenerator confirmationTokenGenerator;
+    private TokenGenerator tokenGenerator;
 
     @Inject
     private JwtGenerator jwtGenerator;
@@ -88,10 +91,10 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         accountFacade.create(account);
 
         AccountConfirmationToken accountConfirmationToken = new AccountConfirmationToken(
-                confirmationTokenGenerator.createAccountConfirmationToken(), account);
+                tokenGenerator.createAccountConfirmationToken(), account);
         accountConfirmationTokenFacade.create(accountConfirmationToken);
 
-        mailSender.sendLinkToActivateAccountToEmail(account.getEmail(), "Activate account", accountConfirmationToken.getTokenValue());
+        mailSender.sendLinkToActivateAccount(account.getEmail(), "Activate account", accountConfirmationToken.getTokenValue());
     }
 
     @Override
@@ -103,6 +106,18 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         accountFacade.edit(accountToActivate);
 
         accountConfirmationTokenFacade.remove(accountConfirmationToken);
+    }
+
+    @Override
+    public void changePasswordFromResetPasswordLink(String token, String newPassword, String newRepeatedPassword) {
+        if (!newPassword.equals(newRepeatedPassword)) {
+            throw AppException.createPasswordsNotSameException();
+        }
+        final ResetPasswordToken resetPasswordToken = resetPasswordTokenFacade.getResetPasswordByTokenValue(token);
+        final Account accountToChangePassword = resetPasswordToken.getAccount();
+        changePassword(accountToChangePassword, newPassword);
+
+        resetPasswordTokenFacade.remove(resetPasswordToken);
     }
 
     @Override
@@ -133,6 +148,9 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 loginData.setInvalidLoginCounter(loginData.getInvalidLoginCounter() + 1);
                 loginData.setLastInvalidLogicAddress(httpServletRequest.getRemoteAddr());
                 loginData.setLastInvalidLoginDate(LocalDateTime.now(ZoneId.of(LoadConfig.loadPropertyFromConfig("zone"))));
+                if (loginData.getInvalidLoginCounter() == 3) {
+                    account.setIsEnable(false);
+                }
             }
             loginDataFacade.edit(loginData);
         } catch (Exception ex) {
@@ -216,7 +234,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
     @Override
-    public void changePassword(String oldPassword, String newPassword, String newRepeatedPassword) throws AccountPasswordException {
+    public void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword) throws AccountPasswordException {
         if (oldPassword.equals(newPassword)) {
             throw new AccountPasswordException("Old password and new password are the same.");
         }
@@ -231,6 +249,48 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         final String newPasswordHash = bcryptHashGenerator.generate(newPassword.toCharArray());
         account.setPassword(newPasswordHash);
         accountFacade.edit(account);
+    }
+
+    @RolesAllowed({Roles.ADMIN})
+    @Override
+    public void changeUserPassword(String username, String newPassword, String newRepeatedPassword) {
+        if (!newPassword.equals(newRepeatedPassword)) {
+            throw AppException.createPasswordsNotSameException();
+        }
+        final Account accountToChangePassword = accountFacade.findByUsername(username);
+        changePassword(accountToChangePassword, newPassword);
+
+        String token = tokenGenerator.createResetPasswordToken();
+        while (resetPasswordTokenFacade.checkIfResetPasswordTokenExistsByTokenValue(token)) {
+            token = tokenGenerator.createResetPasswordToken();
+        }
+        final ResetPasswordToken resetPasswordToken = new ResetPasswordToken(
+                token, accountToChangePassword);
+        resetPasswordTokenFacade.create(resetPasswordToken);
+
+        mailSender.sendInformationAboutChangedPasswordByAdmin(accountToChangePassword.getEmail(), token);
+    }
+
+    @RolesAllowed({Roles.GUEST})
+    @Override
+    public void resetPassword(String username) {
+        final Account accountToChangePassword = accountFacade.findByUsername(username);
+        if (!accountToChangePassword.getIsActive()) {
+            throw AppException.createAccountIsNotActivatedException();
+        }
+        if (!accountToChangePassword.getIsEnable()) {
+            throw AppException.createAccountIsBlockedException();
+        }
+
+        String token = tokenGenerator.createResetPasswordToken();
+        while (resetPasswordTokenFacade.checkIfResetPasswordTokenExistsByTokenValue(token)) {
+            token = tokenGenerator.createResetPasswordToken();
+        }
+        final ResetPasswordToken resetPasswordToken = new ResetPasswordToken(
+                token, accountToChangePassword);
+        resetPasswordTokenFacade.create(resetPasswordToken);
+
+        mailSender.sendInformationAboutResettingPassword(accountToChangePassword.getEmail(), token);
     }
 
     @Override
@@ -317,22 +377,23 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     public void addAccessLevelManager(String username, String license) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
         if (!username.equals(adminUsername)) {
-            Account account = accountFacade.findByUsername(username);
+            final Account account = accountFacade.findByUsername(username);
             if (account.getIsActive()) {
                 if (managerFacade.findByLicense(license)) {
                     throw AppException.createAccountWithLicenseExistsException();
                 } else {
                     if (account.getAccessLevels().stream()
                             .noneMatch(accessLevel -> accessLevel.getAccessLevel().equals(Roles.MANAGER))) {
-                        Manager manager = new Manager(license);
+                        final Manager manager = new Manager(license);
                         manager.setAccount(account);
                         account.getAccessLevels().add(manager);
+                        mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "manager");
                     } else {
                         throw AppException.theAccessLevelisAlreadyGranted();
                     }
                 }
             } else {
-                throw AppException.accountIsNotActivated();
+                throw AppException.createAccountIsNotActivatedException();
             }
         } else {
             throw AppException.addingAnAccessLevelToTheSameAdminAccount();
@@ -343,14 +404,15 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     public void addAccessLevelOwner(String username, String phoneNumber) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
         if (!username.equals(adminUsername)) {
-            Account account = accountFacade.findByUsername(username);
+            final Account account = accountFacade.findByUsername(username);
             if (account.getIsActive()) {
                 if (!ownerFacade.checkIfAnOwnerExistsByPhoneNumber(phoneNumber)) {
                     if (account.getAccessLevels().stream()
                             .noneMatch(accessLevel -> accessLevel.getAccessLevel().equals(Roles.OWNER))) {
-                        Owner owner = new Owner(phoneNumber);
+                        final Owner owner = new Owner(phoneNumber);
                         owner.setAccount(account);
                         account.getAccessLevels().add(owner);
+                        mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "owner");
                     } else {
                         throw AppException.theAccessLevelisAlreadyGranted();
                     }
@@ -358,7 +420,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                     throw AppException.createAccountWithNumberExistsException();
                 }
             } else {
-                throw AppException.accountIsNotActivated();
+                throw AppException.createAccountIsNotActivatedException();
             }
         } else {
             throw AppException.addingAnAccessLevelToTheSameAdminAccount();
@@ -369,18 +431,19 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     public void addAccessLevelAdmin(String username) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
         if (!username.equals(adminUsername)) {
-            Account account = accountFacade.findByUsername(username);
+            final Account account = accountFacade.findByUsername(username);
             if (account.getIsActive()) {
                 if (account.getAccessLevels().stream()
                         .noneMatch(accessLevel -> accessLevel.getAccessLevel().equals(Roles.ADMIN))) {
-                    Admin admin = new Admin();
+                    final Admin admin = new Admin();
                     admin.setAccount(account);
                     account.getAccessLevels().add(admin);
+                    mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "admin");
                 } else {
                     throw AppException.theAccessLevelisAlreadyGranted();
                 }
             } else {
-                throw AppException.accountIsNotActivated();
+                throw AppException.createAccountIsNotActivatedException();
             }
         } else {
             throw AppException.addingAnAccessLevelToTheSameAdminAccount();
@@ -391,12 +454,12 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     public void revokeAccessLevel(String username, String access) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
         if (!username.equals(adminUsername)) {
-            Account account = accountFacade.findByUsername(username);
+            final Account account = accountFacade.findByUsername(username);
             if (account.getIsActive()) {
                 final int size = account.getAccessLevels().size();
                 if (size > 1) {
                     if (access.equals(Roles.MANAGER)) {
-                        Manager manager = account.getAccessLevels().stream()
+                        final Manager manager = account.getAccessLevels().stream()
                                 .filter(accessLevel -> accessLevel instanceof Manager)
                                 .map(accessLevel -> (Manager) accessLevel)
                                 .findAny()
@@ -407,9 +470,10 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                                 .orElse(-1);
                         account.getAccessLevels().remove(index1);
                         managerFacade.remove(manager);
+                        mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "manager");
                     }
                     if (access.equals(Roles.ADMIN)) {
-                        Admin admin = account.getAccessLevels().stream()
+                        final Admin admin = account.getAccessLevels().stream()
                                 .filter(accessLevel -> accessLevel instanceof Admin)
                                 .map(accessLevel -> (Admin) accessLevel)
                                 .findAny()
@@ -420,9 +484,10 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                                 .orElse(-1);
                         account.getAccessLevels().remove(index);
                         adminFacade.remove(admin);
+                        mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "admin");
                     }
                     if (access.equals(Roles.OWNER)) {
-                        Owner owner = account.getAccessLevels().stream()
+                        final Owner owner = account.getAccessLevels().stream()
                                 .filter(accessLevel -> accessLevel instanceof Owner)
                                 .map(accessLevel -> (Owner) accessLevel)
                                 .findAny()
@@ -433,12 +498,13 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                                 .orElse(-1);
                         account.getAccessLevels().remove(index);
                         ownerFacade.remove(owner);
+                        mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "owner");
                     }
                 } else {
                     throw AppException.revokeTheOnlyLevelOfAccess();
                 }
             } else {
-                throw AppException.accountIsNotActivated();
+                throw AppException.createAccountIsNotActivatedException();
             }
         } else {
             throw AppException.revokeAnAccessLevelToTheSameAdminAccount();
@@ -450,9 +516,19 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         return accountFacade.getListOfAccountsWithFilterParams(sortBy, pageNumber);
     }
 
-    @Override
-    public PersonalData getPersonalData() {
-        final String username = securityContext.getCallerPrincipal().getName();
-        return personalDataFacade.findByLogin(username);
+    private void changePassword(Account account, String newPassword) {
+        if (!account.getIsActive()) {
+            throw AppException.createAccountIsNotActivatedException();
+        }
+        if (!account.getIsEnable()) {
+            throw AppException.createAccountIsBlockedException();
+        }
+        final char[] newPasswordCharArray = newPassword.toCharArray();
+        if (bcryptHashGenerator.verify(newPasswordCharArray, account.getPassword())) {
+            throw AppException.createSameOldAndNewPasswordException();
+        }
+        final String newPasswordHash = bcryptHashGenerator.generate(newPasswordCharArray);
+        account.setPassword(newPasswordHash);
+        accountFacade.edit(account);
     }
 }

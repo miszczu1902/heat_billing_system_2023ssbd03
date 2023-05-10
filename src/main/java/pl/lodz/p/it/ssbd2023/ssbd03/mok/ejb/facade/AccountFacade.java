@@ -11,7 +11,12 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+
+import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -48,7 +53,7 @@ public class AccountFacade extends AbstractFacade<Account> {
         try {
             return tq.getSingleResult();
         } catch (PersistenceException pe) {
-            if (pe.getCause() instanceof NoResultException) {
+            if (pe instanceof NoResultException) {
                 throw AppException.createNoResultException(pe.getCause());
             }
             throw AppException.createDatabaseException();
@@ -66,5 +71,11 @@ public class AccountFacade extends AbstractFacade<Account> {
         }
 
         return tq.getResultList();
+    }
+
+    public List<Account> findAllBlockedAccounts() {
+        TypedQuery<Account> query = em.createNamedQuery("Account.findAllBlockedAccounts", Account.class);
+        query.setParameter("date", LocalDateTime.now(TIME_ZONE).minusDays(1));
+        return Optional.of(query.getResultList()).orElse(Collections.emptyList());
     }
 }

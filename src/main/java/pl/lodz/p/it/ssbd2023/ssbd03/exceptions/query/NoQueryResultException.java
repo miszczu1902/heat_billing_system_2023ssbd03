@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account;
+package pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query;
 
 import jakarta.ejb.ApplicationException;
 import jakarta.ws.rs.core.Response;
