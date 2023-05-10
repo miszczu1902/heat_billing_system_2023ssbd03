@@ -38,7 +38,7 @@ public class SystemScheduler {
 
     @Schedule(hour = "*", minute = "*/1", persistent = false)
     public void unlockAccounts() {
-        final List<Account> accounts = accountFacade.findAllLockedAccounts();
+        final List<Account> accounts = accountFacade.findAllBlockedAccounts();
         if (!accounts.isEmpty()) {
             accounts.forEach(account -> {
                 account.setIsEnable(true);

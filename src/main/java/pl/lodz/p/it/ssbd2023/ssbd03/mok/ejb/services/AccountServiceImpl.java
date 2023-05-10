@@ -9,10 +9,10 @@ import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.persistence.NoResultException;
 import jakarta.security.enterprise.SecurityContext;
-import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.security.enterprise.credential.Password;
 import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
+import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.ForbiddenException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.ConfirmationTokenGenerator;
@@ -133,9 +133,9 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 loginData.setInvalidLoginCounter(loginData.getInvalidLoginCounter() + 1);
                 loginData.setLastInvalidLogicAddress(httpServletRequest.getRemoteAddr());
                 loginData.setLastInvalidLoginDate(LocalDateTime.now(ZoneId.of(LoadConfig.loadPropertyFromConfig("zone"))));
-            }
-            if (loginData.getInvalidLoginCounter() == 3) {
-                account.setIsEnable(false);
+                if (loginData.getInvalidLoginCounter() == 3) {
+                    account.setIsEnable(false);
+                }
             }
             loginDataFacade.edit(loginData);
         } catch (Exception ex) {
