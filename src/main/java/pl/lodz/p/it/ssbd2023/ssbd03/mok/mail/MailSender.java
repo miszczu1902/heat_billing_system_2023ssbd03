@@ -12,7 +12,7 @@ import java.util.Properties;
 
 @Stateless
 public class MailSender {
-    private Properties properties = new Properties();
+    private final Properties properties = new Properties();
     private Session session;
 
     @PostConstruct
@@ -33,37 +33,52 @@ public class MailSender {
     }
 
     public void sendLinkToActivateAccountToEmail(String to, String subject, String content) {
-        sendEmail(to, subject, content, "activation.url");
+        sendEmail(to, subject, LoadConfig.loadPropertyFromConfig("activation.url") + "?" + content);
     }
-     public void sendInformationAccountDisabled(String to) {
+
+    public void sendInformationAdminLoggedIn(String to, String ipAddress) {
+        sendEmail(to, "Security Alert!",
+                "Someone from ip address: " + ipAddress +
+                        " just logged in to your account");//TODO - tu trzeba zrobić resource bundle
+    }
+
+    public void sendInformationAddingAnAccessLevel(String to, String role) {
+        sendEmail(to, "Security Alert!",
+                "The " + role +
+                        " access level has been added to your account.");//TODO - tu trzeba zrobić resource bundle
+    }
+
+    public void sendInformationRevokeAnAccessLevel(String to, String role) {
+        sendEmail(to, "Security Alert!",
+                "The " + role +
+                        " access level has been removed from your account.");//TODO - tu trzeba zrobić resource bundle
+    }
+
+    public void sendInformationAccountDisabled(String to) {
         sendEmail(to, "Account has been disabled",
                 "Dear User, \n" +
-                        "Your account has been disabled", null);
-     }
+                        "Your account has been disabled");
+    }
 
-     public void sendInformationAccountEnabled(String to) {
-         sendEmail(to, "Account has been enabled",
-                 "Dear User, \n" +
-                         "Your account has been enabled", null);
-     }
+    public void sendInformationAccountEnabled(String to) {
+        sendEmail(to, "Account has been enabled",
+                "Dear User, \n" +
+                        "Your account has been enabled");
+    }
 
     public void sendInformationAccountActivated(String to) {
         sendEmail(to, "Account has been activated",
                 "Dear User, \n" +
-                        "Your account has been activated", null);
+                        "Your account has been activated");
     }
 
-    private void sendEmail(String to, String subject, String content, String propertyFromConfig) {
+    private void sendEmail(String to, String subject, String content) {
         try {
             MimeMessage message = new MimeMessage(session);
             message.setFrom(new InternetAddress(LoadConfig.loadPropertyFromConfig("mail.login")));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(subject);
-            if (propertyFromConfig != null) {
-                message.setText(LoadConfig.loadPropertyFromConfig(propertyFromConfig) + "?" + content);
-            } else {
-                message.setText(content);
-            }
+            message.setText(content);
             Transport.send(message);
         } catch (MessagingException e) {
             throw AppException.createMailNotSentException();

@@ -59,15 +59,14 @@ public class AccountEndpoint {
     @Path("/login")
     @RolesAllowed(Roles.GUEST)
     public Response authenticate(@Valid LoginDTO loginDTO) {
-        final String token = accountService.authenticate(loginDTO.getUsername(), loginDTO.getPassword());
-        return Response.ok().header("Bearer", token).build();
-    }
-
-    @GET
-    @Path("/test")
-    @RolesAllowed(Roles.ADMIN)
-    public Response getTest() {
-        return Response.ok().entity("test").build();
+        try {
+            final String token = accountService.authenticate(loginDTO.getUsername(), loginDTO.getPassword());
+            accountService.updateLoginData(loginDTO.getUsername(), true);
+            return Response.ok().header("Bearer", token).build();
+        } catch (Exception ex) {
+            accountService.updateLoginData(loginDTO.getUsername(), false);
+            throw AppException.invalidCredentialsException();
+        }
     }
 
     @PATCH
