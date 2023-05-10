@@ -254,14 +254,12 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             throw AppException.createNotAllowedActionException();
         }
 
-        if (editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) {
-            setUserEnableFlag(username, flag);
-        } else if (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) {
+        if ((editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) || (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN)))) {
             setUserEnableFlag(username, flag);
         } else {
             throw AppException.createNotAllowedActionException();
         }
-        if(flag) {
+        if (flag) {
             mailSender.sendInformationAccountEnabled(editableAccount.getEmail());
         } else {
             mailSender.sendInformationAccountDisabled(editableAccount.getEmail());

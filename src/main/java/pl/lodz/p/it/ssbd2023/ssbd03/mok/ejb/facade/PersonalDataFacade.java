@@ -32,7 +32,7 @@ public class PersonalDataFacade extends AbstractFacade<PersonalData> {
         try {
             return tq.getSingleResult();
         } catch (PersistenceException pe) {
-            if (pe.getCause() instanceof NoResultException) {
+            if (pe instanceof NoResultException) {
                 throw AppException.createNoResultException(pe.getCause());
             }
 

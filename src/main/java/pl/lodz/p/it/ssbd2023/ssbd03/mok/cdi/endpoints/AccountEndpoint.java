@@ -103,7 +103,7 @@ public class AccountEndpoint {
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
     public Response editPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO) {
         accountService.editSelfPersonalData(personalDataDTO.getFirstName(), personalDataDTO.getSurname());
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @PATCH
@@ -112,7 +112,7 @@ public class AccountEndpoint {
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response editUserPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO, @PathParam("username") String username) {
         accountService.editUserPersonalData(username, personalDataDTO.getFirstName(), personalDataDTO.getSurname());
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @PATCH
@@ -121,7 +121,7 @@ public class AccountEndpoint {
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response disableUserAccount(@PathParam("username") String username) {
         accountService.disableUserAccount(username);
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @PATCH
@@ -130,7 +130,7 @@ public class AccountEndpoint {
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response enableUserAccount(@PathParam("username") String username) {
         accountService.enableUserAccount(username);
-        return Response.status(Response.Status.OK).build();
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @PATCH

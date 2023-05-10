@@ -47,7 +47,7 @@ public class AccountConfirmationTokenFacade extends AbstractFacade<AccountConfir
         try {
             return query.getSingleResult();
         } catch (PersistenceException pe) {
-            if (pe.getCause() instanceof NoResultException) {
+            if (pe instanceof NoResultException) {
                 throw AppException.createNoResultException(pe.getCause());
             }
 

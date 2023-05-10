@@ -59,7 +59,7 @@ public class MailSender {
             message.setFrom(new InternetAddress(LoadConfig.loadPropertyFromConfig("mail.login")));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(subject);
-            if(propertyFromConfig != null) {
+            if (propertyFromConfig != null) {
                 message.setText(LoadConfig.loadPropertyFromConfig(propertyFromConfig) + "?" + content);
             } else {
                 message.setText(content);

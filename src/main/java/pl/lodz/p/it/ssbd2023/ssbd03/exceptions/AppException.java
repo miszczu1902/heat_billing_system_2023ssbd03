@@ -76,10 +76,6 @@ public class AppException extends WebApplicationException {
         return new AppException(Response.Status.INTERNAL_SERVER_ERROR, key, cause);
     }
 
-    public static AppException createAccessDeniedException(Throwable cause) {
-        return new AppException(Response.Status.FORBIDDEN, ERROR_ACCESS_DENIED, cause);
-    }
-
     public static AppException createPersistenceException(Throwable cause) {
         return new AppException(Response.Status.INTERNAL_SERVER_ERROR, ERROR_GENERAL_PERSISTENCE, cause);
     }
