@@ -15,7 +15,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @Table(name = "personal_data")
 @NamedQueries({
-        @NamedQuery(name = "PersonalData.findByLogin", query = "SELECT k FROM PersonalData k WHERE k.id.username = :login")
+        @NamedQuery(name = "PersonalData.findByUsername", query = "SELECT k FROM PersonalData k WHERE k.id.username = :username")
 })
 public class PersonalData extends AbstractEntity implements Serializable {
     @Id

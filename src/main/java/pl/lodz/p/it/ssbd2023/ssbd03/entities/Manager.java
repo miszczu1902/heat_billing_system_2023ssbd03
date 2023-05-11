@@ -18,6 +18,9 @@ import java.io.Serializable;
                 @Index(name = "unique_license", columnList = "license", unique = true)
         }
 )
+@NamedQueries({
+        @NamedQuery(name = "Manager.findByLicense", query = "SELECT d FROM Manager d WHERE d.license = :license")
+})
 public class Manager extends AccessLevelMapping implements Serializable {
     @Column(name = "license", nullable = false, length = 20)
     private String license;

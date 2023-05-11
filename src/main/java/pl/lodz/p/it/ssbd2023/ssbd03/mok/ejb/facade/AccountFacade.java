@@ -4,17 +4,19 @@ import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.interceptor.Interceptors;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.PersistenceException;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+
+import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -48,7 +50,15 @@ public class AccountFacade extends AbstractFacade<Account> {
     public Account findByUsername(String username) {
         TypedQuery<Account> tq = em.createNamedQuery("Account.findByUsername", Account.class);
         tq.setParameter("username", username);
-        return tq.getSingleResult();
+        try {
+            return tq.getSingleResult();
+        } catch (PersistenceException pe) {
+            if (pe instanceof NoResultException) {
+                throw AppException.createNoResultException(pe.getCause());
+            }
+
+            throw AppException.createDatabaseException();
+        }
     }
 
     public List<Account> getListOfAccountsWithFilterParams(String sortBy, int pageNumber) {
@@ -63,5 +73,10 @@ public class AccountFacade extends AbstractFacade<Account> {
 
         return tq.getResultList();
     }
-}
 
+    public List<Account> findAllBlockedAccounts() {
+        TypedQuery<Account> query = em.createNamedQuery("Account.findAllBlockedAccounts", Account.class);
+        query.setParameter("date", LocalDateTime.now(TIME_ZONE).minusDays(1));
+        return Optional.of(query.getResultList()).orElse(Collections.emptyList());
+    }
+}

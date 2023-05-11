@@ -9,7 +9,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -31,7 +30,7 @@ public class OwnerFacade extends AbstractFacade<Owner> {
         tq.setParameter("phoneNumber", phoneNumber);
         try {
             tq.getSingleResult();
-            throw AppException.createAccountWithNumberExistsException();
+            return true;
         } catch (NoResultException e) {
             return false;
         }
