@@ -12,6 +12,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountConfirmationTokenFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.ResetPasswordTokenFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.mail.MailSender;
 
 import java.util.List;
 
@@ -29,6 +30,9 @@ public class SystemScheduler {
 
     @Inject
     private AccountFacade accountFacade;
+
+    @Inject
+    private MailSender mailSender;
 
     @Schedule(hour = "*", minute = "*/1", persistent = false)
     private void cleanUnconfirmedAccounts() {
@@ -57,6 +61,7 @@ public class SystemScheduler {
                 account.setIsEnable(true);
                 account.getLoginData().setInvalidLoginCounter(0);
                 accountFacade.edit(account);
+                mailSender.sendInformationAccountEnabled(account.getEmail());
             });
         }
     }
