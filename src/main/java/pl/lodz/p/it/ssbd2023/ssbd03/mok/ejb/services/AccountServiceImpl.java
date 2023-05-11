@@ -150,6 +150,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 loginData.setLastInvalidLoginDate(LocalDateTime.now(ZoneId.of(LoadConfig.loadPropertyFromConfig("zone"))));
                 if (loginData.getInvalidLoginCounter() == 3) {
                     account.setIsEnable(false);
+                    mailSender.sendInformationAccountDisabled(account.getEmail());
                 }
             }
             loginDataFacade.edit(loginData);
@@ -193,6 +194,13 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public Account getAccount(String username) {
+        final Account account = accountFacade.findByUsername(username);
+        return account;
+    }
+
+    @Override
     @RolesAllowed(Roles.OWNER)
     public Owner getOwner() {
         final String username = securityContext.getCallerPrincipal().getName();
@@ -201,7 +209,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 .filter(accessLevel -> accessLevel instanceof Owner)
                 .map(accessLevel -> (Owner) accessLevel)
                 .findAny()
-                .orElseThrow(() -> new IllegalStateException("Account is not an Owner."));
+                .orElseThrow(AppException::createAccountIsNotOwnerException);
         return owner;
     }
 
@@ -214,7 +222,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 .filter(accessLevel -> accessLevel instanceof Manager)
                 .map(accessLevel -> (Manager) accessLevel)
                 .findAny()
-                .orElseThrow(() -> new IllegalStateException("Account is not an Manager."));
+                .orElseThrow(AppException::createAccountIsNotManagerException);
         return manager;
     }
 
@@ -227,7 +235,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 .filter(accessLevel -> accessLevel instanceof Admin)
                 .map(accessLevel -> (Admin) accessLevel)
                 .findAny()
-                .orElseThrow(() -> new IllegalStateException("Account is not an Admin."));
+                .orElseThrow(AppException::createAccountIsNotAdminException);
         return admin;
     }
 
@@ -361,7 +369,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         } else {
             mailSender.sendInformationAccountDisabled(editableAccount.getEmail());
         }
-
     }
 
     private void setUserEnableFlag(String username, boolean flag) {

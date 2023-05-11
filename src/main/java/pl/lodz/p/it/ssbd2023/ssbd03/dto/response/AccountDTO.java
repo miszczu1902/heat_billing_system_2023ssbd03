@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.dto.request;
+package pl.lodz.p.it.ssbd2023.ssbd03.dto.response;
 
 import lombok.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.AbstractDTO;
