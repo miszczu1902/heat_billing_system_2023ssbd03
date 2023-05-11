@@ -3,12 +3,13 @@ import EditUserPersonalData from "../components/personalData/EditUserPersonalDat
 import NavbarPanel from "../components/navigation/NavbarPanel";
 import AccountsList from "../components/accountsList/AccountsList";
 import EditPersonalData from "../components/personalData/EditPersonalData";
-import LandingPage from "../components/landingPage/LandingPage";
+import Registration from "../components/registration/Registration";
+import LandingPage from "../landingPage/LandingPage";
 
 const router = createBrowserRouter([
     {
         path: '/',
-        element: <LandingPage />
+        element: <LandingPage/>
     },
     {
         path: "/accounts",
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
                 element: <EditUserPersonalData/>
             }
         ]
+    },
+    {
+        path: '/register',
+        element: <Registration/>
     },
     {
         path: '/self',
