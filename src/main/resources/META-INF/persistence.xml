@@ -24,6 +24,7 @@
         <jta-data-source>java:app/jdbc/ssbd03mok</jta-data-source>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Account</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.AccountConfirmationToken</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.EmailConfirmationToken</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.ResetPasswordToken</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.AbstractEntity</class>

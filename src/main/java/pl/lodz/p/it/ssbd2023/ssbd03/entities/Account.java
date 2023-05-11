@@ -26,8 +26,10 @@ import java.util.Objects;
         @NamedQuery(name = "Account.getListOfAccountsByEmail",
                 query = "SELECT k FROM Account k ORDER BY k.email"),
         @NamedQuery(name = "Account.findAllBlockedAccounts", query = "SELECT a " +
-                "FROM Account a WHERE a.isEnable IS FALSE AND a.loginData.lastInvalidLoginDate <= :date AND a.loginData.invalidLoginCounter = 3")
+                "FROM Account a WHERE a.isEnable IS FALSE AND a.loginData.lastInvalidLoginDate <= :date AND a.loginData.invalidLoginCounter = 3"),
+        @NamedQuery(name = "Account.findByEmail", query = "SELECT d FROM Account d WHERE d.email = :email")
 })
+
 public class Account extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
