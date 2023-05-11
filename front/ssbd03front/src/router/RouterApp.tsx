@@ -4,7 +4,7 @@ import NavbarPanel from "../components/navigation/NavbarPanel";
 import AccountsList from "../components/accountsList/AccountsList";
 import EditPersonalData from "../components/personalData/EditPersonalData";
 import Registration from "../components/registration/Registration";
-import LandingPage from "../landingPage/LandingPage";
+import LandingPage from "../components/landingPage/LandingPage";
 
 const router = createBrowserRouter([
     {
