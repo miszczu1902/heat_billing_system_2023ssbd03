@@ -12,9 +12,11 @@ import ListItem from '@mui/material/ListItem';
 import axios from 'axios';
 import validator from "validator";
 import {useState, useEffect} from 'react';
+import {API_URL} from "../../consts";
 
-const GET_DATA_URL = 'http://localhost:8080/api/accounts/self/personal-data';
-const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtaXN6Y3p1MjEzNyIsImlhdCI6MTY4MzU2NTAxNywicm9sZSI6Ik9XTkVSIiwiZXhwIjoxNjgzNTY2ODE3fQ.ddfkn394c0xhJsY2d58P5uQGJD7Lu4iY3Of7stt9NgI';
+const GET_DATA_URL = API_URL + 'accounts/self/personal-data';
+const token =
+    'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNjgzNzk2OTkxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODM3OTg3OTF9.tW6lfKm0RLzFHDp_hMDfdOO1WE3XqCHikUFGCCkQt78';
 
 const EditPersonalData = () => {
     const [open, setOpen] = React.useState(false);
@@ -119,7 +121,6 @@ const EditPersonalData = () => {
 
     return (
         <div>
-            <NavbarPanel/>
             <div>
                 <Button onClick={handleClickOpen} variant="contained">Edytuj dane</Button>
             </div>

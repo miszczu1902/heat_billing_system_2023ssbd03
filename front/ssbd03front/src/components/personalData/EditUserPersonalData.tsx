@@ -12,10 +12,12 @@ import ListItem from '@mui/material/ListItem';
 import axios from 'axios';
 import validator from "validator";
 import {useState, useEffect} from 'react';
+import {API_URL} from "../../consts";
 
-const user = "miszczu2137";
-const GET_DATA_URL = 'http://localhost:8080/api/accounts/' + user + '/personal-data';
-const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNjgzNzQyMTE3LCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODM3NDM5MTd9.1NTsSrnrwJSEQ0ANMbdtplqmameCv7POxUEi9HGGGtU';
+const user = "janekkowalski";
+const GET_DATA_URL = API_URL + '/accounts/' + user + '/personal-data';
+const token =
+    'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNjgzNzk2OTkxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODM3OTg3OTF9.tW6lfKm0RLzFHDp_hMDfdOO1WE3XqCHikUFGCCkQt78';
 
 const EditUserPersonalData = () => {
     const [open, setOpen] = React.useState(false);

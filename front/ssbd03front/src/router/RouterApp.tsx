@@ -1,12 +1,13 @@
-import {createBrowserRouter, Outlet} from 'react-router-dom';
-import EditUserPersonalData from '../components/personalData/EditUserPersonalData';
-import NavbarPanel from '../components/navigation/NavbarPanel';
-import AccountsList from '../components/accountsList/AccountsList';
-import EditPersonalData from '../components/personalData/EditPersonalData';
+import {createBrowserRouter, Outlet} from "react-router-dom";
+import EditUserPersonalData from "../components/personalData/EditUserPersonalData";
+import NavbarPanel from "../components/navigation/NavbarPanel";
+import AccountsList from "../components/accountsList/AccountsList";
+import EditPersonalData from "../components/personalData/EditPersonalData";
+import LandingPage from "../components/landingPage/LandingPage";
 
 const router = createBrowserRouter([
     {
-        path: '/',
+        path: "/",
         element: (
             <>
                 <NavbarPanel/>
@@ -15,11 +16,16 @@ const router = createBrowserRouter([
         ),
         children: [
             {
-                path: '/accounts',
+                path: "/#",
+                element: <LandingPage/>
+            },
+
+            {
+                path: "/accounts",
                 element: <AccountsList/>
             },
             {
-                path: '/accounts/:username',
+                path: "/accounts/:username",
                 element: <EditPersonalData/>
             }
         ]
