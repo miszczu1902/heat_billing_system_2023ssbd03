@@ -79,4 +79,15 @@ public class AccountFacade extends AbstractFacade<Account> {
         query.setParameter("date", LocalDateTime.now(TIME_ZONE).minusDays(1));
         return Optional.of(query.getResultList()).orElse(Collections.emptyList());
     }
+
+    public boolean checkIfAnAccountExistsByEmail(String email) {
+        TypedQuery<Account> tq = em.createNamedQuery("Account.findByEmail", Account.class);
+        tq.setParameter("email", email);
+        try {
+            tq.getSingleResult();
+            return true;
+        } catch (NoResultException e) {
+            return false;
+        }
+    }
 }

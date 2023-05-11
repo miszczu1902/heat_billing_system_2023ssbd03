@@ -57,6 +57,9 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     private AccountConfirmationTokenFacade accountConfirmationTokenFacade;
 
     @Inject
+    private EmailConfirmationTokenFacade emailConfirmationTokenFacade;
+
+    @Inject
     private ResetPasswordTokenFacade resetPasswordTokenFacade;
 
     @Inject
@@ -534,5 +537,45 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         final String newPasswordHash = bcryptHashGenerator.generate(newPasswordCharArray);
         account.setPassword(newPasswordHash);
         accountFacade.edit(account);
+    }
+
+    @Override
+    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
+    public void changeSelfEmail(String newEmail) {
+        final String username = securityContext.getCallerPrincipal().getName();
+        changeEmail(newEmail, username);
+    }
+
+    @Override
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public void changeUserEmail(String newEmail, String username) {
+        changeEmail(newEmail, username);
+    }
+
+    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
+    public void changeEmail(String newEmail, String username) {
+        final Account account = accountFacade.findByUsername(username);
+        if (newEmail.equals(account.getEmail())) {
+            throw AppException.createCurrentEmailException();
+        } else {
+            if (!accountFacade.checkIfAnAccountExistsByEmail(newEmail)) {
+                EmailConfirmationToken emailConfirmationToken = new EmailConfirmationToken(
+                        tokenGenerator.createAccountConfirmationToken(), newEmail, account);
+                emailConfirmationTokenFacade.create(emailConfirmationToken);
+                mailSender.sendLinkToActivateAccount(newEmail, "Confirm your new email", emailConfirmationToken.getTokenValue());
+            } else {
+                throw AppException.createAccountWithEmailExistsException();
+            }
+        }
+    }
+
+    @Override
+    public void confirmNewEmailAccountFromActivationLink(String confirmationToken) {
+        EmailConfirmationToken emailConfirmationToken = emailConfirmationTokenFacade.getActivationTokenByTokenValue(confirmationToken);
+        Account account = emailConfirmationToken.getAccount();
+        final String newEmail = emailConfirmationToken.getEmail();
+        account.setEmail(newEmail);
+        accountFacade.edit(account);
+        emailConfirmationTokenFacade.remove(emailConfirmationToken);
     }
 }

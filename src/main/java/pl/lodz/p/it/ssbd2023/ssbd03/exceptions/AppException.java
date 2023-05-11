@@ -11,7 +11,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppExcepti
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.personalData.PersonalDataConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
 
 @ApplicationException(rollback = true)
 public class AppException extends WebApplicationException {
@@ -28,6 +27,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_USERNAME_NOT_UNIQUE_MESSAGE = "Username not unique"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_PHONE_NUMBER_NOT_UNIQUE_MESSAGE = "Phone number not unique"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_CURRENT_PHONE_NUMBER = "This is your current phone number"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_CURRENT_EMAIL = "This is your current email"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_IS_NOT_OWNER = "This account is not the owner"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_EXISTS_MESSAGE = "Account already exists"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_NOT_EXISTS_MESSAGE = "Account with provided data not exists"; //TODO - tu trzeba zrobić resource bundle
@@ -151,6 +151,14 @@ public class AppException extends WebApplicationException {
 
     public static AccountWithNumberExistsException createAccountWithNumberExistsException() {
         return new AccountWithNumberExistsException(AppException.ERROR_PHONE_NUMBER_NOT_UNIQUE_MESSAGE, Response.Status.CONFLICT);
+    }
+
+    public static CurrentPhoneNumberException createCurrentEmailException() {
+        return new CurrentPhoneNumberException(AppException.ERROR_CURRENT_EMAIL, Response.Status.CONFLICT);
+    }
+
+    public static AccountWithNumberExistsException createAccountWithEmailExistsException() {
+        return new AccountWithNumberExistsException(AppException.ERROR_EMAIL_NOT_UNIQUE_MESSAGE, Response.Status.CONFLICT);
     }
 
     public static AccessLevelToTheSameAdminAccountException addingAnAccessLevelToTheSameAdminAccount() {
