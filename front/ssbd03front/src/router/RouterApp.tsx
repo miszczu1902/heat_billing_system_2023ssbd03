@@ -7,7 +7,11 @@ import LandingPage from "../components/landingPage/LandingPage";
 
 const router = createBrowserRouter([
     {
-        path: "/",
+        path: '/',
+        element: <LandingPage />
+    },
+    {
+        path: "/accounts",
         element: (
             <>
                 <NavbarPanel/>
@@ -16,23 +20,18 @@ const router = createBrowserRouter([
         ),
         children: [
             {
-                path: "/#",
-                element: <LandingPage/>
-            },
-
-            {
                 path: "/accounts",
                 element: <AccountsList/>
             },
             {
                 path: "/accounts/:username",
-                element: <EditPersonalData/>
+                element: <EditUserPersonalData/>
             }
         ]
     },
     {
         path: '/self',
-        element: <EditUserPersonalData/>
+        element: <EditPersonalData/>
     }
 ]);
 

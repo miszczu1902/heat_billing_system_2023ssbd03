@@ -5,7 +5,6 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import NavbarPanel from '../navigation/NavbarPanel';
 import {TextField} from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -13,13 +12,14 @@ import axios from 'axios';
 import validator from "validator";
 import {useState, useEffect} from 'react';
 import {API_URL} from "../../consts";
-
-const user = "janekkowalski";
-const GET_DATA_URL = API_URL + '/accounts/' + user + '/personal-data';
-const token =
-    'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNjgzNzk2OTkxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODM3OTg3OTF9.tW6lfKm0RLzFHDp_hMDfdOO1WE3XqCHikUFGCCkQt78';
+import {useParams} from "react-router-dom";
 
 const EditUserPersonalData = () => {
+    const user = useParams().username;
+    const GET_DATA_URL = API_URL + '/accounts/' + user + '/personal-data';
+    const token =
+        'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNjgzODM1NzczLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODM4Mzc1NzN9.jN5Rz3Hi3iR7ABheZf0VxMgUjE4LipupCPiTxOdwr5s';
+
     const [open, setOpen] = React.useState(false);
     const [confirmOpen, setConfirmOpen] = React.useState(false);
     let [name, setName] = React.useState("");
@@ -122,7 +122,6 @@ const EditUserPersonalData = () => {
 
     return (
         <div>
-            <NavbarPanel/>
             <div>
                 <Button onClick={handleClickOpen} variant="contained">Edytuj dane</Button>
             </div>
