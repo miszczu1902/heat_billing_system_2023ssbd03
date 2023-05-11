@@ -150,6 +150,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 loginData.setLastInvalidLoginDate(LocalDateTime.now(ZoneId.of(LoadConfig.loadPropertyFromConfig("zone"))));
                 if (loginData.getInvalidLoginCounter() == 3) {
                     account.setIsEnable(false);
+                    mailSender.sendInformationAccountDisabled(account.getEmail());
                 }
             }
             loginDataFacade.edit(loginData);
