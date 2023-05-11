@@ -16,7 +16,7 @@ import {API_URL} from '../../consts';
 import {useNavigate} from "react-router-dom";
 
 const token =
-    'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNjgzNzk2OTkxLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODM3OTg3OTF9.tW6lfKm0RLzFHDp_hMDfdOO1WE3XqCHikUFGCCkQt78';
+    'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNjgzODM1NzczLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODM4Mzc1NzN9.jN5Rz3Hi3iR7ABheZf0VxMgUjE4LipupCPiTxOdwr5s';
 
 const AccountsList = () => {
     const navigate = useNavigate();
