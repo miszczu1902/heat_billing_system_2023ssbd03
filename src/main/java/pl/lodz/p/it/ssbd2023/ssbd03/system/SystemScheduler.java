@@ -7,10 +7,12 @@ import jakarta.interceptor.Interceptors;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccountConfirmationToken;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.EmailConfirmationToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.ResetPasswordToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountConfirmationTokenFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.EmailConfirmationTokenFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.ResetPasswordTokenFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.mail.MailSender;
 
@@ -24,6 +26,9 @@ import java.util.List;
 public class SystemScheduler {
     @Inject
     private AccountConfirmationTokenFacade accountConfirmationTokenFacade;
+
+    @Inject
+    private EmailConfirmationTokenFacade emailConfirmationTokenFacade;
 
     @Inject
     private ResetPasswordTokenFacade resetPasswordTokenFacade;
@@ -42,6 +47,14 @@ public class SystemScheduler {
                 accountFacade.remove(accountConfirmationToken.getAccount());
                 accountConfirmationTokenFacade.remove(accountConfirmationToken);
             });
+        }
+    }
+
+    @Schedule(hour = "*", minute = "*/1", persistent = false)
+    private void deleteNewEmailExpiredTokens() {
+        final List<EmailConfirmationToken> emailConfirmationTokenList = emailConfirmationTokenFacade.getExpiredNewEmailTokensList();
+        if (!emailConfirmationTokenList.isEmpty()) {
+            emailConfirmationTokenList.forEach(emailConfirmationToken -> emailConfirmationTokenFacade.remove(emailConfirmationToken));
         }
     }
 

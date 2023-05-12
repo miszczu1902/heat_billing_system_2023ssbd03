@@ -98,4 +98,16 @@ public class AccountFacade extends AbstractFacade<Account> {
     public void remove(Account entity) {
         super.remove(entity);
     }
+
+    @PermitAll
+    public boolean checkIfAnAccountExistsByEmail(String email) {
+        TypedQuery<Account> tq = em.createNamedQuery("Account.findByEmail", Account.class);
+        tq.setParameter("email", email);
+        try {
+            tq.getSingleResult();
+            return true;
+        } catch (NoResultException e) {
+            return false;
+        }
+    }
 }

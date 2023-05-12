@@ -3,7 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
@@ -11,7 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Entity
-@Getter
+@Data
 @DiscriminatorValue("MANAGER")
 @Table(name = "manager",
         indexes = {
@@ -19,7 +19,7 @@ import java.io.Serializable;
         }
 )
 @NamedQueries({
-        @NamedQuery(name = "Manager.findByLicense", query = "SELECT d FROM Manager d WHERE d.license = :license")
+        @NamedQuery(name = "Manager.findByLicenseAndWithoutUsername", query = "SELECT d FROM Manager d WHERE d.license = :license AND d.account.username != :username")
 })
 public class Manager extends AccessLevelMapping implements Serializable {
     @Column(name = "license", nullable = false, length = 20)
