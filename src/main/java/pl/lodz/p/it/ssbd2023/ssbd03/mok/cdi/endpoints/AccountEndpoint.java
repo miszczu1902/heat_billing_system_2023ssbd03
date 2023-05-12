@@ -17,7 +17,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AccountMapper;
 
@@ -79,17 +78,9 @@ public class AccountEndpoint {
     @Path("/self/password")
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
     public Response changeSelfPassword(@NotNull @Valid ChangeSelfPasswordDTO changeSelfPasswordDTO) {
-        try {
             accountService.changeSelfPassword(changeSelfPasswordDTO.getOldPassword(), changeSelfPasswordDTO.getNewPassword(),
                     changeSelfPasswordDTO.getRepeatedNewPassword());
             return Response.noContent().build();
-        } catch (AccountPasswordException e) {
-            final ErrorResponseDTO errorResponseDTO =
-                    new ErrorResponseDTO(
-                            Response.Status.BAD_REQUEST.getStatusCode(),
-                            e.getMessage());
-            return Response.status(Response.Status.BAD_REQUEST).entity(errorResponseDTO).build();
-        }
     }
 
     @PATCH

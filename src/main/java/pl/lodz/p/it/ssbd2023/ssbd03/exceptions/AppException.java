@@ -23,6 +23,7 @@ public class AppException extends WebApplicationException {
 
     protected final static String ERROR_PASSWORDS_NOT_SAME_MESSAGE = "Passwords are not the same"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_PASSWORDS_OLD_AND_NEW_SAME_EXCEPTION = "Old and new passwords are the same"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_PASSWORD_OLD_INCORRECT_EXCEPTION = "Old password is incorrect"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_EMAIL_NOT_UNIQUE_MESSAGE = "Email not unique"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_USERNAME_NOT_UNIQUE_MESSAGE = "Username not unique"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_PHONE_NUMBER_NOT_UNIQUE_MESSAGE = "Phone number not unique"; //TODO - tu trzeba zrobić resource bundle
@@ -106,6 +107,10 @@ public class AppException extends WebApplicationException {
 
     public static PasswordsOldAndNewSameException createSameOldAndNewPasswordException() {
         return new PasswordsOldAndNewSameException(ERROR_PASSWORDS_OLD_AND_NEW_SAME_EXCEPTION, Response.Status.CONFLICT, null);
+    }
+
+    public static PasswordOldIncorrectException createPasswordOldIncorrectException() {
+        return new PasswordOldIncorrectException(ERROR_PASSWORD_OLD_INCORRECT_EXCEPTION, Response.Status.BAD_REQUEST, null);
     }
 
     public static MailNotSentException createMailNotSentException() {
