@@ -15,9 +15,9 @@ const theme = createTheme();
 
 export default function Login() {
     const [cookies, setCookie] = useCookies(["token"]);
-    var [username, setUsername] = React.useState("");
-    var [password, setPassword] = React.useState("");
-    var [loginError, setLoginError] = React.useState("");
+    const [username, setUsername] = React.useState("");
+    const [password, setPassword] = React.useState("");
+    const [loginError, setLoginError] = React.useState("");
 
     const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(event.target.value);
@@ -39,8 +39,6 @@ export default function Login() {
             let data = JSON.stringify({
                 "username": username,
                 "password": password
-                // "username": "johndoe",
-                // "password": "Password$123"
             });
 
             let config = {

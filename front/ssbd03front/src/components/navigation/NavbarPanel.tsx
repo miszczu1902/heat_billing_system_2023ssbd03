@@ -23,14 +23,10 @@ const NavbarPanel: React.FC = () => {
     const [navbarColor, setNavbarColor] = React.useState('#ffffff');
     const [cookies] = useCookies(["token"]);
     let role = 'GUEST';
-    let decodedToken = '';
-    let isTokenValid = false;
 
     if (cookies.token != undefined) {
-        decodedToken = jwt(cookies.token);
-        const expirationTime = JSON.parse(JSON.stringify(decodedToken)).exp;
+        const decodedToken = jwt(cookies.token);
         role = JSON.parse(JSON.stringify(decodedToken)).role
-        if (Date.now() <= expirationTime * 1000) isTokenValid = true;
     }
 
     const handleChange = (event: SelectChangeEvent<typeof language>) => {
@@ -76,9 +72,7 @@ const NavbarPanel: React.FC = () => {
 
                     <Button style={{backgroundColor: navbarColor}}>Zarejestruj</Button>
                     <Button style={{backgroundColor: navbarColor}}>Zmień język</Button>
-                    {!isTokenValid && (
-                        <Button onClick={handleClickOpenLogin} style={{backgroundColor: navbarColor}}>Zaloguj</Button>
-                    )}
+                    <Button onClick={handleClickOpenLogin} style={{backgroundColor: navbarColor}}>Zaloguj</Button>
                 </ButtonGroup>
             </Toolbar>
             <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
