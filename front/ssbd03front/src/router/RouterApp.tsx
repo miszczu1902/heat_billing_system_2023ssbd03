@@ -20,7 +20,7 @@ const router = createBrowserRouter([
                 path: "/accounts",
             },
             {
-                path: "/accounts/self",
+                path: "/accounts/self/personal-data",
                 element: <EditPersonalData/>
             }
         ]

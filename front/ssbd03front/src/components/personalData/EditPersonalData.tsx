@@ -19,17 +19,17 @@ export default function EditPersonalData() {
   const [open, setOpen] = React.useState(false);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
-  var [name, setName] = React.useState("");
-  var [surname, setSurname] = React.useState("");
+  const [name, setName] = React.useState("");
+  const [surname, setSurname] = React.useState("");
 
-  var [nameError, setNameError] = React.useState("");
-  var [surnameError, setSurnameError] = React.useState("");
-  var [dataError, setDataError] = React.useState("");
+  const [nameError, setNameError] = React.useState("");
+  const [surnameError, setSurnameError] = React.useState("");
+  const [dataError, setDataError] = React.useState("");
 
-  var [validData, setValidData] = React.useState(false);
+  const [validData, setValidData] = React.useState(false);
 
-  var [successOpen, setSuccessOpen] = React.useState(false);
-  var [errorOpen, setErrorOpen] = React.useState(false);
+  const [successOpen, setSuccessOpen] = React.useState(false);
+  const [errorOpen, setErrorOpen] = React.useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,7 +57,6 @@ export default function EditPersonalData() {
       setValidData(false);
     }
   }
-
 
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value)
@@ -203,7 +202,6 @@ export default function EditPersonalData() {
           <Button onClick={handleConfirm} disabled={!validData}>Ok</Button>
         </DialogActions>
       </Dialog>
-
 
       <Dialog disableEscapeKeyDown open={confirmOpen} onClose={handleConfirmClose}>
         <DialogTitle>Czy na pewno chcesz zmienić dane osobowe użytkownika?</DialogTitle>
