@@ -47,6 +47,7 @@ export default function EnableAccount() {
         setErrorOpen(true);
       });
     };
+    fetchData();
     handleConfirmClose(event, reason);
   }
 

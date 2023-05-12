@@ -44,6 +44,7 @@ export default function DisableAccount() {
           setErrorOpen(true);
         });
       };
+        fetchData();
       handleConfirmClose(event, reason);
     }
   
