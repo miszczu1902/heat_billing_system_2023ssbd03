@@ -29,7 +29,6 @@ import java.util.Objects;
                 "FROM Account a WHERE a.isEnable IS FALSE AND a.loginData.lastInvalidLoginDate <= :date AND a.loginData.invalidLoginCounter = 3"),
         @NamedQuery(name = "Account.findByEmail", query = "SELECT d FROM Account d WHERE d.email = :email")
 })
-
 public class Account extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
