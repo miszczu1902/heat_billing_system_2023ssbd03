@@ -70,6 +70,7 @@ create table login_data (
 create table access_level_mapping (
     id BIGINT PRIMARY KEY,
     access_level VARCHAR(7) NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
     account_id BIGINT NOT NULL,
     FOREIGN KEY (account_id) REFERENCES account(id),
     version BIGINT NOT NULL

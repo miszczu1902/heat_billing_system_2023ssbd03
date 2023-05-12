@@ -19,6 +19,7 @@ import java.util.Objects;
         }
 )
 @NamedQueries({
+        @NamedQuery(name = "Owner.findByPhoneNumberAndWithoutUsername", query = "SELECT d FROM Owner d WHERE d.phoneNumber = :phoneNumber AND d.account.username != :username"),
         @NamedQuery(name = "Owner.findByPhoneNumber", query = "SELECT d FROM Owner d WHERE d.phoneNumber = :phoneNumber")
 })
 public class Owner extends AccessLevelMapping implements Serializable {

@@ -11,14 +11,21 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountInfoDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AdminDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.OwnerDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ManagerDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountForListDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangeSelfPasswordDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AccountMapper;
 
@@ -80,17 +87,9 @@ public class AccountEndpoint {
     @Path("/self/password")
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
     public Response changeSelfPassword(@NotNull @Valid ChangeSelfPasswordDTO changeSelfPasswordDTO) {
-        try {
             accountService.changeSelfPassword(changeSelfPasswordDTO.getOldPassword(), changeSelfPasswordDTO.getNewPassword(),
                     changeSelfPasswordDTO.getRepeatedNewPassword());
             return Response.noContent().build();
-        } catch (AccountPasswordException e) {
-            final ErrorResponseDTO errorResponseDTO =
-                    new ErrorResponseDTO(
-                            Response.Status.BAD_REQUEST.getStatusCode(),
-                            e.getMessage());
-            return Response.status(Response.Status.BAD_REQUEST).entity(errorResponseDTO).build();
-        }
     }
 
     @PATCH
@@ -134,11 +133,12 @@ public class AccountEndpoint {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{username}/personal-data")
-    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public Response getUserPersonalData(@PathParam("username") String username) {
-        PersonalData personalData = accountService.getUserPersonalData(username);
-        return Response.ok().entity(new PersonalDataDTO(personalData.getFirstName(), personalData.getSurname())).build();
+    @Path("/self/personal-data")
+    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
+    public Response getPersonalData() {
+        PersonalData personalData = accountService.getPersonalData();
+        PersonalDataDTO personalDataDTO = new PersonalDataDTO(personalData.getFirstName(), personalData.getSurname());
+        return Response.status(Response.Status.OK).entity(personalDataDTO).build();
     }
 
     @PATCH

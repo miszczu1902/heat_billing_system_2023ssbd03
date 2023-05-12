@@ -31,9 +31,10 @@ public class ManagerFacade extends AbstractFacade<Manager> {
     }
 
     @RolesAllowed(Roles.ADMIN)
-    public boolean findByLicense(String license) {
-        TypedQuery<Manager> tq = em.createNamedQuery("Manager.findByLicense", Manager.class);
+    public boolean findByLicense(String license, String username) {
+        TypedQuery<Manager> tq = em.createNamedQuery("Manager.findByLicenseAndWithoutUsername", Manager.class);
         tq.setParameter("license", license);
+        tq.setParameter("username", username);
         try {
             tq.getSingleResult();
             return true;
