@@ -103,7 +103,7 @@ public class MailSender {
         sendEmail(to, "Account is waiting for activation",
                 "Dear User, \n" +
                         "Your account is waiting for activation. \n" +
-                "Activation link: " + LoadConfig.loadPropertyFromConfig("activation.url") + activationToken);
+                "Activation link: " + properties.getProperty("activation.url") + activationToken);
     }
 
     private void sendEmail(String to, String subject, String content) {
