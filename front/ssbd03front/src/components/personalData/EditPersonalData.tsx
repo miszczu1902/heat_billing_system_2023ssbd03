@@ -12,9 +12,8 @@ import axios from 'axios';
 import validator from "validator";
 import { API_URL } from '../../consts';
 import { useState, useEffect } from 'react';
-import e from 'express';
 
-const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtaXN6Y3p1MjEzNyIsImlhdCI6MTY4MzU2NTAxNywicm9sZSI6Ik9XTkVSIiwiZXhwIjoxNjgzNTY2ODE3fQ.ddfkn394c0xhJsY2d58P5uQGJD7Lu4iY3Of7stt9NgI';
+const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNjgzOTA5MTQ4LCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODM5MTA5NDh9.3TfEmb3rUAZfjg5wlqvRIu2QKt1EeBQIShn2ov0gMm0';
 
 export default function EditPersonalData() {
   const [open, setOpen] = React.useState(false);
@@ -22,8 +21,6 @@ export default function EditPersonalData() {
 
   var [name, setName] = React.useState("");
   var [surname, setSurname] = React.useState("");
-  var [newName, setNewName] = React.useState("");
-  var [newSurname, setNewSurname] = React.useState("");
 
   var [nameError, setNameError] = React.useState("");
   var [surnameError, setSurnameError] = React.useState("");
@@ -35,42 +32,52 @@ export default function EditPersonalData() {
   var [errorOpen, setErrorOpen] = React.useState(false);
 
   useEffect(() => {
-    axios.get(`${API_URL}/accounts/self/personal-data`, {
-      headers: {
-        Authorization: 'Bearer ' + token
-      }
-    })
-    .then(response => {
-      setName(response.data.firstName.toString());
-      setSurname(response.data.surname.toString());
-    })
-    .catch(error => {
-      // handle error
-    });
+    const fetchData = async () => {
+      const response = await axios.get(`${API_URL}/accounts/self/personal-data`, {
+        headers: {
+          Authorization: 'Bearer ' + token
+        }
+      })
+      .then(response => {
+        setName(response.data.firstName.toString());
+        setSurname(response.data.surname.toString());
+      });
+  };
+  fetchData();
   }, []);
 
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 }
-  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (validator.isAlpha(event.target.value) && event.target.value.length <= 32 && event.target.value.length > 0) {
-      setNameError("");
-      newName = event.target.value;
+
+  const validateData = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (nameError === "" && surnameError === "" && name !== "" && surname !== "" && event.target.value.length > 0) {
       setValidData(true);
     } else {
-      setNameError("Imię może zawierać tylko litery i musi mieć długość do 32 znaków");
       setValidData(false);
+    }
+  }
+
+
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value)
+    if (validator.isAlpha(event.target.value) && event.target.value.length <= 32 && event.target.value.length > 0) {
+      setNameError("");
+      validateData(event);
+    } else {
+      setNameError("Imię może zawierać tylko litery i musi mieć długość do 32 znaków");
+      validateData(event);
     }
   };
 
   const handleSurnameChange = (event: React.ChangeEvent<HTMLInputElement>) => { 
+    setSurname(event.target.value);
     if (validator.isAlpha(event.target.value) && event.target.value.length <= 32 && event.target.value.length > 0) {
       setSurnameError("");
-      newSurname = event.target.value;
-      setValidData(true);
+      validateData(event);
     } else {
       setSurnameError("Nazwisko może zawierać tylko litery i musi mieć długość do 32 znaków");
-      setValidData(false); 
+      validateData(event); 
     } 
   };
 
@@ -81,11 +88,8 @@ export default function EditPersonalData() {
       }
     })
     .then(response => {
-      setName(response.data.firstName.toString());
-      setSurname(response.data.surname.toString());
-    })
-    .catch(error => {
-      // handle error
+        setName(response.data.firstName.toString());
+        setSurname(response.data.surname.toString());
     });
     setOpen(true);
   };
@@ -106,15 +110,18 @@ export default function EditPersonalData() {
     if (reason !== 'backdropClick') {
       setConfirmOpen(false);
     }
-    setName(newName);
-    setSurname(newSurname);
+    const personalDataDTO = {
+      firstName: name.toString(),
+      surname: surname.toString()
+    }
+
     if(nameError === "" && surnameError === "") {
-      const data = { firstName: name, surname: surname};
-      axios.patch(`${API_URL}/accounts/self/personal-data`, {
-        headers: {
-          Authorization: 'Bearer ' + token
+      axios.patch(`${API_URL}/accounts/self/personal-data`, 
+        personalDataDTO, {
+         headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
         }, 
-        data: data
       })
       .then(response => {
         setSuccessOpen(true);
@@ -145,9 +152,7 @@ export default function EditPersonalData() {
     if (reason !== 'backdropClick') {
       setErrorOpen(false);
     }
-  }
-  
-  ;
+  };
 
   return (
     <div>
@@ -195,7 +200,7 @@ export default function EditPersonalData() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleConfirm}>Ok</Button>
+          <Button onClick={handleConfirm} disabled={!validData}>Ok</Button>
         </DialogActions>
       </Dialog>
 
@@ -208,12 +213,14 @@ export default function EditPersonalData() {
         </DialogActions>
       </Dialog>
 
-      <Dialog disableEscapeKeyDown open={successOpen} onClose={handleSuccessClose}>
+      <Dialog disableEscapeKeyDown open={successOpen}>
         <DialogTitle>Dane osobowe zostały zmienione</DialogTitle>
+        <Button onClick={handleSuccessClose}>Ok</Button>
       </Dialog> 
 
-      <Dialog disableEscapeKeyDown open={errorOpen} onClose={handleErrorClose}>
+      <Dialog disableEscapeKeyDown open={errorOpen}>
         <DialogTitle>Wystąpił błąd podczas zmiany danych osobowych</DialogTitle>
+        <Button onClick={handleErrorClose}>Ok</Button>
       </Dialog>
     </div>
   );
