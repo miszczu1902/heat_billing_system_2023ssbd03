@@ -93,6 +93,12 @@ public class AccountFacade extends AbstractFacade<Account> {
         return Optional.of(query.getResultList()).orElse(Collections.emptyList());
     }
 
+    @Override
+    @PermitAll
+    public void remove(Account entity) {
+        super.remove(entity);
+    }
+
     @PermitAll
     public boolean checkIfAnAccountExistsByEmail(String email) {
         TypedQuery<Account> tq = em.createNamedQuery("Account.findByEmail", Account.class);
@@ -103,11 +109,5 @@ public class AccountFacade extends AbstractFacade<Account> {
         } catch (NoResultException e) {
             return false;
         }
-    }
-
-    @Override
-    @PermitAll
-    public void remove(Account entity) {
-        super.remove(entity);
     }
 }
