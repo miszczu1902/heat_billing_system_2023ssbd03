@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -14,10 +14,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import { ButtonGroup } from '@mui/material';
+import { useCookies } from 'react-cookie';
 
 const NavbarPanel: React.FC = () => {
   const [open, setOpen] = React.useState(false);
   const [language, setLanguage] = React.useState<string>('');
+  const [cookies, setCookie] = useCookies(['role']);
+  const [navbarColor, setNavbarColor] = React.useState('#ffffff');
 
   const handleChange = (event: SelectChangeEvent<typeof language>) => {
     setLanguage(event.target.value);
@@ -33,16 +36,33 @@ const NavbarPanel: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    switch (cookies.role) {
+      case 'ADMIN':
+        setNavbarColor('#58d1fa'); 
+      break;
+    case 'MANAGER':
+      setNavbarColor('#1c75ec'); 
+      break;
+    case 'OWNER':
+      setNavbarColor('#7b79d4'); 
+      break;
+    default:
+      setNavbarColor('#1c8de4');
+    }
+  }, [cookies.role]);
+
+
   return (
-    <AppBar position="static">
+    <AppBar position="static" style={{ backgroundColor: navbarColor }}>
       <Toolbar>
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
             Rozliczenie ciepła dla lokali w wielu budynkach
         </Typography>
         <ButtonGroup variant="contained" aria-label="outlined primary button group">
-          <Button>Zaloguj</Button>
-          <Button>Zarejestruj</Button>
-          <Button onClick={handleClickOpen}>Zmień język</Button>
+          <Button style={{ backgroundColor: navbarColor }}>Zaloguj</Button>
+          <Button style={{ backgroundColor: navbarColor }}>Zarejestruj</Button>
+          <Button style={{ backgroundColor: navbarColor }}>Zmień język</Button>
         </ButtonGroup>
       </Toolbar>
       <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>

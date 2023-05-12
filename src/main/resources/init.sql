@@ -10,6 +10,8 @@ GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE manager TO ssbd03mok;
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE personal_data TO ssbd03mok;
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE login_data TO ssbd03mok;
 GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE account_confirmation_token TO ssbd03mok;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE email_confirmation_token TO ssbd03mok;
+GRANT SELECT,INSERT,DELETE,UPDATE ON TABLE reset_password_token TO ssbd03mok;
 
 GRANT SELECT ON TABLE access_level_mapping TO ssbd03mow;
 GRANT SELECT ON TABLE account TO ssbd03mow;
@@ -33,6 +35,9 @@ GRANT SELECT,INSERT,UPDATE ON TABLE heating_place_and_communal_area_advance TO s
 
 GRANT SELECT,UPDATE ON SEQUENCE access_level_mapping_id_seq TO ssbd03mok;
 GRANT SELECT,UPDATE ON SEQUENCE account_id_seq TO ssbd03mok;
+GRANT SELECT,UPDATE ON SEQUENCE reset_password_token_id_seq TO ssbd03mok;
+GRANT SELECT,UPDATE ON SEQUENCE account_confirmation_token_id_seq TO ssbd03mok;
+GRANT SELECT,UPDATE ON SEQUENCE email_confirmation_token_id_seq TO ssbd03mok;
 
 GRANT SELECT,UPDATE ON SEQUENCE address_id_seq TO ssbd03mow;
 GRANT SELECT,UPDATE ON SEQUENCE advance_id_seq TO ssbd03mow;

@@ -8,19 +8,20 @@ import jakarta.interceptor.Interceptors;
 import jakarta.persistence.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.LoginData;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors({TrackerInterceptor.class})
-public class PersonalDataFacade extends AbstractFacade<PersonalData> {
+public class LoginDataFacade extends AbstractFacade<LoginData> {
     @PersistenceContext(unitName = "ssbd03mokPU")
     private EntityManager em;
 
-    public PersonalDataFacade() {
-        super(PersonalData.class);
+    public LoginDataFacade() {
+        super(LoginData.class);
     }
 
     @Override
@@ -28,30 +29,23 @@ public class PersonalDataFacade extends AbstractFacade<PersonalData> {
         return this.em;
     }
 
-    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public PersonalData findByUsername(String username) {
-        TypedQuery<PersonalData> tq = em.createNamedQuery("PersonalData.findByUsername", PersonalData.class);
-        tq.setParameter("username", username);
+    @RolesAllowed(Roles.GUEST)
+    public LoginData findById(Account account) {
+        TypedQuery<LoginData> tq = em.createNamedQuery("LoginData.findById", LoginData.class);
+        tq.setParameter("id", account);
         try {
             return tq.getSingleResult();
         } catch (PersistenceException pe) {
             if (pe instanceof NoResultException) {
                 throw AppException.createNoResultException(pe.getCause());
             }
-
             throw AppException.createDatabaseException();
         }
     }
 
     @Override
-    @RolesAllowed({Roles.OWNER, Roles.ADMIN, Roles.MANAGER})
-    public PersonalData find(Object id) {
-        return super.find(id);
-    }
-
-    @Override
-    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public void edit(PersonalData entity) {
+    @RolesAllowed(Roles.GUEST)
+    public void edit(LoginData entity) {
         super.edit(entity);
     }
 }
