@@ -65,11 +65,12 @@ public class Account extends AbstractEntity {
     @Column(name = "language_", nullable = false, columnDefinition = "VARCHAR DEFAULT 'PL'")
     private String language_;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = {CascadeType.ALL, CascadeType.REMOVE})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account",
+            cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
     private List<AccessLevelMapping> accessLevels = new ArrayList<>();
 
     @Setter
-    @OneToOne(mappedBy = "id", cascade = {CascadeType.ALL, CascadeType.REMOVE})
+    @OneToOne(mappedBy = "id", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
     private PersonalData personalData;
 
     @OneToOne(mappedBy = "id", cascade = CascadeType.ALL)

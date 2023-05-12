@@ -19,7 +19,7 @@ import java.util.Objects;
 })
 public class PersonalData extends AbstractEntity implements Serializable {
     @Id
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "id", updatable = false, referencedColumnName = "id")
     private Account id;
 
