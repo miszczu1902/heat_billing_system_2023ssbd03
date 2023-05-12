@@ -16,7 +16,7 @@ import { useParams} from "react-router-dom";
 
 export default function EditUserPersonalData() {
   const username = useParams().username;
-  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNjgzOTE1MzUwLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODM5MTcxNTB9.tmNxVtVg18vwfhRZNEQFY1h8CFR2fF-oVSlR0CXKyoU';
+  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNjgzOTI1OTU0LCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODM5Mjc3NTR9.RbobRzMWznH3_DmX__wWOFwG5ZrREIZmrJyijy0_X-0';
 
   const [open, setOpen] = React.useState(false);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
@@ -35,7 +35,7 @@ export default function EditUserPersonalData() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(`${API_URL}/accounts/${username}/personal-data'`, {
+      const response = await axios.get(`${API_URL}/accounts/${username}/personal-data`, {
         headers: {
           Authorization: 'Bearer ' + token
         }
@@ -84,7 +84,7 @@ export default function EditUserPersonalData() {
   };
 
   const handleClickOpen = () => {
-    axios.get(`${API_URL}/accounts/${username}/personal-data'`, {
+    axios.get(`${API_URL}/accounts/${username}/personal-data`, {
       headers: {
         Authorization: 'Bearer ' + token
       }
@@ -118,7 +118,7 @@ export default function EditUserPersonalData() {
     }
 
     if(nameError === "" && surnameError === "") {
-      axios.patch(`${API_URL}/accounts/${username}/personal-data'`,
+      axios.patch(`${API_URL}/accounts/${username}/personal-data`,
         personalDataDTO, {
          headers: {
           'Authorization': 'Bearer ' + token,
