@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW public.glassfish_auth_view AS SELECT username, password, access_level FROM account JOIN access_level_mapping ON account.id = access_level_mapping.account_id WHERE account.is_active = true AND account.is_enable = true;
+CREATE OR REPLACE VIEW public.glassfish_auth_view AS SELECT username, password, access_level FROM account JOIN access_level_mapping ON account.id = access_level_mapping.account_id WHERE account.is_active = true AND account.is_enable = true AND access_level_mapping.is_active = true;
 
 GRANT SELECT ON TABLE glassfish_auth_view TO ssbd03auth;
 
@@ -57,7 +57,7 @@ INSERT INTO personal_data (id, first_name, surname, version, creation_date_time,
 
 INSERT INTO login_data (id, last_valid_login_date, last_valid_logic_address, last_invalid_login_date, last_invalid_logic_address, invalid_login_counter, version, creation_date_time, last_modification_date_time) VALUES (0, NOW() - INTERVAL '1 day', '192.168.0.1', NOW() - INTERVAL '3 days', '192.168.0.2', 2, 1, NOW(), NOW()), (-1, NOW() - INTERVAL '5 days', '10.0.0.1', NOW() - INTERVAL '8 days', '10.0.0.2', 2, 1, NOW(), NOW()), (-2, NOW() - INTERVAL '2 days', '192.168.1.1', NOW() - INTERVAL '4 days', '192.168.1.2', 0, 1, NOW(), NOW());
 
-INSERT INTO access_level_mapping (id, access_level, account_id, version, creation_date_time, last_modification_date_time) VALUES (0, 'ADMIN', 0, 1, NOW(), NOW()), (-1, 'MANAGER', -1, 1, NOW(), NOW()), (-2, 'OWNER', -2, 1, NOW(), NOW());
+INSERT INTO access_level_mapping (id, access_level, is_active, account_id, version, creation_date_time, last_modification_date_time) VALUES (0, 'ADMIN', true, 0, 1, NOW(), NOW()), (-1, 'MANAGER', true, -1, 1, NOW(), NOW()), (-2, 'OWNER', true, -2, 1, NOW(), NOW());
 
 INSERT INTO admin (id) VALUES (0);
 

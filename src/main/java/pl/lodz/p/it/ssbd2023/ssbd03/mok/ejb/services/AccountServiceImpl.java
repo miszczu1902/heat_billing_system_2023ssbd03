@@ -31,8 +31,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.stream.IntStream;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -49,9 +49,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Inject
     private ManagerFacade managerFacade;
-
-    @Inject
-    private AdminFacade adminFacade;
 
     @Inject
     private AccountConfirmationTokenFacade accountConfirmationTokenFacade;
@@ -332,141 +329,150 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @RolesAllowed(Roles.ADMIN)
     public void addAccessLevelManager(String username, String license) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
-        if (!username.equals(adminUsername)) {
-            final Account account = accountFacade.findByUsername(username);
-            if (account.getIsActive()) {
-                if (managerFacade.findByLicense(license)) {
-                    throw AppException.createAccountWithLicenseExistsException();
-                } else {
-                    if (account.getAccessLevels().stream()
-                            .noneMatch(accessLevel -> accessLevel.getAccessLevel().equals(Roles.MANAGER))) {
-                        final Manager manager = new Manager(license);
-                        manager.setAccount(account);
-                        account.getAccessLevels().add(manager);
-                        mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "manager");
-                    } else {
-                        throw AppException.theAccessLevelisAlreadyGranted();
-                    }
-                }
-            } else {
-                throw AppException.createAccountIsNotActivatedException();
-            }
-        } else {
+        if (username.equals(adminUsername)) {
             throw AppException.addingAnAccessLevelToTheSameAdminAccount();
         }
+        final Account account = accountFacade.findByUsername(username);
+        if (!account.getIsActive()) {
+            throw AppException.createAccountIsNotActivatedException();
+        }
+        if (managerFacade.findByLicense(license, username)) {
+            throw AppException.createAccountWithLicenseExistsException();
+        }
+        Optional<Manager> manager = account.getAccessLevels().stream()
+                .filter(accessLevel -> accessLevel instanceof Manager)
+                .map(accessLevel -> (Manager) accessLevel).findAny();
+
+        manager.ifPresentOrElse(managerAccess -> {
+                    if (managerAccess.getIsActive()) {
+                        throw AppException.theAccessLevelisAlreadyGranted();
+                    }
+                    if (managerAccess.getLicense().equals(license)) {
+                        managerAccess.setIsActive(true);
+                    } else {
+                        managerAccess.setIsActive(true);
+                        managerAccess.setLicense(license);
+                    }
+                    mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "manager");
+                }, () -> {
+                    final Manager newManager = new Manager(license);
+                    newManager.setAccount(account);
+                    account.getAccessLevels().add(newManager);
+                    mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "manager");
+                }
+        );
     }
 
     @Override
     @RolesAllowed(Roles.ADMIN)
     public void addAccessLevelOwner(String username, String phoneNumber) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
-        if (!username.equals(adminUsername)) {
-            final Account account = accountFacade.findByUsername(username);
-            if (account.getIsActive()) {
-                if (!ownerFacade.checkIfAnOwnerExistsByPhoneNumber(phoneNumber)) {
-                    if (account.getAccessLevels().stream()
-                            .noneMatch(accessLevel -> accessLevel.getAccessLevel().equals(Roles.OWNER))) {
-                        final Owner owner = new Owner(phoneNumber);
-                        owner.setAccount(account);
-                        account.getAccessLevels().add(owner);
-                        mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "owner");
-                    } else {
-                        throw AppException.theAccessLevelisAlreadyGranted();
-                    }
-                } else {
-                    throw AppException.createAccountWithNumberExistsException();
-                }
-            } else {
-                throw AppException.createAccountIsNotActivatedException();
-            }
-        } else {
+        if (username.equals(adminUsername)) {
             throw AppException.addingAnAccessLevelToTheSameAdminAccount();
         }
+        final Account account = accountFacade.findByUsername(username);
+        if (!account.getIsActive()) {
+            throw AppException.createAccountIsNotActivatedException();
+        }
+        if (ownerFacade.checkIfAnOwnerExistsByPhoneNumberAndWithoutUsername(phoneNumber, username)) {
+            throw AppException.createAccountWithNumberExistsException();
+        }
+        Optional<Owner> owner = account.getAccessLevels().stream()
+                .filter(accessLevel -> accessLevel instanceof Owner)
+                .map(accessLevel -> (Owner) accessLevel).findAny();
+
+        owner.ifPresentOrElse(ownerAccess -> {
+                    if (ownerAccess.getIsActive()) {
+                        throw AppException.theAccessLevelisAlreadyGranted();
+                    }
+                    if (ownerAccess.getPhoneNumber().equals(phoneNumber)) {
+                        ownerAccess.setIsActive(true);
+                    } else {
+                        ownerAccess.setIsActive(true);
+                        ownerAccess.setPhoneNumber(phoneNumber);
+                    }
+                    mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "owner");
+                }, () -> {
+                    final Owner newOwner = new Owner(phoneNumber);
+                    newOwner.setAccount(account);
+                    account.getAccessLevels().add(newOwner);
+                    mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "owner");
+                }
+        );
     }
 
     @Override
     @RolesAllowed(Roles.ADMIN)
     public void addAccessLevelAdmin(String username) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
-        if (!username.equals(adminUsername)) {
-            final Account account = accountFacade.findByUsername(username);
-            if (account.getIsActive()) {
-                if (account.getAccessLevels().stream()
-                        .noneMatch(accessLevel -> accessLevel.getAccessLevel().equals(Roles.ADMIN))) {
-                    final Admin admin = new Admin();
-                    admin.setAccount(account);
-                    account.getAccessLevels().add(admin);
-                    mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "admin");
-                } else {
-                    throw AppException.theAccessLevelisAlreadyGranted();
-                }
-            } else {
-                throw AppException.createAccountIsNotActivatedException();
-            }
-        } else {
+        if (username.equals(adminUsername)) {
             throw AppException.addingAnAccessLevelToTheSameAdminAccount();
         }
+        final Account account = accountFacade.findByUsername(username);
+        if (!account.getIsActive()) {
+            throw AppException.createAccountIsNotActivatedException();
+        }
+        Optional<Admin> admin = account.getAccessLevels().stream()
+                .filter(accessLevel -> accessLevel instanceof Admin)
+                .map(accessLevel -> (Admin) accessLevel).findAny();
+
+        admin.ifPresentOrElse(adminAccess -> {
+                    if (adminAccess.getIsActive()) {
+                        throw AppException.theAccessLevelisAlreadyGranted();
+                    } else {
+                        adminAccess.setIsActive(true);
+                        mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "admin");
+                    }
+                }, () -> {
+                    final Admin newAdmin = new Admin();
+                    newAdmin.setAccount(account);
+                    account.getAccessLevels().add(newAdmin);
+                    mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "admin");
+                }
+        );
     }
 
     @Override
     @RolesAllowed(Roles.ADMIN)
     public void revokeAccessLevel(String username, String access) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
-        if (!username.equals(adminUsername)) {
-            final Account account = accountFacade.findByUsername(username);
-            if (account.getIsActive()) {
-                final int size = account.getAccessLevels().size();
-                if (size > 1) {
-                    if (access.equals(Roles.MANAGER)) {
-                        final Manager manager = account.getAccessLevels().stream()
-                                .filter(accessLevel -> accessLevel instanceof Manager)
-                                .map(accessLevel -> (Manager) accessLevel)
-                                .findAny()
-                                .orElseThrow(AppException::createAccountIsNotManagerException);
-                        final int index1 = IntStream.range(0, account.getAccessLevels().size())
-                                .filter(i -> account.getAccessLevels().get(i) == manager)
-                                .findFirst()
-                                .orElse(-1);
-                        account.getAccessLevels().remove(index1);
-                        managerFacade.remove(manager);
-                        mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "manager");
-                    }
-                    if (access.equals(Roles.ADMIN)) {
-                        final Admin admin = account.getAccessLevels().stream()
-                                .filter(accessLevel -> accessLevel instanceof Admin)
-                                .map(accessLevel -> (Admin) accessLevel)
-                                .findAny()
-                                .orElseThrow(AppException::createAccountIsNotAdminException);
-                        final int index = IntStream.range(0, account.getAccessLevels().size())
-                                .filter(i -> account.getAccessLevels().get(i) == admin)
-                                .findFirst()
-                                .orElse(-1);
-                        account.getAccessLevels().remove(index);
-                        adminFacade.remove(admin);
-                        mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "admin");
-                    }
-                    if (access.equals(Roles.OWNER)) {
-                        final Owner owner = account.getAccessLevels().stream()
-                                .filter(accessLevel -> accessLevel instanceof Owner)
-                                .map(accessLevel -> (Owner) accessLevel)
-                                .findAny()
-                                .orElseThrow(AppException::createAccountIsNotOwnerException);
-                        final int index = IntStream.range(0, account.getAccessLevels().size())
-                                .filter(i -> account.getAccessLevels().get(i) == owner)
-                                .findFirst()
-                                .orElse(-1);
-                        account.getAccessLevels().remove(index);
-                        ownerFacade.remove(owner);
-                        mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "owner");
-                    }
-                } else {
-                    throw AppException.revokeTheOnlyLevelOfAccess();
-                }
-            } else {
-                throw AppException.createAccountIsNotActivatedException();
-            }
-        } else {
+        if (username.equals(adminUsername)) {
             throw AppException.revokeAnAccessLevelToTheSameAdminAccount();
+        }
+        final Account account = accountFacade.findByUsername(username);
+        if (!account.getIsActive()) {
+            throw AppException.createAccountIsNotActivatedException();
+        }
+        final int size = account.getAccessLevels().size();
+        if (size <= 1) {
+            throw AppException.revokeTheOnlyLevelOfAccess();
+        }
+        if (access.equals(Roles.MANAGER)) {
+            final Manager manager = account.getAccessLevels().stream()
+                    .filter(accessLevel -> accessLevel instanceof Manager && accessLevel.getIsActive())
+                    .map(accessLevel -> (Manager) accessLevel)
+                    .findAny()
+                    .orElseThrow(AppException::createAccountIsNotManagerException);
+            manager.setIsActive(false);
+            mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "manager");
+        }
+        if (access.equals(Roles.ADMIN)) {
+            final Admin admin = account.getAccessLevels().stream()
+                    .filter(accessLevel -> accessLevel instanceof Admin && accessLevel.getIsActive())
+                    .map(accessLevel -> (Admin) accessLevel)
+                    .findAny()
+                    .orElseThrow(AppException::createAccountIsNotAdminException);
+            admin.setIsActive(false);
+            mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "admin");
+        }
+        if (access.equals(Roles.OWNER)) {
+            final Owner owner = account.getAccessLevels().stream()
+                    .filter(accessLevel -> accessLevel instanceof Owner && accessLevel.getIsActive())
+                    .map(accessLevel -> (Owner) accessLevel)
+                    .findAny()
+                    .orElseThrow(AppException::createAccountIsNotOwnerException);
+            owner.setIsActive(false);
+            mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "owner");
         }
     }
 
@@ -513,20 +519,18 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
         Owner owner = account.getAccessLevels().stream()
-                .filter(accessLevel -> accessLevel instanceof Owner)
+                .filter(accessLevel -> accessLevel instanceof Owner && accessLevel.getIsActive())
                 .map(accessLevel -> (Owner) accessLevel)
                 .findAny()
                 .orElseThrow(AppException::createAccountIsNotOwnerException);
         if (newPhoneNumber.equals(owner.getPhoneNumber())) {
             throw AppException.createCurrentPhoneNumberException();
-        } else {
-            if (!ownerFacade.checkIfAnOwnerExistsByPhoneNumber(newPhoneNumber)) {
-                owner.setPhoneNumber(newPhoneNumber);
-                ownerFacade.edit(owner);
-            } else {
-                throw AppException.createAccountWithNumberExistsException();
-            }
         }
+        if (ownerFacade.checkIfAnOwnerExistsByPhoneNumber(newPhoneNumber)) {
+            throw AppException.createAccountWithNumberExistsException();
+        }
+        owner.setPhoneNumber(newPhoneNumber);
+        ownerFacade.edit(owner);
     }
 
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})

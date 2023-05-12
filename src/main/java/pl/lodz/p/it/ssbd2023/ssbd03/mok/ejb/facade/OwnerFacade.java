@@ -27,10 +27,23 @@ public class OwnerFacade extends AbstractFacade<Owner> {
         return this.em;
     }
 
-    @RolesAllowed({Roles.OWNER, Roles.ADMIN})
+    @RolesAllowed(Roles.OWNER)
     public boolean checkIfAnOwnerExistsByPhoneNumber(String phoneNumber) {
         TypedQuery<Owner> tq = em.createNamedQuery("Owner.findByPhoneNumber", Owner.class);
         tq.setParameter("phoneNumber", phoneNumber);
+        try {
+            tq.getSingleResult();
+            return true;
+        } catch (NoResultException e) {
+            return false;
+        }
+    }
+
+    @RolesAllowed(Roles.ADMIN)
+    public boolean checkIfAnOwnerExistsByPhoneNumberAndWithoutUsername(String phoneNumber, String username) {
+        TypedQuery<Owner> tq = em.createNamedQuery("Owner.findByPhoneNumberAndWithoutUsername", Owner.class);
+        tq.setParameter("phoneNumber", phoneNumber);
+        tq.setParameter("username", username);
         try {
             tq.getSingleResult();
             return true;
