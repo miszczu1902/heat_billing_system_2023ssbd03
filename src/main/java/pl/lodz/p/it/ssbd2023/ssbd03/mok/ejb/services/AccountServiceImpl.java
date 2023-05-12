@@ -493,9 +493,8 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 .findAny().isPresent();
         if (changedAccountIsManager && !changingAccountIsAdmin) {
             throw AppException.createManagerCanNotChangeAdminException();
-        } else {
-            changeEmail(newEmail, username);
         }
+        changeEmail(newEmail, username);
     }
 
     @Override
