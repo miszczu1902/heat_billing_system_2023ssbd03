@@ -31,6 +31,6 @@ public abstract class AbstractEntity {
 
     @PreUpdate
     private void initModification() {
-        this.lastModificationDateTime = LocalDateTime.now();
+        this.lastModificationDateTime = LocalDateTime.now(TIME_ZONE);
     }
 }
