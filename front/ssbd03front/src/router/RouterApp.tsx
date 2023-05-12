@@ -1,5 +1,6 @@
 import {createBrowserRouter, Outlet} from "react-router-dom";
 import NavbarPanel from "../components/navigation/NavbarPanel";
+import EditPersonalData from "../components/personalData/EditPersonalData";
 import EnableAccount from "../components/accounts/EnableAccount";
 import DisableAccount from "../components/accounts/DisableAccount";
 
@@ -22,7 +23,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "/accounts/self",
-            }, 
+            },
+            {
+                path: "/accounts/self/personal-data",
+                element: <EditPersonalData/>
+            },
             {
                 path: "/accounts/:username/enable",
                 element: <EnableAccount/>
