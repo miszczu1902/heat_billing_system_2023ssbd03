@@ -14,8 +14,8 @@ export default function DisableAccount() {
     const [open, setOpen] = React.useState(false);
     const [confirmOpen, setConfirmOpen] = React.useState(false);
   
-    var [successOpen, setSuccessOpen] = React.useState(false);
-    var [errorOpen, setErrorOpen] = React.useState(false);
+    const [successOpen, setSuccessOpen] = React.useState(false);
+    const [errorOpen, setErrorOpen] = React.useState(false);
   
     const handleClickOpen = () => {
       setOpen(true);
@@ -32,7 +32,7 @@ export default function DisableAccount() {
         setConfirmOpen(false);
       }
       const fetchData = async () => {
-        axios.patch(`${API_URL}/accounts/${username}/disable'`, {
+        axios.patch(`${API_URL}/accounts/${username}/disable`, {}, {
            headers: {
             'Authorization': 'Bearer ' + token,
           },
