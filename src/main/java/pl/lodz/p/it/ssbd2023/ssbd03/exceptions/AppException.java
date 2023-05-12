@@ -11,7 +11,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppExcepti
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.personalData.PersonalDataConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
 
 @ApplicationException(rollback = true)
 public class AppException extends WebApplicationException {
@@ -28,6 +27,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_USERNAME_NOT_UNIQUE_MESSAGE = "Username not unique"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_PHONE_NUMBER_NOT_UNIQUE_MESSAGE = "Phone number not unique"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_CURRENT_PHONE_NUMBER = "This is your current phone number"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_CURRENT_EMAIL = "This is your current email"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_IS_NOT_OWNER = "This account is not the owner"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_EXISTS_MESSAGE = "Account already exists"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_NOT_EXISTS_MESSAGE = "Account with provided data not exists"; //TODO - tu trzeba zrobić resource bundle
@@ -38,6 +38,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ADDING_AN_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT = "You can't give yourself permissions"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_REVOKE_THE_ONLY_LEVEL_OF_ACCESS = "One level of access cannot be taken away"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_IS_NOT_ADMIN = "This account is not the admin"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_MANAGER_CAN_NOT_CHANGE_ADMINA = "This account does not have permission to change Admin email"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_IS_NOT_MANAGER = "This account is not the manager"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCESS_LEVEL_IS_ALREADY_GRANTED = "This account already has this level of access"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_LICENSE_NOT_UNIQUE_MESSAGE = "License not unique"; //TODO - tu trzeba zrobić resource bundle
@@ -153,12 +154,24 @@ public class AppException extends WebApplicationException {
         return new AccountWithNumberExistsException(AppException.ERROR_PHONE_NUMBER_NOT_UNIQUE_MESSAGE, Response.Status.CONFLICT);
     }
 
+    public static CurrentPhoneNumberException createCurrentEmailException() {
+        return new CurrentPhoneNumberException(AppException.ERROR_CURRENT_EMAIL, Response.Status.CONFLICT);
+    }
+
+    public static AccountWithNumberExistsException createAccountWithEmailExistsException() {
+        return new AccountWithNumberExistsException(AppException.ERROR_EMAIL_NOT_UNIQUE_MESSAGE, Response.Status.CONFLICT);
+    }
+
     public static AccessLevelToTheSameAdminAccountException addingAnAccessLevelToTheSameAdminAccount() {
         return new AccessLevelToTheSameAdminAccountException(AppException.ERROR_ADDING_AN_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT, Response.Status.FORBIDDEN);
     }
 
     public static TheOnlyLevelOfAccessException revokeTheOnlyLevelOfAccess() {
         return new TheOnlyLevelOfAccessException(AppException.ERROR_REVOKE_THE_ONLY_LEVEL_OF_ACCESS, Response.Status.FORBIDDEN);
+    }
+
+    public static ManagerCanNotChangeAdminException createManagerCanNotChangeAdminException() {
+        return new ManagerCanNotChangeAdminException(AppException.ERROR_MANAGER_CAN_NOT_CHANGE_ADMINA, Response.Status.FORBIDDEN);
     }
 
     public static AccountIsNotAdminException createAccountIsNotAdminException() {
