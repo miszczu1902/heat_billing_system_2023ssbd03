@@ -553,25 +553,37 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public void changeEmail(String newEmail, String username) {
-        final Account account = accountFacade.findByUsername(username);
-        if (newEmail.equals(account.getEmail())) {
+    private void changeEmail(String newEmail, String changedUsername) {
+        final String changingUsername = securityContext.getCallerPrincipal().getName();
+        final Account changedAccount = accountFacade.findByUsername(changedUsername);
+        final Account changingAccount = accountFacade.findByUsername(changingUsername);
+        Boolean changedAccountIsManager = changingAccount.getAccessLevels().stream()
+                .filter(accessLevel -> accessLevel instanceof Manager)
+                .map(accessLevel -> (Manager) accessLevel)
+                .findAny().isPresent();
+        Boolean changingAccountIsAdmin = changedAccount.getAccessLevels().stream()
+                .filter(accessLevel -> accessLevel instanceof Admin)
+                .map(accessLevel -> (Admin) accessLevel)
+                .findAny().isPresent();
+        if(changedAccountIsManager && changingAccountIsAdmin) {
+            throw AppException.createManagerCanNotChangeAdminException();
+        }
+        if (newEmail.equals(changedAccount.getEmail())) {
             throw AppException.createCurrentEmailException();
         } else {
-            if (!accountFacade.checkIfAnAccountExistsByEmail(newEmail)) {
-                EmailConfirmationToken emailConfirmationToken = new EmailConfirmationToken(
-                        tokenGenerator.createAccountConfirmationToken(), newEmail, account);
-                emailConfirmationTokenFacade.create(emailConfirmationToken);
-                mailSender.sendLinkToActivateAccount(newEmail, "Confirm your new email", emailConfirmationToken.getTokenValue());
-            } else {
+            if (accountFacade.checkIfAnAccountExistsByEmail(newEmail)) {
                 throw AppException.createAccountWithEmailExistsException();
             }
+            final EmailConfirmationToken emailConfirmationToken = new EmailConfirmationToken(
+                    tokenGenerator.createAccountConfirmationToken(), newEmail, changedAccount);
+            emailConfirmationTokenFacade.create(emailConfirmationToken);
+            mailSender.sendLinkToConfirmAnEmail(newEmail, emailConfirmationToken.getTokenValue());
         }
     }
 
     @Override
     public void confirmNewEmailAccountFromActivationLink(String confirmationToken) {
-        EmailConfirmationToken emailConfirmationToken = emailConfirmationTokenFacade.getActivationTokenByTokenValue(confirmationToken);
+        final EmailConfirmationToken emailConfirmationToken = emailConfirmationTokenFacade.getActivationTokenByTokenValue(confirmationToken);
         Account account = emailConfirmationToken.getAccount();
         final String newEmail = emailConfirmationToken.getEmail();
         account.setEmail(newEmail);

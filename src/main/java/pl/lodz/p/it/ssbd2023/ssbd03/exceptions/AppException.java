@@ -169,6 +169,10 @@ public class AppException extends WebApplicationException {
         return new TheOnlyLevelOfAccessException(AppException.ERROR_REVOKE_THE_ONLY_LEVEL_OF_ACCESS, Response.Status.FORBIDDEN);
     }
 
+    public static ManagerCanNotChangeAdminException createManagerCanNotChangeAdminException() {
+        return new ManagerCanNotChangeAdminException(AppException.ERROR_ACCOUNT_IS_NOT_ADMIN, Response.Status.FORBIDDEN);
+    }
+
     public static AccountIsNotAdminException createAccountIsNotAdminException() {
         return new AccountIsNotAdminException(AppException.ERROR_ACCOUNT_IS_NOT_ADMIN, Response.Status.FORBIDDEN);
     }
