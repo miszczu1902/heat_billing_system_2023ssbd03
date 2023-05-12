@@ -483,11 +483,11 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         final String changingUsername = securityContext.getCallerPrincipal().getName();
         final Account changingAccount = accountFacade.findByUsername(changingUsername);
         final Account changedAccount = accountFacade.findByUsername(username);
-        Boolean changedAccountIsManager = changedAccount.getAccessLevels().stream()
+        final Boolean changedAccountIsManager = changedAccount.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Admin)
                 .map(accessLevel -> (Admin) accessLevel)
                 .findAny().isPresent();
-        Boolean changingAccountIsAdmin = changingAccount.getAccessLevels().stream()
+        final Boolean changingAccountIsAdmin = changingAccount.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Admin)
                 .map(accessLevel -> (Admin) accessLevel)
                 .findAny().isPresent();
@@ -580,15 +580,14 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         final Account account = accountFacade.findByUsername(username);
         if (newEmail.equals(account.getEmail())) {
             throw AppException.createCurrentEmailException();
-        } else {
-            if (accountFacade.checkIfAnAccountExistsByEmail(newEmail)) {
-                throw AppException.createAccountWithEmailExistsException();
-            }
-            final EmailConfirmationToken emailConfirmationToken = new EmailConfirmationToken(
-                    tokenGenerator.createAccountConfirmationToken(), newEmail, account);
-            emailConfirmationTokenFacade.create(emailConfirmationToken);
-            mailSender.sendLinkToConfirmAnEmail(newEmail, emailConfirmationToken.getTokenValue());
         }
+        if (accountFacade.checkIfAnAccountExistsByEmail(newEmail)) {
+            throw AppException.createAccountWithEmailExistsException();
+        }
+        final EmailConfirmationToken emailConfirmationToken = new EmailConfirmationToken(
+                tokenGenerator.createAccountConfirmationToken(), newEmail, account);
+        emailConfirmationTokenFacade.create(emailConfirmationToken);
+        mailSender.sendLinkToConfirmAnEmail(newEmail, emailConfirmationToken.getTokenValue());
     }
 
     @RolesAllowed({Roles.GUEST, Roles.ADMIN})
