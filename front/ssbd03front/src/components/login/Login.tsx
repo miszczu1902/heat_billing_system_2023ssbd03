@@ -52,7 +52,7 @@ export default function Login() {
             };
             axios.request(config)
                 .then((response) => {
-                    setCookie("token", response.data)
+                    setCookie("token", response.headers["bearer"])
                     window.location.href = `/accounts`;
                 })
                 .catch((error) => {
