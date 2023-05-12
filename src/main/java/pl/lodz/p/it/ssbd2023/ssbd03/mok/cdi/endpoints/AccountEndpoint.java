@@ -135,7 +135,7 @@ public class AccountEndpoint {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{username}/personal-data")
-    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response getUserPersonalData(@PathParam("username") String username) {
         PersonalData personalData = accountService.getUserPersonalData(username);
         return Response.ok().entity(new PersonalDataDTO(personalData.getFirstName(), personalData.getSurname())).build();

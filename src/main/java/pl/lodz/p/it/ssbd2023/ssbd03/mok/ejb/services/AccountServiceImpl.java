@@ -288,6 +288,13 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public PersonalData getUserPersonalData(String username) {
+        final Account account = accountFacade.findByUsername(username);
+        return personalDataFacade.find(account.getId());
+    }
+
+    @Override
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
     public void editSelfPersonalData(String firstName, String surname) {
         final String username = securityContext.getCallerPrincipal().getName();

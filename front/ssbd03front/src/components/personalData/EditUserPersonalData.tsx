@@ -5,76 +5,93 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import NavbarPanel from '../navigation/NavbarPanel';
+import { useEffect } from  'react';
 import { TextField } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import axios from 'axios'; 
 import validator from "validator";
-import { useState, useEffect } from 'react';
-
-const user = "miszczu2137";
-const GET_DATA_URL = 'http://localhost:8080/api/accounts/'+ user +'/personal-data';
-const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNjgzNTY3MzY4LCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODM1NjkxNjh9.WKjuCzJH2buOrVzuvTtyZ4MVUECMF5ka5lSzkPntFrM';
+import { API_URL } from '../../consts';
+import { useParams} from "react-router-dom";
 
 export default function EditUserPersonalData() {
+  const username = useParams().username;
+  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNjgzOTE1MzUwLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODM5MTcxNTB9.tmNxVtVg18vwfhRZNEQFY1h8CFR2fF-oVSlR0CXKyoU';
+
   const [open, setOpen] = React.useState(false);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
+
   var [name, setName] = React.useState("");
   var [surname, setSurname] = React.useState("");
-  var [newName, setNewName] = React.useState("");
-  var [newSurname, setNewSurname] = React.useState("");
+
   var [nameError, setNameError] = React.useState("");
   var [surnameError, setSurnameError] = React.useState("");
+  var [dataError, setDataError] = React.useState("");
+
+  var [validData, setValidData] = React.useState(false);
+
+  var [successOpen, setSuccessOpen] = React.useState(false);
+  var [errorOpen, setErrorOpen] = React.useState(false);
 
   useEffect(() => {
-    axios.get(GET_DATA_URL, {
-      headers: {
-        Authorization: 'Bearer ' + token
-      }
-    })
-    .then(response => {
-      setName(response.data.firstName.toString());
-      setSurname(response.data.surname.toString());
-    })
-    .catch(error => {
-      // handle error
-    });
+    const fetchData = async () => {
+      const response = await axios.get(`${API_URL}/accounts/${username}/personal-data'`, {
+        headers: {
+          Authorization: 'Bearer ' + token
+        }
+      })
+      .then(response => {
+        setName(response.data.firstName.toString());
+        setSurname(response.data.surname.toString());
+      });
+  };
+  fetchData();
   }, []);
 
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 }
+
+  const validateData = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (nameError === "" && surnameError === "" && name !== "" && surname !== "" && event.target.value.length > 0) {
+      setValidData(true);
+    } else {
+      setValidData(false);
+    }
+  }
+
+
   const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (validator.isAlpha(event.target.value) && event.target.value.length <= 32) {
+    setName(event.target.value)
+    if (validator.isAlpha(event.target.value) && event.target.value.length <= 32 && event.target.value.length > 0) {
       setNameError("");
-      newName = event.target.value;
+      validateData(event);
     } else {
       setNameError("Imię może zawierać tylko litery i musi mieć długość do 32 znaków");
+      validateData(event);
     }
   };
 
   const handleSurnameChange = (event: React.ChangeEvent<HTMLInputElement>) => { 
-    if (validator.isAlpha(event.target.value) && event.target.value.length <= 32) {
+    setSurname(event.target.value);
+    if (validator.isAlpha(event.target.value) && event.target.value.length <= 32 && event.target.value.length > 0) {
       setSurnameError("");
-      newSurname = event.target.value;
+      validateData(event);
     } else {
       setSurnameError("Nazwisko może zawierać tylko litery i musi mieć długość do 32 znaków");
-    } 
+      validateData(event);
+    }
   };
 
   const handleClickOpen = () => {
-    axios.get(GET_DATA_URL, {
+    axios.get(`${API_URL}/accounts/${username}/personal-data'`, {
       headers: {
         Authorization: 'Bearer ' + token
       }
     })
     .then(response => {
-      setName(response.data.firstName.toString());
-      setSurname(response.data.surname.toString());
-    })
-    .catch(error => {
-      // handle error
+        setName(response.data.firstName.toString());
+        setSurname(response.data.surname.toString());
     });
     setOpen(true);
   };
@@ -95,37 +112,57 @@ export default function EditUserPersonalData() {
     if (reason !== 'backdropClick') {
       setConfirmOpen(false);
     }
-    setName(newName);
-    setSurname(newSurname);
+    const personalDataDTO = {
+      firstName: name.toString(),
+      surname: surname.toString()
+    }
+
     if(nameError === "" && surnameError === "") {
-      const data = { firstName: name, surname: surname};
-      axios.patch(GET_DATA_URL, {
-        headers: {
-          Authorization: 'Bearer ' + token
-        }, 
-        data: data
+      axios.patch(`${API_URL}/accounts/${username}/personal-data'`,
+        personalDataDTO, {
+         headers: {
+          'Authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        },
       })
       .then(response => {
+        setSuccessOpen(true);
       })
       .catch(error => {
-        console.log(error);
+        setErrorOpen(true);
       });
     }
     handleClose(event, reason);
   }
 
   const handleConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-    setConfirmOpen(true);
+    if(validData) {
+      setDataError("");
+      setConfirmOpen(true);
+    } else {
+      setDataError("Wprowadź poprawne dane");
+    }
+  }
+
+  const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+    if (reason !== 'backdropClick') {
+      setSuccessOpen(false);
+    }
+  }
+
+  const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+    if (reason !== 'backdropClick') {
+      setErrorOpen(false);
+    }
   };
 
   return (
     <div>
-      <NavbarPanel/>
       <div>
       <Button onClick={handleClickOpen} variant="contained">Edytuj dane</Button>
       </div>
       <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-        <DialogTitle>Wypełnij formularz edycji danych osobowych użytkownika {user}</DialogTitle>
+        <DialogTitle>Wypełnij formularz edycji danych osobowych użytkownika {username}</DialogTitle>
         <DialogContent>
           <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
             <form onSubmit={handleSumbit}>
@@ -157,22 +194,35 @@ export default function EditUserPersonalData() {
                   </div>
                 </ListItem>
               </List>
+              <div className="form-group">
+                      {dataError}
+              </div>
             </form>
           </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleConfirm}>Ok</Button>
+          <Button onClick={handleConfirm} disabled={!validData}>Ok</Button>
         </DialogActions>
       </Dialog>
 
 
       <Dialog disableEscapeKeyDown open={confirmOpen} onClose={handleConfirmClose}>
-        <DialogTitle>Czy na pewno chcesz zmienić dane osobowe użytkownika {user} ?</DialogTitle>
+        <DialogTitle>Czy na pewno chcesz zmienić dane osobowe użytkownika {username} ?</DialogTitle>
         <DialogActions>
           <Button onClick={handleConfirmClose}>Nie</Button>
           <Button onClick={handleConfirmConfirm}>Tak</Button>
         </DialogActions>
+      </Dialog>
+
+      <Dialog disableEscapeKeyDown open={successOpen}>
+        <DialogTitle>Dane osobowe użytkownika {username} zostały zmienione</DialogTitle>
+        <Button onClick={handleSuccessClose}>Ok</Button>
+      </Dialog>
+
+      <Dialog disableEscapeKeyDown open={errorOpen}>
+        <DialogTitle>Wystąpił błąd podczas zmiany danych osobowych użytkownika {username}</DialogTitle>
+        <Button onClick={handleErrorClose}>Ok</Button>
       </Dialog>
     </div>
   );
