@@ -443,7 +443,9 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         if (!account.getIsActive()) {
             throw AppException.createAccountIsNotActivatedException();
         }
-        final int size = account.getAccessLevels().size();
+        final int size = (int) account.getAccessLevels().stream()
+                .filter(AccessLevelMapping::getIsActive)
+                .count();
         if (size <= 1) {
             throw AppException.revokeTheOnlyLevelOfAccess();
         }

@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
+
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,7 +26,7 @@ public abstract class AbstractEntity {
 
     @PrePersist
     private void init() {
-        this.creationDateTime = LocalDateTime.now();
+        this.creationDateTime = LocalDateTime.now(TIME_ZONE);
     }
 
     @PreUpdate
