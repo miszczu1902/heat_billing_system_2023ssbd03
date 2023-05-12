@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
@@ -22,7 +23,7 @@ import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors({TrackerInterceptor.class})
-public class ResetPasswordTokenFacade extends AbstractFacade<ResetPasswordToken>  {
+public class ResetPasswordTokenFacade extends AbstractFacade<ResetPasswordToken> {
     @PersistenceContext(unitName = "ssbd03mokPU")
     private EntityManager em;
 
@@ -54,9 +55,22 @@ public class ResetPasswordTokenFacade extends AbstractFacade<ResetPasswordToken>
         }
     }
 
+    @PermitAll
     public List<ResetPasswordToken> getExpiredResetPasswordTokensList() {
         TypedQuery<ResetPasswordToken> query = em.createNamedQuery("ResetPasswordToken.getOlderResetPasswordToken", ResetPasswordToken.class);
         query.setParameter("currentTime", LocalDateTime.now(TIME_ZONE));
         return query.getResultList();
+    }
+
+    @Override
+    @PermitAll
+    public void remove(ResetPasswordToken entity) {
+        super.remove(entity);
+    }
+
+    @Override
+    @RolesAllowed({Roles.ADMIN, Roles.GUEST})
+    public void create(ResetPasswordToken entity) {
+        super.create(entity);
     }
 }

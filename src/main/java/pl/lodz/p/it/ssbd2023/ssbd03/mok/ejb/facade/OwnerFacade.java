@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -8,6 +9,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 
 @Stateless
@@ -25,6 +27,7 @@ public class OwnerFacade extends AbstractFacade<Owner> {
         return this.em;
     }
 
+    @RolesAllowed({Roles.OWNER, Roles.ADMIN})
     public boolean checkIfAnOwnerExistsByPhoneNumber(String phoneNumber) {
         TypedQuery<Owner> tq = em.createNamedQuery("Owner.findByPhoneNumber", Owner.class);
         tq.setParameter("phoneNumber", phoneNumber);
@@ -34,5 +37,17 @@ public class OwnerFacade extends AbstractFacade<Owner> {
         } catch (NoResultException e) {
             return false;
         }
+    }
+
+    @Override
+    @RolesAllowed(Roles.OWNER)
+    public void edit(Owner entity) {
+        super.edit(entity);
+    }
+
+    @Override
+    @RolesAllowed(Roles.ADMIN)
+    public void remove(Owner entity) {
+        super.remove(entity);
     }
 }
