@@ -339,7 +339,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         if (managerFacade.findByLicense(license, username)) {
             throw AppException.createAccountWithLicenseExistsException();
         }
-        Optional<Manager> manager = account.getAccessLevels().stream()
+        final Optional<Manager> manager = account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Manager)
                 .map(accessLevel -> (Manager) accessLevel).findAny();
 
@@ -377,7 +377,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         if (ownerFacade.checkIfAnOwnerExistsByPhoneNumberAndWithoutUsername(phoneNumber, username)) {
             throw AppException.createAccountWithNumberExistsException();
         }
-        Optional<Owner> owner = account.getAccessLevels().stream()
+        final Optional<Owner> owner = account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Owner)
                 .map(accessLevel -> (Owner) accessLevel).findAny();
 
@@ -412,7 +412,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         if (!account.getIsActive()) {
             throw AppException.createAccountIsNotActivatedException();
         }
-        Optional<Admin> admin = account.getAccessLevels().stream()
+        final Optional<Admin> admin = account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Admin)
                 .map(accessLevel -> (Admin) accessLevel).findAny();
 
