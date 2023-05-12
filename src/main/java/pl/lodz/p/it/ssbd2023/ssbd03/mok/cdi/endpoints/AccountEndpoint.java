@@ -45,7 +45,7 @@ public class AccountEndpoint {
     @Path("/activate-from-email")
     @RolesAllowed(Roles.GUEST)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response activateAccountFromEmail(@NotNull @Valid TockenFromEmailDTO activationTokenDTO) {
+    public Response activateAccountFromEmail(@NotNull @Valid TokenFromEmailDTO activationTokenDTO) {
         accountService.confirmAccountFromActivationLink(activationTokenDTO.getActivationToken());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
@@ -268,7 +268,7 @@ public class AccountEndpoint {
     @Path("/self/confirm-new-email")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
-    public Response confirmNewEmail(@NotNull @Valid TockenFromEmailDTO activationTokenDTO) {
+    public Response confirmNewEmail(@NotNull @Valid TokenFromEmailDTO activationTokenDTO) {
         accountService.confirmNewEmailAccountFromActivationLink(activationTokenDTO.getActivationToken());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
