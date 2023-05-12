@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
@@ -9,6 +10,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 
@@ -28,14 +30,22 @@ public class ManagerFacade extends AbstractFacade<Manager> {
         return this.em;
     }
 
-    public boolean findByLicense(String license) {
-        TypedQuery<Manager> tq = em.createNamedQuery("Manager.findByLicense", Manager.class);
+    @RolesAllowed(Roles.ADMIN)
+    public boolean findByLicense(String license, String username) {
+        TypedQuery<Manager> tq = em.createNamedQuery("Manager.findByLicenseAndWithoutUsername", Manager.class);
         tq.setParameter("license", license);
+        tq.setParameter("username", username);
         try {
             tq.getSingleResult();
             return true;
         } catch (NoResultException e) {
             return false;
         }
+    }
+
+    @Override
+    @RolesAllowed(Roles.ADMIN)
+    public void remove(Manager entity) {
+        super.remove(entity);
     }
 }

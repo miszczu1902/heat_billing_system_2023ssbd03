@@ -12,6 +12,7 @@ import java.util.Properties;
 
 @Stateless
 public class MailSender {
+    private static final String MAIL_SUBJECT_CONFIRMATION_LINK = "Confirm your new email";
     private static final String CHANGED_PASSWORD_BY_ADMIN_CONTENT_MESSAGE = """
             Administrator changed your password.
             Click on the link to reset your password
@@ -31,6 +32,7 @@ public class MailSender {
         properties.put("mail.smtp.starttls.enable", LoadConfig.loadPropertyFromConfig("mail.smtp.starttls.enable"));
         properties.put("mail.smtp.auth", LoadConfig.loadPropertyFromConfig("mail.smtp.auth"));
         properties.put("activation.url", LoadConfig.loadPropertyFromConfig("activation.url"));
+        properties.put("mail.activation.url", LoadConfig.loadPropertyFromConfig("mail.activation.url"));
         properties.put("reset.password.url", LoadConfig.loadPropertyFromConfig("reset.password.url"));
 
         session = Session.getInstance(properties, new Authenticator() {
@@ -45,6 +47,10 @@ public class MailSender {
 
     public void sendLinkToActivateAccount(String to, String subject, String content) {
         sendEmail(to, subject, properties.getProperty("activation.url") + "?" + content);
+    }
+
+    public void sendLinkToConfirmAnEmail(String to, String content) {
+        sendEmail(to, MAIL_SUBJECT_CONFIRMATION_LINK, properties.getProperty("mail.activation.url") + "?" + content);
     }
 
     public void sendInformationAdminLoggedIn(String to, String ipAddress) {
