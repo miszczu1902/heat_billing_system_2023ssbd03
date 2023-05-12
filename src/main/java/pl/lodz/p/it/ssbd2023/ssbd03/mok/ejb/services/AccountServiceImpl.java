@@ -106,6 +106,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         accountFacade.edit(accountToActivate);
 
         accountConfirmationTokenFacade.remove(accountConfirmationToken);
+        mailSender.sendInformationAccountActivated(accountToActivate.getEmail());
     }
 
     @Override

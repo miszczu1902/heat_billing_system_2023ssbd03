@@ -11,8 +11,10 @@ import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccountConfirmationToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +37,15 @@ public class AccountConfirmationTokenFacade extends AbstractFacade<AccountConfir
 
     public List<AccountConfirmationToken> findAllUnconfirmedAccounts() {
         TypedQuery<AccountConfirmationToken> query = em.createNamedQuery("AccountConfirmationToken.findAllUnconfirmedAccounts", AccountConfirmationToken.class);
-        query.setParameter("date", LocalDateTime.now().minusDays(1));
+        query.setParameter("date",
+                LocalDateTime.now(ZoneId.of(LoadConfig.loadPropertyFromConfig("zone"))).minusDays(1));
+        return Optional.of(query.getResultList()).orElse(Collections.emptyList());
+    }
+
+    public List<AccountConfirmationToken> findAllUnconfirmedAccountsToRemind() {
+        TypedQuery<AccountConfirmationToken> query = em.createNamedQuery("AccountConfirmationToken.findAllUnconfirmedAccounts", AccountConfirmationToken.class);
+        query.setParameter("date",
+                LocalDateTime.now(ZoneId.of(LoadConfig.loadPropertyFromConfig("zone"))).minusHours(12));
         return Optional.of(query.getResultList()).orElse(Collections.emptyList());
     }
 

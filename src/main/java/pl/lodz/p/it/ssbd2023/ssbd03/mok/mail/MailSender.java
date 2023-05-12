@@ -93,6 +93,13 @@ public class MailSender {
                         "Your account has been activated");
     }
 
+    public void sendReminderAboutAccountConfirmation(String to, String activationToken) {
+        sendEmail(to, "Account is waiting for activation",
+                "Dear User, \n" +
+                        "Your account is waiting for activation. \n" +
+                "Activation link: " + LoadConfig.loadPropertyFromConfig("activation.url") + activationToken);
+    }
+
     private void sendEmail(String to, String subject, String content) {
         try {
             MimeMessage message = new MimeMessage(session);

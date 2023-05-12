@@ -46,6 +46,17 @@ public class SystemScheduler {
     }
 
     @Schedule(hour = "*", minute = "*/1", persistent = false)
+    private void sendActivationReminder() {
+        final List<AccountConfirmationToken> allUnconfirmedAccounts = accountConfirmationTokenFacade.findAllUnconfirmedAccountsToRemind();
+        if (!allUnconfirmedAccounts.isEmpty()) {
+            allUnconfirmedAccounts.forEach(accountConfirmationToken -> {
+                mailSender.sendReminderAboutAccountConfirmation(
+                        accountConfirmationToken.getAccount().getEmail(), accountConfirmationToken.getTokenValue());
+            });
+        }
+    }
+
+    @Schedule(hour = "*", minute = "*/1", persistent = false)
     private void deleteResetPasswordExpiredTokens() {
         final List<ResetPasswordToken> resetPasswordTokens = resetPasswordTokenFacade.getExpiredResetPasswordTokensList();
         if (!resetPasswordTokens.isEmpty()) {
