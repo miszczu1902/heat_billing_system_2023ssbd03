@@ -286,13 +286,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         return admin;
     }
 
-    @Override
-    @RolesAllowed({Roles.OWNER, Roles.ADMIN, Roles.MANAGER})
-    public PersonalData getPersonalData() {
-        final String username = securityContext.getCallerPrincipal().getName();
-        final Account account = accountFacade.findByUsername(username);
-        return personalDataFacade.find(account.getId());
-    }
 
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
@@ -321,21 +314,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public List<Account> getListOfAccounts(String sortBy, int pageNumber) {
         return accountFacade.getListOfAccountsWithFilterParams(sortBy, pageNumber);
-    }
-
-    private void editPersonalData(String username, String firstName, String surname) {
-        PersonalData personalData = personalDataFacade.findByUsername(username);
-
-        personalData.setFirstName(firstName);
-        personalData.setSurname(surname);
-
-        try {
-            personalDataFacade.edit(personalData);
-        } catch (PersistenceException pe) {
-            if (pe.getCause() instanceof ConstraintViolationException) {
-                throw AppException.createPersonalDataConstraintViolationException();
-            }
-        }
     }
 
     @Override
