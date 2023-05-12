@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
@@ -33,6 +34,7 @@ public class AccountConfirmationTokenFacade extends AbstractFacade<AccountConfir
         super(AccountConfirmationToken.class);
     }
 
+    @PermitAll
     public List<AccountConfirmationToken> findAllUnconfirmedAccounts() {
         TypedQuery<AccountConfirmationToken> query = em.createNamedQuery("AccountConfirmationToken.findAllUnconfirmedAccounts", AccountConfirmationToken.class);
         query.setParameter("date", LocalDateTime.now().minusDays(1));
@@ -52,5 +54,17 @@ public class AccountConfirmationTokenFacade extends AbstractFacade<AccountConfir
 
             throw AppException.createDatabaseException();
         }
+    }
+
+    @Override
+    @RolesAllowed(Roles.GUEST)
+    public void create(AccountConfirmationToken entity) {
+        super.create(entity);
+    }
+
+    @Override
+    @PermitAll
+    public void remove(AccountConfirmationToken entity) {
+        super.remove(entity);
     }
 }

@@ -15,8 +15,8 @@ import jakarta.security.enterprise.identitystore.CredentialValidationResult;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import org.hibernate.exception.ConstraintViolationException;
-import pl.lodz.p.it.ssbd2023.ssbd03.auth.TokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
+import pl.lodz.p.it.ssbd2023.ssbd03.auth.TokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
@@ -84,6 +84,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     private HttpServletRequest httpServletRequest;
 
     @Override
+    @RolesAllowed(Roles.GUEST)
     public void createOwner(Account account) {
         account.setPassword(bcryptHashGenerator.generate(account.getPassword().toCharArray()));
         account.setRegisterDate(LocalDateTime.now());
@@ -98,6 +99,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed(Roles.GUEST)
     public void confirmAccountFromActivationLink(String confirmationToken) {
         AccountConfirmationToken accountConfirmationToken = accountConfirmationTokenFacade.getActivationTokenByTokenValue(confirmationToken);
 
@@ -109,6 +111,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed(Roles.GUEST)
     public void changePasswordFromResetPasswordLink(String token, String newPassword, String newRepeatedPassword) {
         if (!newPassword.equals(newRepeatedPassword)) {
             throw AppException.createPasswordsNotSameException();
@@ -133,6 +136,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed(Roles.GUEST)
     public void updateLoginData(String username, boolean flag) {
         try {
             final Account account = accountFacade.findByUsername(username);
@@ -160,6 +164,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed(Roles.GUEST)
     public void adminLoggedInEmail(String email) {
         mailSender.sendInformationAdminLoggedIn(email, httpServletRequest.getRemoteAddr());
     }
@@ -187,6 +192,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed({Roles.OWNER, Roles.ADMIN, Roles.MANAGER})
     public PersonalData getPersonalData() {
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
@@ -239,8 +245,8 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         return admin;
     }
 
-    @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
     @Override
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
     public void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword) throws AccountPasswordException {
         if (oldPassword.equals(newPassword)) {
             throw new AccountPasswordException("Old password and new password are the same.");
@@ -258,8 +264,8 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         accountFacade.edit(account);
     }
 
-    @RolesAllowed({Roles.ADMIN})
     @Override
+    @RolesAllowed({Roles.ADMIN})
     public void changeUserPassword(String username, String newPassword, String newRepeatedPassword) {
         if (!newPassword.equals(newRepeatedPassword)) {
             throw AppException.createPasswordsNotSameException();
@@ -278,8 +284,8 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         mailSender.sendInformationAboutChangedPasswordByAdmin(accountToChangePassword.getEmail(), token);
     }
 
-    @RolesAllowed({Roles.GUEST})
     @Override
+    @RolesAllowed({Roles.GUEST})
     public void resetPassword(String username) {
         final Account accountToChangePassword = accountFacade.findByUsername(username);
         if (!accountToChangePassword.getIsActive()) {
@@ -323,6 +329,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         }
     }
 
+    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
     private void editPersonalData(String username, String firstName, String surname) {
         PersonalData personalData = personalDataFacade.findByUsername(username);
 
@@ -350,6 +357,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         editUserEnableFlag(username, true);
     }
 
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     private void editUserEnableFlag(String username, boolean flag) {
         final String editor = securityContext.getCallerPrincipal().getName();
         final Account editorAccount = accountFacade.findByUsername(editor);
@@ -371,6 +379,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         }
     }
 
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     private void setUserEnableFlag(String username, boolean flag) {
         final Account editableAccount = accountFacade.findByUsername(username);
         editableAccount.setIsEnable(flag);
@@ -378,6 +387,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed(Roles.ADMIN)
     public void addAccessLevelManager(String username, String license) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
         if (!username.equals(adminUsername)) {
@@ -405,6 +415,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed(Roles.ADMIN)
     public void addAccessLevelOwner(String username, String phoneNumber) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
         if (!username.equals(adminUsername)) {
@@ -432,6 +443,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed(Roles.ADMIN)
     public void addAccessLevelAdmin(String username) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
         if (!username.equals(adminUsername)) {
@@ -455,6 +467,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed(Roles.ADMIN)
     public void revokeAccessLevel(String username, String access) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
         if (!username.equals(adminUsername)) {
@@ -516,10 +529,12 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public List<Account> getListOfAccounts(String sortBy, int pageNumber) {
         return accountFacade.getListOfAccountsWithFilterParams(sortBy, pageNumber);
     }
 
+    @RolesAllowed({Roles.GUEST, Roles.ADMIN})
     private void changePassword(Account account, String newPassword) {
         if (!account.getIsActive()) {
             throw AppException.createAccountIsNotActivatedException();
