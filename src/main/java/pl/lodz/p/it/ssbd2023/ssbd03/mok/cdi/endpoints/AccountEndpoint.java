@@ -11,7 +11,6 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
@@ -21,7 +20,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AdminDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.OwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ManagerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountForListDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ErrorResponseDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangeSelfPasswordDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
@@ -153,7 +151,6 @@ public class AccountEndpoint {
     }
 
     @PATCH
-    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/disable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response disableUserAccount(@PathParam("username") String username) {
@@ -162,7 +159,6 @@ public class AccountEndpoint {
     }
 
     @PATCH
-    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/enable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response enableUserAccount(@PathParam("username") String username) {
