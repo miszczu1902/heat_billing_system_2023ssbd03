@@ -16,6 +16,17 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountInfoDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AdminDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.OwnerDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ManagerDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountForListDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ErrorResponseDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangeSelfPasswordDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AccountMapper;
@@ -120,6 +131,16 @@ public class AccountEndpoint {
     public Response editPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO) {
         accountService.editSelfPersonalData(personalDataDTO.getFirstName(), personalDataDTO.getSurname());
         return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/self/personal-data")
+    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
+    public Response getPersonalData() {
+        PersonalData personalData = accountService.getPersonalData();
+        PersonalDataDTO personalDataDTO = new PersonalDataDTO(personalData.getFirstName(), personalData.getSurname());
+        return Response.status(Response.Status.OK).entity(personalDataDTO).build();
     }
 
     @PATCH
