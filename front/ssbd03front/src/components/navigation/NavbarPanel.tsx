@@ -24,10 +24,10 @@ const NavbarPanel: React.FC = () => {
     const [cookies] = useCookies(["token"]);
     let role = 'GUEST';
 
-    if (cookies.token != undefined) {
-        const decodedToken = jwt(cookies.token);
-        role = JSON.parse(JSON.stringify(decodedToken)).role
-    }
+    // if (cookies.token != undefined) {
+    //     const decodedToken = jwt(cookies.token);
+    //     role = JSON.parse(JSON.stringify(decodedToken)).role
+    // }
 
     const handleChange = (event: SelectChangeEvent<typeof language>) => {
         setLanguage(event.target.value);

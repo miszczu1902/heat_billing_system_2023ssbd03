@@ -11,11 +11,13 @@ import ListItem from '@mui/material/ListItem';
 import axios from 'axios'; 
 import validator from "validator";
 import { API_URL } from '../../consts';
+import {useCookies} from 'react-cookie';
 import { useState, useEffect } from 'react';
 
-const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNjgzOTA5MTQ4LCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODM5MTA5NDh9.3TfEmb3rUAZfjg5wlqvRIu2QKt1EeBQIShn2ov0gMm0';
 
 export default function EditPersonalData() {
+  const [cookies, setCookie] = useCookies(["token"]);
+  const token = "Bearer " + cookies.token;
   const [open, setOpen] = React.useState(false);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
@@ -35,7 +37,7 @@ export default function EditPersonalData() {
     const fetchData = async () => {
       const response = await axios.get(`${API_URL}/accounts/self/personal-data`, {
         headers: {
-          Authorization: 'Bearer ' + token
+          Authorization: token
         }
       })
       .then(response => {
