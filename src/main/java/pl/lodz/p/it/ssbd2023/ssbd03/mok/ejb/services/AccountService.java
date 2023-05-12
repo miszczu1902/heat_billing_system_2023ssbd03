@@ -26,6 +26,12 @@ public interface AccountService {
 
     void adminLoggedInEmail(String email);
 
+    void changeSelfEmail(String newEmail);
+
+    void changeUserEmail(String newEmail, String username);
+
+    void confirmNewEmailAccountFromActivationLink(String confirmationToken);
+
     Account getAccount(String username);
 
     Owner getOwner();

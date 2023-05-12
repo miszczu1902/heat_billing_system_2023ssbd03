@@ -9,8 +9,13 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountInfoDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AdminDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.OwnerDTO;
@@ -51,7 +56,7 @@ public class AccountEndpoint {
     @Path("/activate-from-email")
     @RolesAllowed(Roles.GUEST)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response activateAccountFromEmail(@NotNull @Valid ActivateAccountFromEmailDTO activationTokenDTO) {
+    public Response activateAccountFromEmail(@NotNull @Valid TokenFromEmailDTO activationTokenDTO) {
         accountService.confirmAccountFromActivationLink(activationTokenDTO.getActivationToken());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
@@ -232,6 +237,15 @@ public class AccountEndpoint {
         return Response.ok().entity(accountInfoDTO).build();
     }
 
+    @PATCH
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/{username}/email")
+    @RolesAllowed({Roles.MANAGER, Roles.ADMIN})
+    public Response changeUserEmail(@NotNull @Valid ChangeEmailDTO changeEmailDTO, @PathParam("username") String username) {
+        accountService.changeUserEmail(changeEmailDTO.getNewEmail(), username);
+        return Response.noContent().build();
+    }
+
     @GET
     @Path("/self/owner")
     @Produces(MediaType.APPLICATION_JSON)
@@ -260,5 +274,23 @@ public class AccountEndpoint {
         final Admin admin = accountService.getAdmin();
         final AdminDTO adminDTO = AccountMapper.createAdminDTOEntity(admin, accountService.getPersonalData());
         return Response.ok().entity(adminDTO).build();
+    }
+
+    @PATCH
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/self/email")
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
+    public Response changeSelfEmail(@NotNull @Valid ChangeEmailDTO changeEmailDTO) {
+        accountService.changeSelfEmail(changeEmailDTO.getNewEmail());
+        return Response.noContent().build();
+    }
+
+    @PATCH
+    @Path("/self/confirm-new-email")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
+    public Response confirmNewEmail(@NotNull @Valid TokenFromEmailDTO activationTokenDTO) {
+        accountService.confirmNewEmailAccountFromActivationLink(activationTokenDTO.getActivationToken());
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 }

@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ActivateAccountFromEmailDTO {
+public class TokenFromEmailDTO {
     private String activationToken;
 }
