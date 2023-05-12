@@ -21,7 +21,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.AccountPasswordException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.mail.MailSender;
@@ -196,17 +195,17 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
-    public void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword) throws AccountPasswordException {
+    public void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword) {
         if (oldPassword.equals(newPassword)) {
-            throw new AccountPasswordException("Old password and new password are the same.");
+            throw AppException.createSameOldAndNewPasswordException();
         }
         if (!newPassword.equals(newRepeatedPassword)) {
-            throw new AccountPasswordException("New password and new repeated password are not the same.");
+            throw AppException.createPasswordsNotSameException();
         }
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
         if (!bcryptHashGenerator.generate(oldPassword.toCharArray()).equals(account.getPassword())) {
-            throw new AccountPasswordException("Old password is incorrect");
+            throw AppException.createPasswordOldIncorrectException();
         }
         final String newPasswordHash = bcryptHashGenerator.generate(newPassword.toCharArray());
         account.setPassword(newPasswordHash);
