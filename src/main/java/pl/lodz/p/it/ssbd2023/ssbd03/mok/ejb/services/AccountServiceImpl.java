@@ -564,33 +564,35 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public void changeUserEmail(String newEmail, String username) {
-        changeEmail(newEmail, username);
-    }
-
-    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    private void changeEmail(String newEmail, String changedUsername) {
         final String changingUsername = securityContext.getCallerPrincipal().getName();
-        final Account changedAccount = accountFacade.findByUsername(changedUsername);
         final Account changingAccount = accountFacade.findByUsername(changingUsername);
-        Boolean changedAccountIsManager = changingAccount.getAccessLevels().stream()
-                .filter(accessLevel -> accessLevel instanceof Manager)
-                .map(accessLevel -> (Manager) accessLevel)
-                .findAny().isPresent();
-        Boolean changingAccountIsAdmin = changedAccount.getAccessLevels().stream()
+        final Account changedAccount = accountFacade.findByUsername(username);
+        Boolean changedAccountIsManager = changedAccount.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Admin)
                 .map(accessLevel -> (Admin) accessLevel)
                 .findAny().isPresent();
-        if(changedAccountIsManager && changingAccountIsAdmin) {
+        Boolean changingAccountIsAdmin = changingAccount.getAccessLevels().stream()
+                .filter(accessLevel -> accessLevel instanceof Admin)
+                .map(accessLevel -> (Admin) accessLevel)
+                .findAny().isPresent();
+        if (changedAccountIsManager && !changingAccountIsAdmin) {
             throw AppException.createManagerCanNotChangeAdminException();
+        } else {
+            changeEmail(newEmail, username);
         }
-        if (newEmail.equals(changedAccount.getEmail())) {
+    }
+
+    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
+    private void changeEmail(String newEmail, String username) {
+        final Account account = accountFacade.findByUsername(username);
+        if (newEmail.equals(account.getEmail())) {
             throw AppException.createCurrentEmailException();
         } else {
             if (accountFacade.checkIfAnAccountExistsByEmail(newEmail)) {
                 throw AppException.createAccountWithEmailExistsException();
             }
             final EmailConfirmationToken emailConfirmationToken = new EmailConfirmationToken(
-                    tokenGenerator.createAccountConfirmationToken(), newEmail, changedAccount);
+                    tokenGenerator.createAccountConfirmationToken(), newEmail, account);
             emailConfirmationTokenFacade.create(emailConfirmationToken);
             mailSender.sendLinkToConfirmAnEmail(newEmail, emailConfirmationToken.getTokenValue());
         }
