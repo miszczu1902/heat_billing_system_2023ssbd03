@@ -161,7 +161,6 @@ public class AccountEndpoint {
     }
 
     @PATCH
-    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/disable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response disableUserAccount(@PathParam("username") String username) {
@@ -170,7 +169,6 @@ public class AccountEndpoint {
     }
 
     @PATCH
-    @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/enable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response enableUserAccount(@PathParam("username") String username) {
