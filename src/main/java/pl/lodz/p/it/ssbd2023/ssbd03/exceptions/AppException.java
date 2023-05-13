@@ -8,6 +8,8 @@ import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.DatabaseException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.SignerException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.VerifierException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.personalData.PersonalDataConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
@@ -46,6 +48,8 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ACCOUNT_IS_NOT_ACTIVATED = "This account is not activated"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_IS_BLOCKED = "This account is blocked"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_REVOKE_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT = "You cannot take away your permissions"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_ETAG_VERIFIER = "Cannot verify eTag"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_ETAG_SIGNER = "Cannot sign with eTag"; //TODO - tu trzeba zrobić resource bundle
 
     @Getter
     private Throwable cause;
@@ -205,5 +209,13 @@ public class AppException extends WebApplicationException {
 
     public static RevokeAccessLevelToTheSameAdminAccountException revokeAnAccessLevelToTheSameAdminAccount() {
         return new RevokeAccessLevelToTheSameAdminAccountException(AppException.ERROR_REVOKE_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT, Response.Status.FORBIDDEN);
+    }
+
+    public static VerifierException createVerifierException() {
+        return new VerifierException(ERROR_ETAG_VERIFIER, Response.Status.BAD_REQUEST);
+    }
+
+    public static SignerException createSignerException() {
+        return new SignerException(ERROR_ETAG_SIGNER, Response.Status.BAD_REQUEST);
     }
 }

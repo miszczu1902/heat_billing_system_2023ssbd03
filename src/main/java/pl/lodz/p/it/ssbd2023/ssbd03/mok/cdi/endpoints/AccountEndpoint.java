@@ -27,6 +27,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.EtagValidator;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AccountMapper;
 
 import java.util.List;
@@ -36,6 +38,9 @@ import java.util.List;
 public class AccountEndpoint {
     @Inject
     private AccountService accountService;
+
+    @Inject
+    MessageSigner messageSigner;
 
     @POST
     @Path("/register")
@@ -123,6 +128,7 @@ public class AccountEndpoint {
     }
 
     @PATCH
+    @EtagValidator
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/self/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
@@ -138,10 +144,14 @@ public class AccountEndpoint {
     public Response getPersonalData() {
         PersonalData personalData = accountService.getPersonalData();
         PersonalDataDTO personalDataDTO = new PersonalDataDTO(personalData.getFirstName(), personalData.getSurname());
-        return Response.status(Response.Status.OK).entity(personalDataDTO).build();
+        return Response.status(Response.Status.OK)
+                .entity(personalDataDTO)
+                .header("ETag", messageSigner.sign(personalDataDTO))
+                .build();
     }
 
     @PATCH
+    @EtagValidator
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
