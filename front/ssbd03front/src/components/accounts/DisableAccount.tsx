@@ -6,10 +6,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios'; 
 import { API_URL } from '../../consts';
 import { useParams} from "react-router-dom";
+import {useCookies} from 'react-cookie';
 
 export default function DisableAccount() {
     const username = useParams().username;
-    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNjgzOTE1MzUwLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODM5MTcxNTB9.tmNxVtVg18vwfhRZNEQFY1h8CFR2fF-oVSlR0CXKyoU';
+    const [cookies, setCookie] = useCookies(["token"]);
+    const token = "Bearer " + cookies.token;
   
     const [open, setOpen] = React.useState(false);
     const [confirmOpen, setConfirmOpen] = React.useState(false);
@@ -34,7 +36,7 @@ export default function DisableAccount() {
       const fetchData = async () => {
         axios.patch(`${API_URL}/accounts/${username}/disable`, {}, {
            headers: {
-            'Authorization': 'Bearer ' + token,
+            'Authorization': token,
           },
         })
         .then(response => {
