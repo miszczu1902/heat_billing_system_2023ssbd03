@@ -11,11 +11,9 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 
 import java.text.ParseException;
 
-import static java.lang.Long.parseLong;
-
 @ApplicationScoped
 public class MessageVerifier {
-    private final String secretKey = String.valueOf(parseLong(LoadConfig.loadPropertyFromConfig("etag.secretKey")));
+    private final String secretKey = LoadConfig.loadPropertyFromConfig("ETag.secretKey");
     private JWSVerifier jwsVerifier;
 
     @PostConstruct

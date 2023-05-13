@@ -7,12 +7,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 
-import static java.lang.Long.parseLong;
-
 @ApplicationScoped
 public class MessageSigner {
 
-    private final String secretKey = String.valueOf(parseLong(LoadConfig.loadPropertyFromConfig("etag.secretKey")));
+    private final String secretKey = LoadConfig.loadPropertyFromConfig("ETag.secretKey");
     private JWSSigner jwsSigner;
 
     @PostConstruct
