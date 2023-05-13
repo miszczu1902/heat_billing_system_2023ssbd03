@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services;
 
 import jakarta.ejb.Local;
-import jakarta.persistence.NoResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
@@ -52,9 +51,9 @@ public interface AccountService {
 
     void resetPassword(String username);
 
-    void disableUserAccount(String username) throws IllegalArgumentException, NoResultException;
+    void disableUserAccount(String username);
 
-    void enableUserAccount(String username) throws IllegalArgumentException, NoResultException;
+    void enableUserAccount(String username);
 
     void addAccessLevelManager(String username, String license);
 
