@@ -216,8 +216,10 @@ public class AccountEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response getListOfAccounts(@DefaultValue("username") @QueryParam("sortBy") String sortBy,
-                                      @DefaultValue("0") @QueryParam("pageNumber") int pageNumber) {
-        final List<AccountForListDTO> listOfAccounts = accountService.getListOfAccounts(sortBy, pageNumber)
+                                      @DefaultValue("0") @QueryParam("pageNumber") int pageNumber,
+                                      @DefaultValue("10") @QueryParam("pageSize") int pageSize,
+                                      @QueryParam("isEnable") Boolean isEnable) {
+        final List<AccountForListDTO> listOfAccounts = accountService.getListOfAccounts(sortBy, pageNumber, pageSize, isEnable)
                 .stream()
                 .map(AccountMapper::accountToAccountForListDTO)
                 .toList();

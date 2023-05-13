@@ -26,7 +26,9 @@ public class AccountMapper {
                 account.getId(),
                 account.getVersion(),
                 account.getEmail(),
-                account.getUsername());
+                account.getUsername(),
+                account.getIsEnable(),
+                account.getIsActive());
     }
 
     public static AccountInfoDTO createAccountInfoDTOEntity(Account account) {

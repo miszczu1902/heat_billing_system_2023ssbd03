@@ -13,10 +13,14 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.AbstractDTO;
 public class AccountForListDTO extends AbstractDTO {
     private String email;
     private String username;
+    private Boolean isEnable;
+    private Boolean isActive;
 
-    public AccountForListDTO(Long id, Long version, String email, String username) {
+    public AccountForListDTO(Long id, Long version, String email, String username, Boolean isEnable, Boolean isActive) {
         super(id, version);
         this.email = email;
         this.username = username;
+        this.isEnable = isEnable;
+        this.isActive = isActive;
     }
 }
