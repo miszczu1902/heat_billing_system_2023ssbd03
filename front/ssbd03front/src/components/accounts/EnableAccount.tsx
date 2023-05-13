@@ -8,7 +8,7 @@ import { API_URL } from '../../consts';
 import { useParams} from "react-router-dom";
 import {useCookies} from 'react-cookie';
 
-export default function EnableAccount() {
+const EnableAccount = () => {
   const username = useParams().username;
   const [cookies, setCookie] = useCookies(["token"]);
   const token = "Bearer " + cookies.token;
@@ -88,3 +88,4 @@ export default function EnableAccount() {
     </div>
   );
 }
+export default EnableAccount;

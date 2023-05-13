@@ -14,13 +14,12 @@ import {AccountFromList} from '../../types/accountFromList';
 import axios from 'axios';
 import {API_URL} from '../../consts';
 import {useNavigate} from "react-router-dom";
-
-const token =
-    'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNjgzODM1NzczLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODM4Mzc1NzN9.jN5Rz3Hi3iR7ABheZf0VxMgUjE4LipupCPiTxOdwr5s';
+import {useCookies} from "react-cookie";
 
 const AccountsList = () => {
     const navigate = useNavigate();
-
+    const [cookies, setCookie] = useCookies(['token']);
+    const token = 'Bearer ' + cookies.token;
     const [accounts, setAccounts] = useState<AccountFromList[]>([]);
     const [pageNumber, setPageNumber] = useState(0);
     const [size, setSize] = useState(10);
@@ -45,7 +44,7 @@ const AccountsList = () => {
     };
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setSize(parseInt(event.target.value, 10));
+        setSize(parseInt(event.target.value, 1));
         setPageNumber(0);
     };
 
@@ -53,7 +52,7 @@ const AccountsList = () => {
         setSortBy(column);
     };
 
-    const goToAccount = (username:string) =>  {
+    const goToAccount = (username: string) => {
         navigate('/accounts/' + username);
     }
 
@@ -81,7 +80,7 @@ const AccountsList = () => {
                     ))}
                 </TableBody>
             </Table>
-            <TablePagination count={size} page={pageNumber} rowsPerPage={10}
+            <TablePagination count={size} page={pageNumber} rowsPerPage={1}
                              onPageChange={handleChangePage}></TablePagination>
         </TableContainer>
     );

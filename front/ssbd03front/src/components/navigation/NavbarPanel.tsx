@@ -16,8 +16,10 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import {ButtonGroup} from '@mui/material';
 import {useCookies} from 'react-cookie';
 import jwt from "jwt-decode";
+import {useNavigate} from "react-router-dom";
 
 const NavbarPanel: React.FC = () => {
+    const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
     const [language, setLanguage] = React.useState<string>('');
     const [navbarColor, setNavbarColor] = React.useState('#ffffff');
@@ -43,7 +45,7 @@ const NavbarPanel: React.FC = () => {
         }
     };
     const handleClickOpenLogin = () => {
-        window.location.href = `/accounts/login`;
+        navigate('/login');
     };
 
     useEffect(() => {
