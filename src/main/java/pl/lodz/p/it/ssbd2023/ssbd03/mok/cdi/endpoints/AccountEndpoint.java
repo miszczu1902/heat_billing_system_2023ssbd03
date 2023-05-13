@@ -24,7 +24,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangeSelfPasswordDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AccountMapper;
@@ -148,6 +148,16 @@ public class AccountEndpoint {
     public Response editUserPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO, @PathParam("username") String username) {
         accountService.editUserPersonalData(username, personalDataDTO.getFirstName(), personalDataDTO.getSurname());
         return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{username}/personal-data")
+    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
+    public Response getPersonalData(@PathParam("username") String username) {
+        final PersonalData personalData = accountService.getUserPersonalData(username);
+        final PersonalDataDTO personalDataDTO = new PersonalDataDTO(personalData.getFirstName(), personalData.getSurname());
+        return Response.status(Response.Status.OK).entity(personalDataDTO).build();
     }
 
     @PATCH
