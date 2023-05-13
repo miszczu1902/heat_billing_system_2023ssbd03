@@ -155,8 +155,8 @@ public class AccountEndpoint {
     @Path("/{username}/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
     public Response getPersonalData(@PathParam("username") String username) {
-        PersonalData personalData = accountService.getUserPersonalData(username);
-        PersonalDataDTO personalDataDTO = new PersonalDataDTO(personalData.getFirstName(), personalData.getSurname());
+        final PersonalData personalData = accountService.getUserPersonalData(username);
+        final PersonalDataDTO personalDataDTO = new PersonalDataDTO(personalData.getFirstName(), personalData.getSurname());
         return Response.status(Response.Status.OK).entity(personalDataDTO).build();
     }
 
