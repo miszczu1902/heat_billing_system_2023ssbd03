@@ -47,7 +47,7 @@ public class AccountConfirmationTokenFacade extends AbstractFacade<AccountConfir
     public List<AccountConfirmationToken> findAllUnconfirmedAccountsToRemind() {
         TypedQuery<AccountConfirmationToken> query = em.createNamedQuery("AccountConfirmationToken.findAllUnconfirmedAccounts", AccountConfirmationToken.class);
         query.setParameter("date",
-                LocalDateTime.now(TIME_ZONE).plusHours(12));
+                LocalDateTime.now(TIME_ZONE).minusHours(12));
         return Optional.of(query.getResultList()).orElse(Collections.emptyList());
     }
 

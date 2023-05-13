@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
+
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 @Interceptors({TrackerInterceptor.class})
@@ -86,7 +88,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @RolesAllowed(Roles.GUEST)
     public void createOwner(Account account) {
         account.setPassword(bcryptHashGenerator.generate(account.getPassword().toCharArray()));
-        account.setRegisterDate(LocalDateTime.now());
+        account.setRegisterDate(LocalDateTime.now(TIME_ZONE));
 
         accountFacade.create(account);
 

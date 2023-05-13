@@ -55,6 +55,7 @@ public class SystemScheduler {
         final List<AccountConfirmationToken> allUnconfirmedAccounts = accountConfirmationTokenFacade.findAllUnconfirmedAccountsToRemind();
         if (!allUnconfirmedAccounts.isEmpty()) {
             allUnconfirmedAccounts.forEach(accountConfirmationToken -> {
+                accountConfirmationToken.setIsReminderSent(true);
                 mailSender.sendReminderAboutAccountConfirmation(
                         accountConfirmationToken.getAccount().getEmail(), accountConfirmationToken.getTokenValue());
             });
