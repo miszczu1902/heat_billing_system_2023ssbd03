@@ -211,6 +211,13 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
+    public PersonalData getPersonalData() {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Account account = accountFacade.findByUsername(username);
+        return personalDataFacade.find(account.getId());
+    }
+
     @RolesAllowed({Roles.ADMIN})
     public void changeUserPassword(String username, String newPassword, String newRepeatedPassword) {
         if (!newPassword.equals(newRepeatedPassword)) {
@@ -276,10 +283,10 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         return admin;
     }
 
+
     @Override
-    @RolesAllowed({Roles.OWNER, Roles.ADMIN, Roles.MANAGER})
-    public PersonalData getPersonalData() {
-        final String username = securityContext.getCallerPrincipal().getName();
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public PersonalData getUserPersonalData(String username) {
         final Account account = accountFacade.findByUsername(username);
         return personalDataFacade.find(account.getId());
     }
