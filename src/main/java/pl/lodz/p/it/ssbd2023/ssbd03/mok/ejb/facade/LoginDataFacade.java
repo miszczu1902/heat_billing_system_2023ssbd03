@@ -1,11 +1,13 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.interceptor.Interceptors;
 import jakarta.persistence.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.LoginData;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
@@ -27,6 +29,7 @@ public class LoginDataFacade extends AbstractFacade<LoginData> {
         return this.em;
     }
 
+    @RolesAllowed(Roles.GUEST)
     public LoginData findById(Account account) {
         TypedQuery<LoginData> tq = em.createNamedQuery("LoginData.findById", LoginData.class);
         tq.setParameter("id", account);
@@ -38,5 +41,11 @@ public class LoginDataFacade extends AbstractFacade<LoginData> {
             }
             throw AppException.createDatabaseException();
         }
+    }
+
+    @Override
+    @RolesAllowed(Roles.GUEST)
+    public void edit(LoginData entity) {
+        super.edit(entity);
     }
 }

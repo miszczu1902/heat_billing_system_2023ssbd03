@@ -1,18 +1,14 @@
 import {createBrowserRouter, Outlet} from "react-router-dom";
-import EditUserPersonalData from "../components/personalData/EditUserPersonalData";
 import NavbarPanel from "../components/navigation/NavbarPanel";
-import AccountsList from "../components/accountsList/AccountsList";
 import EditPersonalData from "../components/personalData/EditPersonalData";
-import Registration from "../components/registration/Registration";
-import LandingPage from "../components/landingPage/LandingPage";
+import Login from "../components/login/Login";
+import EnableAccount from "../components/accounts/EnableAccount";
+import DisableAccount from "../components/accounts/DisableAccount";
+import EditUserPersonalData from "../components/personalData/EditUserPersonalData";
 
 const router = createBrowserRouter([
     {
-        path: '/',
-        element: <LandingPage/>
-    },
-    {
-        path: "/accounts",
+        path: "/",
         element: (
             <>
                 <NavbarPanel/>
@@ -21,22 +17,36 @@ const router = createBrowserRouter([
         ),
         children: [
             {
+                path: "/#",
+            },
+
+            {
                 path: "/accounts",
-                element: <AccountsList/>
             },
             {
-                path: "/accounts/:username",
+                path: "/accounts/self",
+            },
+            {
+                path: "/accounts/self/personal-data",
+                element: <EditPersonalData/>
+            },
+            {
+                path: "/accounts/:username/enable",
+                element: <EnableAccount/>
+            },
+            {
+                path: "/accounts/:username/disable",
+                element: <DisableAccount/>
+            },
+            {
+                path: '/login',
+                element: <Login/>
+            },
+            {
+                path: "/accounts/:username/personal-data",
                 element: <EditUserPersonalData/>
             }
         ]
-    },
-    {
-        path: '/register',
-        element: <Registration/>
-    },
-    {
-        path: '/self',
-        element: <EditPersonalData/>
     }
 ]);
 

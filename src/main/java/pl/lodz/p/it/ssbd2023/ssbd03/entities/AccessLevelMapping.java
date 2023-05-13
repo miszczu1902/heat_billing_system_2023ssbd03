@@ -44,6 +44,10 @@ public abstract class AccessLevelMapping extends AbstractEntity implements Seria
     @Column(name = "access_level", updatable = false, insertable = false)
     private String accessLevel;
 
+    @Setter
+    @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean isActive = true;
+
     @Override
     public int hashCode() {
         return Objects.hash(id);
