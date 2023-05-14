@@ -175,15 +175,6 @@ public class AccountEndpoint {
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{username}/personal-data")
-    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public Response getPersonalData(@PathParam("username") String username) {
-        final PersonalData personalData = accountService.getUserPersonalData(username);
-        final PersonalDataDTO personalDataDTO = new PersonalDataDTO(personalData.getFirstName(), personalData.getSurname());
-        return Response.status(Response.Status.OK).entity(personalDataDTO).build();
-    }
 
     @PATCH
     @EtagValidator
