@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -10,6 +9,12 @@ import {API_URL} from '../../consts';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import axios from 'axios';
 import {useCookies} from 'react-cookie';
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import DialogActions from "@mui/material/DialogActions";
 import {useNavigate} from "react-router-dom";
 
 export default function Login() {
@@ -19,6 +24,14 @@ export default function Login() {
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [loginError, setLoginError] = React.useState("");
+    const [open, setOpen] = React.useState(false);
+    const [loginPassword, setLoginPassword] = React.useState("");
+
+    const [loginPasswordError, setLoginPasswordError] = React.useState("");
+    const [validData, setValidData] = React.useState(false);
+    const [successOpen, setSuccessOpen] = React.useState(false);
+    const [errorOpen, setErrorOpen] = React.useState(false);
+    const [errorOpenMessage, setErrorOpenMessage] = React.useState("");
     const [loading, setLoading] = React.useState(true);
     const [loggedIn, setLoggedIn] = React.useState(false);
 
@@ -82,6 +95,69 @@ export default function Login() {
         }
     };
 
+    const handleSubmitPasswordChange = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+    }
+
+    const handleLoginPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let loginPassword = event.target.value;
+        setLoginPassword(loginPassword)
+        const regex = /^[a-zA-Z0-9_]{6,16}$/;
+        if (!regex.test(loginPassword)) {
+            setLoginPasswordError("Login może zawierać tylko litery, cyfry, znak podkreślenia oraz " +
+                "musi mieć długość od 8 do 16 znaków.");
+            setValidData(false);
+        } else {
+            setLoginPasswordError("");
+            setValidData(true);
+        }
+    };
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+        if (reason !== 'backdropClick') {
+            setOpen(false);
+        }
+    };
+
+    const handleConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+        if(validData) {
+            const resetPasswordDTO = {
+                username: loginPassword.toString(),
+            }
+
+            axios.post(`${API_URL}/accounts/reset-password`,
+                resetPasswordDTO, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                })
+                .then(() => {
+                    setSuccessOpen(true);
+                })
+                .catch(error => {
+                    setErrorOpenMessage(error.response.data.message)
+                    setErrorOpen(true);
+                });
+            handleClose(event, reason);
+        }
+    }
+
+    const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+        if (reason !== 'backdropClick') {
+            setSuccessOpen(false);
+        }
+    }
+
+    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+        if (reason !== 'backdropClick') {
+            setErrorOpen(false);
+        }
+    };
+
     return (
         <ThemeProvider theme={theme}>
             <Grid container justifyContent="center" alignItems="center">
@@ -97,7 +173,48 @@ export default function Login() {
                                        value={password}/>
                             <Button type="submit" fullWidth variant="contained">Zaloguj</Button>
                             <Box sx={{my: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                                <Link href="????">Zapomniałeś hasła?</Link>
+                                <div>
+                                    <div>
+                                        <Button onClick={handleClickOpen} variant="contained">Zapomniałem hasła</Button>
+                                    </div>
+                                    <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
+                                        <DialogTitle>Przypomnienie hasła</DialogTitle>
+                                        <DialogContent>
+                                            <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                                                <form onSubmit={handleSubmitPasswordChange}>
+                                                    <List component="nav" aria-label="mailbox folders">
+                                                        <ListItem>
+                                                            <div className="form-group" onChange={handleLoginPasswordChange}>
+                                                                <TextField
+                                                                    id="outlined-helperText"
+                                                                    label="Login"
+                                                                    helperText="Wprowadź Login"
+                                                                />
+                                                                <div className="form-group">
+                                                                    {loginPasswordError}
+                                                                </div>
+                                                            </div>
+                                                        </ListItem>
+                                                    </List>
+                                                </form>
+                                            </Box>
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button onClick={handleClose}>Cancel</Button>
+                                            <Button onClick={handleConfirm} disabled={!validData}>Ok</Button>
+                                        </DialogActions>
+                                    </Dialog>
+                                    <Dialog disableEscapeKeyDown open={successOpen}>
+                                        <DialogTitle>Na adres email przypisany do tego konta została wysłana wiadomość z
+                                            hiperłączem do formularza zmiany hasła.</DialogTitle>
+                                        <Button onClick={handleSuccessClose}>Ok</Button>
+                                    </Dialog>
+
+                                    <Dialog disableEscapeKeyDown open={errorOpen}>
+                                        <DialogTitle>{errorOpenMessage}</DialogTitle>
+                                        <Button onClick={handleErrorClose}>Ok</Button>
+                                    </Dialog>
+                                </div>
                             </Box>
                         </Box>
                     </Box>
