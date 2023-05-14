@@ -175,7 +175,6 @@ public class AccountEndpoint {
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
-
     @PATCH
     @EtagValidator
     @Path("/{username}/disable")
