@@ -318,8 +318,8 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public List<Account> getListOfAccounts(String sortBy, int pageNumber) {
-        return accountFacade.getListOfAccountsWithFilterParams(sortBy, pageNumber);
+    public List<Account> getListOfAccounts(String sortBy, int pageNumber, int pageSize, Boolean isEnable) {
+        return accountFacade.getListOfAccountsWithFilterParams(sortBy, pageNumber, pageSize, isEnable);
     }
 
     @Override

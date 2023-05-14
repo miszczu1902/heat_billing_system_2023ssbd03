@@ -73,14 +73,20 @@ public class AccountFacade extends AbstractFacade<Account> {
     }
 
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public List<Account> getListOfAccountsWithFilterParams(String sortBy, int pageNumber) {
+    public List<Account> getListOfAccountsWithFilterParams(String sortBy, int pageNumber, int pageSize, Boolean isEnable) {
         TypedQuery<Account> tq;
-        if (sortBy.equals("email")) tq = em.createNamedQuery("Account.getListOfAccountsByEmail", Account.class);
-        else tq = em.createNamedQuery("Account.getListOfAccountsByUsername", Account.class);
+        if (isEnable != null) {
+            if (sortBy.equals("email")) tq = em.createNamedQuery("Account.getListOfAccountsByEmailAndEnableStatus", Account.class);
+            else tq = em.createNamedQuery("Account.getListOfAccountsByUsernameAndEnableStatus", Account.class);
+            tq.setParameter("isEnable", isEnable);
+        } else {
+            if (sortBy.equals("email")) tq = em.createNamedQuery("Account.getListOfAccountsByEmail", Account.class);
+            else tq = em.createNamedQuery("Account.getListOfAccountsByUsername", Account.class);
+        }
 
         if (pageNumber != 0) {
-            tq.setFirstResult((pageNumber - 1) * 10);
-            tq.setMaxResults(pageNumber * 10);
+            tq.setFirstResult((pageNumber - 1) * pageSize);
+            tq.setMaxResults(pageSize);
         }
 
         return tq.getResultList();

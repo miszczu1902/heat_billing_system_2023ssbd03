@@ -66,5 +66,5 @@ public interface AccountService {
 
     void revokeAccessLevel(String username, String accessLevel);
 
-    List<Account> getListOfAccounts(String sortBy, int pageNumber);
+    List<Account> getListOfAccounts(String sortBy, int pageNumber, int pageSize, Boolean isEnable);
 }
