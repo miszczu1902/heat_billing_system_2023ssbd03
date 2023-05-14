@@ -31,8 +31,8 @@ public class CreateOwnerDTO implements Serializable {
     private String email;
 
     @NotNull
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
-    message = "Restrictions for password is: at least 8 characters length, at least one upper and lower case, number and special digit")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,32}$",
+    message = "Restrictions for password is: between 8-32 characters length, at least one upper and lower case, number and special digit")
     @ToString.Exclude
     private String password;
 

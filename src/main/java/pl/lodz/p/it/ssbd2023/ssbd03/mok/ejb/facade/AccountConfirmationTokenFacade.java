@@ -18,6 +18,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
+
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors({TrackerInterceptor.class})
@@ -37,7 +39,15 @@ public class AccountConfirmationTokenFacade extends AbstractFacade<AccountConfir
     @PermitAll
     public List<AccountConfirmationToken> findAllUnconfirmedAccounts() {
         TypedQuery<AccountConfirmationToken> query = em.createNamedQuery("AccountConfirmationToken.findAllUnconfirmedAccounts", AccountConfirmationToken.class);
-        query.setParameter("date", LocalDateTime.now().minusDays(1));
+        query.setParameter("date",
+                LocalDateTime.now(TIME_ZONE).minusDays(1));
+        return Optional.of(query.getResultList()).orElse(Collections.emptyList());
+    }
+
+    public List<AccountConfirmationToken> findAllUnconfirmedAccountsToRemind() {
+        TypedQuery<AccountConfirmationToken> query = em.createNamedQuery("AccountConfirmationToken.findAllUnconfirmedAccounts", AccountConfirmationToken.class);
+        query.setParameter("date",
+                LocalDateTime.now(TIME_ZONE).minusHours(12));
         return Optional.of(query.getResultList()).orElse(Collections.emptyList());
     }
 
