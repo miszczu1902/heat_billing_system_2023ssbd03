@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PersonalDataDTO implements Serializable, Signable {
+public class EditPersonalDataDTO implements Serializable, Signable {
     @NotNull
     @Size(max = 32, message = "Max length for first name is 32")
     private String firstName;

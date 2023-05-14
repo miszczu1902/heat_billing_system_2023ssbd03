@@ -20,4 +20,12 @@ public class AdminDTO extends AccountDTO {
         this.surname = surname;
         this.language = language;
     }
+
+    @Override
+    public String messageToSign() {
+        return super.messageToSign()
+                .concat(firstName)
+                .concat(surname)
+                .concat(language);
+    }
 }
