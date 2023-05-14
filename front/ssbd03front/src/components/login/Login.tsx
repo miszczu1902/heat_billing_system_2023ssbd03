@@ -10,10 +10,12 @@ import {API_URL} from '../../consts';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import axios from 'axios';
 import {useCookies} from 'react-cookie';
+import {useNavigate} from "react-router-dom";
 
 const theme = createTheme();
 
 export default function Login() {
+    const navigate = useNavigate();
     const [cookies, setCookie] = useCookies(["token"]);
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
@@ -53,7 +55,7 @@ export default function Login() {
             axios.request(config)
                 .then((response) => {
                     setCookie("token", response.headers["bearer"])
-                    window.location.href = `/accounts`;
+                    navigate('/');
                 })
                 .catch((error) => {
                     setPassword("");
