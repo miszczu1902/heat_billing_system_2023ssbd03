@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services;
 
 import jakarta.ejb.Local;
+import jakarta.ws.rs.PathParam;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
@@ -21,13 +22,13 @@ public interface AccountService {
 
     void updateLoginData(String username, boolean flag);
 
-    void changePhoneNumber(String newPhoneNumber);
+    void changePhoneNumber(String newPhoneNumber, String etag);
 
     void adminLoggedInEmail(String email);
 
-    void changeSelfEmail(String newEmail);
+    void changeSelfEmail(String newEmail, String etag);
 
-    void changeUserEmail(String newEmail, String username);
+    void changeUserEmail(String newEmail, String username, String etag);
 
     void confirmNewEmailAccountFromActivationLink(String confirmationToken);
 
@@ -39,21 +40,21 @@ public interface AccountService {
 
     Admin getAdmin();
 
-    PersonalData getPersonalData();
+    PersonalData getPersonalData(String username);
 
-    void editSelfPersonalData(String firstName, String surname);
+    void editSelfPersonalData(String firstName, String surname, String etag);
 
-    void editUserPersonalData(String username, String firstName, String surname);
+    void editUserPersonalData(String username, String firstName, String surname, String etag);
 
-    void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword);
+    void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword, String etag);
 
-    void changeUserPassword(String username, String newPassword, String newRepeatedPassword);
+    void changeUserPassword(String username, String newPassword, String newRepeatedPassword, String etag);
 
     void resetPassword(String username);
 
-    void disableUserAccount(String username);
+    void disableUserAccount(String username, String etag);
 
-    void enableUserAccount(String username);
+    void enableUserAccount(String username, String etag);
 
     void addAccessLevelManager(String username, String license);
 

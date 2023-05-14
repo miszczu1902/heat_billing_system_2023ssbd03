@@ -11,7 +11,6 @@ public class AccountDTO extends AbstractDTO implements Signable {
     private String email;
     private String username;
     private String password;
-    private String repeatedPassword;
 
     public AccountDTO(String email, String username) {
         this.email = email;
@@ -23,7 +22,6 @@ public class AccountDTO extends AbstractDTO implements Signable {
         return email
                 .concat(username)
                 .concat(password)
-                .concat(repeatedPassword)
                 .concat(getId().toString())
                 .concat(getVersion().toString());
     }
