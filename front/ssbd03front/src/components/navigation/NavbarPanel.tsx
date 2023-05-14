@@ -73,6 +73,7 @@ const NavbarPanel: React.FC = () => {
     }, [role]);
 
     return (
+
         <AppBar position="static" style={{backgroundColor: navbarColor}}>
             <Toolbar>
                 <Typography variant="h6" sx={{flexGrow: 1}}>
@@ -117,6 +118,7 @@ const NavbarPanel: React.FC = () => {
                 </DialogActions>
             </Dialog>
         </AppBar>
+
     );
 };
 

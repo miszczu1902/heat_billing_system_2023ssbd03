@@ -20,6 +20,24 @@ export default function Login() {
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [loginError, setLoginError] = React.useState("");
+    const [loading, setLoading] = React.useState(true);
+    const [loggedIn, setLoggedIn] = React.useState(false);
+
+    React.useEffect(() => {
+        if (cookies.token) {
+            setLoggedIn(true);
+        }
+        setLoading(false);
+    }, [cookies]);
+
+    if (loading) {
+        return <p></p>;
+    }
+
+    if (loggedIn) {
+        navigate("/");
+        return null;
+    }
 
     const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(event.target.value);
@@ -29,14 +47,13 @@ export default function Login() {
     };
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (username.length < 6) {
-            setLoginError('Login musi mieć przynajmniej 6 znaków');
-        } else if (password.length < 8) {
+        const regexLogin = /^[a-zA-Z0-9_]{6,16}$/;
+        const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        if (!regexLogin.test(username)) {
+            setLoginError('Login musi składać się z 6-16 znaków i składać się z liter i cyfr');
+        } else if (!regexPassword.test(password)) {
             setPassword("");
-            setLoginError('Hasło musi mieć przynajmniej 8 znaków');
-        } else if (username.length >= 16) {
-
-            setLoginError('Login może mieć maksymalnie 16 znaków');
+            setLoginError('Hasło musi mieć przynajmniej 8 znaków, jedną dużą literę, znak specjalny');
         } else {
             let data = JSON.stringify({
                 "username": username,
@@ -70,7 +87,7 @@ export default function Login() {
                 <Grid my={2} item sm={8} md={5} component={Paper} elevation={6}>
                     <Box sx={{my: 30, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                         <Typography variant="h5"> Logowanie </Typography>
-                        <p>{loginError}</p>
+                        <Typography sx={{ color: 'red' }}>{loginError}</Typography>
                         <Box component="form" onSubmit={handleSubmit}>
                             <Box component="form">
                                 <TextField fullWidth margin="normal" label="Login" value={username}
