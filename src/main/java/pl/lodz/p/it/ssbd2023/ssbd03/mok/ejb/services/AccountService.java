@@ -1,13 +1,11 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services;
 
 import jakarta.ejb.Local;
-import jakarta.ws.rs.PathParam;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
-
 import java.util.List;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 
@@ -42,6 +40,8 @@ public interface AccountService {
     Admin getAdmin();
 
     PersonalData getPersonalData(String username);
+
+    PersonalData getSelfPersonalData();
 
     void editSelfPersonalData(String firstName, String surname, String etag);
 
