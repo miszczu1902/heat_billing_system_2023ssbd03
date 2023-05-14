@@ -14,7 +14,6 @@ import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.PathParam;
 import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.TokenGenerator;
@@ -300,13 +299,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         return admin;
     }
 
-
-    @Override
-    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public PersonalData getUserPersonalData(String username) {
-        final Account account = accountFacade.findByUsername(username);
-        return personalDataFacade.find(account.getId());
-    }
 
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
