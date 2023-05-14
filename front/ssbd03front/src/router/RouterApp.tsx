@@ -5,6 +5,7 @@ import Login from "../components/login/Login";
 import EnableAccount from "../components/accounts/EnableAccount";
 import DisableAccount from "../components/accounts/DisableAccount";
 import EditUserPersonalData from "../components/personalData/EditUserPersonalData";
+import EditPassword from "../components/passwords/EditPassword";
 
 const router = createBrowserRouter([
     {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
             {
                 path: '/login',
                 element: <Login/>
+            },
+            {
+                path: "/accounts/self/password",
+                element: <EditPassword/>
             }
         ]
     }
