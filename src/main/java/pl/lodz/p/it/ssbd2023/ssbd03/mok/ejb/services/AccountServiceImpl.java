@@ -210,7 +210,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
 
-        if(!etag.equals(messageSigner.sign(account))) {
+        if (!etag.equals(messageSigner.sign(account))) {
             throw AppException.createVerifierException();
         }
 
@@ -236,7 +236,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         }
         final Account accountToChangePassword = accountFacade.findByUsername(username);
 
-        if(!etag.equals(messageSigner.sign(accountToChangePassword))) {
+        if (!etag.equals(messageSigner.sign(accountToChangePassword))) {
             throw AppException.createVerifierException();
         }
 
@@ -542,7 +542,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 .findAny()
                 .orElseThrow(AppException::createAccountIsNotOwnerException);
 
-        if(!etag.equals(messageSigner.sign(owner))) {
+        if (!etag.equals(messageSigner.sign(owner))) {
             throw AppException.createVerifierException();
         }
 
@@ -573,7 +573,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             throw AppException.createNotAllowedActionException();
         }
 
-        if(!etag.equals(messageSigner.sign(editableAccount))) {
+        if (!etag.equals(messageSigner.sign(editableAccount))) {
             throw AppException.createVerifierException();
         }
 
@@ -593,7 +593,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     private void editPersonalData(String username, String firstName, String surname, String etag) {
         PersonalData personalData = personalDataFacade.findByUsername(username);
 
-        if(!etag.equals(messageSigner.sign(personalData))) {
+        if (!etag.equals(messageSigner.sign(personalData))) {
             throw AppException.createVerifierException();
         }
 
@@ -613,7 +613,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     private void changeEmail(String newEmail, String username, String etag) {
         final Account account = accountFacade.findByUsername(username);
 
-        if(!etag.equals(messageSigner.sign(account))) {
+        if (!etag.equals(messageSigner.sign(account))) {
             throw AppException.createVerifierException();
         }
 
