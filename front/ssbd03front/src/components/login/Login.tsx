@@ -87,7 +87,7 @@ export default function Login() {
                 <Grid my={2} item sm={8} md={5} component={Paper} elevation={6}>
                     <Box sx={{my: 30, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                         <Typography variant="h5"> Logowanie </Typography>
-                        <Typography sx={{ color: 'red' }}>{loginError}</Typography>
+                        <Typography sx={{color: 'red'}}>{loginError}</Typography>
                         <Box component="form" onSubmit={handleSubmit}>
                             <Box component="form">
                                 <TextField fullWidth margin="normal" label="Login" value={username}
