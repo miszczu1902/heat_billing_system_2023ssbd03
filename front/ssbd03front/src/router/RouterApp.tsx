@@ -6,6 +6,7 @@ import EnableAccount from "../components/accounts/EnableAccount";
 import DisableAccount from "../components/accounts/DisableAccount";
 import EditUserPersonalData from "../components/personalData/EditUserPersonalData";
 import EditPassword from "../components/passwords/EditPassword";
+import ResetPassword from "../components/passwords/ResetPassword";
 
 const router = createBrowserRouter([
     {
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
             {
                 path: "/accounts/self/password",
                 element: <EditPassword/>
+            },
+            {
+                path: "/accounts/reset-password",
+                element: <ResetPassword/>
             }
         ]
     }
