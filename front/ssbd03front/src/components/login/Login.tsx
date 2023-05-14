@@ -49,12 +49,12 @@ export default function Login() {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const regexLogin = /^[a-zA-Z0-9_]{6,16}$/;
-        const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+        const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/;
         if (!regexLogin.test(username)) {
             setLoginError('Login musi składać się z 6-16 znaków i składać się z liter i cyfr');
         } else if (!regexPassword.test(password)) {
             setPassword("");
-            setLoginError('Hasło musi mieć przynajmniej 8 znaków, jedną dużą literę, znak specjalny');
+            setLoginError('Hasło musi składać się z 8-32 znaków, jednej dużej litery, znak specjalny');
         } else {
             let data = JSON.stringify({
                 "username": username,
