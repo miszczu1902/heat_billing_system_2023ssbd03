@@ -106,9 +106,9 @@ public class Account extends AbstractEntity implements Signable {
                 .concat(getUsername())
                 .concat(getIsEnable().toString())
                 .concat(getIsActive().toString())
-                .concat(getRegisterDate().toString())
-                .concat(getAccessLevels().stream().toString())
                 .concat(getPersonalData().getFirstName())
-                .concat(getPersonalData().getSurname());
+                .concat(getPersonalData().getSurname())
+                .concat(getId().toString())
+                .concat(getVersion().toString());
     }
 }

@@ -41,54 +41,13 @@ public class AccountInfoDTO extends AbstractDTO implements Signable {
 
     @Override
     public String messageToSign() {
-        if (phoneNumber == null && license != null) {
             return email
                     .concat(username)
                     .concat(isEnable.toString())
                     .concat(isActive.toString())
-                    .concat(registerDate)
-                    .concat(accessLevels.stream().toString())
-                    .concat(firstName)
-                    .concat(surname)
-                    .concat(license)
-                    .concat(getId().toString())
-                    .concat(getVersion().toString());
-        } else if (license == null && phoneNumber != null) {
-            return email
-                    .concat(username)
-                    .concat(isEnable.toString())
-                    .concat(isActive.toString())
-                    .concat(registerDate)
-                    .concat(accessLevels.stream().toString())
-                    .concat(firstName)
-                    .concat(surname)
-                    .concat(phoneNumber)
-                    .concat(getId().toString())
-                    .concat(getVersion().toString());
-        } else if (phoneNumber == null && license == null) {
-            return email
-                    .concat(username)
-                    .concat(isEnable.toString())
-                    .concat(isActive.toString())
-                    .concat(registerDate)
-                    .concat(accessLevels.stream().toString())
                     .concat(firstName)
                     .concat(surname)
                     .concat(getId().toString())
                     .concat(getVersion().toString());
         }
-            return email
-                    .concat(username)
-                    .concat(isEnable.toString())
-                    .concat(isActive.toString())
-                    .concat(registerDate)
-                    .concat(accessLevels.stream().toString())
-                    .concat(firstName)
-                    .concat(surname)
-                    .concat(phoneNumber)
-                    .concat(license)
-                    .concat(getId().toString())
-                    .concat(getVersion().toString());
-
-    }
 }
