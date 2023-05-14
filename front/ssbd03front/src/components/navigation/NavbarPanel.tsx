@@ -16,18 +16,24 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import {ButtonGroup} from '@mui/material';
 import {useCookies} from 'react-cookie';
 import jwt from "jwt-decode";
+import {useNavigate} from "react-router-dom";
 
 const NavbarPanel: React.FC = () => {
+    const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
     const [language, setLanguage] = React.useState<string>('');
     const [navbarColor, setNavbarColor] = React.useState('#ffffff');
-    const [cookies] = useCookies(["token"]);
-    let role = 'GUEST';
+    const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+    const [role, setRole] = React.useState('GUEST');
 
-    // if (cookies.token != undefined) {
-    //     const decodedToken = jwt(cookies.token);
-    //     role = JSON.parse(JSON.stringify(decodedToken)).role
-    // }
+    useEffect(() => {
+        if (cookies.token !== undefined) {
+            const decodedToken = jwt(cookies.token);
+            setRole(JSON.parse(JSON.stringify(decodedToken)).role);
+        } else {
+            setRole('GUEST');
+        }
+    }, [cookies.token, role]);
 
     const handleChange = (event: SelectChangeEvent<typeof language>) => {
         setLanguage(event.target.value);
@@ -43,7 +49,11 @@ const NavbarPanel: React.FC = () => {
         }
     };
     const handleClickOpenLogin = () => {
-        window.location.href = `/accounts/login`;
+        navigate('/login');
+    };
+    const handleClickOpenLogout = () => {
+        removeCookie('token');
+        navigate('');
     };
 
     useEffect(() => {
@@ -63,16 +73,24 @@ const NavbarPanel: React.FC = () => {
     }, [role]);
 
     return (
+
         <AppBar position="static" style={{backgroundColor: navbarColor}}>
             <Toolbar>
                 <Typography variant="h6" sx={{flexGrow: 1}}>
                     Rozliczenie ciepła dla lokali w wielu budynkach
                 </Typography>
                 <ButtonGroup variant="contained" aria-label="outlined primary button group">
-
-                    <Button style={{backgroundColor: navbarColor}}>Zarejestruj</Button>
                     <Button style={{backgroundColor: navbarColor}}>Zmień język</Button>
-                    <Button onClick={handleClickOpenLogin} style={{backgroundColor: navbarColor}}>Zaloguj</Button>
+                    {!cookies.token && (
+                        <>
+                            <Button style={{backgroundColor: navbarColor}}>Zarejestruj</Button>
+                            <Button onClick={handleClickOpenLogin}
+                                    style={{backgroundColor: navbarColor}}>Zaloguj</Button>
+                        </>
+                    )}
+                    {cookies.token && (
+                        <Button onClick={handleClickOpenLogout} style={{backgroundColor: navbarColor}}>Wyloguj</Button>
+                    )}
                 </ButtonGroup>
             </Toolbar>
             <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>

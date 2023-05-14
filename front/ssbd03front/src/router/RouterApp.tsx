@@ -19,7 +19,6 @@ const router = createBrowserRouter([
             {
                 path: "/#",
             },
-
             {
                 path: "/accounts",
             },
@@ -39,15 +38,14 @@ const router = createBrowserRouter([
                 element: <DisableAccount/>
             },
             {
-                path: '/login',
-                element: <Login/>
-            },
-            {
                 path: "/accounts/:username/personal-data",
                 element: <EditUserPersonalData/>
+            },
+            {
+                path: '/login',
+                element: <Login/>
             }
         ]
     }
 ]);
-
 export default router;
