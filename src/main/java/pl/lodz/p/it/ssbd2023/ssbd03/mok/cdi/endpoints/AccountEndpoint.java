@@ -147,9 +147,23 @@ public class AccountEndpoint {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{username}/personal-data")
+    @Path("/self/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public Response getPersonalData(@PathParam("username") String username) {
+    public Response getSelfPersonalData() {
+        PersonalData personalData = accountService.getSelfPersonalData();
+        PersonalDataDTO personalDataDTO = new PersonalDataDTO(personalData.getId().getId(), personalData.getVersion(),
+                personalData.getFirstName(), personalData.getSurname());
+        return Response.status(Response.Status.OK)
+                .entity(personalDataDTO)
+                .header("ETag", messageSigner.sign(personalDataDTO))
+                .build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{username}/personal-data")
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public Response getUserPersonalData(@PathParam("username") String username) {
         PersonalData personalData = accountService.getPersonalData(username);
         PersonalDataDTO personalDataDTO = new PersonalDataDTO(personalData.getId().getId(), personalData.getVersion(),
                 personalData.getFirstName(), personalData.getSurname());
