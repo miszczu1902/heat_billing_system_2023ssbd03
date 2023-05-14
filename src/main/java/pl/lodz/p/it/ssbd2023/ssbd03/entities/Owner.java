@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -22,7 +23,7 @@ import java.util.Objects;
         @NamedQuery(name = "Owner.findByPhoneNumberAndWithoutUsername", query = "SELECT d FROM Owner d WHERE d.phoneNumber = :phoneNumber AND d.account.username != :username"),
         @NamedQuery(name = "Owner.findByPhoneNumber", query = "SELECT d FROM Owner d WHERE d.phoneNumber = :phoneNumber")
 })
-public class Owner extends AccessLevelMapping implements Serializable {
+public class Owner extends AccessLevelMapping implements Serializable, Signable {
     @Column(name = "phone_number", nullable = false, length = 9)
     private String phoneNumber;
 
@@ -38,5 +39,13 @@ public class Owner extends AccessLevelMapping implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), phoneNumber);
+    }
+
+    @Override
+    public String messageToSign() {
+        return super.getAccount().messageToSign()
+                .concat(getPhoneNumber())
+                .concat(getId().toString())
+                .concat(getVersion().toString());
     }
 }
