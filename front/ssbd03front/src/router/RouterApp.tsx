@@ -7,6 +7,7 @@ import DisableAccount from '../components/accounts/DisableAccount';
 import EditUserPersonalData from '../components/personalData/EditUserPersonalData';
 import LandingPage from '../components/landingPage/LandingPage';
 import AccountsList from '../components/accountsList/AccountsList';
+import Registration from "../components/registration/Registration";
 
 const router = createBrowserRouter([
     {
@@ -54,7 +55,11 @@ const router = createBrowserRouter([
                 element: <Login/>
             },
             {
-                path: '/register'
+                path: '/register',
+                element: <Registration/>
+            },
+            {
+                path: '/activate-from-email'
             }
         ]
     }

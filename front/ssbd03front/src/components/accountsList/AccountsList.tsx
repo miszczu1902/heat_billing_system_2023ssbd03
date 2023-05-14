@@ -26,26 +26,29 @@ const AccountsList = () => {
     const [sortBy, setSortBy] = useState('username');
     const [total, setTotal] = useState<number>(0);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const response = await axios.get(`${API_URL}/accounts?sortBy=${sortBy}&pageNumber=${pageNumber}`, {
-                headers: {
-                    Authorization: 'Bearer ' + token
-                }
-            });
+    const fetchData = async () => {
+        axios.get(`${API_URL}/accounts?sortBy=${sortBy}&pageNumber=${pageNumber}&pageSize=${size}`, {
+            headers: {
+                Authorization: token
+            }
+        }).then(response => {
             setAccounts(response.data);
-        };
+            setTotal(response.data.length);
+        })
+    };
 
+    useEffect(() => {
         fetchData();
-    }, [sortBy, pageNumber]);
+    }, [sortBy, pageNumber, size]);
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPageNumber(newPage);
     };
 
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setSize(parseInt(event.target.value, 1));
-        setPageNumber(0);
+        setSize(parseInt(event.target.value, size));
+        setPageNumber(pageNumber);
+        // console.log(sortBy, pageNumber, size);
     };
 
     const handleSort = (column: string) => {
@@ -68,6 +71,9 @@ const AccountsList = () => {
                         <TableCell onClick={() => handleSort('email')}>
                             Email
                         </TableCell>
+                        <TableCell onClick={() => handleSort('email')}>
+                            Active status
+                        </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -76,12 +82,16 @@ const AccountsList = () => {
                             <TableCell component='th' scope='row'/>
                             <TableCell>{accounts.username}</TableCell>
                             <TableCell>{accounts.email}</TableCell>
+                            {accounts.isEnable ? <TableCell>Aktywny</TableCell> : <TableCell>Nieaktywny</TableCell>}
                         </TableRow>
                     ))}
                 </TableBody>
             </Table>
-            <TablePagination count={size} page={pageNumber} rowsPerPage={1}
-                             onPageChange={handleChangePage}></TablePagination>
+            <TablePagination rowsPerPageOptions={[1, 5, 10, 25]}
+                             count={total} page={pageNumber} rowsPerPage={size}
+                             onPageChange={handleChangePage} onRowsPerPageChange={handleChangeRowsPerPage}
+                             labelRowsPerPage="Wierszy na stronę"
+                             labelDisplayedRows={({from, to, count}) => `${from}-${to} z ${count}`}></TablePagination>
         </TableContainer>
     );
 }
