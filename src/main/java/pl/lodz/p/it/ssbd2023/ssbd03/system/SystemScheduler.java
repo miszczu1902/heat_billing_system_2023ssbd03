@@ -51,6 +51,20 @@ public class SystemScheduler {
     }
 
     @Schedule(hour = "*", minute = "*/1", persistent = false)
+    private void sendActivationReminder() {
+        final List<AccountConfirmationToken> allUnconfirmedAccounts = accountConfirmationTokenFacade.findAllUnconfirmedAccountsToRemind();
+        if (!allUnconfirmedAccounts.isEmpty()) {
+            allUnconfirmedAccounts.forEach(accountConfirmationToken -> {
+                if (!accountConfirmationToken.getIsReminderSent()) {
+                    accountConfirmationToken.setIsReminderSent(true);
+                    mailSender.sendReminderAboutAccountConfirmation(
+                            accountConfirmationToken.getAccount().getEmail(), accountConfirmationToken.getTokenValue());
+                }
+            });
+        }
+    }
+
+    @Schedule(hour = "*", minute = "*/1", persistent = false)
     private void deleteNewEmailExpiredTokens() {
         final List<EmailConfirmationToken> emailConfirmationTokenList = emailConfirmationTokenFacade.getExpiredNewEmailTokensList();
         if (!emailConfirmationTokenList.isEmpty()) {

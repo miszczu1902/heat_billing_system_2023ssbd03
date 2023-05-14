@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -18,7 +19,9 @@ import java.util.Objects;
         @NamedQuery(name = "AccountConfirmationToken.getActivationTokenByTokenValue",
                 query = "SELECT t FROM AccountConfirmationToken t WHERE tokenValue = :tokenValue"),
         @NamedQuery(name = "AccountConfirmationToken.findAllUnconfirmedAccounts",
-                query = "SELECT t FROM AccountConfirmationToken t WHERE t.account.isActive IS FALSE AND t.account.registerDate <= :date")
+                query = "SELECT t FROM AccountConfirmationToken t WHERE t.account.isActive IS FALSE AND t.account.registerDate <= :date"),
+        @NamedQuery(name = "AccountConfirmationToken.findAllAccountsToSendReminder",
+                query = "SELECT t FROM AccountConfirmationToken t WHERE t.isReminderSent IS FALSE AND t.account.isActive IS FALSE AND t.account.registerDate <= :date")
 })
 public class AccountConfirmationToken extends AbstractEntity implements Serializable {
     @Id
@@ -31,6 +34,11 @@ public class AccountConfirmationToken extends AbstractEntity implements Serializ
 
     @Column(name = "expiration_date", nullable = false, updatable = false)
     private LocalDateTime expirationDate;
+
+    @Setter
+    @Column(name = "is_reminder_sent", nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private Boolean isReminderSent;
+
 
     @OneToOne
     @JoinColumn(name = "account_id", updatable = false, referencedColumnName = "id")
@@ -53,5 +61,6 @@ public class AccountConfirmationToken extends AbstractEntity implements Serializ
         this.tokenValue = tokenValue;
         this.expirationDate = account.getRegisterDate().plusDays(1);
         this.account = account;
+        this.isReminderSent = false;
     }
 }

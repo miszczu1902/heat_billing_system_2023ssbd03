@@ -4,6 +4,7 @@ import EditPersonalData from "../components/personalData/EditPersonalData";
 import Login from "../components/login/Login";
 import EnableAccount from "../components/accounts/EnableAccount";
 import DisableAccount from "../components/accounts/DisableAccount";
+import EditUserPersonalData from "../components/personalData/EditUserPersonalData";
 
 const router = createBrowserRouter([
     {
@@ -41,7 +42,10 @@ const router = createBrowserRouter([
                 path: '/login',
                 element: <Login/>
             },
-
+            {
+                path: "/accounts/:username/personal-data",
+                element: <EditUserPersonalData/>
+            }
         ]
     }
 ]);
