@@ -8,7 +8,6 @@ import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
-
 import java.text.ParseException;
 
 @ApplicationScoped
