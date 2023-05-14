@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -16,8 +15,6 @@ import DialogContent from "@mui/material/DialogContent";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import DialogActions from "@mui/material/DialogActions";
-
-const theme = createTheme();
 import {useNavigate} from "react-router-dom";
 import jwt from "jwt-decode";
 import {useTranslation} from "react-i18next";
@@ -142,7 +139,7 @@ export default function Login() {
                         'Content-Type': 'application/json'
                     },
                 })
-                .then(response => {
+                .then(() => {
                     setSuccessOpen(true);
                 })
                 .catch(error => {
@@ -194,7 +191,7 @@ export default function Login() {
                                                             <div className="form-group" onChange={handleLoginPasswordChange}>
                                                                 <TextField
                                                                     id="outlined-helperText"
-                                                                    label="LoginPassword"
+                                                                    label="Login"
                                                                     helperText="Wprowadź Login"
                                                                 />
                                                                 <div className="form-group">

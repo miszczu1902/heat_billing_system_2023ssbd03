@@ -14,10 +14,10 @@ import DialogActions from "@mui/material/DialogActions";
 import {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const theme = createTheme();
 export default function ResetPassword() {
     const [newPassword, setNewPassword] = React.useState("");
     const [repeatedNewPassword, setRepeatedNewPassword] = React.useState("");
+    const theme = createTheme();
 
     const [newPasswordError, setNewPasswordError] = React.useState("");
     const [repeatedNewPasswordError, setRepeatedNewPasswordError] = React.useState("");
