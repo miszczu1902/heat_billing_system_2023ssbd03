@@ -16,11 +16,11 @@ public class MailSender {
     private static final String CHANGED_PASSWORD_BY_ADMIN_CONTENT_MESSAGE = """
             Administrator changed your password.
             Click on the link to reset your password
-            %s?%s
+            %s?token=%s
             """;
     private static final String RESET_PASSWORD_CONTENT_MESSAGE = """
             Click on the link to reset your password
-            %s?%s
+            %s?token=%s
             """;
     private final Properties properties = new Properties();
     private Session session;
