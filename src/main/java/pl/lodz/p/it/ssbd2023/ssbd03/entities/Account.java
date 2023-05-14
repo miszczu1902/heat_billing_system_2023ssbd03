@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import java.util.Objects;
         @NamedQuery(name = "Account.findByEmail", query = "SELECT d FROM Account d WHERE d.email = :email"),
         @NamedQuery(name = "Account.getListOfAccountsByEmailAndEnableStatus", query = "SELECT d FROM Account d WHERE d.isEnable = :isEnable ORDER BY d.email")
 })
-public class Account extends AbstractEntity {
+public class Account extends AbstractEntity implements Signable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -99,5 +100,17 @@ public class Account extends AbstractEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String messageToSign() {
+        return getEmail()
+                .concat(getUsername())
+                .concat(getIsEnable().toString())
+                .concat(getIsActive().toString())
+                .concat(getPersonalData().getFirstName())
+                .concat(getPersonalData().getSurname())
+                .concat(getId().toString())
+                .concat(getVersion().toString());
     }
 }

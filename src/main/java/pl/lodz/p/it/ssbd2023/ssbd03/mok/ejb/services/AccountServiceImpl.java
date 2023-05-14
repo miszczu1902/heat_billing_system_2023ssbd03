@@ -26,6 +26,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.mail.MailSender;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -83,6 +84,9 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Inject
     private HttpServletRequest httpServletRequest;
+
+    @Inject
+    private MessageSigner messageSigner;
 
     @Override
     @RolesAllowed(Roles.GUEST)
@@ -195,15 +199,21 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
-    public void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword) {
+    public void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword, String etag) {
         if (oldPassword.equals(newPassword)) {
             throw AppException.createSameOldAndNewPasswordException();
         }
         if (!newPassword.equals(newRepeatedPassword)) {
             throw AppException.createPasswordsNotSameException();
         }
+
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
+
+        if (!etag.equals(messageSigner.sign(account))) {
+            throw AppException.createVerifierException();
+        }
+
         if (!bcryptHashGenerator.generate(oldPassword.toCharArray()).equals(account.getPassword())) {
             throw AppException.createPasswordOldIncorrectException();
         }
@@ -213,19 +223,31 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public PersonalData getPersonalData(String username) {
+        final Account account = accountFacade.findByUsername(username);
+        return personalDataFacade.find(account.getId());
+    }
+
+    @Override
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
-    public PersonalData getPersonalData() {
+    public PersonalData getSelfPersonalData() {
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
         return personalDataFacade.find(account.getId());
     }
 
     @RolesAllowed({Roles.ADMIN})
-    public void changeUserPassword(String username, String newPassword, String newRepeatedPassword) {
+    public void changeUserPassword(String username, String newPassword, String newRepeatedPassword, String etag) {
         if (!newPassword.equals(newRepeatedPassword)) {
             throw AppException.createPasswordsNotSameException();
         }
         final Account accountToChangePassword = accountFacade.findByUsername(username);
+
+        if (!etag.equals(messageSigner.sign(accountToChangePassword))) {
+            throw AppException.createVerifierException();
+        }
+
         changePassword(accountToChangePassword, newPassword);
 
         String token = tokenGenerator.createResetPasswordToken();
@@ -287,30 +309,23 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
 
     @Override
-    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public PersonalData getUserPersonalData(String username) {
-        final Account account = accountFacade.findByUsername(username);
-        return personalDataFacade.find(account.getId());
-    }
-
-    @Override
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public void editSelfPersonalData(String firstName, String surname) {
+    public void editSelfPersonalData(String firstName, String surname, String etag) {
         final String username = securityContext.getCallerPrincipal().getName();
-        editPersonalData(username, firstName, surname);
+        editPersonalData(username, firstName, surname, etag);
     }
 
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public void editUserPersonalData(String username, String firstName, String surname) {
+    public void editUserPersonalData(String username, String firstName, String surname, String etag) {
         final String editor = securityContext.getCallerPrincipal().getName();
         final Account editorAccount = accountFacade.findByUsername(editor);
         final Account editableAccount = accountFacade.findByUsername(username);
 
         if (editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) {
-            editPersonalData(username, firstName, surname);
+            editPersonalData(username, firstName, surname, etag);
         } else if (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) {
-            editPersonalData(username, firstName, surname);
+            editPersonalData(username, firstName, surname, etag);
         } else {
             throw AppException.createNotAllowedActionException();
         }
@@ -324,14 +339,14 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public void disableUserAccount(String username) {
-        editUserEnableFlag(username, false);
+    public void disableUserAccount(String username, String etag) {
+        editUserEnableFlag(username, false, etag);
     }
 
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public void enableUserAccount(String username) {
-        editUserEnableFlag(username, true);
+    public void enableUserAccount(String username, String etag) {
+        editUserEnableFlag(username, true, etag);
     }
 
     @Override
@@ -489,14 +504,14 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public void changeSelfEmail(String newEmail) {
+    public void changeSelfEmail(String newEmail, String etag) {
         final String username = securityContext.getCallerPrincipal().getName();
-        changeEmail(newEmail, username);
+        changeEmail(newEmail, username, etag);
     }
 
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public void changeUserEmail(String newEmail, String username) {
+    public void changeUserEmail(String newEmail, String username, String etag) {
         final String changingUsername = securityContext.getCallerPrincipal().getName();
         final Account changingAccount = accountFacade.findByUsername(changingUsername);
         final Account changedAccount = accountFacade.findByUsername(username);
@@ -511,7 +526,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         if (changedAccountIsManager && !changingAccountIsAdmin) {
             throw AppException.createManagerCanNotChangeAdminException();
         }
-        changeEmail(newEmail, username);
+        changeEmail(newEmail, username, etag);
     }
 
     @Override
@@ -526,7 +541,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed(Roles.OWNER)
-    public void changePhoneNumber(String newPhoneNumber) {
+    public void changePhoneNumber(String newPhoneNumber, String etag) {
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
         Owner owner = account.getAccessLevels().stream()
@@ -534,6 +549,11 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 .map(accessLevel -> (Owner) accessLevel)
                 .findAny()
                 .orElseThrow(AppException::createAccountIsNotOwnerException);
+
+        if (!etag.equals(messageSigner.sign(owner))) {
+            throw AppException.createVerifierException();
+        }
+
         if (newPhoneNumber.equals(owner.getPhoneNumber())) {
             throw AppException.createCurrentPhoneNumberException();
         }
@@ -552,13 +572,17 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    private void editUserEnableFlag(String username, boolean flag) {
+    private void editUserEnableFlag(String username, boolean flag, String etag) {
         final String editor = securityContext.getCallerPrincipal().getName();
         final Account editorAccount = accountFacade.findByUsername(editor);
         final Account editableAccount = accountFacade.findByUsername(username);
 
         if (editorAccount.equals(editableAccount)) {
             throw AppException.createNotAllowedActionException();
+        }
+
+        if (!etag.equals(messageSigner.sign(editableAccount))) {
+            throw AppException.createVerifierException();
         }
 
         if ((editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) || (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN)))) {
@@ -574,8 +598,12 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    private void editPersonalData(String username, String firstName, String surname) {
+    private void editPersonalData(String username, String firstName, String surname, String etag) {
         PersonalData personalData = personalDataFacade.findByUsername(username);
+
+        if (!etag.equals(messageSigner.sign(personalData))) {
+            throw AppException.createVerifierException();
+        }
 
         personalData.setFirstName(firstName);
         personalData.setSurname(surname);
@@ -590,8 +618,13 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    private void changeEmail(String newEmail, String username) {
+    private void changeEmail(String newEmail, String username, String etag) {
         final Account account = accountFacade.findByUsername(username);
+
+        if (!etag.equals(messageSigner.sign(account))) {
+            throw AppException.createVerifierException();
+        }
+
         if (newEmail.equals(account.getEmail())) {
             throw AppException.createCurrentEmailException();
         }

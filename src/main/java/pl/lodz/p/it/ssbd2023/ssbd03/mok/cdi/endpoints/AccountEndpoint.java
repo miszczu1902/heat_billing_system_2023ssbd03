@@ -3,23 +3,21 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mok.cdi.endpoints;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountInfoDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AdminDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.OwnerDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ManagerDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountForListDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangeSelfPasswordDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
@@ -27,6 +25,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.EtagValidator;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AccountMapper;
 
 import java.util.List;
@@ -36,6 +36,9 @@ import java.util.List;
 public class AccountEndpoint {
     @Inject
     private AccountService accountService;
+
+    @Inject
+    MessageSigner messageSigner;
 
     @POST
     @Path("/register")
@@ -74,32 +77,40 @@ public class AccountEndpoint {
     }
 
     @PATCH
+    @EtagValidator
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/self/phone-number")
     @RolesAllowed(Roles.OWNER)
-    public Response changePhoneNumber(@Valid ChangePhoneNumberDTO changePhoneNumberDTO) {
-        accountService.changePhoneNumber(changePhoneNumberDTO.getPhoneNumber());
+    public Response changePhoneNumber(@Valid ChangePhoneNumberDTO changePhoneNumberDTO, @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
+        accountService.changePhoneNumber(changePhoneNumberDTO.getPhoneNumber(), etag);
         return Response.noContent().build();
     }
 
     @PATCH
+    @EtagValidator
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/self/password")
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
-    public Response changeSelfPassword(@NotNull @Valid ChangeSelfPasswordDTO changeSelfPasswordDTO) {
-            accountService.changeSelfPassword(changeSelfPasswordDTO.getOldPassword(), changeSelfPasswordDTO.getNewPassword(),
-                    changeSelfPasswordDTO.getRepeatedNewPassword());
-            return Response.noContent().build();
+    public Response changeSelfPassword(@NotNull @Valid ChangeSelfPasswordDTO changeSelfPasswordDTO,
+                                       @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
+        accountService.changeSelfPassword(changeSelfPasswordDTO.getOldPassword(), changeSelfPasswordDTO.getNewPassword(),
+                changeSelfPasswordDTO.getRepeatedNewPassword(), etag);
+        return Response.noContent().build();
     }
 
     @PATCH
+    @EtagValidator
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/password")
     @RolesAllowed({Roles.ADMIN})
     public Response changeUserPassword(@NotNull @Valid ChangeUserPasswordDTO changeUserPasswordDTO,
-                                       @NotBlank @PathParam("username") String username) {
+                                       @NotBlank @PathParam("username") String username,
+                                       @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
         accountService.changeUserPassword(username, changeUserPasswordDTO.getNewPassword(),
-                changeUserPasswordDTO.getRepeatedNewPassword());
+                changeUserPasswordDTO.getRepeatedNewPassword(), etag);
         return Response.noContent().build();
     }
 
@@ -123,11 +134,14 @@ public class AccountEndpoint {
     }
 
     @PATCH
+    @EtagValidator
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/self/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public Response editPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO) {
-        accountService.editSelfPersonalData(personalDataDTO.getFirstName(), personalDataDTO.getSurname());
+    public Response editPersonalData(@NotNull @Valid EditPersonalDataDTO editPersonalDataDTO,
+                                     @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
+        accountService.editSelfPersonalData(editPersonalDataDTO.getFirstName(), editPersonalDataDTO.getSurname(), etag);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
@@ -135,44 +149,63 @@ public class AccountEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/self/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public Response getPersonalData() {
-        PersonalData personalData = accountService.getPersonalData();
-        PersonalDataDTO personalDataDTO = new PersonalDataDTO(personalData.getFirstName(), personalData.getSurname());
-        return Response.status(Response.Status.OK).entity(personalDataDTO).build();
+    public Response getSelfPersonalData() {
+        PersonalData personalData = accountService.getSelfPersonalData();
+        PersonalDataDTO personalDataDTO = new PersonalDataDTO(personalData.getId().getId(), personalData.getVersion(),
+                personalData.getFirstName(), personalData.getSurname());
+        return Response.status(Response.Status.OK)
+                .entity(personalDataDTO)
+                .header("ETag", messageSigner.sign(personalDataDTO))
+                .build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/{username}/personal-data")
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
+    public Response getUserPersonalData(@PathParam("username") String username) {
+        PersonalData personalData = accountService.getPersonalData(username);
+        PersonalDataDTO personalDataDTO = new PersonalDataDTO(personalData.getId().getId(), personalData.getVersion(),
+                personalData.getFirstName(), personalData.getSurname());
+        return Response.status(Response.Status.OK)
+                .entity(personalDataDTO)
+                .header("ETag", messageSigner.sign(personalDataDTO))
+                .build();
     }
 
     @PATCH
+    @EtagValidator
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public Response editUserPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO, @PathParam("username") String username) {
-        accountService.editUserPersonalData(username, personalDataDTO.getFirstName(), personalDataDTO.getSurname());
+    public Response editUserPersonalData(@NotNull @Valid EditPersonalDataDTO editPersonalDataDTO,
+                                         @PathParam("username") String username,
+                                         @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
+        accountService.editUserPersonalData(username,
+                editPersonalDataDTO.getFirstName(),
+                editPersonalDataDTO.getSurname(),
+                etag);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{username}/personal-data")
-    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public Response getPersonalData(@PathParam("username") String username) {
-        final PersonalData personalData = accountService.getUserPersonalData(username);
-        final PersonalDataDTO personalDataDTO = new PersonalDataDTO(personalData.getFirstName(), personalData.getSurname());
-        return Response.status(Response.Status.OK).entity(personalDataDTO).build();
-    }
-
     @PATCH
+    @EtagValidator
     @Path("/{username}/disable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public Response disableUserAccount(@PathParam("username") String username) {
-        accountService.disableUserAccount(username);
+    public Response disableUserAccount(@PathParam("username") String username, @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
+        accountService.disableUserAccount(username, etag);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @PATCH
+    @EtagValidator
     @Path("/{username}/enable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public Response enableUserAccount(@PathParam("username") String username) {
-        accountService.enableUserAccount(username);
+    public Response enableUserAccount(@PathParam("username") String username, @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
+        accountService.enableUserAccount(username, etag);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
@@ -233,15 +266,22 @@ public class AccountEndpoint {
     public Response getAccount(@PathParam("username") String username) {
         final Account account = accountService.getAccount(username);
         final AccountInfoDTO accountInfoDTO = AccountMapper.createAccountInfoDTOEntity(account);
-        return Response.ok().entity(accountInfoDTO).build();
+        return Response.ok()
+                .entity(accountInfoDTO)
+                .header("ETag", messageSigner.sign(accountInfoDTO))
+                .build();
     }
 
     @PATCH
+    @EtagValidator
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/email")
     @RolesAllowed({Roles.MANAGER, Roles.ADMIN})
-    public Response changeUserEmail(@NotNull @Valid ChangeEmailDTO changeEmailDTO, @PathParam("username") String username) {
-        accountService.changeUserEmail(changeEmailDTO.getNewEmail(), username);
+    public Response changeUserEmail(@NotNull @Valid ChangeEmailDTO changeEmailDTO,
+                                    @PathParam("username") String username,
+                                    @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
+        accountService.changeUserEmail(changeEmailDTO.getNewEmail(), username, etag);
         return Response.noContent().build();
     }
 
@@ -251,8 +291,12 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.OWNER)
     public Response getMyOwnerAccount() {
         final Owner owner = accountService.getOwner();
-        final OwnerDTO ownerDTO = AccountMapper.createOwnerDTOEntity(owner, accountService.getPersonalData());
-        return Response.ok().entity(ownerDTO).build();
+        final OwnerDTO ownerDTO = AccountMapper.createOwnerDTOEntity(owner,
+                accountService.getPersonalData(owner.getAccount().getUsername()));
+        return Response.ok()
+                .entity(ownerDTO)
+                .header("ETag", messageSigner.sign(ownerDTO))
+                .build();
     }
 
     @GET
@@ -261,8 +305,12 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.MANAGER)
     public Response getMyManagerAccount() {
         final Manager manager = accountService.getManager();
-        final ManagerDTO managerDTO = AccountMapper.createManagerDTOEntity(manager, accountService.getPersonalData());
-        return Response.ok().entity(managerDTO).build();
+        final ManagerDTO managerDTO = AccountMapper.createManagerDTOEntity(manager,
+                accountService.getPersonalData(manager.getAccount().getUsername()));
+        return Response.ok()
+                .entity(managerDTO)
+                .header("ETag", messageSigner.sign(managerDTO))
+                .build();
     }
 
     @GET
@@ -271,16 +319,22 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.ADMIN)
     public Response getMyAdminAccount() {
         final Admin admin = accountService.getAdmin();
-        final AdminDTO adminDTO = AccountMapper.createAdminDTOEntity(admin, accountService.getPersonalData());
-        return Response.ok().entity(adminDTO).build();
+        final AdminDTO adminDTO = AccountMapper.createAdminDTOEntity(admin,
+                accountService.getPersonalData(admin.getAccount().getUsername()));
+        return Response.ok()
+                .entity(adminDTO)
+                .header("ETag", messageSigner.sign(adminDTO))
+                .build();
     }
 
     @PATCH
+    @EtagValidator
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/self/email")
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
-    public Response changeSelfEmail(@NotNull @Valid ChangeEmailDTO changeEmailDTO) {
-        accountService.changeSelfEmail(changeEmailDTO.getNewEmail());
+    public Response changeSelfEmail(@NotNull @Valid ChangeEmailDTO changeEmailDTO, @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
+        accountService.changeSelfEmail(changeEmailDTO.getNewEmail(), etag);
         return Response.noContent().build();
     }
 
