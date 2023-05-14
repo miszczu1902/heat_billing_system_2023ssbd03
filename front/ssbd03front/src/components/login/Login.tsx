@@ -90,13 +90,11 @@ export default function Login() {
                         <Typography variant="h5"> Logowanie </Typography>
                         <Typography sx={{color: 'red'}}>{loginError}</Typography>
                         <Box component="form" onSubmit={handleSubmit}>
-                            <Box component="form">
-                                <TextField fullWidth margin="normal" label="Login" value={username}
-                                           helperText="Wprowadź Login" onChange={handleUsernameChange}/>
-                                <TextField fullWidth margin="normal" label="Hasło" type="password"
-                                           helperText="Wprowadź hasło" onChange={handlePasswordChange}
-                                           value={password}/>
-                            </Box>
+                            <TextField fullWidth margin="normal" label="Login" value={username}
+                                       helperText="Wprowadź Login" onChange={handleUsernameChange}/>
+                            <TextField fullWidth margin="normal" label="Hasło" type="password"
+                                       helperText="Wprowadź hasło" onChange={handlePasswordChange}
+                                       value={password}/>
                             <Button type="submit" fullWidth variant="contained">Zaloguj</Button>
                             <Box sx={{my: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                 <Link href="????">Zapomniałeś hasła?</Link>
