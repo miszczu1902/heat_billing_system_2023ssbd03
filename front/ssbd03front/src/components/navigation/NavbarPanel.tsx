@@ -118,7 +118,6 @@ const NavbarPanel: React.FC = () => {
                 </DialogActions>
             </Dialog>
         </AppBar>
-
     );
 };
 

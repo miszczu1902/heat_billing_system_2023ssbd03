@@ -12,9 +12,8 @@ import axios from 'axios';
 import {useCookies} from 'react-cookie';
 import {useNavigate} from "react-router-dom";
 
-const theme = createTheme();
-
 export default function Login() {
+    const theme = createTheme();
     const navigate = useNavigate();
     const [cookies, setCookie] = useCookies(["token"]);
     const [username, setUsername] = React.useState("");
@@ -42,9 +41,11 @@ export default function Login() {
     const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(event.target.value);
     };
+
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value);
     };
+
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const regexLogin = /^[a-zA-Z0-9_]{6,16}$/;
