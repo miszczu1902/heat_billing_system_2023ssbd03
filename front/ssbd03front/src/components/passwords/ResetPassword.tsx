@@ -37,7 +37,6 @@ export default function ResetPassword() {
     useEffect(() => {
         if (token === null) {
             setShowMessage(true);
-            setShowMessage(true);
             setTimeout(() => {
                 navigate('/');
             }, 6000);
