@@ -11,15 +11,11 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountInfoDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AdminDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.OwnerDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ManagerDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountForListDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangeSelfPasswordDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
@@ -79,6 +75,7 @@ public class AccountEndpoint {
     }
 
     @PATCH
+    @EtagValidator
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/self/phone-number")
     @RolesAllowed(Roles.OWNER)
@@ -88,6 +85,7 @@ public class AccountEndpoint {
     }
 
     @PATCH
+    @EtagValidator
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/self/password")
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
@@ -98,6 +96,7 @@ public class AccountEndpoint {
     }
 
     @PATCH
+    @EtagValidator
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/password")
     @RolesAllowed({Roles.ADMIN})
@@ -132,8 +131,8 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/self/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public Response editPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO) {
-        accountService.editSelfPersonalData(personalDataDTO.getFirstName(), personalDataDTO.getSurname());
+    public Response editPersonalData(@NotNull @Valid EditPersonalDataDTO editPersonalDataDTO) {
+        accountService.editSelfPersonalData(editPersonalDataDTO.getFirstName(), editPersonalDataDTO.getSurname());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
@@ -143,7 +142,8 @@ public class AccountEndpoint {
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
     public Response getPersonalData() {
         PersonalData personalData = accountService.getPersonalData();
-        PersonalDataDTO personalDataDTO = new PersonalDataDTO(personalData.getFirstName(), personalData.getSurname());
+        PersonalDataDTO personalDataDTO = new PersonalDataDTO(personalData.getId().getId(), personalData.getVersion(),
+                personalData.getFirstName(), personalData.getSurname());
         return Response.status(Response.Status.OK)
                 .entity(personalDataDTO)
                 .header("ETag", messageSigner.sign(personalDataDTO))
@@ -155,12 +155,13 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public Response editUserPersonalData(@NotNull @Valid PersonalDataDTO personalDataDTO, @PathParam("username") String username) {
-        accountService.editUserPersonalData(username, personalDataDTO.getFirstName(), personalDataDTO.getSurname());
+    public Response editUserPersonalData(@NotNull @Valid EditPersonalDataDTO editPersonalDataDTO, @PathParam("username") String username) {
+        accountService.editUserPersonalData(username, editPersonalDataDTO.getFirstName(), editPersonalDataDTO.getSurname());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @PATCH
+    @EtagValidator
     @Path("/{username}/disable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response disableUserAccount(@PathParam("username") String username) {
@@ -169,6 +170,7 @@ public class AccountEndpoint {
     }
 
     @PATCH
+    @EtagValidator
     @Path("/{username}/enable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response enableUserAccount(@PathParam("username") String username) {
@@ -231,10 +233,14 @@ public class AccountEndpoint {
     public Response getAccount(@PathParam("username") String username) {
         final Account account = accountService.getAccount(username);
         final AccountInfoDTO accountInfoDTO = AccountMapper.createAccountInfoDTOEntity(account);
-        return Response.ok().entity(accountInfoDTO).build();
+        return Response.ok()
+                .entity(accountInfoDTO)
+                .header("ETag", messageSigner.sign(accountInfoDTO))
+                .build();
     }
 
     @PATCH
+    @EtagValidator
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{username}/email")
     @RolesAllowed({Roles.MANAGER, Roles.ADMIN})
@@ -250,7 +256,10 @@ public class AccountEndpoint {
     public Response getMyOwnerAccount() {
         final Owner owner = accountService.getOwner();
         final OwnerDTO ownerDTO = AccountMapper.createOwnerDTOEntity(owner, accountService.getPersonalData());
-        return Response.ok().entity(ownerDTO).build();
+        return Response.ok()
+                .entity(ownerDTO)
+                .header("ETag", messageSigner.sign(ownerDTO))
+                .build();
     }
 
     @GET
@@ -260,7 +269,10 @@ public class AccountEndpoint {
     public Response getMyManagerAccount() {
         final Manager manager = accountService.getManager();
         final ManagerDTO managerDTO = AccountMapper.createManagerDTOEntity(manager, accountService.getPersonalData());
-        return Response.ok().entity(managerDTO).build();
+        return Response.ok()
+                .entity(managerDTO)
+                .header("ETag", messageSigner.sign(managerDTO))
+                .build();
     }
 
     @GET
@@ -270,10 +282,14 @@ public class AccountEndpoint {
     public Response getMyAdminAccount() {
         final Admin admin = accountService.getAdmin();
         final AdminDTO adminDTO = AccountMapper.createAdminDTOEntity(admin, accountService.getPersonalData());
-        return Response.ok().entity(adminDTO).build();
+        return Response.ok()
+                .entity(adminDTO)
+                .header("ETag", messageSigner.sign(adminDTO))
+                .build();
     }
 
     @PATCH
+    @EtagValidator
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/self/email")
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
