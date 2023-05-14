@@ -81,6 +81,8 @@ export default function EditPassword() {
             if (newPasswordValid && repeatedNewPasswordValid && oldAndNewPasswordSameValidNow &&
                 newAndRepeatedNewPasswordNotSameValid) {
                 setValidData(true);
+            } else {
+                setValidData(false);
             }
         }
     };
@@ -98,9 +100,10 @@ export default function EditPassword() {
         } else {
             setNewPasswordError("");
             setNewPasswordValid(true);
-            if (oldPasswordValid && repeatedNewPasswordValid && oldAndNewPasswordSameValidNow &&
-                newAndRepeatedNewPasswordNotSameValidNow) {
+            if (oldPasswordValid && repeatedNewPasswordValid && oldAndNewPasswordSameValidNow && newAndRepeatedNewPasswordNotSameValidNow) {
                 setValidData(true);
+            } else {
+                setValidData(false);
             }
         }
     };
@@ -118,9 +121,10 @@ export default function EditPassword() {
         } else {
             setRepeatedNewPasswordError("");
             setRepeatedNewPasswordValid(true);
-            if (oldPasswordValid && newPasswordValid && oldAndNewPasswordSameValid &&
-                newAndRepeatedNewPasswordNotSameValidNow) {
+            if (oldPasswordValid && newPasswordValid && oldAndNewPasswordSameValid && newAndRepeatedNewPasswordNotSameValidNow) {
                 setValidData(true);
+            } else {
+                setValidData(false);
             }
         }
     };
@@ -154,7 +158,7 @@ export default function EditPassword() {
          axios.patch(`${API_URL}/accounts/self/password`,
                 personalDataDTO, {
                     headers: {
-                        'Authorization': 'Bearer ' + token,
+                        'Authorization': token,
                         'Content-Type': 'application/json'
                     },
                 })
@@ -168,7 +172,7 @@ export default function EditPassword() {
         handleClose(event, reason);
     }
 
-    const handleConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+    const handleConfirm = () => {
         if(validData) {
             setDataError("");
             setConfirmOpen(true);
