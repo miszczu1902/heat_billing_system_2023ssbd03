@@ -18,10 +18,13 @@ import DialogActions from "@mui/material/DialogActions";
 import {useNavigate} from "react-router-dom";
 import {Icon} from "@mui/material";
 import Logo from './../../assets/logo.svg';
+import jwt from "jwt-decode";
+import {useTranslation} from "react-i18next";
 
 const theme = createTheme();
 
 const Login = () => {
+    const {t, i18n} = useTranslation();
     const navigate = useNavigate();
     const [cookies, setCookie] = useCookies(["token", "language"]);
     const [username, setUsername] = React.useState("");
@@ -90,6 +93,7 @@ const Login = () => {
                 .then((response) => {
                     setCookie("token", response.headers["bearer"]);
                     setCookie("language", response.headers["language"]);
+                    i18n.changeLanguage(response.headers["language"]);
                     navigate('/');
                 })
                 .catch((error) => {
@@ -232,5 +236,3 @@ const Login = () => {
         </ThemeProvider>
     );
 }
-
-export default Login;

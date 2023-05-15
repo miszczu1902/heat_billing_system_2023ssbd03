@@ -1,0 +1,23 @@
+{
+  "navbar":
+  {
+    "topic": "Heat settlement for premises in many buildings",
+    "register": "Register",
+    "login": "Login",
+    "log_out": "Log out",
+    "languages":
+    {
+      "title": "Change language",
+      "default": "Language",
+      "pl": "Polish",
+      "en": "English"
+    }
+  },
+  "confirm":
+  {
+    "yes": "Yes",
+    "no": "No",
+    "cancel": "Cancel",
+    "ok": "Ok"
+  }
+}
