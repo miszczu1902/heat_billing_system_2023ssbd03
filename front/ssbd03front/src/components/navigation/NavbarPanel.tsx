@@ -30,6 +30,11 @@ const NavbarPanel: React.FC = () => {
         if (cookies.token != "undefined" && cookies.token != undefined) {
             const decodedToken = jwt(cookies.token);
             setRole(JSON.parse(JSON.stringify(decodedToken)).role);
+            const currentTimestamp = Math.floor(new Date().getTime() / 1000);
+            if (JSON.parse(JSON.stringify(decodedToken)).exp < currentTimestamp) {
+                removeCookie('token');
+                navigate('');
+            }
         } else {
             setRole('GUEST');
         }
@@ -88,7 +93,7 @@ const NavbarPanel: React.FC = () => {
                                     style={{backgroundColor: navbarColor}}>Zaloguj</Button>
                         </>
                     )}
-                    {cookies.token && (
+                    {cookies.token && cookies.token != "undefined" && (
                         <Button onClick={handleClickOpenLogout} style={{backgroundColor: navbarColor}}>Wyloguj</Button>
                     )}
                 </ButtonGroup>
