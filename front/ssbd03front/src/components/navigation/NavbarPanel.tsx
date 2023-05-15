@@ -81,7 +81,7 @@ const NavbarPanel: React.FC = () => {
         <AppBar position="static" style={{backgroundColor: navbarColor}}>
             <Toolbar>
                 <Icon sx={{width: '3%', height: '3%', marginLeft: '1vh', marginRight: '1vh'}}>
-                    <img src={Logo}/>
+                    <img src={Logo} alt="Logo" onClick={() => navigate('/')}/>
                 </Icon>
                 {
                     (role === 'ADMIN' || role === 'MANAGER') &&
