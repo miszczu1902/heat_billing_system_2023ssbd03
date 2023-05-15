@@ -90,7 +90,7 @@ const NavbarPanel: React.FC = () => {
                     </Typography>
                 }
 
-                <ButtonGroup variant="contained" aria-label="outlined primary button group">
+                <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{marginLeft: 'auto'}}>
                     <Button style={{backgroundColor: navbarColor}}>Zmień język</Button>
                     {!cookies.token && (
                         <>

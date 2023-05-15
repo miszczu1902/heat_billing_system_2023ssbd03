@@ -294,7 +294,7 @@ const Registration = () => {
                 </Grid>
             </Grid>
             <Dialog disableEscapeKeyDown open={successOpen}>
-                <DialogTitle>Konto zarjestrowane. Na podany adres email została wysłana wiadomość z linkiem
+                <DialogTitle>Konto zarejestrowane. Na podany adres email została wysłana wiadomość z linkiem
                     aktywacyjnym</DialogTitle>
                 <Button onClick={handleSuccessClose}>Ok</Button>
             </Dialog>
