@@ -92,13 +92,6 @@ const NavbarPanel: React.FC = () => {
 
                 <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{marginLeft: 'auto'}}>
                     <Button style={{backgroundColor: navbarColor}}>Zmień język</Button>
-                    {!cookies.token && (
-                        <>
-                            <Button style={{backgroundColor: navbarColor}}>Zarejestruj</Button>
-                            <Button onClick={handleClickOpenLogin}
-                                    style={{backgroundColor: navbarColor}}>Zaloguj</Button>
-                        </>
-                    )}
                     {cookies.token && (
                         <Button onClick={handleClickOpenLogout} style={{backgroundColor: navbarColor}}>Wyloguj</Button>
                     )}
