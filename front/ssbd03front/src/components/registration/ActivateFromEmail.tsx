@@ -1,11 +1,19 @@
-import {useParams} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useNavigate, useParams} from "react-router-dom";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {API_URL} from "../../consts";
+import {Button, Container, Grid, Typography} from "@mui/material";
+import logo from "../../assets/logo.svg";
 
 const ActivateFromEmail = () => {
+    const navigate = useNavigate();
     const {activationToken} = useParams<{ activationToken: string }>();
     const [message, setMessage] = useState('');
+    const [isActivated, setIsActivated] = useState(false);
+
+    const handleButtonClick = (path: string) => {
+        navigate(path);
+    }
 
     useEffect(() => {
         const fetchData = async () => {
@@ -13,11 +21,31 @@ const ActivateFromEmail = () => {
                 {activationToken: activationToken}
             ).then(() => {
                 setMessage('Konto aktywowane');
+                setIsActivated(true)
             }).catch(error => setMessage(error.reason.message));
         };
         fetchData();
     });
 
-    return (<p>{message}</p>);
+    return (<div className="landing-page-root">
+        <Container>
+            <img src={logo} alt="Logo"/>
+        </Container>
+        <Container maxWidth="sm">
+            <Grid container direction="column" alignItems="center" spacing={4}>
+                <Grid item>
+                    <Typography variant="h4" component="h1">{message}</Typography>
+                </Grid>
+                {isActivated &&
+                    <Grid item>
+                        <Button className="landing-page-button" variant="contained" color="primary"
+                                onClick={() => handleButtonClick('/login')}>
+                            Zaloguj się
+                        </Button>
+                    </Grid>
+                }
+            </Grid>
+        </Container>
+    </div>);
 }
 export default ActivateFromEmail;
