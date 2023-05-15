@@ -13,10 +13,11 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import {ButtonGroup} from '@mui/material';
+import {ButtonGroup, Icon} from '@mui/material';
 import {useCookies} from 'react-cookie';
 import jwt from "jwt-decode";
 import {useNavigate} from "react-router-dom";
+import Logo from "../../assets/logo.svg";
 
 const NavbarPanel: React.FC = () => {
     const navigate = useNavigate();
@@ -79,7 +80,10 @@ const NavbarPanel: React.FC = () => {
 
         <AppBar position="static" style={{backgroundColor: navbarColor}}>
             <Toolbar>
-                <Typography variant="h6" sx={{flexGrow: 1}}>
+                <Icon sx={{width: '3%', height: '3%', marginLeft: '1vh', marginRight: '1vh'}}>
+                    <img src={Logo}/>
+                </Icon>
+                <Typography variant="h6" sx={{flexGrow: 1}} onClick={() => navigate('/login')}>
                     Rozliczenie ciepła dla lokali w wielu budynkach
                 </Typography>
                 <ButtonGroup variant="contained" aria-label="outlined primary button group">

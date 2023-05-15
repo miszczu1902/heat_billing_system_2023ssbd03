@@ -22,7 +22,10 @@ const ActivateFromEmail = () => {
             ).then(() => {
                 setMessage('Konto aktywowane');
                 setIsActivated(true)
-            }).catch(error => setMessage(error.reason.message));
+            }).catch(error => {
+                setMessage(error.reason.message);
+                if (error.response.status == 403) navigate('/');
+            });
         };
         fetchData();
     });
