@@ -7,7 +7,7 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
 import {useCookies} from "react-cookie";
-import {Grid, Box, Button} from "@mui/material";
+import {Grid, Box, Button, Icon} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select, {SelectChangeEvent} from "@mui/material/Select";
@@ -17,7 +17,8 @@ import {useForm} from "react-hook-form";
 import {RegistrationForm} from "../../types/registrationForm";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
-
+import Logo from './../../assets/logo.svg';
+import DialogActions from "@mui/material/DialogActions";
 
 const Registration = () => {
     const theme = createTheme();
@@ -29,32 +30,23 @@ const Registration = () => {
     const {register, handleSubmit} = useForm<RegistrationForm>();
 
     const onSubmit = handleSubmit((data: RegistrationForm) => {
-        if (data.firstName.length > 32 || data.firstName.length == 0) setRegisterError('Maksymalna długość imienia to 32 znaki');
-        else if (data.surname.length > 32 || data.surname.length == 0) setRegisterError('Maksymalna długość nazwiska to 32 znaki');
-        else if (!regexEmail.test(data.email)) setRegisterError('Email niepoprawny');
-        else if (!regexLogin.test(data.username)) setRegisterError('Login musi składać się z 6-16 znaków i składać się z liter i cyfr');
-        else if (!regexPassword.test(data.password)) setRegisterError('Hasło musi składać się z 8-32 znaków, jednej dużej litery, znak specjalny');
-        else if (!regexPassword.test(data.repeatedPassword)) setRegisterError('Hasło musi składać się z 8-32 znaków, jednej dużej litery, znak specjalny');
-        else if (data.repeatedPassword !== data.password) setRegisterError('Hasła się nie zgadzają');
-        else if (!phoneNumberRegex.test(data.phoneNumber)) setRegisterError('Numer telefonu niepoprawny');
-        else if (!languageRegex.test(data.language)) setRegisterError('Język niepoprawny');
-        else {
-            let config = {
-                method: 'post',
-                maxBodyLength: Infinity,
-                url: API_URL + '/accounts/register',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                data: JSON.stringify(data),
-            };
-            axios.request(config)
-                .then((response) => {
-                })
-                .catch((error) => {
-                    setRegisterError(error.response.data.message);
-                });
-        }
+        let config = {
+            method: 'post',
+            maxBodyLength: Infinity,
+            url: API_URL + '/accounts/register',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify(data),
+        };
+        axios.request(config)
+            .then((response) => {
+                setSuccessOpen(true);
+            })
+            .catch((error) => {
+                setRegisterError(error.response.data.message);
+            });
+
     });
 
     const navigate = useNavigate();
@@ -72,13 +64,9 @@ const Registration = () => {
     const [loading, setLoading] = useState(true);
     const [loggedIn, setLoggedIn] = useState(false);
     const [successOpen, setSuccessOpen] = useState(false);
-
-
-    const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setSuccessOpen(false);
-        }
-    }
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [registrationForm, setRegistartionForm] = useState<RegistrationForm>();
 
     useEffect(() => {
         if (cookies.token) {
@@ -99,31 +87,35 @@ const Registration = () => {
     const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const name = event.target.value;
         setFirstName(name);
-        if (firstName.length > 32) setValidationInfo('Maksymalna długość imienia to 32 znaki');
+        if (name.length > 32) setValidationInfo('Maksymalna długość imienia to 32 znaki');
     };
 
     const handleSurnameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const name = event.target.value;
         setSurname(name);
-        if (surname.length > 32) setValidationInfo('Maksymalna długość nazwiska to 32 znaki');
+        if (surname.length > 32) setValidationInfo('Maksymalna długość nazwiska to 32 znaki')
+        else setValidationInfo('');
     };
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const mail = event.target.value;
         setEmail(mail);
         if (!regexEmail.test(email)) setValidationInfo('Email niepoprawny');
+        else setValidationInfo('');
     };
 
     const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const login = event.target.value;
         setUsername(login);
         if (!regexLogin.test(username)) setValidationInfo('Nazwa użytkownika może zaweriać: dużą, małą literę, cyfrę oraz znak _');
+        else setValidationInfo('');
     };
 
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const passwd = event.target.value;
         setPassword(passwd);
         if (!regexPassword.test(password)) setValidationInfo('Hasło musi zawierać: dużą, małą literę, cyfrę, znak specjalny oraz mieć długość 8 znaków');
+        else setValidationInfo('');
     };
 
     const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,6 +123,7 @@ const Registration = () => {
         setConfirmPassword(passwd);
         if (regexPassword.test(confirmPassword)) {
             if (confirmPassword !== password) setValidationInfo('Hasła się nie zgadzają');
+            else setValidationInfo('');
         } else setValidationInfo('Hasło musi zawierać: dużą, małą literę, cyfrę, znak specjalny oraz mieć długość 8 znaków');
     };
 
@@ -138,23 +131,72 @@ const Registration = () => {
         const phone = event.target.value;
         setPhoneNumber(phone);
         if (!phoneNumberRegex.test(phoneNumber)) setValidationInfo('Numer telefonu niepoprawny');
+        else setValidationInfo('');
     };
 
     const handleLanguageChange = (event: SelectChangeEvent<typeof language>) => {
         const lang = event.target.value;
         setLanguage(lang);
-        if (languageRegex.test(language)) setValidationInfo('Język niepoprawny');
-
+        if (languageRegex.test(lang)) setValidationInfo('Język niepoprawny');
+        else setValidationInfo('');
     };
 
+    const handleConfirmClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+        if (reason !== 'backdropClick') {
+            setSuccessOpen(false);
+        }
+    }
+
+    const handleConfirmRegister = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+        if (reason !== 'backdropClick') {
+            setConfirmOpen(false);
+        }
+        onSubmit();
+    };
+
+    const handleConfirm = () => {
+        if (firstName.length > 32 || firstName.length == 0) setRegisterError('Maksymalna długość imienia to 32 znaki');
+        else if (surname.length > 32 || surname.length == 0) setRegisterError('Maksymalna długość nazwiska to 32 znaki');
+        else if (!regexEmail.test(email)) setRegisterError('Email niepoprawny');
+        else if (!regexLogin.test(username)) setRegisterError('Login musi składać się z 6-16 znaków i składać się z liter i cyfr');
+        else if (!regexPassword.test(password)) setRegisterError('Hasło musi składać się z 8-32 znaków, jednej dużej litery, znak specjalny');
+        else if (!regexPassword.test(confirmPassword)) setRegisterError('Hasło musi składać się z 8-32 znaków, jednej dużej litery, znak specjalny');
+        else if (confirmPassword !== password) setRegisterError('Hasła się nie zgadzają');
+        else if (!phoneNumberRegex.test(phoneNumber)) setRegisterError('Numer telefonu niepoprawny');
+        else if (!languageRegex.test(language)) setRegisterError('Język niepoprawny');
+        else {
+            setConfirmOpen(true);
+        }
+    }
+
+    const handleSuccessClose = () => {
+        navigate('/login');
+    }
+
+    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+        if (reason !== 'backdropClick') {
+            setErrorOpen(false);
+        }
+    };
 
     return (
         <ThemeProvider theme={theme}>
-            <Grid container justifyContent="center" alignItems="center">
-                <Grid my={2} item sm={8} md={5} component={Paper} elevation={6} className="register-form">
-                    <Box sx={{my: 30, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 'auto'}}>
-                        <Typography variant="h5"> Zarejestruj się </Typography>
-                        <Typography sx={{color: 'red'}}>{registerError}</Typography>
+            <Grid container justifyContent="center" alignItems="center" sx={{background: '#1c8de4', height: '100vh', width: '100vw'}}>
+                <Grid my={2} item sm={8} md={5} component={Paper} elevation={6}>
+                    <Box component="form" sx={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        margin: '2vh'
+                    }}>
+                        <Typography sx={{padding: '1vh'}} variant="h5"> Zarejestruj się</Typography>
+                        <Icon sx={{width: '10%', height: '10%', marginLeft: '1vh'}}>
+                            <img src={Logo}/>
+                        </Icon>
+                    </Box>
+                    <Box sx={{my: 30, display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '2vh'}}>
+                        <Typography sx={{color: 'red'}}>{validationInfo}</Typography>
                         <Box component="form" onSubmit={onSubmit}>
                             <TextField fullWidth margin="normal" label="Imię"
                                        {...register('firstName')}
@@ -185,13 +227,18 @@ const Registration = () => {
                                        helperText="Potwierdź hasło" onChange={handleConfirmPasswordChange}
                                        value={confirmPassword}
                             />
-                            <TextField fullWidth margin="normal" label="Numer telefonu"
-                                       type="text" {...register('phoneNumber')}
-                                       helperText="Podaj numer telefonu" onChange={handlePhoneNumberChange}
-                                       value={phoneNumber}
-                            />
-                            <Box component="form" sx={{display: 'flex', flexWrap: 'wrap'}}>
-                                <FormControl sx={{m: 1, minWidth: 120}}>
+                            <Box component="form" sx={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <TextField margin="normal" label="Numer telefonu"
+                                           type="text" {...register('phoneNumber')}
+                                           helperText="Podaj numer telefonu" onChange={handlePhoneNumberChange}
+                                           value={phoneNumber}
+                                />
+                                <FormControl sx={{m: 1, minWidth: 120, marginBottom: 3}}>
                                     <InputLabel id="demo-dialog-select-label">Język</InputLabel>
                                     <Select
                                         {...register('language')}
@@ -199,30 +246,48 @@ const Registration = () => {
                                         id="demo-dialog-select"
                                         value={language}
                                         onChange={handleLanguageChange}
-                                        input={<OutlinedInput label="Język"/>}
-                                    >
+                                        input={<OutlinedInput label="Język"/>}>
                                         <MenuItem value={'PL'}>Polski</MenuItem>
                                         <MenuItem value={'EN'}>Angielski</MenuItem>
                                     </Select>
                                 </FormControl>
-                                <span>{validationInfo}</span>
+                                <Button sx={{marginBottom: 3}} onClick={handleConfirm} variant="contained">Zarejestuj</Button>
                             </Box>
-                            <Button className="register-button" type="submit" variant="contained">Zarejestuj</Button>
-                            <Box sx={{my: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                                Masz już konto? Zaloguj się
+                            <Dialog disableEscapeKeyDown open={confirmOpen} onClose={handleSuccessClose}>
+                                <DialogTitle>Czy na pewno chcesz się zarejestrować?</DialogTitle>
+                                <DialogActions>
+                                    <Button onClick={handleConfirmClose}>Nie</Button>
+                                    <Button type="submit" variant="contained"
+                                            onClick={handleConfirmRegister}>Tak</Button>
+                                </DialogActions>
+                            </Dialog>
+                            <Dialog disableEscapeKeyDown open={successOpen}>
+                                <DialogTitle>Konto zarejestrowane</DialogTitle>
+                                <Button onClick={handleSuccessClose}>Ok</Button>
+                            </Dialog>
+                            <Dialog disableEscapeKeyDown open={errorOpen}>
+                                <DialogTitle>{registerError}</DialogTitle>
+                                <Button onClick={handleErrorClose}>Ok</Button>
+                            </Dialog>
+                            <Box component="form" sx={{
+                                display: 'flex',
+                                flexWrap: 'wrap',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <Link to='/login'>Masz już konto? Zaloguj się</Link>
                             </Box>
                         </Box>
                     </Box>
                 </Grid>
             </Grid>
             <Dialog disableEscapeKeyDown open={successOpen}>
-                <DialogTitle>Konto zarjestrowane. Na podany adres email zostałą wysłana wiadomość z linkiem
+                <DialogTitle>Konto zarjestrowane. Na podany adres email została wysłana wiadomość z linkiem
                     aktywacyjnym</DialogTitle>
                 <Button onClick={handleSuccessClose}>Ok</Button>
             </Dialog>
         </ThemeProvider>
     );
-
 }
 
 export default Registration;
