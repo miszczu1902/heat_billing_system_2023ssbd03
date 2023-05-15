@@ -21,6 +21,7 @@ export default function Login() {
     const theme = createTheme();
     const navigate = useNavigate();
     const [cookies, setCookie] = useCookies(["token"]);
+    const [cookiesLanguage, setCookieLanguage] = useCookies(["language"]);
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [loginError, setLoginError] = React.useState("");
@@ -86,6 +87,7 @@ export default function Login() {
             axios.request(config)
                 .then((response) => {
                     setCookie("token", response.headers["bearer"])
+                    setCookieLanguage("language", response.headers["language"])
                     navigate('/');
                 })
                 .catch((error) => {
