@@ -46,7 +46,7 @@ public class MailSender {
     }
 
     public void sendLinkToActivateAccount(String to, String subject, String content) {
-        sendEmail(to, subject, properties.getProperty("activation.url") + "?" + content);
+        sendEmail(to, subject, properties.getProperty("activation.url") + "/" + content);
     }
 
     public void sendLinkToConfirmAnEmail(String to, String content) {

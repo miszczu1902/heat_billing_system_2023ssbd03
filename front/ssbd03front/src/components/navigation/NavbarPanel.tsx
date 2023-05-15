@@ -13,10 +13,11 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import {ButtonGroup} from '@mui/material';
+import {ButtonGroup, Icon} from '@mui/material';
 import {useCookies} from 'react-cookie';
 import jwt from "jwt-decode";
 import {useNavigate} from "react-router-dom";
+import Logo from "../../assets/logo.svg";
 
 const NavbarPanel: React.FC = () => {
     const navigate = useNavigate();
@@ -52,8 +53,11 @@ const NavbarPanel: React.FC = () => {
         navigate('/login');
     };
     const handleClickOpenLogout = () => {
+        navigate('/');
+        window.location.reload();
         removeCookie('token');
-        navigate('');
+        setTimeout(() => {
+        }, 6000);
     };
 
     useEffect(() => {
@@ -76,18 +80,18 @@ const NavbarPanel: React.FC = () => {
 
         <AppBar position="static" style={{backgroundColor: navbarColor}}>
             <Toolbar>
-                <Typography variant="h6" sx={{flexGrow: 1}}>
-                    Rozliczenie ciepła dla lokali w wielu budynkach
-                </Typography>
-                <ButtonGroup variant="contained" aria-label="outlined primary button group">
+                <Icon sx={{width: '3%', height: '3%', marginLeft: '1vh', marginRight: '1vh'}}>
+                    <img src={Logo} alt="Logo" onClick={() => navigate('/')}/>
+                </Icon>
+                {
+                    (role === 'ADMIN' || role === 'MANAGER') &&
+                    <Typography variant="h6" sx={{flexGrow: 1, marginLeft: 2}} onClick={() => navigate('/accounts')}>
+                        Lista kont
+                    </Typography>
+                }
+
+                <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{marginLeft: 'auto'}}>
                     <Button style={{backgroundColor: navbarColor}}>Zmień język</Button>
-                    {!cookies.token && (
-                        <>
-                            <Button style={{backgroundColor: navbarColor}}>Zarejestruj</Button>
-                            <Button onClick={handleClickOpenLogin}
-                                    style={{backgroundColor: navbarColor}}>Zaloguj</Button>
-                        </>
-                    )}
                     {cookies.token && (
                         <Button onClick={handleClickOpenLogout} style={{backgroundColor: navbarColor}}>Wyloguj</Button>
                     )}
