@@ -11,6 +11,7 @@ import Registration from "../components/registration/Registration";
 import EditPassword from "../components/passwords/EditPassword";
 import ResetPassword from "../components/passwords/ResetPassword";
 import ActivateFromEmail from "../components/registration/ActivateFromEmail";
+import ChangePhoneNumber from "../components/owner/ChangePhoneNumber";
 
 
 const router = createBrowserRouter([
@@ -73,6 +74,10 @@ const router = createBrowserRouter([
             {
                 path: '/activate-from-email/:activationToken',
                 element: <ActivateFromEmail/>
+            },
+            {
+                path: "/accounts/self/phone-number",
+                element: <ChangePhoneNumber/>
             }
         ]
     }
