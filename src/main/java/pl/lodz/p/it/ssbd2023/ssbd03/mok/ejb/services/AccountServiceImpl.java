@@ -132,7 +132,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 loginDataFacade.edit(loginData);
                 return account.getLanguage_();
             } else {
-                loginData.setInvalidLoginCounter(loginData.getInvalidLoginCounter()+1);
+                loginData.setInvalidLoginCounter(loginData.getInvalidLoginCounter() + 1);
                 loginData.setLastInvalidLogicAddress(httpServletRequest.getRemoteAddr());
                 loginData.setLastInvalidLoginDate(LocalDateTime.now(ZoneId.of(LoadConfig.loadPropertyFromConfig("zone"))));
                 loginDataFacade.edit(loginData);
@@ -147,6 +147,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         }
 
     }
+
     @Override
     @RolesAllowed(Roles.GUEST)
     public void adminLoggedInEmail(String email) {
