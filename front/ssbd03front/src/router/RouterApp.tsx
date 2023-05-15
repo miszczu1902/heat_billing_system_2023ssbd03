@@ -8,6 +8,9 @@ import EditUserPersonalData from '../components/personalData/EditUserPersonalDat
 import LandingPage from '../components/landingPage/LandingPage';
 import AccountsList from '../components/accountsList/AccountsList';
 import Registration from "../components/registration/Registration";
+import EditPassword from "../components/passwords/EditPassword";
+import ResetPassword from "../components/passwords/ResetPassword";
+
 
 const router = createBrowserRouter([
     {
@@ -60,6 +63,15 @@ const router = createBrowserRouter([
             },
             {
                 path: '/activate-from-email'
+            },
+            ,
+            {
+                path: "/accounts/self/password",
+                element: <EditPassword/>
+            },
+            {
+                path: "/accounts/reset-password",
+                element: <ResetPassword/>
             }
         ]
     }

@@ -22,4 +22,13 @@ public class ManagerDTO extends AccountDTO {
         this.language = language;
         this.license = license;
     }
+
+    @Override
+    public String messageToSign() {
+        return super.messageToSign()
+                .concat(firstName)
+                .concat(surname)
+                .concat(language)
+                .concat(license);
+    }
 }
