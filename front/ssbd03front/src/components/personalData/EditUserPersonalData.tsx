@@ -12,11 +12,14 @@ import ListItem from '@mui/material/ListItem';
 import axios from 'axios'; 
 import validator from "validator";
 import { API_URL } from '../../consts';
+import {useCookies} from 'react-cookie';
 import { useParams} from "react-router-dom";
 
 export default function EditUserPersonalData() {
   const username = useParams().username;
-  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNjgzOTI1OTU0LCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODM5Mjc3NTR9.RbobRzMWznH3_DmX__wWOFwG5ZrREIZmrJyijy0_X-0';
+  const [cookies, setCookie] = useCookies(["token", "etag"]);
+  const token = "Bearer " + cookies.token;
+  const etag = cookies.etag;
 
   const [open, setOpen] = React.useState(false);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
@@ -43,6 +46,7 @@ export default function EditUserPersonalData() {
       .then(response => {
         setName(response.data.firstName.toString());
         setSurname(response.data.surname.toString());
+        setCookie("etag", response.headers.etag);
       });
   };
   fetchData();
@@ -92,6 +96,7 @@ export default function EditUserPersonalData() {
     .then(response => {
         setName(response.data.firstName.toString());
         setSurname(response.data.surname.toString());
+        setCookie("etag", response.headers.etag);
     });
     setOpen(true);
   };
@@ -122,7 +127,8 @@ export default function EditUserPersonalData() {
         personalDataDTO, {
          headers: {
           'Authorization': 'Bearer ' + token,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'If-Match': etag
         },
       })
       .then(response => {

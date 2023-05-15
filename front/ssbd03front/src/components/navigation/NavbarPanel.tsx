@@ -72,6 +72,8 @@ const NavbarPanel: React.FC = () => {
         }
     }, [role]);
 
+    
+
     return (
 
         <AppBar position="static" style={{backgroundColor: navbarColor}}>

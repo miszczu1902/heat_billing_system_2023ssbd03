@@ -38,7 +38,7 @@ public interface AccountService {
 
     Admin getAdmin();
 
-    PersonalData getPersonalData(String username);
+    PersonalData getUserPersonalData(String username);
 
     PersonalData getSelfPersonalData();
 

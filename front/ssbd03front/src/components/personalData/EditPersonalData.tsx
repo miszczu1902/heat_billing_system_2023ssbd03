@@ -16,8 +16,9 @@ import { useState, useEffect } from 'react';
 
 
 export default function EditPersonalData() {
-  const [cookies, setCookie] = useCookies(["token"]);
+  const [cookies, setCookie] = useCookies(["token", "etag"]);
   const token = "Bearer " + cookies.token;
+  const etag = cookies.etag;
   const [open, setOpen] = React.useState(false);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
@@ -43,6 +44,7 @@ export default function EditPersonalData() {
       .then(response => {
         setName(response.data.firstName.toString());
         setSurname(response.data.surname.toString());
+        setCookie("etag", response.headers.etag);
       });
   };
   fetchData();
@@ -85,12 +87,13 @@ export default function EditPersonalData() {
   const handleClickOpen = () => {
     axios.get(`${API_URL}/accounts/self/personal-data`, {
       headers: {
-        Authorization: 'Bearer ' + token
+        'Authorization': 'Bearer ' + token
       }
     })
     .then(response => {
         setName(response.data.firstName.toString());
         setSurname(response.data.surname.toString());
+        setCookie("etag", response.headers.etag);
     });
     setOpen(true);
   };
@@ -121,7 +124,8 @@ export default function EditPersonalData() {
         personalDataDTO, {
          headers: {
           'Authorization': 'Bearer ' + token,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'If-Match': etag
         }, 
       })
       .then(response => {

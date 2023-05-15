@@ -164,7 +164,7 @@ public class AccountEndpoint {
     @Path("/{username}/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response getUserPersonalData(@PathParam("username") String username) {
-        PersonalData personalData = accountService.getPersonalData(username);
+        PersonalData personalData = accountService.getUserPersonalData(username);
         PersonalDataDTO personalDataDTO = new PersonalDataDTO(personalData.getId().getId(), personalData.getVersion(),
                 personalData.getFirstName(), personalData.getSurname());
         return Response.status(Response.Status.OK)
@@ -172,6 +172,7 @@ public class AccountEndpoint {
                 .header("ETag", messageSigner.sign(personalDataDTO))
                 .build();
     }
+
 
     @PATCH
     @EtagValidator
@@ -292,7 +293,7 @@ public class AccountEndpoint {
     public Response getMyOwnerAccount() {
         final Owner owner = accountService.getOwner();
         final OwnerDTO ownerDTO = AccountMapper.createOwnerDTOEntity(owner,
-                accountService.getPersonalData(owner.getAccount().getUsername()));
+                accountService.getUserPersonalData(owner.getAccount().getUsername()));
         return Response.ok()
                 .entity(ownerDTO)
                 .header("ETag", messageSigner.sign(ownerDTO))
@@ -306,7 +307,7 @@ public class AccountEndpoint {
     public Response getMyManagerAccount() {
         final Manager manager = accountService.getManager();
         final ManagerDTO managerDTO = AccountMapper.createManagerDTOEntity(manager,
-                accountService.getPersonalData(manager.getAccount().getUsername()));
+                accountService.getUserPersonalData(manager.getAccount().getUsername()));
         return Response.ok()
                 .entity(managerDTO)
                 .header("ETag", messageSigner.sign(managerDTO))
@@ -320,7 +321,7 @@ public class AccountEndpoint {
     public Response getMyAdminAccount() {
         final Admin admin = accountService.getAdmin();
         final AdminDTO adminDTO = AccountMapper.createAdminDTOEntity(admin,
-                accountService.getPersonalData(admin.getAccount().getUsername()));
+                accountService.getUserPersonalData(admin.getAccount().getUsername()));
         return Response.ok()
                 .entity(adminDTO)
                 .header("ETag", messageSigner.sign(adminDTO))

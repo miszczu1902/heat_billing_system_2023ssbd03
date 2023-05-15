@@ -5,19 +5,36 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios'; 
 import { API_URL } from '../../consts';
-import { useParams} from "react-router-dom";
-import {useCookies} from 'react-cookie';
+import { useParams } from "react-router-dom";
+import { useCookies } from 'react-cookie';
+import { useEffect } from 'react';
 
 export default function DisableAccount() {
     const username = useParams().username;
-    const [cookies, setCookie] = useCookies(["token"]);
+    const [cookies, setCookie] = useCookies(["token", "etag"]);
     const token = "Bearer " + cookies.token;
+    const etag = cookies.etag;
   
     const [open, setOpen] = React.useState(false);
     const [confirmOpen, setConfirmOpen] = React.useState(false);
   
     const [successOpen, setSuccessOpen] = React.useState(false);
     const [errorOpen, setErrorOpen] = React.useState(false);
+
+    useEffect(() => {
+      const fetchData = async () => {
+        await axios.get(`${API_URL}/accounts/${username}`, {
+          headers: {
+            Authorization: token
+          }
+        })
+        .then(response => {
+          setCookie("etag", response.headers.etag);
+        });
+    };
+    fetchData();
+    }, []);
+
   
     const handleClickOpen = () => {
       setOpen(true);
@@ -37,6 +54,7 @@ export default function DisableAccount() {
         axios.patch(`${API_URL}/accounts/${username}/disable`, {}, {
            headers: {
             'Authorization': token,
+            'If-Match': etag
           },
         })
         .then(response => {
