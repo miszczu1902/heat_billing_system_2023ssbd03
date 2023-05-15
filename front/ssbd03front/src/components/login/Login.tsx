@@ -20,7 +20,7 @@ import {useNavigate} from "react-router-dom";
 export default function Login() {
     const theme = createTheme();
     const navigate = useNavigate();
-    const [cookies, setCookie] = useCookies(["token","language"]);
+    const [cookies, setCookie] = useCookies(["token", "language"]);
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [loginError, setLoginError] = React.useState("");
@@ -36,7 +36,7 @@ export default function Login() {
     const [loggedIn, setLoggedIn] = React.useState(false);
 
     React.useEffect(() => {
-        if (cookies.token) {
+        if (cookies.token != "undefined" && cookies.token != undefined) {
             setLoggedIn(true);
         }
         setLoading(false);
@@ -125,7 +125,7 @@ export default function Login() {
     };
 
     const handleConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if(validData) {
+        if (validData) {
             const resetPasswordDTO = {
                 username: loginPassword.toString(),
             }
@@ -181,11 +181,12 @@ export default function Login() {
                                     <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
                                         <DialogTitle>Przypomnienie hasła</DialogTitle>
                                         <DialogContent>
-                                            <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                                            <Box sx={{display: 'flex', flexWrap: 'wrap'}}>
                                                 <form onSubmit={handleSubmitPasswordChange}>
                                                     <List component="nav" aria-label="mailbox folders">
                                                         <ListItem>
-                                                            <div className="form-group" onChange={handleLoginPasswordChange}>
+                                                            <div className="form-group"
+                                                                 onChange={handleLoginPasswordChange}>
                                                                 <TextField
                                                                     id="outlined-helperText"
                                                                     label="Login"
