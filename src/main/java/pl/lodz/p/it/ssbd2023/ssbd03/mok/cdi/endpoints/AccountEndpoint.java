@@ -66,7 +66,7 @@ public class AccountEndpoint {
         try {
             final String token = accountService.authenticate(loginDTO.getUsername(), loginDTO.getPassword());
             accountService.updateLoginData(loginDTO.getUsername(), true);
-            return Response.ok().header("Bearer", token).build();
+            return Response.ok().header("Bearer", token).header("Language", "PL").build();
         } catch (Exception ex) {
             accountService.updateLoginData(loginDTO.getUsername(), false);
             throw AppException.invalidCredentialsException();

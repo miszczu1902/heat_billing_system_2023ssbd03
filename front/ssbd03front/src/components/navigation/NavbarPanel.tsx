@@ -17,11 +17,16 @@ import {ButtonGroup} from '@mui/material';
 import {useCookies} from 'react-cookie';
 import jwt from "jwt-decode";
 import {useNavigate} from "react-router-dom";
+import "../../i18n";
+import {useTranslation} from "react-i18next";
+import {API_URL} from "../../consts";
+import axios from "axios";
 
 const NavbarPanel: React.FC = () => {
+    const {t, i18n} = useTranslation();
     const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
-    const [language, setLanguage] = React.useState<string>('');
+    // const [language, setLanguage] = React.useState<string>('');
     const [navbarColor, setNavbarColor] = React.useState('#ffffff');
     const [cookies, setCookie, removeCookie] = useCookies(["token"]);
     const [role, setRole] = React.useState('GUEST');
@@ -35,8 +40,37 @@ const NavbarPanel: React.FC = () => {
         }
     }, [cookies.token, role]);
 
-    const handleChange = (event: SelectChangeEvent<typeof language>) => {
-        setLanguage(event.target.value);
+    const GlobeIcon = ({width = 24, height = 24}) => (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width={width}
+            height={height}
+            fill="currentColor"
+            className="bi bi-globe"
+            viewBox="0 0 16 16"
+        >
+            <path
+                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4a9.267 9.267 0 0 1 .64-1.539 6.7 6.7 0 0 1 .597-.933A7.025 7.025 0 0 0 2.255 4H4.09zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a6.958 6.958 0 0 0-.656 2.5h2.49zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5H4.847zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5H8.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5H4.51zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5H8.5zM5.145 12c.138.386.295.744.468 1.068.552 1.035 1.218 1.65 1.887 1.855V12H5.145zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472zM3.82 11a13.652 13.652 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5H3.82zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933zM8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855.173-.324.33-.682.468-1.068H8.5zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5zm2.802-3.5a6.959 6.959 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5h2.49zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7.024 7.024 0 0 0-3.072-2.472c.218.284.418.598.597.933zM10.855 4a7.966 7.966 0 0 0-.468-1.068C9.835 1.897 9.17 1.282 8.5 1.077V4h2.355z"/>
+        </svg>
+    )
+    const UserInfoIcon = ({width = 24, height = 24}) => (
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width={width}
+             height={height}
+             fill="currentColor"
+             className="bi bi-person-lines-fill" viewBox="0 0 16 16">
+            <path
+                d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"/>
+        </svg>
+    )
+
+    const handleComeBackHome = () => {
+        navigate('/');
+    };
+
+    const handleChange = (event: SelectChangeEvent) => {
+        // setLanguage(event.target.value);
+        localStorage.setItem("selectedLanguage", event.target.value);
     };
 
     const handleClickOpen = () => {
@@ -46,6 +80,17 @@ const NavbarPanel: React.FC = () => {
     const handleClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
         if (reason !== 'backdropClick') {
             setOpen(false);
+            const language = localStorage.getItem("selectedLanguage")
+            if (language) {
+                i18n.changeLanguage(language);
+                // if (cookies.token !== undefined) {
+                //     axios.patch(`${API_URL}/accounts/self/language`, {}, {
+                //         headers: {
+                //             'Authorization': token,
+                //         },
+                //     })
+                // }
+            }
         }
     };
     const handleClickOpenLogin = () => {
@@ -77,44 +122,49 @@ const NavbarPanel: React.FC = () => {
         <AppBar position="static" style={{backgroundColor: navbarColor}}>
             <Toolbar>
                 <Typography variant="h6" sx={{flexGrow: 1}}>
-                    Rozliczenie ciepła dla lokali w wielu budynkach
+                    <a onClick={handleComeBackHome} style={{cursor: 'pointer'}}>
+                        {t('navbar.topic')}
+                    </a>
                 </Typography>
                 <ButtonGroup variant="contained" aria-label="outlined primary button group">
-                    <Button style={{backgroundColor: navbarColor}}>Zmień język</Button>
+                    <Button onClick={handleClickOpen} style={{backgroundColor: navbarColor}}><GlobeIcon/></Button>
                     {!cookies.token && (
                         <>
-                            <Button style={{backgroundColor: navbarColor}}>Zarejestruj</Button>
+                            <Button style={{backgroundColor: navbarColor}}>{t('navbar.register')}</Button>
                             <Button onClick={handleClickOpenLogin}
-                                    style={{backgroundColor: navbarColor}}>Zaloguj</Button>
+                                    style={{backgroundColor: navbarColor}}>{t('navbar.login')}</Button>
                         </>
                     )}
                     {cookies.token && (
-                        <Button onClick={handleClickOpenLogout} style={{backgroundColor: navbarColor}}>Wyloguj</Button>
+                        <>
+                            <Button onClick={handleClickOpenLogout}
+                                    style={{backgroundColor: navbarColor}}>{t('navbar.log_out')}</Button>
+                            <Button style={{backgroundColor: navbarColor}}><UserInfoIcon/></Button>
+                        </>
                     )}
                 </ButtonGroup>
             </Toolbar>
             <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-                <DialogTitle>Zmień język</DialogTitle>
+                <DialogTitle>{t('navbar.languages.title')}</DialogTitle>
                 <DialogContent>
                     <Box component="form" sx={{display: 'flex', flexWrap: 'wrap'}}>
                         <FormControl sx={{m: 1, minWidth: 120}}>
-                            <InputLabel id="demo-dialog-select-label">Język</InputLabel>
+                            <InputLabel id="demo-dialog-select-label">{t('navbar.languages.default')}</InputLabel>
                             <Select
                                 labelId="demo-dialog-select-label"
                                 id="demo-dialog-select"
-                                value={language}
                                 onChange={handleChange}
-                                input={<OutlinedInput label="Język"/>}
+                                input={<OutlinedInput label={t('navbar.languages.default')}/>}
                             >
-                                <MenuItem value={'PL'}>Polski</MenuItem>
-                                <MenuItem value={'EN'}>Angielski</MenuItem>
+                                <MenuItem value={'PL'}>{t('navbar.languages.pl')}</MenuItem>
+                                <MenuItem value={'EN'}>{t('navbar.languages.en')}</MenuItem>
                             </Select>
                         </FormControl>
                     </Box>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClose}>Ok</Button>
+                    <Button onClick={handleClose}>{t('confirm.cancel')}</Button>
+                    <Button onClick={handleClose}>{t('confirm.ok')}</Button>
                 </DialogActions>
             </Dialog>
         </AppBar>

@@ -11,8 +11,11 @@ import {createTheme, ThemeProvider} from '@mui/material/styles';
 import axios from 'axios';
 import {useCookies} from 'react-cookie';
 import {useNavigate} from "react-router-dom";
+import jwt from "jwt-decode";
+import {useTranslation} from "react-i18next";
 
 export default function Login() {
+    const {t, i18n} = useTranslation();
     const theme = createTheme();
     const navigate = useNavigate();
     const [cookies, setCookie] = useCookies(["token"]);
@@ -73,6 +76,7 @@ export default function Login() {
             axios.request(config)
                 .then((response) => {
                     setCookie("token", response.headers["bearer"])
+                    i18n.changeLanguage(response.headers["language"]);
                     navigate('/');
                 })
                 .catch((error) => {

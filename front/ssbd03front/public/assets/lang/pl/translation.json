@@ -1,0 +1,20 @@
+{
+  "navbar": {
+    "topic": "Rozliczenie ciepła dla lokali w wielu budynkach",
+    "register": "Zarejestruj",
+    "log_in": "Zaloguj",
+    "log_out": "Wyloguj",
+    "languages": {
+      "title": "Zmień język",
+      "default": "Język",
+      "pl": "Polski",
+      "en": "Angielski"
+    }
+  },
+  "confirm": {
+    "yes": "Tak",
+    "no": "Nie",
+    "cancel": "Anuluj",
+    "ok": "Ok"
+  }
+}
