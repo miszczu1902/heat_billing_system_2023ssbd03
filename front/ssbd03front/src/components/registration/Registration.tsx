@@ -27,7 +27,25 @@ const Registration = () => {
     const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/;
     const phoneNumberRegex = /^[0-9]{9}$/;
     const languageRegex = /^(?=.*\b(EN|PL)\b).+$/;
+
     const {register, handleSubmit} = useForm<RegistrationForm>();
+    const navigate = useNavigate();
+    const [cookies, setCookie] = useCookies(["token"]);
+    const [firstName, setFirstName] = useState('');
+    const [surname, setSurname] = useState('');
+    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [language, setLanguage] = useState<string>('');
+    const [validationInfo, setValidationInfo] = useState('');
+    const [registerError, setRegisterError] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [successOpen, setSuccessOpen] = useState(false);
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
     const onSubmit = handleSubmit((data: RegistrationForm) => {
         let config = {
@@ -46,27 +64,7 @@ const Registration = () => {
             .catch((error) => {
                 setRegisterError(error.response.data.message);
             });
-
     });
-
-    const navigate = useNavigate();
-    const [cookies, setCookie] = useCookies(["token"]);
-    const [firstName, setFirstName] = useState('');
-    const [surname, setSurname] = useState('');
-    const [email, setEmail] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [language, setLanguage] = useState<string>('');
-    const [validationInfo, setValidationInfo] = useState('');
-    const [registerError, setRegisterError] = useState("");
-    const [loading, setLoading] = useState(true);
-    const [loggedIn, setLoggedIn] = useState(false);
-    const [successOpen, setSuccessOpen] = useState(false);
-    const [errorOpen, setErrorOpen] = useState(false);
-    const [confirmOpen, setConfirmOpen] = useState(false);
-    const [registrationForm, setRegistartionForm] = useState<RegistrationForm>();
 
     useEffect(() => {
         if (cookies.token) {
@@ -87,42 +85,43 @@ const Registration = () => {
     const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const name = event.target.value;
         setFirstName(name);
-        if (name.length > 32) setValidationInfo('Maksymalna długość imienia to 32 znaki');
+        if (event.target.value.length > 32) setValidationInfo('Maksymalna długość imienia to 32 znaki');
+        else setValidationInfo('');
     };
 
     const handleSurnameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const name = event.target.value;
         setSurname(name);
-        if (surname.length > 32) setValidationInfo('Maksymalna długość nazwiska to 32 znaki')
+        if (event.target.value.length > 32) setValidationInfo('Maksymalna długość nazwiska to 32 znaki')
         else setValidationInfo('');
     };
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const mail = event.target.value;
         setEmail(mail);
-        if (!regexEmail.test(email)) setValidationInfo('Email niepoprawny');
+        if (!regexEmail.test(event.target.value)) setValidationInfo('Email niepoprawny');
         else setValidationInfo('');
     };
 
     const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const login = event.target.value;
         setUsername(login);
-        if (!regexLogin.test(username)) setValidationInfo('Nazwa użytkownika może zaweriać: dużą, małą literę, cyfrę oraz znak _');
+        if (!regexLogin.test(event.target.value)) setValidationInfo('Nazwa użytkownika może zaweriać: dużą, małą literę, cyfrę oraz znak _');
         else setValidationInfo('');
     };
 
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const passwd = event.target.value;
         setPassword(passwd);
-        if (!regexPassword.test(password)) setValidationInfo('Hasło musi zawierać: dużą, małą literę, cyfrę, znak specjalny oraz mieć długość 8 znaków');
+        if (!regexPassword.test(event.target.value)) setValidationInfo('Hasło musi zawierać: dużą, małą literę, cyfrę, znak specjalny oraz mieć długość 8 znaków');
         else setValidationInfo('');
     };
 
     const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const passwd = event.target.value;
         setConfirmPassword(passwd);
-        if (regexPassword.test(confirmPassword)) {
-            if (confirmPassword !== password) setValidationInfo('Hasła się nie zgadzają');
+        if (regexPassword.test(event.target.value)) {
+            if (event.target.value !== password) setValidationInfo('Hasła się nie zgadzają');
             else setValidationInfo('');
         } else setValidationInfo('Hasło musi zawierać: dużą, małą literę, cyfrę, znak specjalny oraz mieć długość 8 znaków');
     };
@@ -130,15 +129,19 @@ const Registration = () => {
     const handlePhoneNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const phone = event.target.value;
         setPhoneNumber(phone);
-        if (!phoneNumberRegex.test(phoneNumber)) setValidationInfo('Numer telefonu niepoprawny');
+        if (!phoneNumberRegex.test(event.target.value)) setValidationInfo('Numer telefonu niepoprawny');
         else setValidationInfo('');
     };
 
     const handleLanguageChange = (event: SelectChangeEvent<typeof language>) => {
         const lang = event.target.value;
         setLanguage(lang);
-        if (languageRegex.test(lang)) setValidationInfo('Język niepoprawny');
+        if (languageRegex.test(event.target.value)) setValidationInfo('Język niepoprawny');
         else setValidationInfo('');
+    };
+
+    const handleFocus = () => {
+        setValidationInfo('');
     };
 
     const handleConfirmClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
@@ -202,30 +205,36 @@ const Registration = () => {
                                        {...register('firstName')}
                                        value={firstName}
                                        helperText="Podaj imię" onChange={handleFirstNameChange}
+                                       onFocus={handleFocus}
                             />
                             <TextField fullWidth margin="normal" label="Nazwisko"
                                        {...register('surname')}
                                        value={surname}
                                        helperText="Podaj nazwisko" onChange={handleSurnameChange}
+                                       onFocus={handleFocus}
                             />
                             <TextField fullWidth margin="normal" label="Email" value={email} {...register("email")}
                                        helperText="Wprowadź email" onChange={handleEmailChange}
+                                       onFocus={handleFocus}
                             />
                             <TextField fullWidth margin="normal" label="Nazwa użytkownika"
                                        {...register('username')}
                                        value={username}
                                        helperText="Wprowadź nazwę użytkownika" onChange={handleUsernameChange}
+                                       onFocus={handleFocus}
                             />
                             <TextField fullWidth margin="normal" label="Wprowadź hasło"
                                        {...register('password')}
                                        type="password"
                                        helperText="Wprowadź hasło" onChange={handlePasswordChange}
                                        value={password}
+                                       onFocus={handleFocus}
                             />
                             <TextField fullWidth margin="normal" label="Potwierdź hasło"
                                        type="password" {...register('repeatedPassword')}
                                        helperText="Potwierdź hasło" onChange={handleConfirmPasswordChange}
                                        value={confirmPassword}
+                                       onFocus={handleFocus}
                             />
                             <Box component="form" sx={{
                                 display: 'flex',
@@ -237,6 +246,7 @@ const Registration = () => {
                                            type="text" {...register('phoneNumber')}
                                            helperText="Podaj numer telefonu" onChange={handlePhoneNumberChange}
                                            value={phoneNumber}
+                                           onFocus={handleFocus}
                                 />
                                 <FormControl sx={{m: 1, minWidth: 120, marginBottom: 3}}>
                                     <InputLabel id="demo-dialog-select-label">Język</InputLabel>
@@ -246,6 +256,7 @@ const Registration = () => {
                                         id="demo-dialog-select"
                                         value={language}
                                         onChange={handleLanguageChange}
+                                        onFocus={handleFocus}
                                         input={<OutlinedInput label="Język"/>}>
                                         <MenuItem value={'PL'}>Polski</MenuItem>
                                         <MenuItem value={'EN'}>Angielski</MenuItem>
