@@ -63,6 +63,7 @@ const Registration = () => {
             })
             .catch((error) => {
                 setRegisterError(error.response.data.message);
+                    if (error.response.status == 403) navigate('/');
             });
     });
 

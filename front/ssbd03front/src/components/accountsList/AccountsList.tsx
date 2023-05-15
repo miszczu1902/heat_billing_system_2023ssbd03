@@ -25,6 +25,7 @@ const AccountsList = () => {
     const [size, setSize] = useState(10);
     const [sortBy, setSortBy] = useState('username');
     const [total, setTotal] = useState<number>(0);
+    const [role, setRole] = useState('');
 
     const fetchData = async () => {
         axios.get(`${API_URL}/accounts?sortBy=${sortBy}&pageNumber=${pageNumber}&pageSize=${size}`, {
@@ -34,6 +35,8 @@ const AccountsList = () => {
         }).then(response => {
             setAccounts(response.data);
             setTotal(response.data.length);
+        }).catch(error => {
+            if (error.response.status == 403) navigate('/');
         })
     };
 
@@ -48,7 +51,6 @@ const AccountsList = () => {
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setSize(parseInt(event.target.value, size));
         setPageNumber(pageNumber);
-        // console.log(sortBy, pageNumber, size);
     };
 
     const handleSort = (column: string) => {
@@ -71,8 +73,11 @@ const AccountsList = () => {
                         <TableCell onClick={() => handleSort('email')}>
                             Email
                         </TableCell>
-                        <TableCell onClick={() => handleSort('email')}>
+                        <TableCell>
                             Active status
+                        </TableCell>
+                        <TableCell>
+                            Confirmation status
                         </TableCell>
                     </TableRow>
                 </TableHead>
@@ -83,6 +88,8 @@ const AccountsList = () => {
                             <TableCell>{accounts.username}</TableCell>
                             <TableCell>{accounts.email}</TableCell>
                             {accounts.isEnable ? <TableCell>Aktywny</TableCell> : <TableCell>Nieaktywny</TableCell>}
+                            {accounts.isActive ? <TableCell>Potwierdzony</TableCell> :
+                                <TableCell>Niepotwierdzony</TableCell>}
                         </TableRow>
                     ))}
                 </TableBody>

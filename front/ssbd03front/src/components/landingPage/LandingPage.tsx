@@ -1,9 +1,10 @@
-import {Button, Container, Grid, Typography} from "@mui/material";
+import {Button, Container, Grid, Icon, Typography} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import logo from './../../assets/logo.svg';
 import React, {useEffect, useState} from "react";
 import {useCookies} from "react-cookie";
 import NavbarPanel from "../navigation/NavbarPanel";
+import Logo from "../../assets/logo.svg";
 
 const LandingPage = () => {
     const navigate = useNavigate();
@@ -22,9 +23,9 @@ const LandingPage = () => {
         <div>
             {loggedIn && <NavbarPanel/>}
             <div className="landing-page-root">
-                <Container>
-                    <img src={logo} alt="Logo"/>
-                </Container>
+                    <Icon sx={{width: '40%', height: '40%', marginLeft: '1vh', marginRight: '1vh'}}>
+                        <img src={Logo}/>
+                    </Icon>
                 <Container maxWidth="sm">
                     <Grid container direction="column" alignItems="center" spacing={4}>
                         <Grid item>
