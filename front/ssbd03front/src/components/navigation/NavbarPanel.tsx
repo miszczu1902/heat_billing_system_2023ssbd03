@@ -97,8 +97,11 @@ const NavbarPanel: React.FC = () => {
         navigate('/login');
     };
     const handleClickOpenLogout = () => {
+        navigate('/');
+        window.location.reload();
         removeCookie('token');
-        navigate('');
+        setTimeout(() => {
+        }, 6000);
     };
 
     useEffect(() => {

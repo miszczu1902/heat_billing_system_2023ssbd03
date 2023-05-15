@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import validator from "validator";
 import {Link, useNavigate} from "react-router-dom";
 import axios from "axios";
 import {API_URL} from "../../consts";
@@ -30,8 +29,6 @@ const Registration = () => {
     const {register, handleSubmit} = useForm<RegistrationForm>();
 
     const onSubmit = handleSubmit((data: RegistrationForm) => {
-        console.log(email, username, firstName, password, language);
-        console.log(data);
         if (data.firstName.length > 32 || data.firstName.length == 0) setRegisterError('Maksymalna długość imienia to 32 znaki');
         else if (data.surname.length > 32 || data.surname.length == 0) setRegisterError('Maksymalna długość nazwiska to 32 znaki');
         else if (!regexEmail.test(data.email)) setRegisterError('Email niepoprawny');
@@ -150,14 +147,11 @@ const Registration = () => {
 
     };
 
-    const handleBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
-        // setValidationInfo('');
-    };
 
     return (
         <ThemeProvider theme={theme}>
             <Grid container justifyContent="center" alignItems="center">
-                <Grid my={2} item sm={8} md={5} component={Paper} elevation={6}>
+                <Grid my={2} item sm={8} md={5} component={Paper} elevation={6} className="register-form">
                     <Box sx={{my: 30, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 'auto'}}>
                         <Typography variant="h5"> Zarejestruj się </Typography>
                         <Typography sx={{color: 'red'}}>{registerError}</Typography>
@@ -166,55 +160,45 @@ const Registration = () => {
                                        {...register('firstName')}
                                        value={firstName}
                                        helperText="Podaj imię" onChange={handleFirstNameChange}
-                                       // onBlur={handleBlur as any}
                             />
                             <TextField fullWidth margin="normal" label="Nazwisko"
                                        {...register('surname')}
                                        value={surname}
                                        helperText="Podaj nazwisko" onChange={handleSurnameChange}
-                                       // onBlur={handleBlur as any}
                             />
                             <TextField fullWidth margin="normal" label="Email" value={email} {...register("email")}
                                        helperText="Wprowadź email" onChange={handleEmailChange}
-                                       // onBlur={handleBlur as any}
                             />
                             <TextField fullWidth margin="normal" label="Nazwa użytkownika"
                                        {...register('username')}
                                        value={username}
                                        helperText="Wprowadź nazwę użytkownika" onChange={handleUsernameChange}
-                                       // onBlur={handleBlur as any}
                             />
                             <TextField fullWidth margin="normal" label="Wprowadź hasło"
                                        {...register('password')}
                                        type="password"
                                        helperText="Wprowadź hasło" onChange={handlePasswordChange}
                                        value={password}
-                                       // onBlur={handleBlur as any}
                             />
                             <TextField fullWidth margin="normal" label="Potwierdź hasło"
                                        type="password" {...register('repeatedPassword')}
                                        helperText="Potwierdź hasło" onChange={handleConfirmPasswordChange}
                                        value={confirmPassword}
-                                       // onBlur={handleBlur as any}
                             />
                             <TextField fullWidth margin="normal" label="Numer telefonu"
                                        type="text" {...register('phoneNumber')}
                                        helperText="Podaj numer telefonu" onChange={handlePhoneNumberChange}
                                        value={phoneNumber}
-                                       // onBlur={handleBlur as any}
                             />
                             <Box component="form" sx={{display: 'flex', flexWrap: 'wrap'}}>
                                 <FormControl sx={{m: 1, minWidth: 120}}>
-                                    <InputLabel
-                                        id="demo-dialog-select-label"
-                                    >Język</InputLabel>
+                                    <InputLabel id="demo-dialog-select-label">Język</InputLabel>
                                     <Select
                                         {...register('language')}
                                         labelId="demo-dialog-select-label"
                                         id="demo-dialog-select"
                                         value={language}
                                         onChange={handleLanguageChange}
-                                        // onBlur={handleBlur as any}
                                         input={<OutlinedInput label="Język"/>}
                                     >
                                         <MenuItem value={'PL'}>Polski</MenuItem>
@@ -223,7 +207,7 @@ const Registration = () => {
                                 </FormControl>
                                 <span>{validationInfo}</span>
                             </Box>
-                            <Button type="submit" fullWidth variant="contained">Zarejestuj</Button>
+                            <Button className="register-button" type="submit" variant="contained">Zarejestuj</Button>
                             <Box sx={{my: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                 Masz już konto? Zaloguj się
                             </Box>
@@ -232,7 +216,8 @@ const Registration = () => {
                 </Grid>
             </Grid>
             <Dialog disableEscapeKeyDown open={successOpen}>
-                <DialogTitle>Konto zarjestrowane. Na podany adres email zostałą wysłana wiadomość z linkiem aktywacyjnym</DialogTitle>
+                <DialogTitle>Konto zarjestrowane. Na podany adres email zostałą wysłana wiadomość z linkiem
+                    aktywacyjnym</DialogTitle>
                 <Button onClick={handleSuccessClose}>Ok</Button>
             </Dialog>
         </ThemeProvider>
