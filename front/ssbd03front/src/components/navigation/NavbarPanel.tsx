@@ -83,9 +83,13 @@ const NavbarPanel: React.FC = () => {
                 <Icon sx={{width: '3%', height: '3%', marginLeft: '1vh', marginRight: '1vh'}}>
                     <img src={Logo}/>
                 </Icon>
-                <Typography variant="h6" sx={{flexGrow: 1}} onClick={() => navigate('/login')}>
-                    Rozliczenie ciepła dla lokali w wielu budynkach
-                </Typography>
+                {
+                    (role === 'ADMIN' || role === 'MANAGER') &&
+                    <Typography variant="h6" sx={{flexGrow: 1, marginLeft: 2}} onClick={() => navigate('/accounts')}>
+                        Lista kont
+                    </Typography>
+                }
+
                 <ButtonGroup variant="contained" aria-label="outlined primary button group">
                     <Button style={{backgroundColor: navbarColor}}>Zmień język</Button>
                     {!cookies.token && (
