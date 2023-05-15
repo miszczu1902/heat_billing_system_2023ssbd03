@@ -16,6 +16,8 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import {useForm} from "react-hook-form";
 import {RegistrationForm} from "../../types/registrationForm";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
 
 
 const Registration = () => {
@@ -27,11 +29,11 @@ const Registration = () => {
     const languageRegex = /^(?=.*\b(EN|PL)\b).+$/;
     const {register, handleSubmit} = useForm<RegistrationForm>();
 
-    const onSubmit = (data: RegistrationForm) => {
-        // event.preventDefault();
+    const onSubmit = handleSubmit((data: RegistrationForm) => {
+        console.log(email, username, firstName, password, language);
         console.log(data);
-        if (data.firstName.length > 32) setRegisterError('Maksymalna długość imienia to 32 znaki');
-        else if (data.surname.length> 32) setRegisterError('Maksymalna długość nazwiska to 32 znaki');
+        if (data.firstName.length > 32 || data.firstName.length == 0) setRegisterError('Maksymalna długość imienia to 32 znaki');
+        else if (data.surname.length > 32 || data.surname.length == 0) setRegisterError('Maksymalna długość nazwiska to 32 znaki');
         else if (!regexEmail.test(data.email)) setRegisterError('Email niepoprawny');
         else if (!regexLogin.test(data.username)) setRegisterError('Login musi składać się z 6-16 znaków i składać się z liter i cyfr');
         else if (!regexPassword.test(data.password)) setRegisterError('Hasło musi składać się z 8-32 znaków, jednej dużej litery, znak specjalny');
@@ -51,15 +53,12 @@ const Registration = () => {
             };
             axios.request(config)
                 .then((response) => {
-                    setCookie("token", response.headers["bearer"])
-                    navigate('/activate-from-email');
                 })
                 .catch((error) => {
-                    setPassword("");
                     setRegisterError(error.response.data.message);
                 });
         }
-    }
+    });
 
     const navigate = useNavigate();
     const [cookies, setCookie] = useCookies(["token"]);
@@ -75,6 +74,14 @@ const Registration = () => {
     const [registerError, setRegisterError] = useState("");
     const [loading, setLoading] = useState(true);
     const [loggedIn, setLoggedIn] = useState(false);
+    const [successOpen, setSuccessOpen] = useState(false);
+
+
+    const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+        if (reason !== 'backdropClick') {
+            setSuccessOpen(false);
+        }
+    }
 
     useEffect(() => {
         if (cookies.token) {
@@ -94,60 +101,58 @@ const Registration = () => {
 
     const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const name = event.target.value;
-        if (name.length <= 32) setFirstName(name);
-        else setValidationInfo('Maksymalna długość imienia to 32 znaki');
+        setFirstName(name);
+        if (firstName.length > 32) setValidationInfo('Maksymalna długość imienia to 32 znaki');
     };
 
     const handleSurnameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const name = event.target.value;
-        if (name.length <= 32) setSurname(name);
-        else setValidationInfo('Maksymalna długość nazwiska to 32 znaki');
+        setSurname(name);
+        if (surname.length > 32) setValidationInfo('Maksymalna długość nazwiska to 32 znaki');
     };
 
     const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const mail = event.target.value;
-        if (regexEmail.test(mail)) setEmail(mail);
-        else setValidationInfo('Email niepoprawny');
+        setEmail(mail);
+        if (!regexEmail.test(email)) setValidationInfo('Email niepoprawny');
     };
 
     const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const login = event.target.value;
-        if (regexLogin.test(login)) setUsername(login);
-        else setValidationInfo('Nazwa użytkownika musi zaweriać: dużą, małą literę, cyfrę oraz znak _');
+        setUsername(login);
+        if (!regexLogin.test(username)) setValidationInfo('Nazwa użytkownika może zaweriać: dużą, małą literę, cyfrę oraz znak _');
     };
 
     const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const passwd = event.target.value;
-        if (regexPassword.test(password)) setPassword(passwd);
-        else setValidationInfo('Hasło musi zawierać: dużą, małą literę, cyfrę, znak specjalny oraz mieć długość 8 znaków');
+        setPassword(passwd);
+        if (!regexPassword.test(password)) setValidationInfo('Hasło musi zawierać: dużą, małą literę, cyfrę, znak specjalny oraz mieć długość 8 znaków');
     };
 
     const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const passwd = event.target.value;
-        if (regexPassword.test(passwd)) {
-            if (passwd === password) setConfirmPassword(passwd);
-            else setValidationInfo('Hasła się nie zgadzają');
-        }
-        else setValidationInfo('Hasło musi zawierać: dużą, małą literę, cyfrę, znak specjalny oraz mieć długość 8 znaków');
+        setConfirmPassword(passwd);
+        if (regexPassword.test(confirmPassword)) {
+            if (confirmPassword !== password) setValidationInfo('Hasła się nie zgadzają');
+        } else setValidationInfo('Hasło musi zawierać: dużą, małą literę, cyfrę, znak specjalny oraz mieć długość 8 znaków');
     };
 
     const handlePhoneNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const phone = event.target.value;
-        if (phoneNumberRegex.test(phone)) setPhoneNumber(phone);
-        else setValidationInfo('Numer telefonu niepoprawny');
+        setPhoneNumber(phone);
+        if (!phoneNumberRegex.test(phoneNumber)) setValidationInfo('Numer telefonu niepoprawny');
     };
 
     const handleLanguageChange = (event: SelectChangeEvent<typeof language>) => {
         const lang = event.target.value;
-        if (languageRegex.test(lang)) setLanguage(event.target.value);
-        else setValidationInfo('Język niepoprawny');
+        setLanguage(lang);
+        if (languageRegex.test(language)) setValidationInfo('Język niepoprawny');
 
     };
 
     const handleBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setValidationInfo('');
+        // setValidationInfo('');
     };
-
 
     return (
         <ThemeProvider theme={theme}>
@@ -156,48 +161,60 @@ const Registration = () => {
                     <Box sx={{my: 30, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 'auto'}}>
                         <Typography variant="h5"> Zarejestruj się </Typography>
                         <Typography sx={{color: 'red'}}>{registerError}</Typography>
-                        {/*<Box component="form" onSubmit={handleSubmit}>*/}
-                        <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+                        <Box component="form" onSubmit={onSubmit}>
                             <TextField fullWidth margin="normal" label="Imię"
-                                       value={firstName} {...register("firstName")}
+                                       {...register('firstName')}
+                                       value={firstName}
                                        helperText="Podaj imię" onChange={handleFirstNameChange}
-                                       onBlur={handleBlur as any}/>
+                                       // onBlur={handleBlur as any}
+                            />
                             <TextField fullWidth margin="normal" label="Nazwisko"
-                                       value={surname} {...register("surname")}
+                                       {...register('surname')}
+                                       value={surname}
                                        helperText="Podaj nazwisko" onChange={handleSurnameChange}
-                                       onBlur={handleBlur as any}/>
+                                       // onBlur={handleBlur as any}
+                            />
                             <TextField fullWidth margin="normal" label="Email" value={email} {...register("email")}
                                        helperText="Wprowadź email" onChange={handleEmailChange}
-                                       onBlur={handleBlur as any}/>
+                                       // onBlur={handleBlur as any}
+                            />
                             <TextField fullWidth margin="normal" label="Nazwa użytkownika"
-                                       value={username} {...register("username")}
+                                       {...register('username')}
+                                       value={username}
                                        helperText="Wprowadź nazwę użytkownika" onChange={handleUsernameChange}
-                                       onBlur={handleBlur as any}/>
+                                       // onBlur={handleBlur as any}
+                            />
                             <TextField fullWidth margin="normal" label="Wprowadź hasło"
-                                       type="password" {...register("password")}
+                                       {...register('password')}
+                                       type="password"
                                        helperText="Wprowadź hasło" onChange={handlePasswordChange}
                                        value={password}
-                                       onBlur={handleBlur as any}/>
+                                       // onBlur={handleBlur as any}
+                            />
                             <TextField fullWidth margin="normal" label="Potwierdź hasło"
-                                       type="password" {...register("repeatedPassword")}
+                                       type="password" {...register('repeatedPassword')}
                                        helperText="Potwierdź hasło" onChange={handleConfirmPasswordChange}
                                        value={confirmPassword}
-                                       onBlur={handleBlur as any}/>
+                                       // onBlur={handleBlur as any}
+                            />
                             <TextField fullWidth margin="normal" label="Numer telefonu"
-                                       type="password" {...register("phoneNumber")}
+                                       type="text" {...register('phoneNumber')}
                                        helperText="Podaj numer telefonu" onChange={handlePhoneNumberChange}
                                        value={phoneNumber}
-                                       onBlur={handleBlur as any}/>
+                                       // onBlur={handleBlur as any}
+                            />
                             <Box component="form" sx={{display: 'flex', flexWrap: 'wrap'}}>
                                 <FormControl sx={{m: 1, minWidth: 120}}>
                                     <InputLabel
-                                        id="demo-dialog-select-label" {...register("language")}>Język</InputLabel>
+                                        id="demo-dialog-select-label"
+                                    >Język</InputLabel>
                                     <Select
+                                        {...register('language')}
                                         labelId="demo-dialog-select-label"
                                         id="demo-dialog-select"
                                         value={language}
                                         onChange={handleLanguageChange}
-                                        onBlur={handleBlur as any}
+                                        // onBlur={handleBlur as any}
                                         input={<OutlinedInput label="Język"/>}
                                     >
                                         <MenuItem value={'PL'}>Polski</MenuItem>
@@ -214,6 +231,10 @@ const Registration = () => {
                     </Box>
                 </Grid>
             </Grid>
+            <Dialog disableEscapeKeyDown open={successOpen}>
+                <DialogTitle>Konto zarjestrowane. Na podany adres email zostałą wysłana wiadomość z linkiem aktywacyjnym</DialogTitle>
+                <Button onClick={handleSuccessClose}>Ok</Button>
+            </Dialog>
         </ThemeProvider>
     );
 

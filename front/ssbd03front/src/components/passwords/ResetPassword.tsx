@@ -12,9 +12,9 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import {useEffect, useState} from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
-export default function ResetPassword() {
+const ResetPassword = () => {
     const [newPassword, setNewPassword] = React.useState("");
     const [repeatedNewPassword, setRepeatedNewPassword] = React.useState("");
     const theme = createTheme();
@@ -99,7 +99,7 @@ export default function ResetPassword() {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        }
+    }
 
     const handleConfirmClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
         if (reason !== 'backdropClick') {
@@ -143,7 +143,7 @@ export default function ResetPassword() {
     };
 
     const handleConfirm = () => {
-        if(validData) {
+        if (validData) {
             setConfirmOpen(true);
         }
     }
@@ -158,50 +158,52 @@ export default function ResetPassword() {
         }
     };
 
-return (
-    <ThemeProvider theme={theme}>
-        <Grid container justifyContent="center" alignItems="center">
-            <Grid my={2} item sm={8} md={5} component={Paper} elevation={6}>
-                <Box sx={{my: 30, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                    <Typography variant="h5"> Zmiana hasła </Typography>
-                    <Box component="form" onSubmit={handleSubmit}>
-                        <Box component="form">
-                            <TextField fullWidth margin="normal" label="nowe hasło" type="password" value={newPassword}
-                                       helperText="Wprowadź nowe hasło" onChange={handleNewPasswordChange}/>
-                            <div className="form-group" style={{ textAlign: "center" }}>
-                                {newPasswordError}
-                            </div>
-                            <TextField fullWidth margin="normal" label="powtórzone nowe hasło" type="password"
-                                       helperText="Powtórz nowe hasło" onChange={handleRepeatedNewPasswordChange}
-                                       value={repeatedNewPassword}/>
+    return (
+        <ThemeProvider theme={theme}>
+            <Grid container justifyContent="center" alignItems="center">
+                <Grid my={2} item sm={8} md={5} component={Paper} elevation={6}>
+                    <Box sx={{my: 30, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                        <Typography variant="h5"> Zmiana hasła </Typography>
+                        <Box component="form" onSubmit={handleSubmit}>
+                            <Box component="form">
+                                <TextField fullWidth margin="normal" label="nowe hasło" type="password"
+                                           value={newPassword}
+                                           helperText="Wprowadź nowe hasło" onChange={handleNewPasswordChange}/>
+                                <div className="form-group" style={{textAlign: "center"}}>
+                                    {newPasswordError}
+                                </div>
+                                <TextField fullWidth margin="normal" label="powtórzone nowe hasło" type="password"
+                                           helperText="Powtórz nowe hasło" onChange={handleRepeatedNewPasswordChange}
+                                           value={repeatedNewPassword}/>
+                                <div className="form-group">
+                                    {repeatedNewPasswordError}
+                                </div>
+                            </Box>
                             <div className="form-group">
-                                {repeatedNewPasswordError}
+                                {newAndRepeatedNewPasswordNotSameError}
                             </div>
+                            <Button onClick={handleConfirm} fullWidth variant="contained">Zmień hasło</Button>
+                            <Dialog disableEscapeKeyDown open={confirmOpen} onClose={handleConfirmClose}>
+                                <DialogTitle>Czy na pewno chcesz zmienić swoje hasło?</DialogTitle>
+                                <DialogActions>
+                                    <Button onClick={handleConfirmClose}>Nie</Button>
+                                    <Button onClick={handleConfirmConfirm}>Tak</Button>
+                                </DialogActions>
+                            </Dialog>
+                            <Dialog disableEscapeKeyDown open={successOpen}>
+                                <DialogTitle>Hasło zostało zmienione</DialogTitle>
+                                <Button onClick={handleSuccessClose}>Ok</Button>
+                            </Dialog>
+                            <Dialog disableEscapeKeyDown open={errorOpen}>
+                                <DialogTitle>{errorOpenMessage}</DialogTitle>
+                                <Button onClick={handleErrorClose}>Ok</Button>
+                            </Dialog>
                         </Box>
-                        <div className="form-group">
-                            {newAndRepeatedNewPasswordNotSameError}
-                        </div>
-                        <Button onClick={handleConfirm} fullWidth variant="contained">Zmień hasło</Button>
-                        <Dialog disableEscapeKeyDown open={confirmOpen} onClose={handleConfirmClose}>
-                            <DialogTitle>Czy na pewno chcesz zmienić swoje hasło?</DialogTitle>
-                            <DialogActions>
-                                <Button onClick={handleConfirmClose}>Nie</Button>
-                                <Button onClick={handleConfirmConfirm}>Tak</Button>
-                            </DialogActions>
-                        </Dialog>
-                        <Dialog disableEscapeKeyDown open={successOpen}>
-                            <DialogTitle>Hasło zostało zmienione</DialogTitle>
-                            <Button onClick={handleSuccessClose}>Ok</Button>
-                        </Dialog>
-                        <Dialog disableEscapeKeyDown open={errorOpen}>
-                            <DialogTitle>{errorOpenMessage}</DialogTitle>
-                            <Button onClick={handleErrorClose}>Ok</Button>
-                        </Dialog>
                     </Box>
-                </Box>
+                </Grid>
             </Grid>
-        </Grid>
-    </ThemeProvider>
-);
+        </ThemeProvider>
+    );
 }
+export default ResetPassword;
 

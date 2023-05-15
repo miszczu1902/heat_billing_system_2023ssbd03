@@ -12,7 +12,7 @@ import axios from 'axios';
 import { API_URL } from '../../consts';
 import {useCookies} from 'react-cookie';
 
-export default function EditPassword() {
+const EditPassword = () => {
     const [cookies] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
     const [open, setOpen] = React.useState(false);
@@ -288,3 +288,4 @@ export default function EditPassword() {
         </div>
     );
 }
+export default EditPassword;
