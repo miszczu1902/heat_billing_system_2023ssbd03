@@ -16,6 +16,8 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import DialogActions from "@mui/material/DialogActions";
 import {useNavigate} from "react-router-dom";
+import {Icon} from "@mui/material";
+import Logo from './../../assets/logo.svg';
 
 const theme = createTheme();
 
@@ -161,9 +163,12 @@ const Login = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <Grid container justifyContent="center" alignItems="center">
+            <Grid container justifyContent="center" alignItems="center"  sx={{background: '#1c8de4', height: '100vh', width: '100vw'}}>
                 <Grid my={2} item sm={8} md={5} component={Paper} elevation={6}>
-                    <Box sx={{my: 30, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                    <Box sx={{my: 20, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                        <Icon sx={{width: '10%', height: '10%', marginLeft: '1vh'}}>
+                            <img src={Logo}/>
+                        </Icon>
                         <Typography variant="h5"> Logowanie </Typography>
                         <Typography sx={{color: 'red'}}>{loginError}</Typography>
                         <Box component="form" onSubmit={handleSubmit}>
@@ -172,12 +177,13 @@ const Login = () => {
                             <TextField fullWidth margin="normal" label="Hasło" type="password"
                                        helperText="Wprowadź hasło" onChange={handlePasswordChange}
                                        value={password}/>
-                            <Button type="submit" fullWidth variant="contained">Zaloguj</Button>
-                            <Box sx={{my: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                            <Box sx={{display: 'flex',
+                                flexWrap: 'wrap',
+                                alignItems: 'center',
+                                justifyContent: 'center'}}>
+                                <Button type="submit" variant="contained" sx={{m:2}}>Zaloguj</Button>
+                                <Button onClick={handleClickOpen} variant="contained" sx={{m:2}}>Zapomniałem hasła</Button>
                                 <div>
-                                    <div>
-                                        <Button onClick={handleClickOpen} variant="contained">Zapomniałem hasła</Button>
-                                    </div>
                                     <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
                                         <DialogTitle>Przypomnienie hasła</DialogTitle>
                                         <DialogContent>
