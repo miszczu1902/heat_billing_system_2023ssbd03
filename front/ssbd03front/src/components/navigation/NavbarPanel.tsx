@@ -54,9 +54,6 @@ const NavbarPanel: React.FC = () => {
             setOpen(false);
         }
     };
-    const handleClickOpenLogin = () => {
-        navigate('/login');
-    };
     const handleClickOpenLogout = () => {
         navigate('/');
         window.location.reload();
@@ -97,7 +94,7 @@ const NavbarPanel: React.FC = () => {
 
                 <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{marginLeft: 'auto'}}>
                     <Button style={{backgroundColor: navbarColor}}>Zmień język</Button>
-                    {cookies.token && (
+                    {cookies.token && cookies.token != "undefined" && (
                         <Button onClick={handleClickOpenLogout} style={{backgroundColor: navbarColor}}>Wyloguj</Button>
                     )}
                 </ButtonGroup>
