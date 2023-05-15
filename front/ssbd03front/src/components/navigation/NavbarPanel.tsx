@@ -24,7 +24,7 @@ const NavbarPanel: React.FC = () => {
     const [open, setOpen] = React.useState(false);
     const [language, setLanguage] = React.useState<string>('');
     const [navbarColor, setNavbarColor] = React.useState('#ffffff');
-    const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+    const [cookies, setCookie, removeCookie] = useCookies(["token","language"]);
     const [role, setRole] = React.useState('GUEST');
 
     useEffect(() => {

@@ -120,28 +120,33 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @RolesAllowed(Roles.GUEST)
     public String updateLoginData(String username, boolean flag) {
         final Account account = accountFacade.findByUsername(username);
-        final LoginData loginData = loginDataFacade.findById(account);
-        if (flag) {
-            if (account.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) {
-                adminLoggedInEmail(account.getEmail());
+        try {
+            final LoginData loginData = loginDataFacade.findById(account);
+            if (flag) {
+                if (account.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) {
+                    adminLoggedInEmail(account.getEmail());
+                }
+                loginData.setInvalidLoginCounter(0);
+                loginData.setLastValidLogicAddress(httpServletRequest.getRemoteAddr());
+                loginData.setLastValidLoginDate(LocalDateTime.now(ZoneId.of(LoadConfig.loadPropertyFromConfig("zone"))));
+                loginDataFacade.edit(loginData);
+                return account.getLanguage_();
+            } else {
+                loginData.setInvalidLoginCounter(loginData.getInvalidLoginCounter()+1);
+                loginData.setLastInvalidLogicAddress(httpServletRequest.getRemoteAddr());
+                loginData.setLastInvalidLoginDate(LocalDateTime.now(ZoneId.of(LoadConfig.loadPropertyFromConfig("zone"))));
+                loginDataFacade.edit(loginData);
+                if (loginData.getInvalidLoginCounter() == 3) {
+                    account.setIsEnable(false);
+                    mailSender.sendInformationAccountDisabled(account.getEmail());
+                }
+                return account.getLanguage_();
             }
-            loginData.setInvalidLoginCounter(0);
-            loginData.setLastValidLogicAddress(httpServletRequest.getRemoteAddr());
-            loginData.setLastValidLoginDate(LocalDateTime.now(ZoneId.of(LoadConfig.loadPropertyFromConfig("zone"))));
-            return account.getLanguage_();
-        } else {
-            loginData.setInvalidLoginCounter(loginData.getInvalidLoginCounter() + 1);
-            loginData.setLastInvalidLogicAddress(httpServletRequest.getRemoteAddr());
-            loginData.setLastInvalidLoginDate(LocalDateTime.now(ZoneId.of(LoadConfig.loadPropertyFromConfig("zone"))));
-            if (loginData.getInvalidLoginCounter() == 3) {
-                account.setIsEnable(false);
-                mailSender.sendInformationAccountDisabled(account.getEmail());
-            }
+        } catch (Exception ex) {
+            throw AppException.invalidCredentialsException();
         }
-        loginDataFacade.edit(loginData);
-        throw AppException.invalidCredentialsException();
-    }
 
+    }
     @Override
     @RolesAllowed(Roles.GUEST)
     public void adminLoggedInEmail(String email) {
