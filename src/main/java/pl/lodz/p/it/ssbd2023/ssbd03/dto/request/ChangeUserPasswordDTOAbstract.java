@@ -5,14 +5,12 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.VersionDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.AbstractVersionDTO;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChangeSelfPasswordDTO extends VersionDTO {
-    @NotNull
-    private String oldPassword;
+public class ChangeUserPasswordDTOAbstract extends AbstractVersionDTO {
     @NotNull
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
             message = "Restrictions for password is: at least 8 characters length, at least one upper and lower case, number and special digit")

@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class VersionDTO {
+public abstract class AbstractVersionDTO {
     protected Long version;
 }
