@@ -12,6 +12,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.VersionDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
@@ -193,9 +194,11 @@ public class AccountEndpoint {
     @EtagValidator
     @Path("/{username}/disable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public Response disableUserAccount(@PathParam("username") String username, @Context HttpServletRequest request) {
+    public Response disableUserAccount(@PathParam("username") String username,
+                                       @NotNull @Valid VersionDTO versionDTO,
+                                       @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        accountService.disableUserAccount(username, etag);
+        accountService.disableUserAccount(username, etag, versionDTO.getVersion());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
@@ -203,9 +206,11 @@ public class AccountEndpoint {
     @EtagValidator
     @Path("/{username}/enable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public Response enableUserAccount(@PathParam("username") String username, @Context HttpServletRequest request) {
+    public Response enableUserAccount(@PathParam("username") String username,
+                                      @NotNull @Valid VersionDTO versionDTO,
+                                      @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        accountService.enableUserAccount(username, etag);
+        accountService.enableUserAccount(username, etag, versionDTO.getVersion());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 

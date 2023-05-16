@@ -52,9 +52,9 @@ public interface AccountService {
 
     void resetPassword(String username);
 
-    void disableUserAccount(String username, String etag);
+    void disableUserAccount(String username, String etag, Long version);
 
-    void enableUserAccount(String username, String etag);
+    void enableUserAccount(String username, String etag, Long version);
 
     void addAccessLevelManager(String username, String license);
 

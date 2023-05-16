@@ -346,14 +346,14 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public void disableUserAccount(String username, String etag) {
-        editUserEnableFlag(username, false, etag);
+    public void disableUserAccount(String username, String etag, Long version) {
+        editUserEnableFlag(username, false, etag, version);
     }
 
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public void enableUserAccount(String username, String etag) {
-        editUserEnableFlag(username, true, etag);
+    public void enableUserAccount(String username, String etag, Long version) {
+        editUserEnableFlag(username, true, etag, version);
     }
 
     @Override
@@ -599,7 +599,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    private void editUserEnableFlag(String username, boolean flag, String etag) {
+    private void editUserEnableFlag(String username, boolean flag, String etag, Long version) {
         final String editor = securityContext.getCallerPrincipal().getName();
         final Account editorAccount = accountFacade.findByUsername(editor);
         final Account editableAccount = accountFacade.findByUsername(username);
@@ -610,6 +610,9 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
         if (!etag.equals(messageSigner.sign(editableAccount))) {
             throw AppException.createVerifierException();
+        }
+        if (!Objects.equals(version, editableAccount.getVersion())) {
+            throw AppException.createOptimisticLockAppException();
         }
 
         if ((editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) || (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN)))) {
