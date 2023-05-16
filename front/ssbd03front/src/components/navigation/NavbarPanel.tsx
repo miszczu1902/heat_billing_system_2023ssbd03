@@ -13,10 +13,11 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import {ButtonGroup} from '@mui/material';
+import {ButtonGroup, Icon} from '@mui/material';
 import {useCookies} from 'react-cookie';
 import jwt from "jwt-decode";
 import {useNavigate} from "react-router-dom";
+import Logo from "../../assets/logo.svg";
 import "../../i18n";
 import {useTranslation} from "react-i18next";
 import {API_URL} from "../../consts";
@@ -26,9 +27,9 @@ const NavbarPanel: React.FC = () => {
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
-    // const [language, setLanguage] = React.useState<string>('');
     const [navbarColor, setNavbarColor] = React.useState('#ffffff');
     const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+    const token = "Bearer " + cookies.token;
     const [role, setRole] = React.useState('GUEST');
 
     useEffect(() => {
@@ -64,14 +65,10 @@ const NavbarPanel: React.FC = () => {
         </svg>
     )
 
-    const handleComeBackHome = () => {
-        navigate('/');
-    };
-
     const handleChange = (event: SelectChangeEvent) => {
-        // setLanguage(event.target.value);
         localStorage.setItem("selectedLanguage", event.target.value);
     };
+
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -83,16 +80,19 @@ const NavbarPanel: React.FC = () => {
             const language = localStorage.getItem("selectedLanguage")
             if (language) {
                 i18n.changeLanguage(language);
-                // if (cookies.token !== undefined) {
-                //     axios.patch(`${API_URL}/accounts/self/language`, {}, {
-                //         headers: {
-                //             'Authorization': token,
-                //         },
-                //     })
-                // }
+                if (cookies.token !== undefined) {
+                    axios.patch(`${API_URL}/accounts/self/language`,
+                        language, {
+                            headers: {
+                                'Authorization': token,
+                                'Content-Type': 'application/json'
+                            },
+                        })
+                }
             }
         }
     };
+
     const handleClickOpenLogin = () => {
         navigate('/login');
     };
@@ -124,20 +124,18 @@ const NavbarPanel: React.FC = () => {
 
         <AppBar position="static" style={{backgroundColor: navbarColor}}>
             <Toolbar>
-                <Typography variant="h6" sx={{flexGrow: 1}}>
-                    <a onClick={handleComeBackHome} style={{cursor: 'pointer'}}>
-                        {t('navbar.topic')}
-                    </a>
-                </Typography>
-                <ButtonGroup variant="contained" aria-label="outlined primary button group">
+                <Icon sx={{width: '3%', height: '3%', marginLeft: '1vh', marginRight: '1vh'}}>
+                    <img src={Logo} alt="Logo" onClick={() => navigate('/')}/>
+                </Icon>
+                {
+                    (role === 'ADMIN' || role === 'MANAGER') &&
+                    <Typography variant="h6" sx={{flexGrow: 1, marginLeft: 2}} onClick={() => navigate('/accounts')}>
+                        {t('navbar.account_list')}
+                    </Typography>
+                }
+
+                <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{marginLeft: 'auto'}}>
                     <Button onClick={handleClickOpen} style={{backgroundColor: navbarColor}}><GlobeIcon/></Button>
-                    {!cookies.token && (
-                        <>
-                            <Button style={{backgroundColor: navbarColor}}>{t('navbar.register')}</Button>
-                            <Button onClick={handleClickOpenLogin}
-                                    style={{backgroundColor: navbarColor}}>{t('navbar.login')}</Button>
-                        </>
-                    )}
                     {cookies.token && (
                         <>
                             <Button onClick={handleClickOpenLogout}
