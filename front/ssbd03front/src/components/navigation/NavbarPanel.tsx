@@ -78,23 +78,32 @@ const NavbarPanel: React.FC = () => {
         setOpen(true);
     };
 
+    const handleCancel = () => {
+        setOpen(false);
+    };
+
     const handleClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
         if (reason !== 'backdropClick') {
             setOpen(false);
-            const language = localStorage.getItem("selectedLanguage")
-            if (language) {
-                i18n.changeLanguage(language);
-                if (cookies.token !== undefined) {
-                    axios.patch(`${API_URL}/accounts/self/language`,
-                        language, {
-                            headers: {
-                                'Authorization': token,
-                                'Content-Type': 'application/json'
-                            },
-                        })
-                }
+        }
+        const language = localStorage.getItem("selectedLanguage");
+        const languageDTO = {
+            language: language
+        }
+        console.log(language);
+        if (language) {
+            i18n.changeLanguage(language);
+            if (cookies.token !== undefined) {
+                axios.patch(`${API_URL}/accounts/self/language`,
+                    languageDTO, {
+                        headers: {
+                            'Authorization': token,
+                            'Content-Type': 'application/json'
+                        },
+                    })
             }
         }
+
     };
     const handleClickOpenLogout = () => {
         navigate('/');
@@ -164,7 +173,7 @@ const NavbarPanel: React.FC = () => {
                     </Box>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>{t('confirm.cancel')}</Button>
+                    <Button onClick={handleCancel}>{t('confirm.cancel')}</Button>
                     <Button onClick={handleClose}>{t('confirm.ok')}</Button>
                 </DialogActions>
             </Dialog>

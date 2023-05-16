@@ -70,10 +70,10 @@ const Login = () => {
         const regexLogin = /^[a-zA-Z0-9_]{6,16}$/;
         const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/;
         if (!regexLogin.test(username)) {
-            setLoginError('Login musi składać się z 6-16 znaków i składać się z liter i cyfr');
+            setLoginError(t('register.register_error_login'));
         } else if (!regexPassword.test(password)) {
             setPassword("");
-            setLoginError('Hasło musi składać się z 8-32 znaków, jednej dużej litery, znak specjalny');
+            setLoginError(t('register.register_error_password'));
         } else {
             let data = JSON.stringify({
                 "username": username,
@@ -112,8 +112,8 @@ const Login = () => {
         setLoginPassword(loginPassword)
         const regex = /^[a-zA-Z0-9_]{6,16}$/;
         if (!regex.test(loginPassword)) {
-            setLoginPasswordError("Login może zawierać tylko litery, cyfry, znak podkreślenia oraz " +
-                "musi mieć długość od 8 do 16 znaków.");
+            setLoginPasswordError(t('login.login_password_error_one') +
+                t('login.login_password_error_two'));
             setValidData(false);
         } else {
             setLoginPasswordError("");
@@ -190,8 +190,7 @@ const Login = () => {
                                 justifyContent: 'center'
                             }}>
                                 <Button type="submit" variant="contained" sx={{m: 2}}>Zaloguj</Button>
-                                <Button onClick={handleClickOpen} variant="contained" sx={{m: 2}}>Zapomniałem
-                                    hasła</Button>
+                                <Button onClick={handleClickOpen} variant="contained" sx={{m: 2}}>{t('login.password_forgot')}</Button>
                                 <div>
                                     <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
                                         <DialogTitle>{t('login.password_reminder')}</DialogTitle>

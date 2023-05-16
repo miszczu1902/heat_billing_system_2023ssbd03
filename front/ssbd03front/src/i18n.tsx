@@ -7,7 +7,7 @@ i18n.use(initReactI18next)
     .use(LanguageDetector)
     .use(HttpApi)
     .init({
-        fallbackLng: "en",
+        fallbackLng: "pl",
         detection: {
             order: ["cookie", "localStorage", "htmlTag", "path", "subdomain"],
             caches: ["cookie", "localStorage"],
