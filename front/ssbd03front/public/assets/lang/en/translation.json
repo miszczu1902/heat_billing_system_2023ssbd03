@@ -23,7 +23,7 @@
   "edit_password":
   {
     "old_and_new_password_same_error": "The old and new passwords cannot be the same",
-    "new_and_repeated_new_password_not_same_error": "\nThe new and repeated new passwords must be the same",
+    "new_and_repeated_new_password_not_same_error": "The new and repeated new passwords must be the same",
     "old_password_error_one": "Password must contain at least 8 characters, one uppercase and one lowercase letter, ",
     "old_password_error_two": "number and one of the special characters: @$!%*?&",
     "data_error": "Please enter the correct data",
@@ -88,7 +88,7 @@
     "error_token": "No valid password reset token, redirecting...",
     "password_change": "Password change",
     "change_password": "Change passwords",
-    "new_password": "\nA new password"
+    "new_password": "A new password"
   },
   "register":
   {
