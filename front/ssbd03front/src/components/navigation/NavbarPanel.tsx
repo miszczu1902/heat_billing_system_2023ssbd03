@@ -24,13 +24,18 @@ const NavbarPanel: React.FC = () => {
     const [open, setOpen] = React.useState(false);
     const [language, setLanguage] = React.useState<string>('');
     const [navbarColor, setNavbarColor] = React.useState('#ffffff');
-    const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+    const [cookies, setCookie, removeCookie] = useCookies(["token", "language"]);
     const [role, setRole] = React.useState('GUEST');
 
     useEffect(() => {
-        if (cookies.token !== undefined) {
+        if (cookies.token != "undefined" && cookies.token != undefined) {
             const decodedToken = jwt(cookies.token);
             setRole(JSON.parse(JSON.stringify(decodedToken)).role);
+            const currentTimestamp = Math.floor(new Date().getTime() / 1000);
+            if (JSON.parse(JSON.stringify(decodedToken)).exp < currentTimestamp) {
+                removeCookie('token');
+                navigate('');
+            }
         } else {
             setRole('GUEST');
         }
@@ -48,9 +53,6 @@ const NavbarPanel: React.FC = () => {
         if (reason !== 'backdropClick') {
             setOpen(false);
         }
-    };
-    const handleClickOpenLogin = () => {
-        navigate('/login');
     };
     const handleClickOpenLogout = () => {
         navigate('/');
@@ -92,7 +94,7 @@ const NavbarPanel: React.FC = () => {
 
                 <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{marginLeft: 'auto'}}>
                     <Button style={{backgroundColor: navbarColor}}>Zmień język</Button>
-                    {cookies.token && (
+                    {cookies.token && cookies.token != "undefined" && (
                         <Button onClick={handleClickOpenLogout} style={{backgroundColor: navbarColor}}>Wyloguj</Button>
                     )}
                 </ButtonGroup>
