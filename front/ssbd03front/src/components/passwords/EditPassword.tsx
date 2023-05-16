@@ -51,7 +51,7 @@ const EditPassword = () => {
             const fetchData = async () => {
                 await axios.get(`${API_URL}/accounts/${username}`, {
                     headers: {
-                        Authorization: 'Bearer ' + token
+                        Authorization: token
                     }
                 })
                     .then(response => {
