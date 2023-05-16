@@ -69,8 +69,7 @@ public class Account extends AbstractEntity implements Signable {
     @Column(name = "language_", nullable = false, columnDefinition = "VARCHAR DEFAULT 'PL'")
     private String language_;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account",
-            cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
     private List<AccessLevelMapping> accessLevels = new ArrayList<>();
 
     @Setter
