@@ -1,3 +1,10 @@
+import Box from "@mui/material/Box";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select, {SelectChangeEvent} from '@mui/material/Select';
 import React, {useState} from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -5,17 +12,10 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {API_URL} from "../../consts";
 import {useCookies} from "react-cookie";
 import axios from 'axios';
-import Box from "@mui/material/Box";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Select, {SelectChangeEvent} from '@mui/material/Select';
 
 const roles = [
     {value: "ADMIN", label: "Administrator"},
@@ -24,33 +24,30 @@ const roles = [
 ];
 
 export default function Profile() {
+    const navigate = useNavigate();
     const [cookies] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
-
     const [selectedRole, setSelectedRole] = useState("");
     const [license, setLicense] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const username = useParams().username;
-
     const [phoneNumberError, setPhoneNumberError] = React.useState("");
     const [licenseError, setLicenseError] = React.useState("");
     const [phoneNumberValid, setPhoneNumberValid] = React.useState(false);
+    const [removeValid, setRemoveValid] = React.useState(false);
     const [licenseValid, setLicenseValid] = React.useState(false);
-
     const [confirmOpen, setConfirmOpen] = React.useState(false);
     const [successOpen, setSuccessOpen] = React.useState(false);
-
     const [errorOpen, setErrorOpen] = React.useState(false);
     const [errorOpenMessage, setErrorOpenMessage] = React.useState("");
     const [dataError, setDataError] = React.useState("");
-
     const [isAdmin, setIsAdmin] = React.useState(false);
     const [isOwner, setIsOwner] = React.useState(false);
     const [isManager, setIsManager] = React.useState(false);
     const [isRemoveAccessOpen, setIsRemoveAccessOpen] = useState(false);
-
     const [confirmRemove, setConfirmRemove] = React.useState(false);
     const [successOpenRemove, setSuccessOpenRemove] = React.useState(false);
+
     const handleConfirmConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
         if (reason !== 'backdropClick') {
             setConfirmOpen(false);
@@ -253,6 +250,7 @@ export default function Profile() {
     const handleAccessLevelChange = (event: SelectChangeEvent<string>) => {
         const selectedRole = event.target.value;
         setSelectedRole(selectedRole);
+        setRemoveValid(true);
     };
 
     const handleRemoveAccessLevel = () => {
@@ -388,7 +386,7 @@ export default function Profile() {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Anuluj</Button>
-                    <Button onClick={handleConfirmRemove}>Usuń</Button>
+                    <Button onClick={handleConfirmRemove} disabled={!removeValid}>Usuń</Button>
                 </DialogActions>
             </Dialog>
 
