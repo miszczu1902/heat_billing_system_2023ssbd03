@@ -37,6 +37,7 @@
   },
   "login":
   {
+    "title": "Login",
     "username": "Username",
     "enter_username": "Enter username",
     "password": "Password",
