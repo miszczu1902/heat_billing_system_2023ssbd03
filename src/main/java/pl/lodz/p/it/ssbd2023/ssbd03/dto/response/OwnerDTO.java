@@ -22,4 +22,13 @@ public class OwnerDTO extends AccountDTO {
         this.language = language;
         this.phoneNumber = phoneNumber;
     }
+
+    @Override
+    public String messageToSign() {
+        return super.messageToSign()
+                .concat(firstName)
+                .concat(surname)
+                .concat(language)
+                .concat(phoneNumber);
+    }
 }

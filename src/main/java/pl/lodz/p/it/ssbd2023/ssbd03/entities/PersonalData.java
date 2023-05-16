@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -17,7 +18,7 @@ import java.util.Objects;
 @NamedQueries({
         @NamedQuery(name = "PersonalData.findByUsername", query = "SELECT k FROM PersonalData k WHERE k.id.username = :username")
 })
-public class PersonalData extends AbstractEntity implements Serializable {
+public class PersonalData extends AbstractEntity implements Serializable, Signable {
     @Id
     @OneToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "id", updatable = false, referencedColumnName = "id")
@@ -42,5 +43,13 @@ public class PersonalData extends AbstractEntity implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String messageToSign() {
+        return firstName
+                .concat(surname)
+                .concat(getId().getId().toString())
+                .concat(getVersion().toString());
     }
 }

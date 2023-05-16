@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.AbstractDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class AccountInfoDTO extends AbstractDTO {
+public class AccountInfoDTO extends AbstractDTO implements Signable {
     private String email;
     private String username;
     private Boolean isEnable;
@@ -37,4 +38,16 @@ public class AccountInfoDTO extends AbstractDTO {
         this.phoneNumber = phoneNumber;
         this.license = license;
     }
+
+    @Override
+    public String messageToSign() {
+            return email
+                    .concat(username)
+                    .concat(isEnable.toString())
+                    .concat(isActive.toString())
+                    .concat(firstName)
+                    .concat(surname)
+                    .concat(getId().toString())
+                    .concat(getVersion().toString());
+        }
 }

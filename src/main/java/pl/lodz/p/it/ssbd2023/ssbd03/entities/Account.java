@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,15 +22,17 @@ import java.util.Objects;
         })
 @NamedQueries({
         @NamedQuery(name = "Account.findByUsername", query = "SELECT k FROM Account k WHERE k.username = :username"),
+        @NamedQuery(name = "Account.getListOfAccountsByUsernameAndEnableStatus", query = "SELECT k FROM Account k WHERE k.isEnable = :isEnable ORDER BY k.username"),
         @NamedQuery(name = "Account.getListOfAccountsByUsername",
                 query = "SELECT k FROM Account k ORDER BY k.username"),
         @NamedQuery(name = "Account.getListOfAccountsByEmail",
                 query = "SELECT k FROM Account k ORDER BY k.email"),
         @NamedQuery(name = "Account.findAllBlockedAccounts", query = "SELECT a " +
                 "FROM Account a WHERE a.isEnable IS FALSE AND a.loginData.lastInvalidLoginDate <= :date AND a.loginData.invalidLoginCounter = 3"),
-        @NamedQuery(name = "Account.findByEmail", query = "SELECT d FROM Account d WHERE d.email = :email")
+        @NamedQuery(name = "Account.findByEmail", query = "SELECT d FROM Account d WHERE d.email = :email"),
+        @NamedQuery(name = "Account.getListOfAccountsByEmailAndEnableStatus", query = "SELECT d FROM Account d WHERE d.isEnable = :isEnable ORDER BY d.email")
 })
-public class Account extends AbstractEntity {
+public class Account extends AbstractEntity implements Signable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -98,5 +101,17 @@ public class Account extends AbstractEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String messageToSign() {
+        return getEmail()
+                .concat(getUsername())
+                .concat(getIsEnable().toString())
+                .concat(getIsActive().toString())
+                .concat(getPersonalData().getFirstName())
+                .concat(getPersonalData().getSurname())
+                .concat(getId().toString())
+                .concat(getVersion().toString());
     }
 }

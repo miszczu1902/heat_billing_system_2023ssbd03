@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services;
 
 import jakarta.ejb.Local;
-import jakarta.persistence.NoResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
@@ -20,15 +19,15 @@ public interface AccountService {
 
     String authenticate(String username, String password);
 
-    void updateLoginData(String username, boolean flag);
+    String updateLoginData(String username, boolean flag);
 
-    void changePhoneNumber(String newPhoneNumber);
+    void changePhoneNumber(String newPhoneNumber, String etag);
 
     void adminLoggedInEmail(String email);
 
-    void changeSelfEmail(String newEmail);
+    void changeSelfEmail(String newEmail, String etag);
 
-    void changeUserEmail(String newEmail, String username);
+    void changeUserEmail(String newEmail, String username, String etag);
 
     void confirmNewEmailAccountFromActivationLink(String confirmationToken);
 
@@ -40,21 +39,23 @@ public interface AccountService {
 
     Admin getAdmin();
 
-    PersonalData getPersonalData();
+    PersonalData getPersonalData(String username);
 
-    void editSelfPersonalData(String firstName, String surname);
+    PersonalData getSelfPersonalData();
 
-    void editUserPersonalData(String username, String firstName, String surname);
+    void editSelfPersonalData(String firstName, String surname, String etag);
 
-    void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword);
+    void editUserPersonalData(String username, String firstName, String surname, String etag);
 
-    void changeUserPassword(String username, String newPassword, String newRepeatedPassword);
+    void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword, String etag);
+
+    void changeUserPassword(String username, String newPassword, String newRepeatedPassword, String etag);
 
     void resetPassword(String username);
 
-    void disableUserAccount(String username) throws IllegalArgumentException, NoResultException;
+    void disableUserAccount(String username, String etag);
 
-    void enableUserAccount(String username) throws IllegalArgumentException, NoResultException;
+    void enableUserAccount(String username, String etag);
 
     void addAccessLevelManager(String username, String license);
 
@@ -64,5 +65,5 @@ public interface AccountService {
 
     void revokeAccessLevel(String username, String accessLevel);
 
-    List<Account> getListOfAccounts(String sortBy, int pageNumber);
+    List<Account> getListOfAccounts(String sortBy, int pageNumber, int pageSize, Boolean isEnable);
 }

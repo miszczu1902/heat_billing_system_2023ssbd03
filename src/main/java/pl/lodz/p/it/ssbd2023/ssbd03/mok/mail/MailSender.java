@@ -16,11 +16,11 @@ public class MailSender {
     private static final String CHANGED_PASSWORD_BY_ADMIN_CONTENT_MESSAGE = """
             Administrator changed your password.
             Click on the link to reset your password
-            %s?%s
+            %s?token=%s
             """;
     private static final String RESET_PASSWORD_CONTENT_MESSAGE = """
             Click on the link to reset your password
-            %s?%s
+            %s?token=%s
             """;
     private final Properties properties = new Properties();
     private Session session;
@@ -46,7 +46,7 @@ public class MailSender {
     }
 
     public void sendLinkToActivateAccount(String to, String subject, String content) {
-        sendEmail(to, subject, properties.getProperty("activation.url") + "?" + content);
+        sendEmail(to, subject, properties.getProperty("activation.url") + "/" + content);
     }
 
     public void sendLinkToConfirmAnEmail(String to, String content) {
@@ -97,6 +97,13 @@ public class MailSender {
         sendEmail(to, "Account has been activated",
                 "Dear User, \n" +
                         "Your account has been activated");
+    }
+
+    public void sendReminderAboutAccountConfirmation(String to, String activationToken) {
+        sendEmail(to, "Account is waiting for activation",
+                "Dear User, \n" +
+                        "Your account is waiting for activation. \n" +
+                "Activation link: " + properties.getProperty("activation.url") + activationToken);
     }
 
     private void sendEmail(String to, String subject, String content) {
