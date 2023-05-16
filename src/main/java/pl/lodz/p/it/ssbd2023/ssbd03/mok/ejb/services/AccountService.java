@@ -21,13 +21,13 @@ public interface AccountService {
 
     String updateLoginData(String username, boolean flag);
 
-    void changePhoneNumber(String newPhoneNumber, String etag);
+    void changePhoneNumber(String newPhoneNumber, String etag, Long version);
 
     void adminLoggedInEmail(String email);
 
-    void changeSelfEmail(String newEmail, String etag);
+    void changeSelfEmail(String newEmail, String etag, Long version);
 
-    void changeUserEmail(String newEmail, String username, String etag);
+    void changeUserEmail(String newEmail, String username, String etag, Long version);
 
     void confirmNewEmailAccountFromActivationLink(String confirmationToken);
 
@@ -43,19 +43,19 @@ public interface AccountService {
 
     PersonalData getSelfPersonalData();
 
-    void editSelfPersonalData(String firstName, String surname, String etag);
+    void editSelfPersonalData(String firstName, String surname, String etag, Long version);
 
-    void editUserPersonalData(String username, String firstName, String surname, String etag);
+    void editUserPersonalData(String username, String firstName, String surname, String etag, Long version);
 
-    void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword, String etag);
+    void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword, String etag, Long version);
 
-    void changeUserPassword(String username, String newPassword, String newRepeatedPassword, String etag);
+    void changeUserPassword(String username, String newPassword, String newRepeatedPassword, String etag, Long version);
 
     void resetPassword(String username);
 
-    void disableUserAccount(String username, String etag);
+    void disableUserAccount(String username, String etag, Long version);
 
-    void enableUserAccount(String username, String etag);
+    void enableUserAccount(String username, String etag, Long version);
 
     void addAccessLevelManager(String username, String license);
 
