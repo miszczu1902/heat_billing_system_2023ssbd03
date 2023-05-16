@@ -15,7 +15,7 @@ import {useCookies} from 'react-cookie';
 import { useState, useEffect } from 'react';
 
 
-export default function EditPersonalData() {
+const EditPersonalData = () => {
   const [cookies, setCookie] = useCookies(["token", "etag"]);
   const token = "Bearer " + cookies.token;
   const etag = cookies.etag;
@@ -229,3 +229,5 @@ export default function EditPersonalData() {
     </div>
   );
 }
+
+export default EditPersonalData;

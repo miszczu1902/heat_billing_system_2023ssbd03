@@ -118,9 +118,8 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed(Roles.GUEST)
-    public void updateLoginData(String username, boolean flag) {
-        try {
-            final Account account = accountFacade.findByUsername(username);
+    public String updateLoginData(String username, boolean flag) {
+        final Account account = accountFacade.findByUsername(username);
             final LoginData loginData = loginDataFacade.findById(account);
             if (flag) {
                 if (account.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) {
@@ -139,9 +138,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 }
             }
             loginDataFacade.edit(loginData);
-        } catch (Exception ex) {
-            throw AppException.invalidCredentialsException();
-        }
+            return account.getLanguage_();
     }
 
     @Override

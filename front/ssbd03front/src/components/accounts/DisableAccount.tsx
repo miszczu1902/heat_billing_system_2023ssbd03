@@ -9,15 +9,15 @@ import { useParams } from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import { useEffect } from 'react';
 
-export default function DisableAccount() {
+const DisableAccount = () => {
     const username = useParams().username;
     const [cookies, setCookie] = useCookies(["token", "etag"]);
     const token = "Bearer " + cookies.token;
     const etag = cookies.etag;
-  
+
     const [open, setOpen] = React.useState(false);
     const [confirmOpen, setConfirmOpen] = React.useState(false);
-  
+
     const [successOpen, setSuccessOpen] = React.useState(false);
     const [errorOpen, setErrorOpen] = React.useState(false);
 
@@ -35,17 +35,17 @@ export default function DisableAccount() {
     fetchData();
     }, []);
 
-  
+
     const handleClickOpen = () => {
-      setOpen(true);
+        setOpen(true);
     };
-  
+
     const handleConfirmClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-      if (reason !== 'backdropClick') {
-        setOpen(false);
-      }
+        if (reason !== 'backdropClick') {
+            setOpen(false);
+        }
     }
-  
+
     const handleConfirmConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
       if (reason !== 'backdropClick') {
         setConfirmOpen(false);
@@ -105,3 +105,5 @@ export default function DisableAccount() {
       </div>
     );
 }
+
+export default DisableAccount;

@@ -16,11 +16,14 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import DialogActions from "@mui/material/DialogActions";
 import {useNavigate} from "react-router-dom";
+import {Icon} from "@mui/material";
+import Logo from './../../assets/logo.svg';
 
-export default function Login() {
-    const theme = createTheme();
+const theme = createTheme();
+
+const Login = () => {
     const navigate = useNavigate();
-    const [cookies, setCookie] = useCookies(["token"]);
+    const [cookies, setCookie] = useCookies(["token", "language"]);
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [loginError, setLoginError] = React.useState("");
@@ -36,7 +39,7 @@ export default function Login() {
     const [loggedIn, setLoggedIn] = React.useState(false);
 
     React.useEffect(() => {
-        if (cookies.token) {
+        if (cookies.token != "undefined" && cookies.token != undefined) {
             setLoggedIn(true);
         }
         setLoading(false);
@@ -85,7 +88,8 @@ export default function Login() {
             };
             axios.request(config)
                 .then((response) => {
-                    setCookie("token", response.headers["bearer"])
+                    setCookie("token", response.headers["bearer"]);
+                    setCookie("language", response.headers["language"]);
                     navigate('/');
                 })
                 .catch((error) => {
@@ -124,7 +128,7 @@ export default function Login() {
     };
 
     const handleConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if(validData) {
+        if (validData) {
             const resetPasswordDTO = {
                 username: loginPassword.toString(),
             }
@@ -160,9 +164,12 @@ export default function Login() {
 
     return (
         <ThemeProvider theme={theme}>
-            <Grid container justifyContent="center" alignItems="center">
+            <Grid container justifyContent="center" alignItems="center"  sx={{background: '#1c8de4', height: '100vh', width: '100vw'}}>
                 <Grid my={2} item sm={8} md={5} component={Paper} elevation={6}>
-                    <Box sx={{my: 30, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                    <Box sx={{my: 20, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                        <Icon sx={{width: '10%', height: '10%', marginLeft: '1vh'}}>
+                            <img src={Logo}/>
+                        </Icon>
                         <Typography variant="h5"> Logowanie </Typography>
                         <Typography sx={{color: 'red'}}>{loginError}</Typography>
                         <Box component="form" onSubmit={handleSubmit}>
@@ -171,20 +178,22 @@ export default function Login() {
                             <TextField fullWidth margin="normal" label="Hasło" type="password"
                                        helperText="Wprowadź hasło" onChange={handlePasswordChange}
                                        value={password}/>
-                            <Button type="submit" fullWidth variant="contained">Zaloguj</Button>
-                            <Box sx={{my: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+                            <Box sx={{display: 'flex',
+                                flexWrap: 'wrap',
+                                alignItems: 'center',
+                                justifyContent: 'center'}}>
+                                <Button type="submit" variant="contained" sx={{m:2}}>Zaloguj</Button>
+                                <Button onClick={handleClickOpen} variant="contained" sx={{m:2}}>Zapomniałem hasła</Button>
                                 <div>
-                                    <div>
-                                        <Button onClick={handleClickOpen} variant="contained">Zapomniałem hasła</Button>
-                                    </div>
                                     <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
                                         <DialogTitle>Przypomnienie hasła</DialogTitle>
                                         <DialogContent>
-                                            <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                                            <Box sx={{display: 'flex', flexWrap: 'wrap'}}>
                                                 <form onSubmit={handleSubmitPasswordChange}>
                                                     <List component="nav" aria-label="mailbox folders">
                                                         <ListItem>
-                                                            <div className="form-group" onChange={handleLoginPasswordChange}>
+                                                            <div className="form-group"
+                                                                 onChange={handleLoginPasswordChange}>
                                                                 <TextField
                                                                     id="outlined-helperText"
                                                                     label="Login"
@@ -223,3 +232,5 @@ export default function Login() {
         </ThemeProvider>
     );
 }
+
+export default Login;

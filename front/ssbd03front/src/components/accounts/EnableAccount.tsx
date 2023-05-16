@@ -9,7 +9,7 @@ import { useParams} from "react-router-dom";
 import { useCookies } from 'react-cookie';
 import { useEffect } from 'react';
 
-export default function EnableAccount() {
+const EnableAccount = () => {
   const username = useParams().username;
   const [cookies, setCookie] = useCookies(["token", "etag"]);
   const token = "Bearer " + cookies.token;
@@ -105,3 +105,4 @@ export default function EnableAccount() {
     </div>
   );
 }
+export default EnableAccount;
