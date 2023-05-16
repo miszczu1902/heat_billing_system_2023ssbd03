@@ -180,6 +180,8 @@ export default function Profile() {
         if (licenseValid || phoneNumberValid) {
             setDataError("");
             setConfirmOpen(true);
+        } else {
+            setDataError("");
         }
     }
 
@@ -187,6 +189,8 @@ export default function Profile() {
         if (isRemoveAccessOpen) {
             setDataError("");
             setConfirmRemove(true);
+        } else {
+            setDataError("");
         }
     }
 
@@ -298,7 +302,7 @@ export default function Profile() {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Anuluj</Button>
-                    <Button onClick={handleConfirm} disabled={!license}>Dodaj</Button>
+                    <Button onClick={handleConfirm} disabled={!licenseValid}>Dodaj</Button>
                 </DialogActions>
             </Dialog>
 
