@@ -12,17 +12,22 @@ import axios from 'axios';
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select, {SelectChangeEvent} from '@mui/material/Select';
 
 const roles = [
-    {value: "admin", label: "Administrator"},
-    {value: "manager", label: "Manager"},
-    {value: "owner", label: "Właściciel"}
+    {value: "ADMIN", label: "Administrator"},
+    {value: "MANAGER", label: "Manager"},
+    {value: "OWNER", label: "Właściciel"}
 ];
 
 export default function Profile() {
     const [cookies] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
 
+    const [selectedRole, setSelectedRole] = useState("");
     const [license, setLicense] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const username = useParams().username;
@@ -42,10 +47,14 @@ export default function Profile() {
     const [isAdmin, setIsAdmin] = React.useState(false);
     const [isOwner, setIsOwner] = React.useState(false);
     const [isManager, setIsManager] = React.useState(false);
+    const [isRemoveAccessOpen, setIsRemoveAccessOpen] = useState(false);
 
+    const [confirmRemove, setConfirmRemove] = React.useState(false);
+    const [successOpenRemove, setSuccessOpenRemove] = React.useState(false);
     const handleConfirmConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
         if (reason !== 'backdropClick') {
             setConfirmOpen(false);
+            setConfirmRemove(false);
         }
         if (isManager && !isOwner && !isAdmin) {
             const addAccessLevelManagerDTO = {
@@ -112,6 +121,28 @@ export default function Profile() {
                 });
             handleClose(event, reason);
         }
+        if (confirmRemove && !isAdmin && !isOwner && !isManager) {
+            const removeAccessLevelDTO = {
+                username: username,
+                accessLevel: selectedRole.toString()
+            }
+
+            axios.patch(`${API_URL}/accounts/revoke-access-level`,
+                removeAccessLevelDTO, {
+                    headers: {
+                        'Authorization': token,
+                        'Content-Type': 'application/json'
+                    },
+                })
+                .then(response => {
+                    setSuccessOpenRemove(true);
+                })
+                .catch(error => {
+                    setErrorOpenMessage(error.response.data.message)
+                    setErrorOpen(true);
+                });
+            handleClose(event, reason);
+        }
     }
 
     const handleClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
@@ -119,6 +150,7 @@ export default function Profile() {
             setIsManager(false);
             setIsOwner(false);
             setIsAdmin(false);
+            setIsRemoveAccessOpen(false);
         }
     };
 
@@ -129,6 +161,7 @@ export default function Profile() {
             setIsManager(false);
             setIsOwner(false);
             setIsAdmin(false);
+            setIsRemoveAccessOpen(false);
         }
     };
 
@@ -138,6 +171,9 @@ export default function Profile() {
         setIsManager(false);
         setIsOwner(false);
         setIsAdmin(false);
+        setIsRemoveAccessOpen(false);
+        setConfirmRemove(false);
+        setSuccessOpenRemove(false);
         if (reason !== 'backdropClick') {
             setSuccessOpen(false);
         }
@@ -152,6 +188,15 @@ export default function Profile() {
         }
     }
 
+    const handleConfirmRemove = () => {
+        if (isRemoveAccessOpen) {
+            setDataError("");
+            setConfirmRemove(true);
+        } else {
+            setDataError("Wprowadź poprawne dane");
+        }
+    }
+
     const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     }
@@ -159,6 +204,7 @@ export default function Profile() {
     const handleConfirmClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
         if (reason !== 'backdropClick') {
             setConfirmOpen(false);
+            setConfirmRemove(false);
         }
     }
 
@@ -200,6 +246,20 @@ export default function Profile() {
         setIsAdmin(true);
     };
 
+    const handleAddSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+    };
+
+    const handleAccessLevelChange = (event: SelectChangeEvent<string>) => {
+        const selectedRole = event.target.value;
+        setSelectedRole(selectedRole);
+    };
+
+    const handleRemoveAccessLevel = () => {
+        setIsRemoveAccessOpen(true);
+    };
+
+
     return (
         <div>
             <Button onClick={handleClickOpenManager} variant="contained">
@@ -210,6 +270,9 @@ export default function Profile() {
             </Button>
             <Button onClick={handleClickOpenAdmin} variant="contained">
                 Dodaj poziom dostępu admin
+            </Button>
+            <Button onClick={handleRemoveAccessLevel} variant="contained">
+                Usuń poziom dostępu
             </Button>
 
             <Dialog disableEscapeKeyDown open={isManager} onClose={handleClose}>
@@ -240,8 +303,8 @@ export default function Profile() {
                     </Box>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleConfirm} disabled={!license}>Ok</Button>
+                    <Button onClick={handleClose}>Anuluj</Button>
+                    <Button onClick={handleConfirm} disabled={!license}>Dodaj</Button>
                 </DialogActions>
             </Dialog>
 
@@ -281,8 +344,8 @@ export default function Profile() {
                     </Box>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleConfirm} disabled={!phoneNumberValid}>Ok</Button>
+                    <Button onClick={handleClose}>Anuluj</Button>
+                    <Button onClick={handleConfirm} disabled={!phoneNumberValid}>Dodaj</Button>
                 </DialogActions>
             </Dialog>
 
@@ -300,6 +363,46 @@ export default function Profile() {
                     <Button onClick={handleClose}>Nie</Button>
                     <Button onClick={handleConfirmConfirm}>Tak</Button>
                 </DialogActions>
+            </Dialog>
+
+            <Dialog disableEscapeKeyDown open={isRemoveAccessOpen} onClose={handleClose}>
+                <DialogTitle>Usuń poziom dostępu</DialogTitle>
+                <DialogContent>
+                    <form onSubmit={handleAddSubmit}>
+                        <FormControl fullWidth>
+                            {!selectedRole && <InputLabel id="access-level-label">Wybierz poziom</InputLabel>}
+                            <Select
+                                labelId="access-level-label"
+                                value={selectedRole}
+                                onChange={(event: SelectChangeEvent<string>) => handleAccessLevelChange(event)}
+                                displayEmpty
+                            >
+                                {roles.map((role) => (
+                                    <MenuItem key={role.value} value={role.value}>
+                                        {role.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </form>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Anuluj</Button>
+                    <Button onClick={handleConfirmRemove}>Usuń</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog disableEscapeKeyDown open={confirmRemove} onClose={handleConfirmClose}>
+                <DialogTitle>Czy na pewno chcesz odebrać poziom dostępu?</DialogTitle>
+                <DialogActions>
+                    <Button onClick={handleConfirmClose}>Nie</Button>
+                    <Button onClick={handleConfirmConfirm}>Tak</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog disableEscapeKeyDown open={successOpenRemove}>
+                <DialogTitle>Poziom dostępu został odebrany</DialogTitle>
+                <Button onClick={handleSuccessClose}>Ok</Button>
             </Dialog>
 
             <Dialog disableEscapeKeyDown open={successOpen}>
