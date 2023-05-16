@@ -11,8 +11,10 @@ import ListItem from '@mui/material/ListItem';
 import axios from 'axios';
 import {API_URL} from '../../consts';
 import {useCookies} from 'react-cookie';
+import {useTranslation} from "react-i18next";
 
 export default function ChangePhoneNumber() {
+    const {t, i18n} = useTranslation();
     const [cookies] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
     const [open, setOpen] = React.useState(false);
@@ -37,7 +39,7 @@ export default function ChangePhoneNumber() {
         setPhoneNumber(phoneNumber);
         const regex = /^\d{9}$/;
         if (!regex.test(phoneNumber)) {
-            setPhoneNumberError("Numer telefonu musi zawierać 9 cyfr.");
+            setPhoneNumberError(t('change_phone_number.error'));
             setPhoneNumberValid(false);
         } else {
             setPhoneNumberError("");
@@ -91,7 +93,7 @@ export default function ChangePhoneNumber() {
             setDataError("");
             setConfirmOpen(true);
         } else {
-            setDataError("Wprowadź poprawne dane");
+            setDataError(t('change_phone_number.data_error'));
         }
     }
 
@@ -111,10 +113,10 @@ export default function ChangePhoneNumber() {
     return (
         <div>
             <div>
-                <Button onClick={handleClickOpen} variant="contained">Zmień numer telefonu</Button>
+                <Button onClick={handleClickOpen} variant="contained">{t('change_phone_number.title')}</Button>
             </div>
             <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-                <DialogTitle>Wypełnij formularz zmiany numeru telefonu</DialogTitle>
+                <DialogTitle>{t('change_phone_number.form_title')}</DialogTitle>
                 <DialogContent>
                     <Box sx={{display: 'flex', flexWrap: 'wrap'}}>
                         <form onSubmit={handleSumbit}>
@@ -123,10 +125,10 @@ export default function ChangePhoneNumber() {
                                     <div className="form-group" onChange={handleNewPhoneNumber}>
                                         <TextField
                                             id="outlined-helperText"
-                                            label="Nowy numer telefonu"
+                                            label={t('change_phone_number.new_number')}
                                             defaultValue={phoneNumber}
                                             type="phoneNumber"
-                                            helperText="Wprowadź nowy numer telefonu"
+                                            helperText={t('change_phone_number.new_number_help_text')}
                                         />
                                         <div className="form-group">
                                             {phoneNumberError}
@@ -141,27 +143,27 @@ export default function ChangePhoneNumber() {
                     </Box>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleConfirm} disabled={!phoneNumberValid}>Ok</Button>
+                    <Button onClick={handleClose}>{t('confirm.cancel')}</Button>
+                    <Button onClick={handleConfirm} disabled={!phoneNumberValid}>{t('confirm.ok')}</Button>
                 </DialogActions>
             </Dialog>
 
             <Dialog disableEscapeKeyDown open={confirmOpen} onClose={handleConfirmClose}>
-                <DialogTitle>Czy na pewno chcesz zmienić swój numer telefonu</DialogTitle>
+                <DialogTitle>{t('change_phone_number.confirm_changes')}</DialogTitle>
                 <DialogActions>
-                    <Button onClick={handleConfirmClose}>Nie</Button>
-                    <Button onClick={handleConfirmConfirm}>Tak</Button>
+                    <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
+                    <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
                 </DialogActions>
             </Dialog>
 
             <Dialog disableEscapeKeyDown open={successOpen}>
-                <DialogTitle>Numer telefonu został zmieniony</DialogTitle>
-                <Button onClick={handleSuccessClose}>Ok</Button>
+                <DialogTitle>{t('change_phone_number.success')}</DialogTitle>
+                <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
             </Dialog>
 
             <Dialog disableEscapeKeyDown open={errorOpen}>
                 <DialogTitle>{errorOpenMessage}</DialogTitle>
-                <Button onClick={handleErrorClose}>Ok</Button>
+                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
             </Dialog>
         </div>
     );

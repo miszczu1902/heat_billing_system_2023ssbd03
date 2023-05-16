@@ -313,6 +313,14 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
+    public void changeLanguage(String language) {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Account account = accountFacade.findByUsername(username);
+        account.setLanguage_(language);
+    }
+
+    @Override
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public void editUserPersonalData(String username, String firstName, String surname, String etag) {
         final String editor = securityContext.getCallerPrincipal().getName();

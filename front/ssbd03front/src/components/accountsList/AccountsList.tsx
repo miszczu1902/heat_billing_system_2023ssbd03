@@ -15,8 +15,10 @@ import axios from 'axios';
 import {API_URL} from '../../consts';
 import {useNavigate} from "react-router-dom";
 import {useCookies} from "react-cookie";
+import {useTranslation} from "react-i18next";
 
 const AccountsList = () => {
+    const {t, i18n} = useTranslation();
     const navigate = useNavigate();
     const [cookies, setCookie] = useCookies(['token']);
     const token = 'Bearer ' + cookies.token;
@@ -68,16 +70,16 @@ const AccountsList = () => {
                     <TableRow>
                         <TableCell/>
                         <TableCell onClick={() => handleSort('username')}>
-                            Username
+                            {t('login.username')}
                         </TableCell>
                         <TableCell onClick={() => handleSort('email')}>
-                            Email
+                            {t('register.email')}
                         </TableCell>
                         <TableCell>
-                            Active status
+                            {t('account_list.active_status')}
                         </TableCell>
                         <TableCell>
-                            Confirmation status
+                            {t('account_list.confirmation_status')}
                         </TableCell>
                     </TableRow>
                 </TableHead>
@@ -87,9 +89,9 @@ const AccountsList = () => {
                             <TableCell component='th' scope='row'/>
                             <TableCell>{accounts.username}</TableCell>
                             <TableCell>{accounts.email}</TableCell>
-                            {accounts.isEnable ? <TableCell>Aktywny</TableCell> : <TableCell>Nieaktywny</TableCell>}
-                            {accounts.isActive ? <TableCell>Potwierdzony</TableCell> :
-                                <TableCell>Niepotwierdzony</TableCell>}
+                            {accounts.isEnable ? <TableCell>{t('account_list.active')}</TableCell> : <TableCell>{t('account_list.inactive')}</TableCell>}
+                            {accounts.isActive ? <TableCell>{t('account_list.confirmed')}</TableCell> :
+                                <TableCell>{t('account_list.unconfirmed')}</TableCell>}
                         </TableRow>
                     ))}
                 </TableBody>
@@ -97,7 +99,7 @@ const AccountsList = () => {
             <TablePagination rowsPerPageOptions={[1, 5, 10, 25]}
                              count={total} page={pageNumber} rowsPerPage={size}
                              onPageChange={handleChangePage} onRowsPerPageChange={handleChangeRowsPerPage}
-                             labelRowsPerPage="Wierszy na stronę"
+                             labelRowsPerPage={t('account_list.label_rows_per_page')}
                              labelDisplayedRows={({from, to, count}) => `${from}-${to} z ${count}`}></TablePagination>
         </TableContainer>
     );
