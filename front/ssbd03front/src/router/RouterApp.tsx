@@ -12,7 +12,7 @@ import EditPassword from "../components/passwords/EditPassword";
 import ResetPassword from "../components/passwords/ResetPassword";
 import ActivateFromEmail from "../components/registration/ActivateFromEmail";
 import ChangePhoneNumber from "../components/owner/ChangePhoneNumber";
-
+import Profile from "../components/account/Profile";
 
 const router = createBrowserRouter([
     {
@@ -35,7 +35,8 @@ const router = createBrowserRouter([
                         path: '/accounts/self',
                     },
                     {
-                        path: '/accounts/:username'
+                        path: '/accounts/:username',
+                        element: <Profile/>
                     },
                     {
                         path: '/accounts/self/personal-data',
