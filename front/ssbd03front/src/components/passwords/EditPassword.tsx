@@ -12,11 +12,16 @@ import axios from 'axios';
 import { API_URL } from '../../consts';
 import {useCookies} from 'react-cookie';
 import {useTranslation} from "react-i18next";
+import {useEffect} from "react";
+import jwt from "jwt-decode";
 
 const EditPassword = () => {
     const {t, i18n} = useTranslation();
     const [cookies] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
+    const [etag, setEtag] = React.useState(false);
+    const [version, setVersion] = React.useState("");
+
     const [open, setOpen] = React.useState(false);
     const [confirmOpen, setConfirmOpen] = React.useState(false);
     const [oldPassword, setOldPassword] = React.useState("");
@@ -40,6 +45,25 @@ const EditPassword = () => {
     const [successOpen, setSuccessOpen] = React.useState(false);
     const [errorOpen, setErrorOpen] = React.useState(false);
     const [errorOpenMessage, setErrorOpenMessage] = React.useState("");
+
+    useEffect(() => {
+        if (cookies.token !== "undefined" && cookies.token !== undefined) {
+            const decodedToken = jwt(cookies.token);
+            const username = JSON.parse(JSON.stringify(decodedToken)).sub;
+            const fetchData = async () => {
+                await axios.get(`${API_URL}/accounts/${username}`, {
+                    headers: {
+                        Authorization: token
+                    }
+                })
+                    .then(response => {
+                        setEtag(response.headers["etag"]);
+                        setVersion(response.data.version)
+                    });
+            };
+            fetchData();
+        }
+    }, []);
 
     const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -151,16 +175,18 @@ const EditPassword = () => {
         if (reason !== 'backdropClick') {
             setConfirmOpen(false);
         }
-        const personalDataDTO = {
+        const passwordDTO = {
             oldPassword: oldPassword.toString(),
             newPassword: newPassword.toString(),
-            repeatedNewPassword: repeatedNewPassword.toString()
+            repeatedNewPassword: repeatedNewPassword.toString(),
+            version: parseInt(version)
         }
 
          axios.patch(`${API_URL}/accounts/self/password`,
-                personalDataDTO, {
+             passwordDTO, {
                     headers: {
                         'Authorization': token,
+                        'If-Match' : etag,
                         'Content-Type': 'application/json'
                     },
                 })
