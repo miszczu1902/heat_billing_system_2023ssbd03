@@ -18,6 +18,7 @@ const EditPassword = () => {
     const [cookies] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
     const [etag, setEtag] = React.useState(false);
+    const [version, setVersion] = React.useState("");
 
     const [open, setOpen] = React.useState(false);
     const [confirmOpen, setConfirmOpen] = React.useState(false);
@@ -55,6 +56,7 @@ const EditPassword = () => {
                 })
                     .then(response => {
                         setEtag(response.headers["etag"]);
+                        setVersion(response.data.version)
                     });
             };
             fetchData();
@@ -174,7 +176,8 @@ const EditPassword = () => {
         const passwordDTO = {
             oldPassword: oldPassword.toString(),
             newPassword: newPassword.toString(),
-            repeatedNewPassword: repeatedNewPassword.toString()
+            repeatedNewPassword: repeatedNewPassword.toString(),
+            version: parseInt(version)
         }
 
          axios.patch(`${API_URL}/accounts/self/password`,
