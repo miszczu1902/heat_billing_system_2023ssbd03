@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.dto.request;
 
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,6 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ChangeLanguageDTO implements Serializable {
-    @Size(min = 2, max = 3, message = "Language can be: EN, PL")
+    @Pattern(regexp = "^(PL|EN)$",
+            message = "Language can be: EN, PL")
     private String language;
 }
