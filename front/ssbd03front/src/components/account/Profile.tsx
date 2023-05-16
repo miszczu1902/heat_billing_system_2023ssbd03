@@ -180,8 +180,6 @@ export default function Profile() {
         if (licenseValid || phoneNumberValid) {
             setDataError("");
             setConfirmOpen(true);
-        } else {
-            setDataError("Wprowadź poprawne dane");
         }
     }
 
@@ -189,8 +187,6 @@ export default function Profile() {
         if (isRemoveAccessOpen) {
             setDataError("");
             setConfirmRemove(true);
-        } else {
-            setDataError("Wprowadź poprawne dane");
         }
     }
 
@@ -306,7 +302,7 @@ export default function Profile() {
                 </DialogActions>
             </Dialog>
 
-            <Dialog disableEscapeKeyDown open={confirmOpen} onClose={handleConfirmClose}>
+            <Dialog disableEscapeKeyDown open={isManager && confirmOpen} onClose={handleConfirmClose}>
                 <DialogTitle>Czy na pewno chcesz dodać poziom dostępu zarządcy?</DialogTitle>
                 <DialogActions>
                     <Button onClick={handleConfirmClose}>Nie</Button>
@@ -315,7 +311,7 @@ export default function Profile() {
             </Dialog>
 
             <Dialog disableEscapeKeyDown open={isOwner} onClose={handleClose}>
-                <DialogTitle>Wypełnij formularz dodania uprawnieć właściciela</DialogTitle>
+                <DialogTitle>Wypełnij formularz dodania uprawnień właściciela</DialogTitle>
                 <DialogContent>
                     <Box sx={{display: 'flex', flexWrap: 'wrap'}}>
                         <form onSubmit={handleSumbit}>
@@ -347,7 +343,7 @@ export default function Profile() {
                 </DialogActions>
             </Dialog>
 
-            <Dialog disableEscapeKeyDown open={confirmOpen} onClose={handleConfirmClose}>
+            <Dialog disableEscapeKeyDown open={isOwner && confirmOpen} onClose={handleConfirmClose}>
                 <DialogTitle>Czy na pewno chcesz dodać poziom dostępu właściciela?</DialogTitle>
                 <DialogActions>
                     <Button onClick={handleConfirmClose}>Nie</Button>
