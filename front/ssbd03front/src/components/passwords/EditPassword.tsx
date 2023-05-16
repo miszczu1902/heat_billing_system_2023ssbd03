@@ -11,8 +11,10 @@ import ListItem from '@mui/material/ListItem';
 import axios from 'axios';
 import { API_URL } from '../../consts';
 import {useCookies} from 'react-cookie';
+import {useTranslation} from "react-i18next";
 
 const EditPassword = () => {
+    const {t, i18n} = useTranslation();
     const [cookies] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
     const [open, setOpen] = React.useState(false);
@@ -45,7 +47,7 @@ const EditPassword = () => {
 
     const checkOldAndNewPasswords = (oldPassword: string, newPassword: string): boolean => {
         if (oldPassword === newPassword) {
-            setOldAndNewPasswordSameError("Stare i nowe hasło nie mogą być takie same");
+            setOldAndNewPasswordSameError(t('edit_password.old_and_new_password_same_error'));
             setOldAndNewPasswordSameValid(false);
             return false;
         }
@@ -56,7 +58,7 @@ const EditPassword = () => {
 
     const checkNewAndRepeatedNewPasswords = (newPassword: string, repeatedNewPassword: string): boolean => {
         if (newPassword !== repeatedNewPassword) {
-            setNewAndRepeatedNewPasswordNotSameError("Nowe i powtórzone nowe hasło muszą być takie same");
+            setNewAndRepeatedNewPasswordNotSameError(t('edit_password.new_and_repeated_new_password_not_same_error'));
             setNewAndRepeatedNewPasswordNotSameValid(false);
             return false;
         }
@@ -72,8 +74,8 @@ const EditPassword = () => {
         let oldAndNewPasswordSameValidNow = checkOldAndNewPasswords(password, newPassword);
 
         if (!regex.test(password)) {
-            setOldPasswordError("Hasło musi zawierać conajmniej 8 znaków, jedną wielką i małą literę, " +
-                "cyfrę i jeden ze znaków specjalnych: @$!%*?&");
+            setOldPasswordError(t('edit_password.old_password_error_one') +
+                t('edit_password.old_password_error_two'));
             setValidData(false);
         } else {
             setOldPasswordError("");
@@ -94,8 +96,8 @@ const EditPassword = () => {
         let oldAndNewPasswordSameValidNow = checkOldAndNewPasswords(oldPassword, password);
         let newAndRepeatedNewPasswordNotSameValidNow = checkNewAndRepeatedNewPasswords(password, repeatedNewPassword);
         if (!regex.test(password)) {
-            setNewPasswordError("Hasło musi zawierać conajmniej 8 znaków, jedną wielką i małą literę, " +
-                "cyfrę i jeden ze znaków specjalnych: @$!%*?&");
+            setOldPasswordError(t('edit_password.old_password_error_one') +
+                t('edit_password.old_password_error_two'));
             setValidData(false);
         } else {
             setNewPasswordError("");
@@ -114,8 +116,8 @@ const EditPassword = () => {
         const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/;
         let newAndRepeatedNewPasswordNotSameValidNow = checkNewAndRepeatedNewPasswords(newPassword, password);
         if (!regex.test(password)) {
-            setRepeatedNewPasswordError("Hasło musi zawierać conajmniej 8 znaków, jedną wielką i małą literę, " +
-                "cyfrę i jeden ze znaków specjalnych: @$!%*?&");
+            setRepeatedNewPasswordError(t('edit_password.old_password_error_one') +
+                t('edit_password.old_password_error_two'));
             setRepeatedNewPasswordValid(false);
             setValidData(false);
         } else {
@@ -177,7 +179,7 @@ const EditPassword = () => {
             setDataError("");
             setConfirmOpen(true);
         } else {
-            setDataError("Wprowadź poprawne dane");
+            setDataError(t('edit_password.data_error'));
         }
     }
 
@@ -202,7 +204,7 @@ const EditPassword = () => {
                 <Button onClick={handleClickOpen} variant="contained">Zmień hasło</Button>
             </div>
             <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-                <DialogTitle>Wypełnij formularz zmiany hasła</DialogTitle>
+                <DialogTitle>{t('edit_password.change_title')}</DialogTitle>
                 <DialogContent>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
                         <form onSubmit={handleSumbit}>
@@ -214,7 +216,7 @@ const EditPassword = () => {
                                             label="Stare hasło"
                                             defaultValue= {oldPassword}
                                             type="password"
-                                            helperText="Wprowadź stare hasło"
+                                            helperText={t('edit_password.help_text_old_password')}
                                         />
                                         <div className="form-group">
                                             {oldPasswordError}
@@ -228,7 +230,7 @@ const EditPassword = () => {
                                             label="Nowe hasło"
                                             defaultValue= {newPassword}
                                             type="password"
-                                            helperText="Wprowadź nowe hasło"
+                                            helperText={t('edit_password.help_text_new_password')}
                                         />
                                         <div className="form-group">
                                             {newPasswordError}
@@ -242,7 +244,7 @@ const EditPassword = () => {
                                             label="Powtórz nowe hasło"
                                             defaultValue= {repeatedNewPassword}
                                             type="password"
-                                            helperText="Powtórz nowe hasło"
+                                            helperText={t('edit_password.help_text_repeated_password')}
                                         />
                                         <div className="form-group">
                                             {repeatedNewPasswordError}
@@ -263,27 +265,27 @@ const EditPassword = () => {
                     </Box>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleClose}>{t('confirm.cancel')}</Button>
                     <Button onClick={handleConfirm} disabled={!validData}>Ok</Button>
                 </DialogActions>
             </Dialog>
 
             <Dialog disableEscapeKeyDown open={confirmOpen} onClose={handleConfirmClose}>
-                <DialogTitle>Czy na pewno chcesz zmienić swoje hasło?</DialogTitle>
+                <DialogTitle>{t('edit_password.confirm_title')}</DialogTitle>
                 <DialogActions>
-                    <Button onClick={handleConfirmClose}>Nie</Button>
-                    <Button onClick={handleConfirmConfirm}>Tak</Button>
+                    <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
+                    <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
                 </DialogActions>
             </Dialog>
 
             <Dialog disableEscapeKeyDown open={successOpen}>
-                <DialogTitle>Hasło zostało zmienione</DialogTitle>
-                <Button onClick={handleSuccessClose}>Ok</Button>
+                <DialogTitle>{t('edit_password.success_title')}</DialogTitle>
+                <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
             </Dialog>
 
             <Dialog disableEscapeKeyDown open={errorOpen}>
                 <DialogTitle>{errorOpenMessage}</DialogTitle>
-                <Button onClick={handleErrorClose}>Ok</Button>
+                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
             </Dialog>
         </div>
     );

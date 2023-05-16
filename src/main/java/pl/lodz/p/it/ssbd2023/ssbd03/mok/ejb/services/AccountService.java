@@ -45,6 +45,8 @@ public interface AccountService {
 
     void editSelfPersonalData(String firstName, String surname, String etag);
 
+    void changeLanguage(String language);
+
     void editUserPersonalData(String username, String firstName, String surname, String etag);
 
     void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword, String etag);

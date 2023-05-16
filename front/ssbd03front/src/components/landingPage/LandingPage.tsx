@@ -4,8 +4,10 @@ import React, {useEffect, useState} from "react";
 import {useCookies} from "react-cookie";
 import NavbarPanel from "../navigation/NavbarPanel";
 import Logo from "../../assets/logo.svg";
+import {useTranslation} from "react-i18next";
 
 const LandingPage = () => {
+    const {t, i18n} = useTranslation();
     const navigate = useNavigate();
     const [loggedIn, setLoggedIn] = useState(false);
     const [cookies, setCookie] = useCookies(["token"]);
@@ -29,23 +31,23 @@ const LandingPage = () => {
                     <Grid container direction="column" alignItems="center" spacing={4}>
                         <Grid item>
                             <Typography variant="h4" component="h1">
-                                Projekt zespołu 3 SSBD 2023
+                                {t('landing_page.title')}
                             </Typography>
                         </Grid>
                         <Grid item>
                             <Typography variant="subtitle1">
-                                System rozliczania ciepła w lokalach w wielu budynkach.
+                                {t('landing_page.subtitle')}
                             </Typography>
                         </Grid>
                         {!loggedIn &&
                             <Grid item>
                                 <Button className="landing-page-button" variant="contained" color="primary"
                                         onClick={() => handleButtonClick('/register')}>
-                                    Zarejestruj się
+                                    {t('navbar.register')}
                                 </Button>
                                 <Button className="landing-page-button" variant="contained" color="primary"
                                         onClick={() => handleButtonClick('/login')}>
-                                    Zaloguj się
+                                    {t('navbar.login')}
                                 </Button>
                             </Grid>
                         }
