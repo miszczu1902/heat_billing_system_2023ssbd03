@@ -37,6 +37,7 @@
   },
   "login":
   {
+    "title": "Logowanie",
     "username": "Nazwa użytkownika",
     "enter_username": "Wprowadź nazwę użytkownika",
     "password": "Hasło",
