@@ -12,6 +12,7 @@ import EditPassword from "../components/passwords/EditPassword";
 import ResetPassword from "../components/passwords/ResetPassword";
 import ActivateFromEmail from "../components/registration/ActivateFromEmail";
 import ChangePhoneNumber from "../components/owner/ChangePhoneNumber";
+import EditUserPassword from "../components/passwords/EditUserPassword";
 import Profile from "../components/account/Profile";
 
 const router = createBrowserRouter([
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
             {
                 path: "/accounts/reset-password",
                 element: <ResetPassword/>
+            },
+            {
+                path: "/accounts/:username/password",
+                element: <EditUserPassword/>
             },
             {
                 path: '/login',
