@@ -69,8 +69,8 @@ public class AccountEndpoint {
     public Response authenticate(@Valid LoginDTO loginDTO) {
         try {
             final String token = accountService.authenticate(loginDTO.getUsername(), loginDTO.getPassword());
-            final String language = accountService.updateLoginData(loginDTO.getUsername(), true);
-            return Response.ok().header("Bearer", token).header("Language", language).build();
+            accountService.updateLoginData(loginDTO.getUsername(), true);
+            return Response.ok().header("Bearer", token).header("Language", "PL").build();
         } catch (Exception ex) {
             accountService.updateLoginData(loginDTO.getUsername(), false);
             throw AppException.invalidCredentialsException();
@@ -143,6 +143,16 @@ public class AccountEndpoint {
                                      @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
         accountService.editSelfPersonalData(editPersonalDataDTO.getFirstName(), editPersonalDataDTO.getSurname(), etag, editPersonalDataDTO.getVersion());
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @PATCH
+    @EtagValidator
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/self/language")
+    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
+    public Response changeLanguage(@NotNull @Valid ChangeLanguageDTO changeLanguageDTO) {
+        accountService.changeLanguage(changeLanguageDTO.getLanguage());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
