@@ -12,6 +12,7 @@ import axios from 'axios';
 import { API_URL } from '../../consts';
 import {useCookies} from 'react-cookie';
 import {useEffect} from "react";
+import jwt from "jwt-decode";
 
 const EditPassword = () => {
     const [cookies] = useCookies(["token"]);
@@ -42,19 +43,23 @@ const EditPassword = () => {
     const [errorOpen, setErrorOpen] = React.useState(false);
     const [errorOpenMessage, setErrorOpenMessage] = React.useState("");
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         await axios.get(`${API_URL}/accounts/${username}`, {
-    //             headers: {
-    //                 Authorization: 'Bearer ' + token
-    //             }
-    //         })
-    //             .then(response => {
-    //                 setEtag(response.headers["etag"]);
-    //             });
-    //     };
-    //     fetchData();
-    // }, []);
+    useEffect(() => {
+        if (cookies.token !== "undefined" && cookies.token !== undefined) {
+            const decodedToken = jwt(cookies.token);
+            const username = JSON.parse(JSON.stringify(decodedToken)).sub;
+            const fetchData = async () => {
+                await axios.get(`${API_URL}/accounts/${username}`, {
+                    headers: {
+                        Authorization: 'Bearer ' + token
+                    }
+                })
+                    .then(response => {
+                        setEtag(response.headers["etag"]);
+                    });
+            };
+            fetchData();
+        }
+    }, []);
 
     const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
