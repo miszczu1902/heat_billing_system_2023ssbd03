@@ -1,6 +1,25 @@
 version: '3.9'
 
 services:
+  appserver:
+    image: payara/server-full:6.2023.3-jdk17
+    ports:
+      - "8080:8080"
+      - "4848:4848"
+      - "9009:9009"
+    extra_hosts:
+      - "database:172.25.0.3"
+      - "appserver:172.25.0.4"
+      - "nginx:172.25.0.2"
+    networks:
+      heatappnet:
+        ipv4_address: 172.25.0.4
+    environment:
+      - JVM_ARGS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9009
+    depends_on:
+      database:
+        condition: service_healthy
+
   database:
     image: postgres
     restart: always
