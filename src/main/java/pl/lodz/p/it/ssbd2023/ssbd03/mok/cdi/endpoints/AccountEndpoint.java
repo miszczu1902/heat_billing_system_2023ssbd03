@@ -12,6 +12,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.VersionDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
@@ -83,7 +84,7 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.OWNER)
     public Response changePhoneNumber(@Valid ChangePhoneNumberDTO changePhoneNumberDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        accountService.changePhoneNumber(changePhoneNumberDTO.getPhoneNumber(), etag);
+        accountService.changePhoneNumber(changePhoneNumberDTO.getPhoneNumber(), etag, changePhoneNumberDTO.getVersion());
         return Response.noContent().build();
     }
 
@@ -96,7 +97,7 @@ public class AccountEndpoint {
                                        @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
         accountService.changeSelfPassword(changeSelfPasswordDTO.getOldPassword(), changeSelfPasswordDTO.getNewPassword(),
-                changeSelfPasswordDTO.getRepeatedNewPassword(), etag);
+                changeSelfPasswordDTO.getRepeatedNewPassword(), etag, changeSelfPasswordDTO.getVersion());
         return Response.noContent().build();
     }
 
@@ -110,7 +111,7 @@ public class AccountEndpoint {
                                        @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
         accountService.changeUserPassword(username, changeUserPasswordDTO.getNewPassword(),
-                changeUserPasswordDTO.getRepeatedNewPassword(), etag);
+                changeUserPasswordDTO.getRepeatedNewPassword(), etag, changeUserPasswordDTO.getVersion());
         return Response.noContent().build();
     }
 
@@ -141,7 +142,7 @@ public class AccountEndpoint {
     public Response editPersonalData(@NotNull @Valid EditPersonalDataDTO editPersonalDataDTO,
                                      @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        accountService.editSelfPersonalData(editPersonalDataDTO.getFirstName(), editPersonalDataDTO.getSurname(), etag);
+        accountService.editSelfPersonalData(editPersonalDataDTO.getFirstName(), editPersonalDataDTO.getSurname(), etag, editPersonalDataDTO.getVersion());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
@@ -185,7 +186,7 @@ public class AccountEndpoint {
         accountService.editUserPersonalData(username,
                 editPersonalDataDTO.getFirstName(),
                 editPersonalDataDTO.getSurname(),
-                etag);
+                etag, editPersonalDataDTO.getVersion());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
@@ -193,9 +194,11 @@ public class AccountEndpoint {
     @EtagValidator
     @Path("/{username}/disable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public Response disableUserAccount(@PathParam("username") String username, @Context HttpServletRequest request) {
+    public Response disableUserAccount(@PathParam("username") String username,
+                                       @NotNull @Valid VersionDTO versionDTO,
+                                       @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        accountService.disableUserAccount(username, etag);
+        accountService.disableUserAccount(username, etag, versionDTO.getVersion());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
@@ -203,9 +206,11 @@ public class AccountEndpoint {
     @EtagValidator
     @Path("/{username}/enable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public Response enableUserAccount(@PathParam("username") String username, @Context HttpServletRequest request) {
+    public Response enableUserAccount(@PathParam("username") String username,
+                                      @NotNull @Valid VersionDTO versionDTO,
+                                      @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        accountService.enableUserAccount(username, etag);
+        accountService.enableUserAccount(username, etag, versionDTO.getVersion());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
@@ -281,7 +286,7 @@ public class AccountEndpoint {
                                     @PathParam("username") String username,
                                     @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        accountService.changeUserEmail(changeEmailDTO.getNewEmail(), username, etag);
+        accountService.changeUserEmail(changeEmailDTO.getNewEmail(), username, etag, changeEmailDTO.getVersion());
         return Response.noContent().build();
     }
 
@@ -334,7 +339,7 @@ public class AccountEndpoint {
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
     public Response changeSelfEmail(@NotNull @Valid ChangeEmailDTO changeEmailDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        accountService.changeSelfEmail(changeEmailDTO.getNewEmail(), etag);
+        accountService.changeSelfEmail(changeEmailDTO.getNewEmail(), etag, changeEmailDTO.getVersion());
         return Response.noContent().build();
     }
 
