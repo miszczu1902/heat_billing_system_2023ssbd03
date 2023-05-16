@@ -24,22 +24,23 @@ const NavbarPanel: React.FC = () => {
     const [open, setOpen] = React.useState(false);
     const [language, setLanguage] = React.useState<string>('');
     const [navbarColor, setNavbarColor] = React.useState('#ffffff');
-    const [cookies, setCookie, removeCookie] = useCookies(["token", "language"]);
-    const [role, setRole] = React.useState('GUEST');
+    const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+    const [role, setRole] = React.useState(['GUEST']);
 
     useEffect(() => {
-        if (cookies.token != "undefined" && cookies.token != undefined) {
+        if (cookies.token !== "undefined" && cookies.token !== undefined) {
             const decodedToken = jwt(cookies.token);
-            setRole(JSON.parse(JSON.stringify(decodedToken)).role);
+            const decodedRole = JSON.parse(JSON.stringify(decodedToken)).role;
+            setRole(decodedRole.split(','));
             const currentTimestamp = Math.floor(new Date().getTime() / 1000);
             if (JSON.parse(JSON.stringify(decodedToken)).exp < currentTimestamp) {
                 removeCookie('token');
                 navigate('');
             }
         } else {
-            setRole('GUEST');
+            setRole(['GUEST']);
         }
-    }, [cookies.token, role]);
+    }, [cookies.token]);
 
     const handleChange = (event: SelectChangeEvent<typeof language>) => {
         setLanguage(event.target.value);
@@ -54,6 +55,9 @@ const NavbarPanel: React.FC = () => {
             setOpen(false);
         }
     };
+    const handleClickOpenLogin = () => {
+        navigate('/login');
+    };
     const handleClickOpenLogout = () => {
         navigate('/');
         window.location.reload();
@@ -63,19 +67,19 @@ const NavbarPanel: React.FC = () => {
     };
 
     useEffect(() => {
-        switch (role) {
-            case 'ADMIN':
-                setNavbarColor('#58d1fa');
-                break;
-            case 'MANAGER':
-                setNavbarColor('#1c75ec');
-                break;
-            case 'OWNER':
-                setNavbarColor('#7b79d4');
-                break;
-            case 'GUEST':
-                setNavbarColor('#1c8de4');
+        if (role.includes('ADMIN')) {
+            setNavbarColor('#58d1fa');
+            return;
         }
+        if (role.includes('MANAGER')) {
+            setNavbarColor('#1c75ec');
+            return;
+        }
+        if (role.includes('OWNER')) {
+            setNavbarColor('#7b79d4');
+            return;
+        }
+        setNavbarColor('#1c8de4');
     }, [role]);
 
     return (
@@ -86,7 +90,7 @@ const NavbarPanel: React.FC = () => {
                     <img src={Logo} alt="Logo" onClick={() => navigate('/')}/>
                 </Icon>
                 {
-                    (role === 'ADMIN' || role === 'MANAGER') &&
+                    (role.includes('ADMIN') || role.includes('MANAGER')) &&
                     <Typography variant="h6" sx={{flexGrow: 1, marginLeft: 2}} onClick={() => navigate('/accounts')}>
                         Lista kont
                     </Typography>
