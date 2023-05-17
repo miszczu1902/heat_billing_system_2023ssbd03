@@ -147,5 +147,13 @@
   {
     "title": "Projekt zespołu 3 SSBD 2023",
     "subtitle": "System rozliczania ciepła w lokalach w wielu budynkach."
+  },
+  "profile":
+  {
+    "title": "Account info",
+    "phone_number_error" : "Numer telefonu musi zawierać 9 cyfr.",
+    "license_error" : "Licencja musi skladać się z 20 znaków.",
+    "license" : "Licencja",
+    "access_levels" : "Access levels"
   }
 }

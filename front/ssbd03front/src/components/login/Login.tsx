@@ -20,6 +20,7 @@ import {Icon} from "@mui/material";
 import Logo from './../../assets/logo.svg';
 import jwt from "jwt-decode";
 import {useTranslation} from "react-i18next";
+import NavbarPanel from "../navigation/NavbarPanel";
 
 const theme = createTheme();
 
@@ -239,3 +240,5 @@ const Login = () => {
         </ThemeProvider>
     );
 }
+
+export default Login;
