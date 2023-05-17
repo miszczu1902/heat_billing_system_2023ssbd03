@@ -25,18 +25,26 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.EtagValidator;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AccountMapper;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Path("/accounts")
 @RequestScoped
 public class AccountEndpoint {
     @Inject
     private AccountService accountService;
+
+    private int txRetries = Integer.parseInt(LoadConfig.loadPropertyFromConfig("tx.retries"));
+
+    protected static final Logger LOGGER = Logger.getGlobal();
 
     @Inject
     MessageSigner messageSigner;
@@ -207,6 +215,27 @@ public class AccountEndpoint {
                                        @NotNull @Valid VersionDTO versionDTO,
                                        @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
+
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                accountService.disableUserAccount(username, etag, versionDTO.getVersion());
+                rollbackTX = accountService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+            } catch (OptimisticLockAppException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
         accountService.disableUserAccount(username, etag, versionDTO.getVersion());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
@@ -219,6 +248,27 @@ public class AccountEndpoint {
                                       @NotNull @Valid VersionDTO versionDTO,
                                       @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
+
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                accountService.enableUserAccount(username, etag, versionDTO.getVersion());
+                rollbackTX = accountService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+            } catch (OptimisticLockAppException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
         accountService.enableUserAccount(username, etag, versionDTO.getVersion());
         return Response.status(Response.Status.NO_CONTENT).build();
     }

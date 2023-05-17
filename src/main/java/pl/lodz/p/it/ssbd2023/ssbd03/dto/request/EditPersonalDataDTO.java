@@ -21,6 +21,12 @@ public class EditPersonalDataDTO extends VersionDTO implements Serializable, Sig
     @Size(max = 32, message = "Max length for surname is 32")
     private String surname;
 
+    public EditPersonalDataDTO(int version, String firstName, String surname) {
+        super(version);
+        this.firstName = firstName;
+        this.surname = surname;
+    }
+
     @Override
     public String messageToSign() {
         return firstName.concat(surname);

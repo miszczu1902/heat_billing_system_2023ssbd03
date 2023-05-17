@@ -11,4 +11,8 @@ import lombok.NoArgsConstructor;
 public class VersionDTO {
     @NotNull
     protected Long version;
+
+    public VersionDTO(int version) {
+        this.version = (long) version;
+    }
 }
