@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.integration.api.personalData;
+package pl.lodz.p.it.ssbd2023.ssbd03.integration.api;
 
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
@@ -18,7 +18,6 @@ public class EditPersonalDataTest extends BasicIntegrationConfigTest {
 
     @Before
     public void initialize() {
-        ETAG = "";
         auth(new LoginDTO("johndoe", "Password$123"));
     }
 
@@ -30,8 +29,6 @@ public class EditPersonalDataTest extends BasicIntegrationConfigTest {
                 ContentType.JSON);
 
         assertEquals(200, getUserPersonalDataResponse.getStatusCode());
-
-        ETAG = getUserPersonalDataResponse.header("ETag");
 
         JsonPath jsonPath = new JsonPath(getUserPersonalDataResponse.getBody().asString());
         int version = jsonPath.getInt("version");
@@ -54,8 +51,6 @@ public class EditPersonalDataTest extends BasicIntegrationConfigTest {
 
         assertEquals(200, getUserPersonalDataResponse.getStatusCode());
 
-        ETAG = getUserPersonalDataResponse.header("ETag");
-
         JsonPath jsonPath = new JsonPath(getUserPersonalDataResponse.getBody().asString());
         int version = jsonPath.getInt("version");
         EditPersonalDataDTO personalDataDTO = new EditPersonalDataDTO(version, "Jan", "Doe");
@@ -76,8 +71,6 @@ public class EditPersonalDataTest extends BasicIntegrationConfigTest {
                 ContentType.JSON);
 
         assertEquals(200, getUserPersonalDataResponse.getStatusCode());
-
-        ETAG = "";
 
         JsonPath jsonPath = new JsonPath(getUserPersonalDataResponse.getBody().asString());
         int version = jsonPath.getInt("version");
@@ -100,8 +93,6 @@ public class EditPersonalDataTest extends BasicIntegrationConfigTest {
 
         assertEquals(200, getUserPersonalDataResponse.getStatusCode());
 
-        ETAG = "";
-
         JsonPath jsonPath = new JsonPath(getUserPersonalDataResponse.getBody().asString());
         int version = jsonPath.getInt("version");
         EditPersonalDataDTO personalDataDTO = new EditPersonalDataDTO(version, "Jane", "Kowalska");
@@ -123,9 +114,6 @@ public class EditPersonalDataTest extends BasicIntegrationConfigTest {
 
         assertEquals(200, getUserPersonalDataResponse.getStatusCode());
 
-        ETAG = getUserPersonalDataResponse.header("ETag");
-
-
         Response changePersonalDataResponse = sendRequestAndGetResponse(Method.PATCH,
                 "/accounts/janekowalski/personal-data",
                 null,
@@ -142,8 +130,6 @@ public class EditPersonalDataTest extends BasicIntegrationConfigTest {
                 ContentType.JSON);
 
         assertEquals(200, getUserPersonalDataResponse.getStatusCode());
-
-        ETAG = getUserPersonalDataResponse.header("ETag");
 
         JsonPath jsonPath = new JsonPath(getUserPersonalDataResponse.getBody().asString());
         int version = jsonPath.getInt("version");

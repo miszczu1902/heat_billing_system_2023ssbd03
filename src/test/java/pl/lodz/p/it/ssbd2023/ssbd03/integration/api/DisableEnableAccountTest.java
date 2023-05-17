@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.integration.api.account;
+package pl.lodz.p.it.ssbd2023.ssbd03.integration.api;
 
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
@@ -17,7 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DisableEnableAccountTest extends BasicIntegrationConfigTest {
     @Before
     public void initialize() {
-        ETAG = "";
         auth(new LoginDTO("johndoe", "Password$123"));
     }
 
@@ -29,8 +28,6 @@ public class DisableEnableAccountTest extends BasicIntegrationConfigTest {
                 ContentType.JSON);
 
         assertEquals(200, getUserResponse.getStatusCode());
-
-        ETAG = getUserResponse.header("ETag");
 
         JsonPath jsonPath = new JsonPath(getUserResponse.getBody().asString());
         int version = jsonPath.getInt("version");
@@ -56,8 +53,6 @@ public class DisableEnableAccountTest extends BasicIntegrationConfigTest {
 
         assertEquals(200, getUserResponse.getStatusCode());
 
-        ETAG = getUserResponse.header("ETag");
-
         JsonPath jsonPath = new JsonPath(getUserResponse.getBody().asString());
         int version = jsonPath.getInt("version");
         VersionDTO versionDTO = new VersionDTO(version);
@@ -82,8 +77,6 @@ public class DisableEnableAccountTest extends BasicIntegrationConfigTest {
 
         assertEquals(200, getUserResponse.getStatusCode());
 
-        ETAG = getUserResponse.header("ETag");
-
         JsonPath jsonPath = new JsonPath(getUserResponse.getBody().asString());
         int version = jsonPath.getInt("version");
         VersionDTO versionDTO = new VersionDTO(version);
@@ -106,8 +99,6 @@ public class DisableEnableAccountTest extends BasicIntegrationConfigTest {
                 ContentType.JSON);
 
         assertEquals(200, getUserResponse.getStatusCode());
-
-        ETAG = getUserResponse.header("ETag");
 
         JsonPath jsonPath = new JsonPath(getUserResponse.getBody().asString());
         int version = jsonPath.getInt("version");

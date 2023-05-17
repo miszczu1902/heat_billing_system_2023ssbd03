@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.integration.api.personalData;
+package pl.lodz.p.it.ssbd2023.ssbd03.integration.api;
 
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
@@ -25,7 +25,6 @@ public class EditPersonalDataConcurrencyTest extends BasicIntegrationConfigTest 
 
     @Before
     public void initialize() {
-        ETAG = "";
         auth(new LoginDTO("johndoe", "Password$123"));
     }
 
@@ -40,8 +39,6 @@ public class EditPersonalDataConcurrencyTest extends BasicIntegrationConfigTest 
                 ContentType.JSON);
 
         assertEquals(200, getUserPersonalDataResponse.getStatusCode());
-
-        ETAG = getUserPersonalDataResponse.header("ETag");
 
         JsonPath jsonPath = new JsonPath(getUserPersonalDataResponse.getBody().asString());
         int version = jsonPath.getInt("version");
@@ -73,8 +70,6 @@ public class EditPersonalDataConcurrencyTest extends BasicIntegrationConfigTest 
                 ContentType.JSON);
 
         assertEquals(200, getUserPersonalDataResponse2.getStatusCode());
-
-        ETAG = getUserPersonalDataResponse2.header("ETag");
 
         JsonPath jsonPath2 = new JsonPath(getUserPersonalDataResponse2.getBody().asString());
         int version2 = jsonPath2.getInt("version");
