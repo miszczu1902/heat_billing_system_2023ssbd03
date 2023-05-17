@@ -62,6 +62,7 @@ public class GetAccountsListTest extends BasicIntegrationConfigTest {
 
         assertEquals(200, statusCode, "Check if request responses ok.");
         assertTrue(listOfAccounts.contains(owner.getUsername()), "Check if list contains new registered account");
+
         logger.info("PASSED!");
     }
 }
