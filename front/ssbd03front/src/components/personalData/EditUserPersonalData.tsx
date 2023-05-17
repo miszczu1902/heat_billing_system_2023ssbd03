@@ -22,6 +22,7 @@ export default function EditUserPersonalData() {
   const [cookies, setCookie] = useCookies(["token", "etag"]);
   const token = "Bearer " + cookies.token;
   const etag = cookies.etag;
+  const [version, setVersion] = React.useState("");
 
   const [open, setOpen] = React.useState(false);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
@@ -48,8 +49,13 @@ export default function EditUserPersonalData() {
         setName(response.data.firstName.toString());
         setSurname(response.data.surname.toString());
         setCookie("etag", response.headers.etag);
+        setVersion(response.data.version.toString());
       });
   };
+
+  useEffect(() => { 
+    fetchData();
+  }, []);
 
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -109,7 +115,8 @@ export default function EditUserPersonalData() {
     }
     const personalDataDTO = {
       firstName: name.toString(),
-      surname: surname.toString()
+      surname: surname.toString(),
+      version: version.toString()
     }
 
     if(nameError === "" && surnameError === "") {

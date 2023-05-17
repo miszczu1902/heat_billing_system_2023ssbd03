@@ -15,6 +15,7 @@ const DisableAccount = () => {
     const [cookies, setCookie] = useCookies(["token", "etag"]);
     const token = "Bearer " + cookies.token;
     const etag = cookies.etag;
+    const [version, setVersion] = React.useState("");
 
     const [open, setOpen] = React.useState(false);
     const [confirmOpen, setConfirmOpen] = React.useState(false);
@@ -30,11 +31,16 @@ const DisableAccount = () => {
       })
       .then(response => {
         setCookie("etag", response.headers.etag);
+        setVersion(response.data.version.toString());
       });
   };
 
   const disable = async () => {
-    axios.patch(`${API_URL}/accounts/${username}/disable`, {}, {
+    axios.patch(`${API_URL}/accounts/${username}/disable`, 
+    {
+      version: version
+    }, 
+    {
        headers: {
         'Authorization': token,
         'If-Match': etag

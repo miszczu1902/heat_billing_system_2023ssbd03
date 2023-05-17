@@ -18,9 +18,11 @@ import {useTranslation} from "react-i18next";
 
 const EditPersonalData = () => {
   const {t, i18n} = useTranslation();
-  const [cookies, setCookie] = useCookies(["token", "etag"]);
+  const [cookies, setCookie] = useCookies(["token", "etag", "version"]);
   const token = "Bearer " + cookies.token;
   const etag = cookies.etag;
+  const [version, setVersion] = React.useState("");
+
   const [open, setOpen] = React.useState(false);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
@@ -46,8 +48,13 @@ const EditPersonalData = () => {
         setName(response.data.firstName.toString());
         setSurname(response.data.surname.toString());
         setCookie("etag", response.headers.etag);
+        setVersion(response.data.version.toString());
       });
   };
+
+  useEffect(() => { 
+    fetchData();
+  }, []);
 
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -106,7 +113,8 @@ const EditPersonalData = () => {
     }
     const personalDataDTO = {
       firstName: name.toString(),
-      surname: surname.toString()
+      surname: surname.toString(),
+      version: version.toString()
     }
 
     if(nameError === "" && surnameError === "") {

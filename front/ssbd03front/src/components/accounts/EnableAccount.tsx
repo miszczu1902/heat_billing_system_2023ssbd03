@@ -9,6 +9,7 @@ import { useParams} from "react-router-dom";
 import {useCookies} from 'react-cookie';
 import {useTranslation} from "react-i18next";
 import { useEffect } from 'react';
+import { set } from 'react-hook-form';
 
 const EnableAccount = () => {
   const {t, i18n} = useTranslation();
@@ -16,6 +17,7 @@ const EnableAccount = () => {
   const [cookies, setCookie] = useCookies(["token", "etag"]);
   const token = "Bearer " + cookies.token;
   const etag = cookies.etag;
+  const [version, setVersion] = React.useState("");
 
   const [open, setOpen] = React.useState(false);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
@@ -31,11 +33,15 @@ const EnableAccount = () => {
       })
       .then(response => {
         setCookie("etag", response.headers.etag);
+        setVersion(response.data.version);
       });
   };
 
   const enable = async () => {
-    axios.patch(`${API_URL}/accounts/${username}/enable`, {},
+    axios.patch(`${API_URL}/accounts/${username}/enable`, 
+    {
+      version: version
+    },
     {
        headers: {
         'Authorization': token,
