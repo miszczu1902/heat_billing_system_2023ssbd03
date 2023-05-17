@@ -7,8 +7,6 @@ import io.restassured.http.Method;
 import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import lombok.Getter;
-import lombok.Setter;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,11 +24,10 @@ public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
     private static ObjectMapper mapper = new ObjectMapper();
 
     /* Test data */
-    @Getter
-    @Setter
     private static String BEARER_TOKEN = "";
+    protected static String ETAG = "";
 
-    protected static Response sendRequestAndGetResponse(Method method, String path, Object object, ContentType contentType) {
+    protected static Response sendRequestAndGetResponse(Method method, String path, Object object, ContentType contentType, Boolean withETag) {
         contentType = contentType == null ? ContentType.ANY : contentType;
         RequestSpecification request = given().contentType(contentType);
         String jsonObject = objectToJson(object);
@@ -38,9 +35,11 @@ public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
         if (object != null) request.body(jsonObject);
         if (!BEARER_TOKEN.equals("") && !path.equals("/accounts/login") && !path.equals("/accounts/register"))
             request.header(new Header("Authorization", "Bearer " + BEARER_TOKEN));
+        if (!ETAG.equals("") && withETag) request.header(new Header("If-Match", ETAG));
 
         logBeforeRequest(method, path, jsonObject, contentType);
         Response response = request.request(method, baseURI + path);
+        ETAG = Optional.ofNullable(response.getHeader("ETag")).orElse("");
 
         logAfterRequest(response);
         return response;
@@ -55,7 +54,7 @@ public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
     }
 
     protected static void auth(LoginDTO loginData) {
-        BEARER_TOKEN = sendRequestAndGetResponse(Method.POST, "/accounts/login", loginData, ContentType.JSON)
+        BEARER_TOKEN = sendRequestAndGetResponse(Method.POST, "/accounts/login", loginData, ContentType.JSON, false)
                 .getHeader("Bearer");
     }
 
@@ -74,7 +73,8 @@ public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
 
     protected static void logAfterRequest(Response response) {
         logger.info("Status code: " + response.getStatusCode() + "\n" +
-                "Response body: \n" + response.getBody().asPrettyString() + "\n");
+                "Response body: \n" + response.getBody().asPrettyString() + "\n"
+                + "ETag: " + ETAG + "\n");
     }
 
     @BeforeClass

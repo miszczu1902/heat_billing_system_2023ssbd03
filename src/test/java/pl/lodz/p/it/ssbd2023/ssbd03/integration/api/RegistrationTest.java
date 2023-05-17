@@ -27,7 +27,7 @@ public class RegistrationTest extends BasicIntegrationConfigTest {
 
     @BeforeClass
     public static void prepareTest() {
-        int statusCode = sendRequestAndGetResponse(Method.POST, "/accounts/register", initalizedOwner, ContentType.JSON)
+        int statusCode = sendRequestAndGetResponse(Method.POST, "/accounts/register", initalizedOwner, ContentType.JSON, false)
                 .getStatusCode();
         assertEquals(201, statusCode);
         logger.info("DATA PREPARED!");
@@ -36,7 +36,7 @@ public class RegistrationTest extends BasicIntegrationConfigTest {
     @Test
     public void registerOwnerTest() {
         CreateOwnerDTO owner = IntegrationTestObjectsFactory.createAccountToRegister();
-        int statusCode = sendRequestAndGetResponse(Method.POST, "/accounts/register", owner, ContentType.JSON)
+        int statusCode = sendRequestAndGetResponse(Method.POST, "/accounts/register", owner, ContentType.JSON, false)
                 .getStatusCode();
         assertEquals(201, statusCode);
         logger.info("PASSED!");
@@ -45,7 +45,7 @@ public class RegistrationTest extends BasicIntegrationConfigTest {
     @Test
     public void validationDataTest() {
         Arrays.asList("firstName", "surname", "username", "email", "password", "language", "phoneNumber").forEach(field -> {
-            int statusCode = sendRequestAndGetResponse(Method.POST, "/accounts/register", getInvalidOwnerData(field), ContentType.JSON)
+            int statusCode = sendRequestAndGetResponse(Method.POST, "/accounts/register", getInvalidOwnerData(field), ContentType.JSON, false)
                     .getStatusCode();
             assertEquals(400, statusCode, "Field: " + field + " validation.");
             logger.info("PASSED!");
@@ -55,7 +55,7 @@ public class RegistrationTest extends BasicIntegrationConfigTest {
     @Test
     public void tryCreateOwnerWithNotUniqueDataTest() {
         Arrays.asList("username", "email", "phoneNumber").forEach(field -> {
-            int statusCode = sendRequestAndGetResponse(Method.POST, "/accounts/register", createNotUniqueOwner(field), ContentType.JSON)
+            int statusCode = sendRequestAndGetResponse(Method.POST, "/accounts/register", createNotUniqueOwner(field), ContentType.JSON, false)
                     .getStatusCode();
             assertEquals(409, statusCode, "Field: " + field + " unique validation.");
             logger.info("PASSED!");

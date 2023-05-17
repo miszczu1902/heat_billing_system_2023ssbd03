@@ -24,7 +24,7 @@ public class GetAccountsListTest extends BasicIntegrationConfigTest {
 
     @Test
     public void getListOfAccountsTest() {
-        Response response = sendRequestAndGetResponse(Method.GET, "/accounts", null, null);
+        Response response = sendRequestAndGetResponse(Method.GET, "/accounts", null, null, false);
         int statusCode = response.getStatusCode();
         List<String> listOfAccounts = response.body().jsonPath().getList("", AccountForListDTO.class).stream()
                 .map(AccountForListDTO::getUsername).toList();
@@ -37,7 +37,7 @@ public class GetAccountsListTest extends BasicIntegrationConfigTest {
     @Test
     public void getListOfAccountsByOwnerTest() {
         auth(new LoginDTO("janekowalski", "Password$123"));
-        Response response = sendRequestAndGetResponse(Method.GET, "/accounts", null, null);
+        Response response = sendRequestAndGetResponse(Method.GET, "/accounts", null, null, false);
         int statusCode = response.getStatusCode();
         List<String> listOfAccounts = response.body().jsonPath().getList("", AccountForListDTO.class).stream()
                 .map(AccountForListDTO::getUsername).toList();
@@ -50,12 +50,12 @@ public class GetAccountsListTest extends BasicIntegrationConfigTest {
     @Test
     public void registerNewAccountAndGetListOfAccountsTest() {
         CreateOwnerDTO owner = IntegrationTestObjectsFactory.createAccountToRegister();
-        int statusCode = sendRequestAndGetResponse(Method.POST, "/accounts/register", owner, ContentType.JSON)
+        int statusCode = sendRequestAndGetResponse(Method.POST, "/accounts/register", owner, ContentType.JSON, false)
                 .getStatusCode();
         assertEquals(201, statusCode, "Check if account was registered");
         logger.info("Owner registered.");
 
-        Response response = sendRequestAndGetResponse(Method.GET, "/accounts", null, null);
+        Response response = sendRequestAndGetResponse(Method.GET, "/accounts", null, null, false);
         statusCode = response.getStatusCode();
         List<String> listOfAccounts = response.body().jsonPath().getList("", AccountForListDTO.class).stream()
                 .map(AccountForListDTO::getUsername).toList();
