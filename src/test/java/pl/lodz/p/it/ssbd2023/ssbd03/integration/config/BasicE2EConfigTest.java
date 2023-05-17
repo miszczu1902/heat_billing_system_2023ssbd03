@@ -31,14 +31,20 @@ public class BasicE2EConfigTest extends DevelopEnvConfigTest {
     @Setter
     private static String BEARER_TOKEN = "";
 
+    @Getter
+    @Setter
+    private static String ETAG = "";
+
     protected static Response sendRequestAndGetResponse(Method method, String path, Object object, ContentType contentType) {
         contentType = contentType == null ? ContentType.ANY : contentType;
         RequestSpecification request = given().contentType(contentType);
         String jsonObject = objectToJson(object);
 
         if (object != null) request.body(jsonObject);
-        if (!BEARER_TOKEN.equals("") && !path.equals("/auth/login")) //TODO - ten path /auth/login do zmiany
+        if (!BEARER_TOKEN.equals("") && !path.equals("/accounts/login")) //TODO - ten path /auth/login do zmiany
             request.header(new Header("Authorization", "Bearer " + BEARER_TOKEN));
+        if (!ETAG.equals("") && method.equals(Method.PATCH))
+            request.header(new Header("If-Match", ETAG));
 
         logBeforeRequest(method, path, jsonObject, contentType);
         Response response = request.request(method, baseURI + path);
