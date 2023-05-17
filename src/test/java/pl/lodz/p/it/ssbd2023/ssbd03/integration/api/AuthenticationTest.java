@@ -22,7 +22,6 @@ public class AuthenticationTest extends BasicIntegrationConfigTest {
             "997654322"
     );
 
-
     public int authenticate(LoginDTO loginDTO) {
         return sendRequestAndGetResponse(Method.POST, "/accounts/login", loginDTO, ContentType.JSON)
                 .getStatusCode();
