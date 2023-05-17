@@ -132,8 +132,8 @@
     "enable": "Enable",
     "enable_confirm": "Are you sure you want to unblock the user ",
     "success_one": "Username ",
-    "success_two": " has been unlocked",
-    "error": "An error occurred while unlocking the user "
+    "success_two": " has been unblocked",
+    "error": "An error occurred while unblocking the user "
   },
   "disable_account":
   {
