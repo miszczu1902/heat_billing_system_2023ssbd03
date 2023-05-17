@@ -13,6 +13,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.VerifierException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.personalData.PersonalDataConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 
 @ApplicationException(rollback = true)
 public class AppException extends WebApplicationException {
@@ -217,5 +218,9 @@ public class AppException extends WebApplicationException {
 
     public static SignerException createSignerException() {
         return new SignerException(ERROR_ETAG_SIGNER, Response.Status.BAD_REQUEST);
+    }
+
+    public static TransactionRollbackException createTransactionRollbackException() {
+        return new TransactionRollbackException();
     }
 }
