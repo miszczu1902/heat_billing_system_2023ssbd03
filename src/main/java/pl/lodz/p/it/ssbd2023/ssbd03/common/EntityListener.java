@@ -16,20 +16,20 @@ import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 public class EntityListener {
     @PrePersist
     public void initCreatedBy(AbstractEntity entity) {
-        Principal principal = CDI.current().select(SecurityContext.class).get().getCallerPrincipal();
-        AccessLevelMappingFacade accessLevelMappingFacade = CDI.current().select(AccessLevelMappingFacade.class).get();
-        String username = principal.getName();
-        Account account = accessLevelMappingFacade.findByUsernameForEntityListener(username);
+        final Principal principal = CDI.current().select(SecurityContext.class).get().getCallerPrincipal();
+        final AccessLevelMappingFacade accessLevelMappingFacade = CDI.current().select(AccessLevelMappingFacade.class).get();
+        final String username = principal.getName();
+        final Account account = accessLevelMappingFacade.findByUsernameForEntityListener(username);
         entity.setCreatedBy(account);
         entity.setCreationDateTime(LocalDateTime.now(TIME_ZONE));
     }
 
     @PreUpdate
     public void initLastModifiedBy(AbstractEntity entity) {
-        Principal principal = CDI.current().select(SecurityContext.class).get().getCallerPrincipal();
-        AccessLevelMappingFacade accessLevelMappingFacade = CDI.current().select(AccessLevelMappingFacade.class).get();
-        String username = principal.getName();
-        Account account = accessLevelMappingFacade.findByUsernameForEntityListener(username);
+        final Principal principal = CDI.current().select(SecurityContext.class).get().getCallerPrincipal();
+        final AccessLevelMappingFacade accessLevelMappingFacade = CDI.current().select(AccessLevelMappingFacade.class).get();
+        final String username = principal.getName();
+        final Account account = accessLevelMappingFacade.findByUsernameForEntityListener(username);
         entity.setLastModifiedBy(account);
         entity.setLastModificationDateTime(LocalDateTime.now(TIME_ZONE));
     }

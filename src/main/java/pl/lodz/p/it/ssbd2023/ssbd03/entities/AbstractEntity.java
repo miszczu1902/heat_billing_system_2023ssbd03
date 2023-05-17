@@ -30,6 +30,6 @@ public abstract class AbstractEntity {
 
     @Setter
     @OneToOne
-    @JoinColumn(name = "last_modified_by", updatable = false)
+    @JoinColumn(name = "last_modified_by")
     private Account lastModifiedBy;
 }
