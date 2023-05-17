@@ -8,5 +8,7 @@ export interface Account {
     license: string;
     isEnable: boolean;
     isActive: boolean;
-    accessLevels: Array<string>;
+    isUserOwner: boolean;
+    isUserManager: boolean;
+    isUserAdmin: boolean;
 }

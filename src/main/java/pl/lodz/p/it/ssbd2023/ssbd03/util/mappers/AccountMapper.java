@@ -55,8 +55,23 @@ public class AccountMapper {
                 account.getIsActive(),
                 account.getRegisterDate().toString(),
                 account.getAccessLevels().stream()
-                        .map(accessLevel -> (String) accessLevel.getAccessLevel())
-                        .toList(),
+                        .filter(accessLevel -> accessLevel instanceof Owner)
+                        .map(accessLevel -> (Owner) accessLevel)
+                        .findAny()
+                        .map(Owner::getIsActive)
+                        .orElse(null),
+                account.getAccessLevels().stream()
+                        .filter(accessLevel -> accessLevel instanceof Manager)
+                        .map(accessLevel -> (Manager) accessLevel)
+                        .findAny()
+                        .map(Manager::getIsActive)
+                        .orElse(null),
+                account.getAccessLevels().stream()
+                        .filter(accessLevel -> accessLevel instanceof Admin)
+                        .map(accessLevel -> (Admin) accessLevel)
+                        .findAny()
+                        .map(Admin::getIsActive)
+                        .orElse(null),
                 account.getPersonalData().getFirstName(),
                 account.getPersonalData().getSurname(),
                 phoneNumber,
