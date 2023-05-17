@@ -174,7 +174,6 @@ public class AccountEndpoint {
                 .build();
     }
 
-
     @PATCH
     @EtagValidator
     @Consumes(MediaType.APPLICATION_JSON)
