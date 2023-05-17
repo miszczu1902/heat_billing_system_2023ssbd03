@@ -12,7 +12,6 @@ import axios from 'axios';
 import { API_URL } from '../../consts';
 import {useCookies} from 'react-cookie';
 import {useParams} from "react-router-dom";
-import {useEffect} from "react";
 
 const EditPassword = () => {
     const [cookies] = useCookies(["token"]);
@@ -40,21 +39,6 @@ const EditPassword = () => {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     }
-
-    useEffect(() => {
-        const fetchData = async () => {
-            await axios.get(`${API_URL}/accounts/${username}`, {
-                headers: {
-                    Authorization: token
-                }
-            })
-                .then(response => {
-                    setEtag(response.headers["etag"]);
-                    setVersion(response.data.version)
-                });
-        };
-        fetchData();
-    }, []);
 
     const handleNewPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let password = event.target.value;
@@ -107,6 +91,18 @@ const EditPassword = () => {
     }
 
     const handleClickOpen = () => {
+        const fetchData = async () => {
+            await axios.get(`${API_URL}/accounts/${username}`, {
+                headers: {
+                    Authorization: token
+                }
+            })
+                .then(response => {
+                    setEtag(response.headers["etag"]);
+                    setVersion(response.data.version)
+                });
+        };
+        fetchData();
         setOpen(true);
     };
 

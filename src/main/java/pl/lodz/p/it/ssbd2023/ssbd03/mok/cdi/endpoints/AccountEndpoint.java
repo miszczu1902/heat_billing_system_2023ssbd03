@@ -286,6 +286,19 @@ public class AccountEndpoint {
                 .build();
     }
 
+    @GET
+    @Path("/self")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
+    public Response getSelfAccount() {
+        final Account account = accountService.getSelfAccount();
+        final AccountInfoDTO accountInfoDTO = AccountMapper.createAccountInfoDTOEntity(account);
+        return Response.ok()
+                .entity(accountInfoDTO)
+                .header("ETag", messageSigner.sign(accountInfoDTO))
+                .build();
+    }
+
     @PATCH
     @EtagValidator
     @Consumes(MediaType.APPLICATION_JSON)
