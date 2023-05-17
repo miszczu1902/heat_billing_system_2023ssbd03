@@ -21,6 +21,10 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import {useTranslation} from "react-i18next";
 import {Account} from "../../types/account";
+import EditPersonalData from "../personalData/EditPersonalData";
+import EditUserPersonalData from "../personalData/EditUserPersonalData";
+import EnableAccount from "../accounts/EnableAccount";
+import DisableAccount from "../accounts/DisableAccount";
 
 const roles = [
     {value: "ADMIN", label: "Administrator"},
@@ -51,9 +55,6 @@ export default function Profile() {
     const [isAdmin, setIsAdmin] = React.useState(false);
     const [isOwner, setIsOwner] = React.useState(false);
     const [isManager, setIsManager] = React.useState(false);
-    const [isUserAdmin, setIsUserAdmin] = useState(false);
-    const [isUserManager, setIsUserManager] = useState(false);
-    const [isUserOwner, setIsUserOwner] = useState(false);
     const [isRemoveAccessOpen, setIsRemoveAccessOpen] = useState(false);
     const [confirmRemove, setConfirmRemove] = React.useState(false);
     const [successOpenRemove, setSuccessOpenRemove] = React.useState(false);
@@ -72,11 +73,6 @@ export default function Profile() {
             }
         }).then(response => {
             setAccount(response.data);
-
-            const accessLevels = response.data.accessLevels;
-            setIsUserOwner(accessLevels.includes('OWNER'));
-            setIsUserManager(accessLevels.includes('MANAGER'));
-            setIsUserAdmin(accessLevels.includes('ADMIN'));
         }).catch(error => {
             if (error.response.status == 403) navigate('/');
         });
@@ -313,56 +309,92 @@ export default function Profile() {
                     <Box sx={{my: 30, display: 'flex', flexDirection: 'column', alignItems: 'left', margin: '2vh'}}>
                         {account !== null && (
                             <>
-                                <Typography sx={{padding: '1vh'}} variant="h5"><b>{t('personal_data.name')}:</b> {account.firstName}
-                                </Typography>
-                                <Typography sx={{padding: '1vh'}} variant="h5"><b>{t('personal_data.surname')}:</b> {account.surname}
-                                </Typography>
-                                <Typography sx={{padding: '1vh'}} variant="h5"><b>{t('login.username')}:</b> {account.username}
-                                </Typography>
-                                <Typography sx={{padding: '1vh'}} variant="h5"><b>{t('register.email')}:</b> {account.email}
-                                </Typography>
+                                <Paper elevation={3} style={{position: 'relative'}}>
+                                    <div style={{position: 'absolute', top: '1vh', right: '1vh'}}>
+                                        <EditUserPersonalData/>
+                                    </div>
+                                    <Typography sx={{padding: '1vh'}} variant="h5">
+                                        <b>{t('personal_data.name')}:</b> {account.firstName}
+                                    </Typography>
+                                    <Typography sx={{padding: '1vh'}} variant="h5">
+                                        <b>{t('personal_data.surname')}:</b> {account.surname}
+                                    </Typography>
+                                </Paper>
+                                <Paper elevation={3} style={{position: 'relative'}}>
+                                    <Typography sx={{padding: '1vh'}}
+                                                variant="h5"><b>{t('login.username')}:</b> {account.username}
+                                    </Typography>
+                                </Paper>
+                                <Paper elevation={3} style={{position: 'relative'}}>
+                                    <div style={{position: 'absolute', top: '1vh', right: '1vh'}}>
+                                        {/*Przycisk zmiany email*/}
+                                    </div>
+                                    <Typography sx={{padding: '1vh'}}
+                                                variant="h5"><b>{t('register.email')}:</b> {account.email}</Typography>
+                                </Paper>
+
                                 {account.phoneNumber && (
-                                    <Typography sx={{padding: '1vh'}} variant="h5"><b>{t('register.phone_number')}:</b> {account.phoneNumber}</Typography>
+                                    <Paper elevation={3} style={{position: 'relative'}}>
+                                        <Typography sx={{padding: '1vh'}}
+                                                    variant="h5"><b>{t('register.phone_number')}:</b> {account.phoneNumber}
+                                        </Typography>
+                                    </Paper>
                                 )}
-                                <Typography sx={{padding: '1vh'}}
-                                            variant="h5"><b>{t('enable_account.enable')}:</b> {account.isEnable ? t('account_list.confirmed') : t('account_list.unconfirmed')}
-                                </Typography>
-                                <Typography sx={{padding: '1vh'}}
-                                            variant="h5"><b>{t('account_list.active_status')}:</b> {account.isActive ? t('account_list.active') : t('account_list.inactive')}
-                                </Typography>
+                                <Paper elevation={3} style={{position: 'relative'}}>
+                                    <div style={{ position: 'absolute', top: '1vh', right: '1vh', display: 'flex', gap: '0.5vh' }}>
+                                        <EnableAccount />
+                                        <DisableAccount />
+                                    </div>
+                                    <Typography sx={{padding: '1vh'}}
+                                                variant="h5"><b>{t('enable_account.enable')}:</b> {account.isEnable ? t('account_list.confirmed') : t('account_list.unconfirmed')}
+                                    </Typography>
+                                </Paper>
+                                <Paper elevation={3} style={{position: 'relative'}}>
+                                    <Typography sx={{padding: '1vh'}}
+                                                variant="h5"><b>{t('account_list.active_status')}:</b> {account.isActive ? t('account_list.active') : t('account_list.inactive')}
+                                    </Typography>
+                                </Paper>
                                 {account.license && (
-                                    <Typography sx={{padding: '1vh'}} variant="h5"><b>{t('profile.license')}:</b> {account.license}</Typography>
+                                    <Typography sx={{padding: '1vh'}}
+                                                variant="h5"><b>{t('profile.license')}:</b> {account.license}
+                                    </Typography>
                                 )}
                                 <div style={{display: 'flex', alignItems: 'center'}}>
                                     <Typography sx={{padding: '1vh'}} variant="h5">
                                         <b>{t('profile.access_levels')}:</b>
                                     </Typography>
                                     <FormControlLabel
-                                        control={<Checkbox checked={isUserOwner} disabled/>}
+                                        control={<Checkbox checked={account.isUserOwner} disabled/>}
                                         label="Owner"
                                     />
                                     <FormControlLabel
-                                        control={<Checkbox checked={isUserManager} disabled/>}
+                                        control={<Checkbox checked={account.isUserManager} disabled/>}
                                         label="Manager"
                                     />
                                     <FormControlLabel
-                                        control={<Checkbox checked={isUserAdmin} disabled/>}
+                                        control={<Checkbox checked={account.isUserAdmin} disabled/>}
                                         label="Admin"
                                     />
                                 </div>
                                 <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                                    <Button onClick={handleClickOpenManager} variant="contained"
-                                            style={{height: "80px", margin: "10px"}}>
-                                        Dodaj<br/>poziom dostępu<br/>manager
-                                    </Button>
-                                    <Button onClick={handleClickOpenOwner} variant="contained"
-                                            style={{height: "80px", margin: "10px"}}>
-                                        Dodaj<br/>poziom dostępu<br/>owner
-                                    </Button>
-                                    <Button onClick={handleClickOpenAdmin} variant="contained"
-                                            style={{height: "80px", margin: "10px"}}>
-                                        Dodaj<br/>poziom dostępu<br/>admin
-                                    </Button>
+                                    {!account.isUserOwner && (
+                                        <Button onClick={handleClickOpenOwner} variant="contained"
+                                                style={{height: "80px", margin: "10px"}}>
+                                            Dodaj<br/>poziom dostępu<br/>owner
+                                        </Button>
+                                    )}
+                                    {!account.isUserManager && (
+                                        <Button onClick={handleClickOpenManager} variant="contained"
+                                                style={{height: "80px", margin: "10px"}}>
+                                            Dodaj<br/>poziom dostępu<br/>manager
+                                        </Button>
+                                    )}
+                                    {!account.isUserAdmin && (
+                                        <Button onClick={handleClickOpenAdmin} variant="contained"
+                                                style={{height: "80px", margin: "10px"}}>
+                                            Dodaj<br/>poziom dostępu<br/>admin
+                                        </Button>
+                                    )}
                                     <Button onClick={handleRemoveAccessLevel} variant="contained"
                                             style={{height: "80px", margin: "10px"}}>
                                         Usuń<br/>poziom dostępu

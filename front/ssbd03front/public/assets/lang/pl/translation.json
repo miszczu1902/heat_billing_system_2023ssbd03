@@ -123,8 +123,8 @@
     "confirmation_status": "Stan potwierdzenia",
     "active": "Aktywny",
     "inactive": "Nieaktywny",
-    "confirmed": "Potwierdzony",
-    "unconfirmed": "Niepotwierdzony",
+    "confirmed": "Odblokowanyy",
+    "unconfirmed": "Zablokowany",
     "label_rows_per_page": "Wierszy na stronę"
   },
   "enable_account":
