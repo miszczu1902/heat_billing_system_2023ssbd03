@@ -7,8 +7,10 @@ import axios from 'axios';
 import {API_URL} from '../../consts';
 import {useParams} from "react-router-dom";
 import {useCookies} from 'react-cookie';
+import {useTranslation} from "react-i18next";
 
 const DisableAccount = () => {
+    const {t, i18n} = useTranslation();
     const username = useParams().username;
     const [cookies, setCookie] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
@@ -65,24 +67,24 @@ const DisableAccount = () => {
     return (
         <div>
             <div>
-                <Button onClick={handleClickOpen} variant="contained">Zablokuj</Button>
+                <Button onClick={handleClickOpen} variant="contained">{t('disable_account.disable')}</Button>
             </div>
             <Dialog disableEscapeKeyDown open={open}>
-                <DialogTitle>Czy na pewno chcesz zablokować użytkownika {username} ?</DialogTitle>
+                <DialogTitle>{t('disable_account.disable_confirm')}{username}?</DialogTitle>
                 <DialogActions>
-                    <Button onClick={handleConfirmClose}>Nie</Button>
-                    <Button onClick={handleConfirmConfirm}>Tak</Button>
+                    <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
+                    <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
                 </DialogActions>
             </Dialog>
 
             <Dialog disableEscapeKeyDown open={successOpen}>
-                <DialogTitle>Użytkownik {username} został zablokowany</DialogTitle>
-                <Button onClick={handleSuccessClose}>Ok</Button>
+                <DialogTitle>{t('disable_account.success_one')}{username}{t('disable_account.success_two')}</DialogTitle>
+                <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
             </Dialog>
 
             <Dialog disableEscapeKeyDown open={errorOpen}>
-                <DialogTitle>Wystąpił błąd podczas zablokowania użytkownika {username}</DialogTitle>
-                <Button onClick={handleErrorClose}>Ok</Button>
+                <DialogTitle>{t('disable_account.error')}{username}</DialogTitle>
+                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
             </Dialog>
         </div>
     );

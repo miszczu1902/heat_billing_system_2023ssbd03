@@ -18,10 +18,13 @@ import DialogActions from "@mui/material/DialogActions";
 import {useNavigate} from "react-router-dom";
 import {Icon} from "@mui/material";
 import Logo from './../../assets/logo.svg';
+import jwt from "jwt-decode";
+import {useTranslation} from "react-i18next";
 
 const theme = createTheme();
 
 const Login = () => {
+    const {t, i18n} = useTranslation();
     const navigate = useNavigate();
     const [cookies, setCookie] = useCookies(["token", "language"]);
     const [username, setUsername] = React.useState("");
@@ -67,10 +70,10 @@ const Login = () => {
         const regexLogin = /^[a-zA-Z0-9_]{6,16}$/;
         const regexPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/;
         if (!regexLogin.test(username)) {
-            setLoginError('Login musi składać się z 6-16 znaków i składać się z liter i cyfr');
+            setLoginError(t('register.register_error_login'));
         } else if (!regexPassword.test(password)) {
             setPassword("");
-            setLoginError('Hasło musi składać się z 8-32 znaków, jednej dużej litery, znak specjalny');
+            setLoginError(t('register.register_error_password'));
         } else {
             let data = JSON.stringify({
                 "username": username,
@@ -90,6 +93,7 @@ const Login = () => {
                 .then((response) => {
                     setCookie("token", response.headers["bearer"]);
                     setCookie("language", response.headers["language"]);
+                    i18n.changeLanguage(response.headers["language"]);
                     navigate('/');
                 })
                 .catch((error) => {
@@ -108,8 +112,8 @@ const Login = () => {
         setLoginPassword(loginPassword)
         const regex = /^[a-zA-Z0-9_]{6,16}$/;
         if (!regex.test(loginPassword)) {
-            setLoginPasswordError("Login może zawierać tylko litery, cyfry, znak podkreślenia oraz " +
-                "musi mieć długość od 8 do 16 znaków.");
+            setLoginPasswordError(t('login.login_password_error_one') +
+                t('login.login_password_error_two'));
             setValidData(false);
         } else {
             setLoginPasswordError("");
@@ -164,29 +168,32 @@ const Login = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <Grid container justifyContent="center" alignItems="center"  sx={{background: '#1c8de4', height: '100vh', width: '100vw'}}>
+            <Grid container justifyContent="center" alignItems="center"
+                  sx={{background: '#1c8de4', height: '100vh', width: '100vw'}}>
                 <Grid my={2} item sm={8} md={5} component={Paper} elevation={6}>
                     <Box sx={{my: 20, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                         <Icon sx={{width: '10%', height: '10%', marginLeft: '1vh'}}>
                             <img src={Logo}/>
                         </Icon>
-                        <Typography variant="h5"> Logowanie </Typography>
+                        <Typography variant="h5">{t('login.title')}</Typography>
                         <Typography sx={{color: 'red'}}>{loginError}</Typography>
                         <Box component="form" onSubmit={handleSubmit}>
-                            <TextField fullWidth margin="normal" label="Login" value={username}
-                                       helperText="Wprowadź Login" onChange={handleUsernameChange}/>
-                            <TextField fullWidth margin="normal" label="Hasło" type="password"
-                                       helperText="Wprowadź hasło" onChange={handlePasswordChange}
+                            <TextField fullWidth margin="normal" label={t('login.username')} value={username}
+                                       helperText={t('login.enter_username')} onChange={handleUsernameChange}/>
+                            <TextField fullWidth margin="normal" label={t('login.password')} type="password"
+                                       helperText={t('login.enter_password')} onChange={handlePasswordChange}
                                        value={password}/>
-                            <Box sx={{display: 'flex',
+                            <Box sx={{
+                                display: 'flex',
                                 flexWrap: 'wrap',
                                 alignItems: 'center',
-                                justifyContent: 'center'}}>
-                                <Button type="submit" variant="contained" sx={{m:2}}>Zaloguj</Button>
-                                <Button onClick={handleClickOpen} variant="contained" sx={{m:2}}>Zapomniałem hasła</Button>
+                                justifyContent: 'center'
+                            }}>
+                                <Button type="submit" variant="contained" sx={{m: 2}}>Zaloguj</Button>
+                                <Button onClick={handleClickOpen} variant="contained" sx={{m: 2}}>{t('login.password_forgot')}</Button>
                                 <div>
                                     <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-                                        <DialogTitle>Przypomnienie hasła</DialogTitle>
+                                        <DialogTitle>{t('login.password_reminder')}</DialogTitle>
                                         <DialogContent>
                                             <Box sx={{display: 'flex', flexWrap: 'wrap'}}>
                                                 <form onSubmit={handleSubmitPasswordChange}>
@@ -196,8 +203,8 @@ const Login = () => {
                                                                  onChange={handleLoginPasswordChange}>
                                                                 <TextField
                                                                     id="outlined-helperText"
-                                                                    label="Login"
-                                                                    helperText="Wprowadź Login"
+                                                                    label={t('login.username')}
+                                                                    helperText={t('login.enter_username')}
                                                                 />
                                                                 <div className="form-group">
                                                                     {loginPasswordError}
@@ -209,19 +216,19 @@ const Login = () => {
                                             </Box>
                                         </DialogContent>
                                         <DialogActions>
-                                            <Button onClick={handleClose}>Cancel</Button>
-                                            <Button onClick={handleConfirm} disabled={!validData}>Ok</Button>
+                                            <Button onClick={handleClose}>{t('confirm.cancel')}</Button>
+                                            <Button onClick={handleConfirm}
+                                                    disabled={!validData}>{t('confirm.ok')}</Button>
                                         </DialogActions>
                                     </Dialog>
                                     <Dialog disableEscapeKeyDown open={successOpen}>
-                                        <DialogTitle>Na adres email przypisany do tego konta została wysłana wiadomość z
-                                            hiperłączem do formularza zmiany hasła.</DialogTitle>
-                                        <Button onClick={handleSuccessClose}>Ok</Button>
+                                        <DialogTitle>{t('login.success_title')}</DialogTitle>
+                                        <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
                                     </Dialog>
 
                                     <Dialog disableEscapeKeyDown open={errorOpen}>
                                         <DialogTitle>{errorOpenMessage}</DialogTitle>
-                                        <Button onClick={handleErrorClose}>Ok</Button>
+                                        <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
                                     </Dialog>
                                 </div>
                             </Box>
@@ -232,5 +239,3 @@ const Login = () => {
         </ThemeProvider>
     );
 }
-
-export default Login;

@@ -20,7 +20,7 @@ import java.util.Objects;
 })
 public class PersonalData extends AbstractEntity implements Serializable, Signable {
     @Id
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "id", updatable = false, referencedColumnName = "id")
     private Account id;
 
