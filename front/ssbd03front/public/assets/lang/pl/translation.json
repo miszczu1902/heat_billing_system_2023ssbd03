@@ -154,10 +154,10 @@
   },
   "profile":
   {
-    "title": "Account info",
+    "title": "Informacje o koncie",
     "phone_number_error" : "Numer telefonu musi zawierać 9 cyfr.",
     "license_error" : "Licencja musi skladać się z 20 znaków.",
     "license" : "Licencja",
-    "access_levels" : "Access levels"
+    "access_levels" : "Poziom dostępu"
   }
 }
