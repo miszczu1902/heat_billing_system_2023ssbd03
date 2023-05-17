@@ -27,7 +27,7 @@ public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
     private static String BEARER_TOKEN = "";
     protected static String ETAG = "";
 
-    protected static Response sendRequestAndGetResponse(Method method, String path, Object object, ContentType contentType, Boolean withETag) {
+    protected static Response sendRequestAndGetResponse(Method method, String path, Object object, ContentType contentType) {
         contentType = contentType == null ? ContentType.ANY : contentType;
         RequestSpecification request = given().contentType(contentType);
         String jsonObject = objectToJson(object);
@@ -35,7 +35,8 @@ public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
         if (object != null) request.body(jsonObject);
         if (!BEARER_TOKEN.equals("") && !path.equals("/accounts/login") && !path.equals("/accounts/register"))
             request.header(new Header("Authorization", "Bearer " + BEARER_TOKEN));
-        if (!ETAG.equals("") && withETag) request.header(new Header("If-Match", ETAG));
+        if (!ETAG.equals("") && method.equals(Method.PATCH))
+            request.header(new Header("If-Match", ETAG));
 
         logBeforeRequest(method, path, jsonObject, contentType);
         Response response = request.request(method, baseURI + path);
@@ -54,7 +55,7 @@ public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
     }
 
     protected static void auth(LoginDTO loginData) {
-        BEARER_TOKEN = sendRequestAndGetResponse(Method.POST, "/accounts/login", loginData, ContentType.JSON, false)
+        BEARER_TOKEN = sendRequestAndGetResponse(Method.POST, "/accounts/login", loginData, ContentType.JSON)
                 .getHeader("Bearer");
     }
 

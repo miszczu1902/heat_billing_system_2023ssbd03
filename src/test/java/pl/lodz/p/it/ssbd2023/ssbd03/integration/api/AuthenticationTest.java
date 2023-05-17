@@ -23,7 +23,7 @@ public class AuthenticationTest extends BasicIntegrationConfigTest {
     );
 
     public int authenticate(LoginDTO loginDTO) {
-        return sendRequestAndGetResponse(Method.POST, "/accounts/login", loginDTO, ContentType.JSON, false)
+        return sendRequestAndGetResponse(Method.POST, "/accounts/login", loginDTO, ContentType.JSON)
                 .getStatusCode();
     }
 
@@ -112,7 +112,7 @@ public class AuthenticationTest extends BasicIntegrationConfigTest {
 
     @Test
     public void ValidCredentialsOnNotActiveUser() {
-        int statusCode = sendRequestAndGetResponse(Method.POST, "/accounts/register", initalizedOwner, ContentType.JSON, false)
+        int statusCode = sendRequestAndGetResponse(Method.POST, "/accounts/register", initalizedOwner, ContentType.JSON)
                 .getStatusCode();
         assertEquals(201, statusCode);
 

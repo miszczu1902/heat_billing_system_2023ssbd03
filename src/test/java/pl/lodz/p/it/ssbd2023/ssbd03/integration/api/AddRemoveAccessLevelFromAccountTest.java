@@ -28,12 +28,12 @@ public class AddRemoveAccessLevelFromAccountTest extends BasicIntegrationConfigT
     @Test
     public void addAndRemoveAdminAccessLevelToAccountTest() {
         AddAccessLevelAdminDTO accessLevelAdmin = new AddAccessLevelAdminDTO("mariasilva");
-        Response response = sendRequestAndGetResponse(Method.PATCH, "/accounts/add-access-level-admin", accessLevelAdmin, ContentType.JSON, false);
+        Response response = sendRequestAndGetResponse(Method.PATCH, "/accounts/add-access-level-admin", accessLevelAdmin, ContentType.JSON);
         int statusCode = response.getStatusCode();
         assertEquals(204, statusCode, "Check if access level was added.");
 
         RevokeAccessLevelDTO accessLevelToRevoke = new RevokeAccessLevelDTO("mariasilva", Roles.ADMIN);
-        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/revoke-access-level", accessLevelToRevoke, ContentType.JSON, false);
+        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/revoke-access-level", accessLevelToRevoke, ContentType.JSON);
         statusCode = response.getStatusCode();
         assertEquals(204, statusCode, "Check if access level was revoked.");
     }
@@ -41,12 +41,12 @@ public class AddRemoveAccessLevelFromAccountTest extends BasicIntegrationConfigT
     @Test
     public void addAndRemoveManagerAccessLevelToAccountTest() {
         AddAccessLevelManagerDTO accessLevelAdmin = new AddAccessLevelManagerDTO("mariasilva", RandomStringUtils.randomNumeric(20));
-        Response response = sendRequestAndGetResponse(Method.PATCH, "/accounts/add-access-level-manager", accessLevelAdmin, ContentType.JSON, false);
+        Response response = sendRequestAndGetResponse(Method.PATCH, "/accounts/add-access-level-manager", accessLevelAdmin, ContentType.JSON);
         int statusCode = response.getStatusCode();
         assertEquals(204, statusCode, "Check if access level was added.");
 
         RevokeAccessLevelDTO accessLevelToRevoke = new RevokeAccessLevelDTO("mariasilva", Roles.MANAGER);
-        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/revoke-access-level", accessLevelToRevoke, ContentType.JSON, false);
+        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/revoke-access-level", accessLevelToRevoke, ContentType.JSON);
         statusCode = response.getStatusCode();
         assertEquals(204, statusCode, "Check if access level was revoked.");
     }
@@ -54,12 +54,12 @@ public class AddRemoveAccessLevelFromAccountTest extends BasicIntegrationConfigT
     @Test
     public void addAndRemoveOwnerAccessLevelToAccountTest() {
         AddAccessLevelOwnerDTO accessLevelAdmin = new AddAccessLevelOwnerDTO("janekowalski", RandomStringUtils.randomNumeric(9));
-        Response response = sendRequestAndGetResponse(Method.PATCH, "/accounts/add-access-level-owner", accessLevelAdmin, ContentType.JSON, false);
+        Response response = sendRequestAndGetResponse(Method.PATCH, "/accounts/add-access-level-owner", accessLevelAdmin, ContentType.JSON);
         int statusCode = response.getStatusCode();
         assertEquals(204, statusCode, "Check if access level was added.");
 
         RevokeAccessLevelDTO accessLevelToRevoke = new RevokeAccessLevelDTO("janekowalski", Roles.OWNER);
-        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/revoke-access-level", accessLevelToRevoke, ContentType.JSON, false);
+        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/revoke-access-level", accessLevelToRevoke, ContentType.JSON);
         statusCode = response.getStatusCode();
         assertEquals(204, statusCode, "Check if access level was revoked.");
     }
@@ -75,7 +75,7 @@ public class AddRemoveAccessLevelFromAccountTest extends BasicIntegrationConfigT
             int index = i + 1;
             executorService.execute(() -> {
                 logger.info("Request no. " + index);
-                Response response = sendRequestAndGetResponse(Method.PATCH, "/accounts/add-access-level-admin", accessLevelAdmin, ContentType.JSON, null);
+                Response response = sendRequestAndGetResponse(Method.PATCH, "/accounts/add-access-level-admin", accessLevelAdmin, ContentType.JSON);
                 responseList.add(response.getStatusCode());
             });
         }

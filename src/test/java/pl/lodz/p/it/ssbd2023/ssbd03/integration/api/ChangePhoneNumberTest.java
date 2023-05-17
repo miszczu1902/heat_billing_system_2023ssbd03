@@ -21,34 +21,34 @@ public class ChangePhoneNumberTest extends BasicIntegrationConfigTest {
 
     @Test
     public void changePhoneNumberTest() {
-        Response response = sendRequestAndGetResponse(Method.GET, "/accounts/self/owner", null, null, false);
+        Response response = sendRequestAndGetResponse(Method.GET, "/accounts/self/owner", null, null);
         OwnerDTO oldData = response.body().jsonPath().getObject("", OwnerDTO.class);
         ChangePhoneNumberDTO newPhoneNumber = new ChangePhoneNumberDTO(RandomStringUtils.randomNumeric(9));
         newPhoneNumber.setVersion(oldData.getVersion());
 
-        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/phone-number", newPhoneNumber, ContentType.JSON, true);
+        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/phone-number", newPhoneNumber, ContentType.JSON);
         int statusCode = response.getStatusCode();
         assertEquals(204, statusCode, "Check if modification passed.");
 
-        String actualPhoneNumber = sendRequestAndGetResponse(Method.GET, "/accounts/self/owner", null, null, false)
+        String actualPhoneNumber = sendRequestAndGetResponse(Method.GET, "/accounts/self/owner", null, null)
                 .body().jsonPath().getObject("", OwnerDTO.class).getPhoneNumber();
         assertNotEquals(oldData.getPhoneNumber(), actualPhoneNumber, "Compare phone numbers.");
     }
 
     @Test
     public void tryToChangeOnNotUniquePhoneNumberTest() {
-        Response response = sendRequestAndGetResponse(Method.GET, "/accounts/self/owner", null, null, false);
+        Response response = sendRequestAndGetResponse(Method.GET, "/accounts/self/owner", null, null);
         OwnerDTO oldData = response.body().jsonPath().getObject("", OwnerDTO.class);
         ChangePhoneNumberDTO newPhoneNumber = new ChangePhoneNumberDTO(oldData.getPhoneNumber());
         newPhoneNumber.setVersion(oldData.getVersion());
 
-        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/phone-number", newPhoneNumber, ContentType.JSON, true);
+        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/phone-number", newPhoneNumber, ContentType.JSON);
         int statusCode = response.getStatusCode();
         assertEquals(409, statusCode, "Check if modification failed.");
 
         newPhoneNumber.setPhoneNumber("123456789");
 
-        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/phone-number", newPhoneNumber, ContentType.JSON, true);
+        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/phone-number", newPhoneNumber, ContentType.JSON);
         statusCode = response.getStatusCode();
         assertEquals(409, statusCode, "Check if modification failed.");
     }
