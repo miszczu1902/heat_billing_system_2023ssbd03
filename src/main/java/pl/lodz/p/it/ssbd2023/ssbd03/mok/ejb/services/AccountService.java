@@ -33,6 +33,8 @@ public interface AccountService {
 
     Account getAccount(String username);
 
+    Account getSelfAccount();
+
     Owner getOwner();
 
     Manager getManager();
