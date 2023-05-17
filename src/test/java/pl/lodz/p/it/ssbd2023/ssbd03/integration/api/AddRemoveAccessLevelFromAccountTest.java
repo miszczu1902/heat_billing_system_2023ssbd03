@@ -1,0 +1,91 @@
+package pl.lodz.p.it.ssbd2023.ssbd03.integration.api;
+
+import io.restassured.http.ContentType;
+import io.restassured.http.Method;
+import io.restassured.response.Response;
+import org.junit.Before;
+import org.junit.Test;
+import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
+import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTest;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class AddRemoveAccessLevelFromAccountTest extends BasicIntegrationConfigTest {
+    @Before
+    public void initTest() {
+        auth(new LoginDTO("johndoe", "Password$123"));
+    }
+
+    @Test
+    public void addAndRemoveAdminAccessLevelToAccountTest() {
+        AddAccessLevelAdminDTO accessLevelAdmin = new AddAccessLevelAdminDTO("mariasilva");
+        Response response = sendRequestAndGetResponse(Method.PATCH, "/accounts/add-access-level-admin", accessLevelAdmin, ContentType.JSON, false);
+        int statusCode = response.getStatusCode();
+        assertEquals(204, statusCode, "Check if access level was added.");
+
+        RevokeAccessLevelDTO accessLevelToRevoke = new RevokeAccessLevelDTO("mariasilva", Roles.ADMIN);
+        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/revoke-access-level", accessLevelToRevoke, ContentType.JSON, false);
+        statusCode = response.getStatusCode();
+        assertEquals(204, statusCode, "Check if access level was revoked.");
+    }
+
+    @Test
+    public void addAndRemoveManagerAccessLevelToAccountTest() {
+        AddAccessLevelManagerDTO accessLevelAdmin = new AddAccessLevelManagerDTO("mariasilva", RandomStringUtils.randomNumeric(20));
+        Response response = sendRequestAndGetResponse(Method.PATCH, "/accounts/add-access-level-manager", accessLevelAdmin, ContentType.JSON, false);
+        int statusCode = response.getStatusCode();
+        assertEquals(204, statusCode, "Check if access level was added.");
+
+        RevokeAccessLevelDTO accessLevelToRevoke = new RevokeAccessLevelDTO("mariasilva", Roles.MANAGER);
+        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/revoke-access-level", accessLevelToRevoke, ContentType.JSON, false);
+        statusCode = response.getStatusCode();
+        assertEquals(204, statusCode, "Check if access level was revoked.");
+    }
+
+    @Test
+    public void addAndRemoveOwnerAccessLevelToAccountTest() {
+        AddAccessLevelOwnerDTO accessLevelAdmin = new AddAccessLevelOwnerDTO("janekowalski", RandomStringUtils.randomNumeric(9));
+        Response response = sendRequestAndGetResponse(Method.PATCH, "/accounts/add-access-level-owner", accessLevelAdmin, ContentType.JSON, false);
+        int statusCode = response.getStatusCode();
+        assertEquals(204, statusCode, "Check if access level was added.");
+
+        RevokeAccessLevelDTO accessLevelToRevoke = new RevokeAccessLevelDTO("janekowalski", Roles.OWNER);
+        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/revoke-access-level", accessLevelToRevoke, ContentType.JSON, false);
+        statusCode = response.getStatusCode();
+        assertEquals(204, statusCode, "Check if access level was revoked.");
+    }
+
+    @Test
+    public void addAndRemoveOwnerAccessLevelToAccount() {
+        List<Integer> responseList = new ArrayList<>();
+        int concurrentRequests = 3;
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
+        AddAccessLevelAdminDTO accessLevelAdmin = new AddAccessLevelAdminDTO("mariasilva");
+
+        for (int i = 0; i < concurrentRequests; i++) {
+            int index = i + 1;
+            executorService.execute(() -> {
+                logger.info("Request no. " + index);
+                Response response = sendRequestAndGetResponse(Method.PATCH, "/accounts/add-access-level-admin", accessLevelAdmin, ContentType.JSON, null);
+                responseList.add(response.getStatusCode());
+            });
+        }
+        try {
+            executorService.shutdown();
+            executorService.awaitTermination(10, TimeUnit.SECONDS);
+            assertEquals(1, responseList.stream().filter(code -> code == 204).toList().size(), "Check if the first of request was passed.");
+            assertEquals(2, responseList.stream().filter(code -> code == 500).toList().size(), "Check if the rest of requests was failed.");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+}

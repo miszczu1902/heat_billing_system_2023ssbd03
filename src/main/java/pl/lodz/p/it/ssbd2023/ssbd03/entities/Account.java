@@ -82,6 +82,7 @@ public class Account extends AbstractEntity implements Signable {
     public Account(String email, String username, String password, Boolean isEnable, Boolean isActive, String language_) {
         this.email = email;
         this.username = username;
+        this.password = password;
         this.isEnable = isEnable;
         this.isActive = isActive;
         this.language_ = language_;
