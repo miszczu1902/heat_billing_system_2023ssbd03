@@ -123,7 +123,7 @@ export default function EditUserPersonalData() {
       axios.patch(`${API_URL}/accounts/${username}/personal-data`,
         personalDataDTO, {
          headers: {
-          'Authorization': 'Bearer ' + token,
+          'Authorization':  token,
           'Content-Type': 'application/json',
           'If-Match': etag
         },
