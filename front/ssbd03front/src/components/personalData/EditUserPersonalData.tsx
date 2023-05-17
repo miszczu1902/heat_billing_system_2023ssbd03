@@ -40,7 +40,7 @@ export default function EditUserPersonalData() {
     const fetchData = async () => {
       const response = await axios.get(`${API_URL}/accounts/${username}/personal-data`, {
         headers: {
-          Authorization: 'Bearer ' + token
+          Authorization: token
         }
       })
       .then(response => {
@@ -90,7 +90,7 @@ export default function EditUserPersonalData() {
   const handleClickOpen = () => {
     axios.get(`${API_URL}/accounts/${username}/personal-data`, {
       headers: {
-        Authorization: 'Bearer ' + token
+        Authorization: token
       }
     })
     .then(response => {
