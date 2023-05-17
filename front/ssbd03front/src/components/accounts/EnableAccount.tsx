@@ -23,7 +23,6 @@ const EnableAccount = () => {
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [errorOpen, setErrorOpen] = React.useState(false);
 
-  useEffect(() => {
     const fetchData = async () => {
       await axios.get(`${API_URL}/accounts/${username}`, {
         headers: {
@@ -34,10 +33,25 @@ const EnableAccount = () => {
         setCookie("etag", response.headers.etag);
       });
   };
-  fetchData();
-  }, []);
+
+  const enable = async () => {
+    axios.patch(`${API_URL}/accounts/${username}/enable`, {},
+    {
+       headers: {
+        'Authorization': token,
+        'If-Match': etag
+      },
+    })
+    .then(response => {
+      setSuccessOpen(true);
+    })
+    .catch(error => {
+      setErrorOpen(true);
+    });
+  };
 
   const handleClickOpen = () => {
+    fetchData();
     setOpen(true);
   };
 
@@ -51,22 +65,7 @@ const EnableAccount = () => {
     if (reason !== 'backdropClick') {
       setConfirmOpen(false);
     }
-    const fetchData = async () => {
-      axios.patch(`${API_URL}/accounts/${username}/enable`, {},
-      {
-         headers: {
-          'Authorization': token,
-          'If-Match': etag
-        },
-      })
-      .then(response => {
-        setSuccessOpen(true);
-      })
-      .catch(error => {
-        setErrorOpen(true);
-      });
-    };
-    fetchData();
+    enable();
     handleConfirmClose(event, reason);
   }
 

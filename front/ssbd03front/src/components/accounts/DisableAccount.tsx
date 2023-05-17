@@ -7,7 +7,6 @@ import axios from 'axios';
 import { API_URL } from '../../consts';
 import { useParams } from "react-router-dom";
 import { useCookies } from 'react-cookie';
-import { useEffect } from 'react';
 import {useTranslation} from "react-i18next";
 
 const DisableAccount = () => {
@@ -23,22 +22,34 @@ const DisableAccount = () => {
     const [successOpen, setSuccessOpen] = React.useState(false);
     const [errorOpen, setErrorOpen] = React.useState(false);
 
-    useEffect(() => {
-      const fetchData = async () => {
-        await axios.get(`${API_URL}/accounts/${username}`, {
-          headers: {
-            Authorization: token
-          }
-        })
-        .then(response => {
-          setCookie("etag", response.headers.etag);
-        });
-    };
-    fetchData();
-    }, []);
+    const fetchData = async () => {
+      await axios.get(`${API_URL}/accounts/${username}`, {
+        headers: {
+          Authorization: token
+        }
+      })
+      .then(response => {
+        setCookie("etag", response.headers.etag);
+      });
+  };
 
+  const disable = async () => {
+    axios.patch(`${API_URL}/accounts/${username}/disable`, {}, {
+       headers: {
+        'Authorization': token,
+        'If-Match': etag
+      },
+    })
+    .then(response => {
+      setSuccessOpen(true);
+    })
+    .catch(error => {
+      setErrorOpen(true);
+    });
+  };
 
     const handleClickOpen = () => {
+        fetchData();
         setOpen(true);
     };
 
@@ -52,21 +63,7 @@ const DisableAccount = () => {
       if (reason !== 'backdropClick') {
         setConfirmOpen(false);
       }
-      const fetchData = async () => {
-        axios.patch(`${API_URL}/accounts/${username}/disable`, {}, {
-           headers: {
-            'Authorization': token,
-            'If-Match': etag
-          },
-        })
-        .then(response => {
-          setSuccessOpen(true);
-        })
-        .catch(error => {
-          setErrorOpen(true);
-        });
-      };
-        fetchData();
+        disable();
       handleConfirmClose(event, reason);
     }
 

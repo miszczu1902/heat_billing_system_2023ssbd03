@@ -38,7 +38,6 @@ export default function EditUserPersonalData() {
   var [successOpen, setSuccessOpen] = React.useState(false);
   var [errorOpen, setErrorOpen] = React.useState(false);
 
-  useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(`${API_URL}/accounts/${username}/personal-data`, {
         headers: {
@@ -51,8 +50,6 @@ export default function EditUserPersonalData() {
         setCookie("etag", response.headers.etag);
       });
   };
-  fetchData();
-  }, []);
 
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -90,16 +87,7 @@ export default function EditUserPersonalData() {
   };
 
   const handleClickOpen = () => {
-    axios.get(`${API_URL}/accounts/${username}/personal-data`, {
-      headers: {
-        Authorization: token
-      }
-    })
-    .then(response => {
-        setName(response.data.firstName.toString());
-        setSurname(response.data.surname.toString());
-        setCookie("etag", response.headers.etag);
-    });
+    fetchData();
     setOpen(true);
   };
 

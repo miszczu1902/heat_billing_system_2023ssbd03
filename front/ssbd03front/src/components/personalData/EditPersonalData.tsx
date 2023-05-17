@@ -36,7 +36,6 @@ const EditPersonalData = () => {
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [errorOpen, setErrorOpen] = React.useState(false);
 
-  useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(`${API_URL}/accounts/self/personal-data`, {
         headers: {
@@ -49,8 +48,6 @@ const EditPersonalData = () => {
         setCookie("etag", response.headers.etag);
       });
   };
-  fetchData();
-  }, []);
 
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -87,16 +84,7 @@ const EditPersonalData = () => {
   };
 
   const handleClickOpen = () => {
-    axios.get(`${API_URL}/accounts/self/personal-data`, {
-      headers: {
-        'Authorization': token
-      }
-    })
-    .then(response => {
-        setName(response.data.firstName.toString());
-        setSurname(response.data.surname.toString());
-        setCookie("etag", response.headers.etag);
-    });
+    fetchData();
     setOpen(true);
   };
 
