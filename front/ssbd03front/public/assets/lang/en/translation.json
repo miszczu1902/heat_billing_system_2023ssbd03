@@ -132,8 +132,10 @@
     "enable": "Enable",
     "enable_confirm": "Are you sure you want to unblock the user ",
     "success_one": "Username ",
-    "success_two": " has been unlocked",
-    "error": "An error occurred while unlocking the user "
+    "success_two": " has been unblocked",
+    "error": "An error occurred while unblocking the user ",
+    "unblocked_user_one": "User ",
+    "unblocked_user_two": " is already unblocked"
   },
   "disable_account":
   {
@@ -141,7 +143,9 @@
     "disable_confirm": "Are you sure you want to block the user ",
     "success_one": "Username ",
     "success_two": " has been blocked",
-    "error": "An error occurred while blocking the user "
+    "error": "An error occurred while blocking the user ",
+    "blocked_user_one": "User ",
+    "blocked_user_two": " is already blocked"
   },
   "landing_page":
   {

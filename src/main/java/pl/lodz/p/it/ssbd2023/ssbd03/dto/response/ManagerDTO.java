@@ -23,6 +23,14 @@ public class ManagerDTO extends AccountDTO {
         this.license = license;
     }
 
+    public ManagerDTO(Long id, Long version, String email, String username, String firstName, String surname, String language, String license) {
+        super(id, version, email, username);
+        this.firstName = firstName;
+        this.surname = surname;
+        this.language = language;
+        this.license = license;
+    }
+
     @Override
     public String messageToSign() {
         return super.messageToSign()

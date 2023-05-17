@@ -4,16 +4,19 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios';
-import {API_URL} from '../../consts';
-import {useParams} from "react-router-dom";
-import {useCookies} from 'react-cookie';
+import { API_URL } from '../../consts';
+import { useParams } from "react-router-dom";
+import { useCookies } from 'react-cookie';
 import {useTranslation} from "react-i18next";
 
 const DisableAccount = () => {
     const {t, i18n} = useTranslation();
     const username = useParams().username;
-    const [cookies, setCookie] = useCookies(["token"]);
+    const [cookies, setCookie] = useCookies(["token", "etag"]);
     const token = "Bearer " + cookies.token;
+    const etag = cookies.etag;
+    const [version, setVersion] = React.useState("");
+    const [enable, setEnable] = React.useState(false);
 
     const [open, setOpen] = React.useState(false);
     const [confirmOpen, setConfirmOpen] = React.useState(false);
@@ -21,7 +24,43 @@ const DisableAccount = () => {
     const [successOpen, setSuccessOpen] = React.useState(false);
     const [errorOpen, setErrorOpen] = React.useState(false);
 
+    const [blockedUserOpen, setBlockedUserOpen] = React.useState(false);
+
+
+    const fetchData = async () => {
+      await axios.get(`${API_URL}/accounts/${username}`, {
+        headers: {
+          Authorization: token
+        }
+      })
+      .then(response => {
+        setCookie("etag", response.headers.etag);
+        setVersion(response.data.version.toString());
+        setEnable(response.data.isEnable);
+      });
+  };
+
+  const disable = async () => {
+    axios.patch(`${API_URL}/accounts/${username}/disable`, 
+    {
+      version: version
+    }, 
+    {
+       headers: {
+        'Authorization': token,
+        'If-Match': etag
+      },
+    })
+    .then(response => {
+      setSuccessOpen(true);
+    })
+    .catch(error => {
+      setErrorOpen(true);
+    });
+  };
+
     const handleClickOpen = () => {
+        fetchData();
         setOpen(true);
     };
 
@@ -32,36 +71,34 @@ const DisableAccount = () => {
     }
 
     const handleConfirmConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setConfirmOpen(false);
-        }
-        const fetchData = async () => {
-            axios.patch(`${API_URL}/accounts/${username}/disable`, {}, {
-                headers: {
-                    'Authorization': token,
-                },
-            })
-                .then(response => {
-                    setSuccessOpen(true);
-                })
-                .catch(error => {
-                    setErrorOpen(true);
-                });
-        };
-        fetchData();
-        handleConfirmClose(event, reason);
+      if (reason !== 'backdropClick') {
+        setConfirmOpen(false);
+      }
+      if(!enable) {
+        setBlockedUserOpen(true);
+        return;
+      }
+      disable();
+      handleConfirmClose(event, reason);
     }
 
     const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setSuccessOpen(false);
-        }
+      if (reason !== 'backdropClick') {
+        setSuccessOpen(false);
+      }
     }
 
     const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setErrorOpen(false);
-        }
+      if (reason !== 'backdropClick') {
+        setErrorOpen(false);
+      }
+    };
+
+    const handleBlockedUserOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+      if (reason !== 'backdropClick') {
+        setBlockedUserOpen(false);
+        handleConfirmClose(event, reason);
+      }
     };
 
     return (
@@ -85,6 +122,11 @@ const DisableAccount = () => {
             <Dialog disableEscapeKeyDown open={errorOpen}>
                 <DialogTitle>{t('disable_account.error')}{username}</DialogTitle>
                 <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
+            </Dialog>
+
+            <Dialog disableEscapeKeyDown open={blockedUserOpen}>
+                <DialogTitle>{t('disable_account.blocked_user_one')}{username}{t('disable_account.blocked_user_two')}</DialogTitle>
+                <Button onClick={handleBlockedUserOpen}>{t('confirm.ok')}</Button>
             </Dialog>
         </div>
     );

@@ -18,8 +18,11 @@ import {useTranslation} from "react-i18next";
 
 const EditPersonalData = () => {
   const {t, i18n} = useTranslation();
-  const [cookies, setCookie] = useCookies(["token"]);
+  const [cookies, setCookie] = useCookies(["token", "etag", "version"]);
   const token = "Bearer " + cookies.token;
+  const etag = cookies.etag;
+  const [version, setVersion] = React.useState("");
+
   const [open, setOpen] = React.useState(false);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
@@ -35,7 +38,6 @@ const EditPersonalData = () => {
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [errorOpen, setErrorOpen] = React.useState(false);
 
-  useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(`${API_URL}/accounts/self/personal-data`, {
         headers: {
@@ -45,9 +47,13 @@ const EditPersonalData = () => {
       .then(response => {
         setName(response.data.firstName.toString());
         setSurname(response.data.surname.toString());
+        setCookie("etag", response.headers.etag);
+        setVersion(response.data.version.toString());
       });
   };
-  fetchData();
+
+  useEffect(() => { 
+    fetchData();
   }, []);
 
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -85,15 +91,7 @@ const EditPersonalData = () => {
   };
 
   const handleClickOpen = () => {
-    axios.get(`${API_URL}/accounts/self/personal-data`, {
-      headers: {
-        Authorization: 'Bearer ' + token
-      }
-    })
-    .then(response => {
-        setName(response.data.firstName.toString());
-        setSurname(response.data.surname.toString());
-    });
+    fetchData();
     setOpen(true);
   };
 
@@ -115,7 +113,8 @@ const EditPersonalData = () => {
     }
     const personalDataDTO = {
       firstName: name.toString(),
-      surname: surname.toString()
+      surname: surname.toString(),
+      version: version.toString()
     }
 
     if(nameError === "" && surnameError === "") {
@@ -123,7 +122,8 @@ const EditPersonalData = () => {
         personalDataDTO, {
          headers: {
           'Authorization': 'Bearer ' + token,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'If-Match': etag
         }, 
       })
       .then(response => {

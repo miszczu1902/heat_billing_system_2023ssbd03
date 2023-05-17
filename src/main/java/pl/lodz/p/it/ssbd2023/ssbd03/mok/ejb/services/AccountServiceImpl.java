@@ -228,16 +228,8 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
-    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public PersonalData getPersonalData(String username) {
-        final Account account = accountFacade.findByUsername(username);
-        return personalDataFacade.find(account.getId());
-    }
-
-    @Override
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
-    public PersonalData getSelfPersonalData() {
-        final String username = securityContext.getCallerPrincipal().getName();
+    public PersonalData getUserPersonalData(String username) {
         final Account account = accountFacade.findByUsername(username);
         return personalDataFacade.find(account.getId());
     }
@@ -323,6 +315,13 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         return admin;
     }
 
+    @Override
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
+    public PersonalData getSelfPersonalData() {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Account account = accountFacade.findByUsername(username);
+        return personalDataFacade.find(account.getId());
+    }
 
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})

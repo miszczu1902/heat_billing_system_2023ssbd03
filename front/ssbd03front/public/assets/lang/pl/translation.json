@@ -133,7 +133,9 @@
     "enable_confirm": "Czy na pewno chcesz odblokować użytkownika ",
     "success_one": "Użytkownik ",
     "success_two": " został odblokowany",
-    "error": "Wystąpił błąd podczas odblokowania użytkownika "
+    "error": "Wystąpił błąd podczas odblokowania użytkownika ",
+    "unblocked_user_one": "Użytkownik ",
+    "unblocked_user_two": " jest już odblokowany"
   },
   "disable_account":
   {
@@ -141,7 +143,9 @@
     "disable_confirm": "Czy na pewno chcesz zablokować użytkownika ",
     "success_one": "Użytkownik ",
     "success_two": " został zablokowany",
-    "error": "Wystąpił błąd podczas zablokowania użytkownika "
+    "error": "Wystąpił błąd podczas zablokowania użytkownika ",
+    "blocked_user_one": "Użytkownik ",
+    "blocked_user_two": " jest już zablokowany"
   },
   "landing_page":
   {

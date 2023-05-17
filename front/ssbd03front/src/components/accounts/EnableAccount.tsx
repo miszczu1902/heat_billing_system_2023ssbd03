@@ -12,8 +12,11 @@ import {useTranslation} from "react-i18next";
 const EnableAccount = () => {
   const {t, i18n} = useTranslation();
   const username = useParams().username;
-  const [cookies, setCookie] = useCookies(["token"]);
+  const [cookies, setCookie] = useCookies(["token", "etag"]);
   const token = "Bearer " + cookies.token;
+  const etag = cookies.etag;
+  const [version, setVersion] = React.useState("");
+  const [enableState, setEnable] = React.useState(false);
 
   const [open, setOpen] = React.useState(false);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
@@ -21,7 +24,42 @@ const EnableAccount = () => {
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [errorOpen, setErrorOpen] = React.useState(false);
 
+  const [unblockedUserOpen, setUnblockedUserOpen] = React.useState(false);
+
+    const fetchData = async () => {
+      await axios.get(`${API_URL}/accounts/${username}`, {
+        headers: {
+          Authorization: token
+        }
+      })
+      .then(response => {
+        setCookie("etag", response.headers.etag);
+        setVersion(response.data.version);
+        setEnable(response.data.isEnable);
+      });
+  };
+
+  const enable = async () => {
+    axios.patch(`${API_URL}/accounts/${username}/enable`, 
+    {
+      version: version
+    },
+    {
+       headers: {
+        'Authorization': token,
+        'If-Match': etag
+      },
+    })
+    .then(response => {
+      setSuccessOpen(true);
+    })
+    .catch(error => {
+      setErrorOpen(true);
+    });
+  };
+
   const handleClickOpen = () => {
+    fetchData();
     setOpen(true);
   };
 
@@ -35,21 +73,11 @@ const EnableAccount = () => {
     if (reason !== 'backdropClick') {
       setConfirmOpen(false);
     }
-    const fetchData = async () => {
-      axios.patch(`${API_URL}/accounts/${username}/enable`, {},
-      {
-         headers: {
-          'Authorization': token,
-        },
-      })
-      .then(response => {
-        setSuccessOpen(true);
-      })
-      .catch(error => {
-        setErrorOpen(true);
-      });
-    };
-    fetchData();
+    if(enableState) {
+      setUnblockedUserOpen(true);
+      return;
+    }
+    enable();
     handleConfirmClose(event, reason);
   }
 
@@ -62,6 +90,13 @@ const EnableAccount = () => {
   const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
     if (reason !== 'backdropClick') {
       setErrorOpen(false);
+    }
+  };
+
+  const handleUnblockedUserOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+    if (reason !== 'backdropClick') {
+      setUnblockedUserOpen(false);
+      handleConfirmClose(event, reason);
     }
   };
 
@@ -87,6 +122,11 @@ const EnableAccount = () => {
         <DialogTitle>{t('enable_account.error')}{username}</DialogTitle>
         <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
       </Dialog>
+
+      <Dialog disableEscapeKeyDown open={unblockedUserOpen}>
+                <DialogTitle>{t('disable_account.unblocked_user_one')}{username}{t('disable_account.unblocked_user_two')}</DialogTitle>
+                <Button onClick={handleUnblockedUserOpen}>{t('confirm.ok')}</Button>
+            </Dialog>
     </div>
   );
 }

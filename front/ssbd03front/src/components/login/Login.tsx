@@ -18,7 +18,6 @@ import DialogActions from "@mui/material/DialogActions";
 import {useNavigate} from "react-router-dom";
 import {Icon} from "@mui/material";
 import Logo from './../../assets/logo.svg';
-import jwt from "jwt-decode";
 import {useTranslation} from "react-i18next";
 
 const theme = createTheme();

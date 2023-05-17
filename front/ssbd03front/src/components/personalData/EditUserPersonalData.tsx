@@ -12,13 +12,17 @@ import ListItem from '@mui/material/ListItem';
 import axios from 'axios'; 
 import validator from "validator";
 import { API_URL } from '../../consts';
+import {useCookies} from 'react-cookie';
 import { useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 
 export default function EditUserPersonalData() {
   const {t, i18n} = useTranslation();
   const username = useParams().username;
-  const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJqb2huZG9lIiwiaWF0IjoxNjgzOTI1OTU0LCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODM5Mjc3NTR9.RbobRzMWznH3_DmX__wWOFwG5ZrREIZmrJyijy0_X-0';
+  const [cookies, setCookie] = useCookies(["token", "etag"]);
+  const token = "Bearer " + cookies.token;
+  const etag = cookies.etag;
+  const [version, setVersion] = React.useState("");
 
   const [open, setOpen] = React.useState(false);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
@@ -35,19 +39,22 @@ export default function EditUserPersonalData() {
   var [successOpen, setSuccessOpen] = React.useState(false);
   var [errorOpen, setErrorOpen] = React.useState(false);
 
-  useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(`${API_URL}/accounts/${username}/personal-data`, {
         headers: {
-          Authorization: 'Bearer ' + token
+          Authorization: token
         }
       })
       .then(response => {
         setName(response.data.firstName.toString());
         setSurname(response.data.surname.toString());
+        setCookie("etag", response.headers.etag);
+        setVersion(response.data.version.toString());
       });
   };
-  fetchData();
+
+  useEffect(() => { 
+    fetchData();
   }, []);
 
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -86,15 +93,7 @@ export default function EditUserPersonalData() {
   };
 
   const handleClickOpen = () => {
-    axios.get(`${API_URL}/accounts/${username}/personal-data`, {
-      headers: {
-        Authorization: 'Bearer ' + token
-      }
-    })
-    .then(response => {
-        setName(response.data.firstName.toString());
-        setSurname(response.data.surname.toString());
-    });
+    fetchData();
     setOpen(true);
   };
 
@@ -116,15 +115,17 @@ export default function EditUserPersonalData() {
     }
     const personalDataDTO = {
       firstName: name.toString(),
-      surname: surname.toString()
+      surname: surname.toString(),
+      version: version.toString()
     }
 
     if(nameError === "" && surnameError === "") {
       axios.patch(`${API_URL}/accounts/${username}/personal-data`,
         personalDataDTO, {
          headers: {
-          'Authorization': 'Bearer ' + token,
-          'Content-Type': 'application/json'
+          'Authorization':  token,
+          'Content-Type': 'application/json',
+          'If-Match': etag
         },
       })
       .then(response => {

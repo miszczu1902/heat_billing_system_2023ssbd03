@@ -134,7 +134,6 @@ const NavbarPanel: React.FC = () => {
     }, [role]);
 
     return (
-
         <AppBar position="static" style={{backgroundColor: navbarColor}}>
             <Toolbar>
                 <Icon sx={{width: '3%', height: '3%', marginLeft: '1vh', marginRight: '1vh'}}>
