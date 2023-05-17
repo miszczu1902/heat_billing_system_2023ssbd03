@@ -65,7 +65,7 @@ public class AddRemoveAccessLevelFromAccountTest extends BasicIntegrationConfigT
     }
 
     @Test
-    public void addAndRemoveOwnerAccessLevelToAccount() {
+    public void addAndRemoveAdminAccessLevelToAccountConcurrent() {
         List<Integer> responseList = new ArrayList<>();
         int concurrentRequests = 3;
         ExecutorService executorService = Executors.newFixedThreadPool(3);
@@ -79,6 +79,25 @@ public class AddRemoveAccessLevelFromAccountTest extends BasicIntegrationConfigT
                 responseList.add(response.getStatusCode());
             });
         }
+        try {
+            executorService.shutdown();
+            executorService.awaitTermination(10, TimeUnit.SECONDS);
+            assertEquals(1, responseList.stream().filter(code -> code == 204).toList().size(), "Check if the first of request was passed.");
+            assertEquals(2, responseList.stream().filter(code -> code == 500).toList().size(), "Check if the rest of requests was failed.");
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+        RevokeAccessLevelDTO accessLevelToRevoke = new RevokeAccessLevelDTO("mariasilva", Roles.ADMIN);
+        for (int i = 0; i < concurrentRequests; i++) {
+            int index = i + 1;
+            executorService.execute(() -> {
+                logger.info("Request no. " + index);
+                Response response = sendRequestAndGetResponse(Method.PATCH, "/accounts/revoke-access-level", accessLevelToRevoke, ContentType.JSON);
+                responseList.add(response.getStatusCode());
+            });
+        }
+
         try {
             executorService.shutdown();
             executorService.awaitTermination(10, TimeUnit.SECONDS);
