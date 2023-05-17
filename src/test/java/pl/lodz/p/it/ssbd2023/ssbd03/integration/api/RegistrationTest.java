@@ -7,10 +7,11 @@ import org.junit.Test;
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTest;
+import pl.lodz.p.it.ssbd2023.ssbd03.integration.factory.IntegrationTestObjectsFactory;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RegistrationTest extends BasicIntegrationConfigTest {
     private static final CreateOwnerDTO initalizedOwner = new CreateOwnerDTO(
@@ -34,17 +35,7 @@ public class RegistrationTest extends BasicIntegrationConfigTest {
 
     @Test
     public void registerOwnerTest() {
-        CreateOwnerDTO owner = new CreateOwnerDTO(
-                RandomStringUtils.randomAlphabetic(10),
-                RandomStringUtils.randomAlphabetic(10),
-                RandomStringUtils.randomAlphanumeric(10),
-                RandomStringUtils.randomAlphanumeric(10) + "@fakemailik.com",
-                "Password$123",
-                "Password$123",
-                "PL",
-                RandomStringUtils.randomNumeric(9)
-        );
-
+        CreateOwnerDTO owner = IntegrationTestObjectsFactory.createAccountToRegister();
         int statusCode = sendRequestAndGetResponse(Method.POST, "/accounts/register", owner, ContentType.JSON)
                 .getStatusCode();
         assertEquals(201, statusCode);
@@ -72,15 +63,7 @@ public class RegistrationTest extends BasicIntegrationConfigTest {
     }
 
     private CreateOwnerDTO getInvalidOwnerData(String field) {
-        CreateOwnerDTO owner = new CreateOwnerDTO(
-                initalizedOwner.getFirstName(),
-                initalizedOwner.getSurname(),
-                RandomStringUtils.randomAlphanumeric(10),
-                RandomStringUtils.randomAlphanumeric(10) + "@fakemail.com",
-                "Password$123",
-                "Password$123",
-                "PL",
-                RandomStringUtils.randomNumeric(9));
+        CreateOwnerDTO owner = IntegrationTestObjectsFactory.createAccountToRegister();
 
         switch (field) {
             case "firstName" -> owner.setFirstName(RandomStringUtils.randomAlphanumeric(33));
@@ -99,15 +82,7 @@ public class RegistrationTest extends BasicIntegrationConfigTest {
     }
 
     private CreateOwnerDTO createNotUniqueOwner(String field) {
-        CreateOwnerDTO owner = new CreateOwnerDTO(
-                initalizedOwner.getFirstName(),
-                initalizedOwner.getSurname(),
-                RandomStringUtils.randomAlphanumeric(10),
-                RandomStringUtils.randomAlphanumeric(10) + "@fakemail.com",
-                "Password$123",
-                "Password$123",
-                "PL",
-                RandomStringUtils.randomNumeric(9));
+        CreateOwnerDTO owner = IntegrationTestObjectsFactory.createAccountToRegister();
 
         switch (field) {
             case "username" -> owner.setUsername(initalizedOwner.getUsername());

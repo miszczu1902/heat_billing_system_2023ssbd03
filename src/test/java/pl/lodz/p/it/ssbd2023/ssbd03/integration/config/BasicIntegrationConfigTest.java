@@ -19,10 +19,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import java.util.Optional;
 
 import static io.restassured.RestAssured.*;
-import static io.restassured.RestAssured.baseURI;
 
 public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
-
     /* RestAssured config */
     protected static Logger logger = LoggerFactory.getLogger("e2e-tests");
     private static ObjectMapper mapper = new ObjectMapper();
@@ -38,7 +36,7 @@ public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
         String jsonObject = objectToJson(object);
 
         if (object != null) request.body(jsonObject);
-        if (!BEARER_TOKEN.equals("") && !path.equals("/accounts/login"))
+        if (!BEARER_TOKEN.equals("") && !path.equals("/accounts/login") && !path.equals("/accounts/register"))
             request.header(new Header("Authorization", "Bearer " + BEARER_TOKEN));
 
         logBeforeRequest(method, path, jsonObject, contentType);
@@ -57,7 +55,7 @@ public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
     }
 
     protected static void auth(LoginDTO loginData) {
-        BEARER_TOKEN = sendRequestAndGetResponse(Method.POST, "/accounts/login", objectToJson(loginData), ContentType.JSON)
+        BEARER_TOKEN = sendRequestAndGetResponse(Method.POST, "/accounts/login", loginData, ContentType.JSON)
                 .getHeader("Bearer");
     }
 
