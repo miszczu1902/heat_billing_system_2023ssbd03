@@ -16,12 +16,16 @@ const DisableAccount = () => {
     const token = "Bearer " + cookies.token;
     const etag = cookies.etag;
     const [version, setVersion] = React.useState("");
+    const [enable, setEnable] = React.useState(false);
 
     const [open, setOpen] = React.useState(false);
     const [confirmOpen, setConfirmOpen] = React.useState(false);
 
     const [successOpen, setSuccessOpen] = React.useState(false);
     const [errorOpen, setErrorOpen] = React.useState(false);
+
+    const [blockedUserOpen, setBlockedUserOpen] = React.useState(false);
+
 
     const fetchData = async () => {
       await axios.get(`${API_URL}/accounts/${username}`, {
@@ -32,6 +36,7 @@ const DisableAccount = () => {
       .then(response => {
         setCookie("etag", response.headers.etag);
         setVersion(response.data.version.toString());
+        setEnable(response.data.isEnable);
       });
   };
 
@@ -69,7 +74,11 @@ const DisableAccount = () => {
       if (reason !== 'backdropClick') {
         setConfirmOpen(false);
       }
-        disable();
+      if(!enable) {
+        setBlockedUserOpen(true);
+        return;
+      }
+      disable();
       handleConfirmClose(event, reason);
     }
 
@@ -82,6 +91,13 @@ const DisableAccount = () => {
     const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
       if (reason !== 'backdropClick') {
         setErrorOpen(false);
+      }
+    };
+
+    const handleBlockedUserOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+      if (reason !== 'backdropClick') {
+        setBlockedUserOpen(false);
+        handleConfirmClose(event, reason);
       }
     };
 
@@ -106,6 +122,11 @@ const DisableAccount = () => {
             <Dialog disableEscapeKeyDown open={errorOpen}>
                 <DialogTitle>{t('disable_account.error')}{username}</DialogTitle>
                 <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
+            </Dialog>
+
+            <Dialog disableEscapeKeyDown open={blockedUserOpen}>
+                <DialogTitle>{t('disable_account.blocked_user_one')}{username}{t('disable_account.blocked_user_two')}</DialogTitle>
+                <Button onClick={handleBlockedUserOpen}>{t('confirm.ok')}</Button>
             </Dialog>
         </div>
     );

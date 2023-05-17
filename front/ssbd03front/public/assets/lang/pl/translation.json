@@ -133,7 +133,9 @@
     "enable_confirm": "Czy na pewno chcesz odblokować użytkownika ",
     "success_one": "Użytkownik ",
     "success_two": " został odblokowany",
-    "error": "Wystąpił błąd podczas odblokowania użytkownika "
+    "error": "Wystąpił błąd podczas odblokowania użytkownika ",
+    "unblocked_user_one": "Użytkownik ",
+    "unblocked_user_two": " jest już odblokowany"
   },
   "disable_account":
   {
@@ -141,11 +143,21 @@
     "disable_confirm": "Czy na pewno chcesz zablokować użytkownika ",
     "success_one": "Użytkownik ",
     "success_two": " został zablokowany",
-    "error": "Wystąpił błąd podczas zablokowania użytkownika "
+    "error": "Wystąpił błąd podczas zablokowania użytkownika ",
+    "blocked_user_one": "Użytkownik ",
+    "blocked_user_two": " jest już zablokowany"
   },
   "landing_page":
   {
     "title": "Projekt zespołu 3 SSBD 2023",
     "subtitle": "System rozliczania ciepła w lokalach w wielu budynkach."
+  },
+  "profile":
+  {
+    "title": "Informacje o koncie",
+    "phone_number_error" : "Numer telefonu musi zawierać 9 cyfr.",
+    "license_error" : "Licencja musi skladać się z 20 znaków.",
+    "license" : "Licencja",
+    "access_levels" : "Poziom dostępu"
   }
 }

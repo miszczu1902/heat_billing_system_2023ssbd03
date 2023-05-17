@@ -133,7 +133,9 @@
     "enable_confirm": "Are you sure you want to unblock the user ",
     "success_one": "Username ",
     "success_two": " has been unblocked",
-    "error": "An error occurred while unblocking the user "
+    "error": "An error occurred while unblocking the user ",
+    "unblocked_user_one": "User ",
+    "unblocked_user_two": " is already unblocked"
   },
   "disable_account":
   {
@@ -141,11 +143,21 @@
     "disable_confirm": "Are you sure you want to block the user ",
     "success_one": "Username ",
     "success_two": " has been blocked",
-    "error": "An error occurred while blocking the user "
+    "error": "An error occurred while blocking the user ",
+    "blocked_user_one": "User ",
+    "blocked_user_two": " is already blocked"
   },
   "landing_page":
   {
     "title": "Project Team 3 SSBD 2023",
     "subtitle": "Heat accounting system for premises in many buildings."
+  },
+  "profile":
+  {
+    "title": "Account info",
+    "phone_number_error" : "The phone number must contain 9 digits.",
+    "license_error" : "The license must consist of 20 characters.",
+    "license" : "License",
+    "access_levels" : "Access levels"
   }
 }

@@ -34,6 +34,8 @@ public interface AccountService extends CommonManagerLocalInterface {
 
     Account getAccount(String username);
 
+    Account getSelfAccount();
+
     Owner getOwner();
 
     Manager getManager();
