@@ -21,6 +21,13 @@ public class AdminDTO extends AccountDTO {
         this.language = language;
     }
 
+    public AdminDTO(Long id, Long version, String email, String username, String firstName, String surname, String language) {
+        super(id, version, email, username);
+        this.firstName = firstName;
+        this.surname = surname;
+        this.language = language;
+    }
+
     @Override
     public String messageToSign() {
         return super.messageToSign()

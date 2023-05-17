@@ -23,6 +23,14 @@ public class OwnerDTO extends AccountDTO {
         this.phoneNumber = phoneNumber;
     }
 
+    public OwnerDTO(Long id, Long version, String email, String username, String firstName, String surname, String language, String phoneNumber) {
+        super(id, version, email, username);
+        this.firstName = firstName;
+        this.surname = surname;
+        this.language = language;
+        this.phoneNumber = phoneNumber;
+    }
+
     @Override
     public String messageToSign() {
         return super.messageToSign()
