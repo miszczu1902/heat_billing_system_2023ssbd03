@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 
 import java.util.Optional;
 
@@ -61,8 +62,19 @@ public class BasicE2EConfigTest extends DevelopEnvConfigTest {
         }
     }
 
-    protected static void auth() {
+    protected static void auth(String username, String passsword) {
         //TODO - zaimplementować gdy pojawi się uwierzytelnienie
+        LoginDTO loginDTO =  new LoginDTO(
+                username,
+                passsword
+        );
+
+        Response logIn = sendRequestAndGetResponse(Method.POST,
+                "/accounts/login",
+                loginDTO,
+                ContentType.JSON);
+
+        setBEARER_TOKEN(logIn.header("Bearer"));
     }
 
     private static void logMetaData(Method method, String path, ContentType contentType) {

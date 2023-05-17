@@ -1,30 +1,29 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.integration.api;
+package pl.lodz.p.it.ssbd2023.ssbd03.integration.api.account;
 
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
+import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.Before;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.Test;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.VersionDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicE2EConfigTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Testcontainers
-public class EnableDisableAccountTest extends BasicE2EConfigTest {
+public class EnableAccountTest extends BasicE2EConfigTest {
 
     @Before
     public void initialize() {
         setETAG("");
         setBEARER_TOKEN("");
-        login("johndoe", "Password$123");
+        auth("johndoe", "Password$123");
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"enable", "disable"})
-    public void shouldAdminEnableDisableGivenUserAccount(String action) {
+    @Test
+    public void shouldAdminEnableGivenUserAccount() {
         Response getUserResponse = sendRequestAndGetResponse(Method.GET,
                 "/accounts/janekowalski",
                 null,
@@ -34,17 +33,20 @@ public class EnableDisableAccountTest extends BasicE2EConfigTest {
 
         setETAG(getUserResponse.header("ETag"));
 
+        JsonPath jsonPath = new JsonPath(getUserResponse.getBody().asString());
+        int version = jsonPath.getInt("version");
+        VersionDTO versionDTO = new VersionDTO(version);
+
         Response enableUser = sendRequestAndGetResponse(Method.PATCH,
-                "/accounts/janekowalski/" + action,
-                null,
+                "/accounts/janekowalski/enable",
+                versionDTO,
                 ContentType.JSON);
 
         assertEquals(204, enableUser.getStatusCode());
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"enable", "disable"})
-    public void shouldNotAdminEnableSelfAccount(String action) {
+    @Test
+    public void shouldNotAdminEnableSelfAccount() {
         Response getUserResponse = sendRequestAndGetResponse(Method.GET,
                 "/accounts/johndoe",
                 null,
@@ -54,19 +56,22 @@ public class EnableDisableAccountTest extends BasicE2EConfigTest {
 
         setETAG(getUserResponse.header("ETag"));
 
+        JsonPath jsonPath = new JsonPath(getUserResponse.getBody().asString());
+        int version = jsonPath.getInt("version");
+        VersionDTO versionDTO = new VersionDTO(version);
+
         Response enableUser = sendRequestAndGetResponse(Method.PATCH,
-                "/accounts/johndoe/" + action,
-                null,
+                "/accounts/johndoe/enable",
+                versionDTO,
                 ContentType.JSON);
 
         assertEquals(405, enableUser.getStatusCode());
         assertEquals("Action is not allowed with this privileges", enableUser.getBody().print());
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"enable", "disable"})
-    public void shouldNotManagerEnableSelfAccount(String action) {
-        login("janekowalski", "Password$123");
+    @Test
+    public void shouldNotManagerEnableSelfAccount() {
+        auth("janekowalski", "Password$123");
 
         Response getUserResponse = sendRequestAndGetResponse(Method.GET,
                 "/accounts/janekowalski",
@@ -77,19 +82,22 @@ public class EnableDisableAccountTest extends BasicE2EConfigTest {
 
         setETAG(getUserResponse.header("ETag"));
 
+        JsonPath jsonPath = new JsonPath(getUserResponse.getBody().asString());
+        int version = jsonPath.getInt("version");
+        VersionDTO versionDTO = new VersionDTO(version);
+
         Response enableUser = sendRequestAndGetResponse(Method.PATCH,
-                "/accounts/janekowalski/" + action,
-                null,
+                "/accounts/janekowalski/enable",
+                versionDTO,
                 ContentType.JSON);
 
         assertEquals(405, enableUser.getStatusCode());
         assertEquals("Action is not allowed with this privileges", enableUser.getBody().print());
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"enable", "disable"})
-    public void shouldNotManagerEnableAdminAccount(String action) {
-        login("janekowalski", "Password$123");
+    @Test
+    public void shouldNotManagerEnableAdminAccount() {
+        auth("janekowalski", "Password$123");
 
         Response getUserResponse = sendRequestAndGetResponse(Method.GET,
                 "/accounts/johndoe",
@@ -100,31 +108,22 @@ public class EnableDisableAccountTest extends BasicE2EConfigTest {
 
         setETAG(getUserResponse.header("ETag"));
 
+        JsonPath jsonPath = new JsonPath(getUserResponse.getBody().asString());
+        int version = jsonPath.getInt("version");
+        VersionDTO versionDTO = new VersionDTO(version);
+
         Response enableUser = sendRequestAndGetResponse(Method.PATCH,
-                "/accounts/johndoe/" + action,
-                null,
+                "/accounts/johndoe/enable",
+                versionDTO,
                 ContentType.JSON);
 
         assertEquals(405, enableUser.getStatusCode());
         assertEquals("Action is not allowed with this privileges", enableUser.getBody().print());
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {"enable", "disable"})
-    public void shouldNotEnableNotExistingAccount(String action) {
-        setETAG("etag");
 
-        Response enableUser = sendRequestAndGetResponse(Method.PATCH,
-                "/accounts/kamiltumulec/" + action,
-                null,
-                ContentType.JSON);
-
-        assertEquals(404, enableUser.getStatusCode());
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"enable", "disable"})
-    public void shouldNotEnableWhenEtagNotMatch(String action) {
+    @Test
+    public void shouldNotEnableWhenEtagNotMatch() {
         Response getUserResponse = sendRequestAndGetResponse(Method.GET,
                 "/accounts/janekowalski",
                 null,
@@ -132,28 +131,18 @@ public class EnableDisableAccountTest extends BasicE2EConfigTest {
 
         assertEquals(200, getUserResponse.getStatusCode());
 
-        setETAG("not matching ETag");
+        setETAG(getUserResponse.header("ETag"));
+
+        JsonPath jsonPath = new JsonPath(getUserResponse.getBody().asString());
+        int version = jsonPath.getInt("version");
+        VersionDTO versionDTO = new VersionDTO(version+1);
 
         Response enableUser = sendRequestAndGetResponse(Method.PATCH,
-                "/accounts/janekowalski/" + action,
-                null,
+                "/accounts/janekowalski/enable",
+                versionDTO,
                 ContentType.JSON);
 
-        assertEquals(400, enableUser.getStatusCode());
-    }
-
-    private void login(String username, String passsword) {
-        LoginDTO loginDTO =  new LoginDTO(
-                username,
-                passsword
-        );
-
-        Response logIn = sendRequestAndGetResponse(Method.POST,
-                "/accounts/login",
-                loginDTO,
-                ContentType.JSON);
-
-        setBEARER_TOKEN(logIn.header("Bearer"));
+        assertEquals(409, enableUser.getStatusCode());
     }
 
 }
