@@ -157,7 +157,7 @@
     "title": "Account info",
     "phone_number_error" : "The phone number must contain 9 digits.",
     "license_error" : "The license must consist of 20 characters.",
-    "license" : "Licens",
+    "license" : "License",
     "access_levels" : "Access levels"
   }
 }
