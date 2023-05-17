@@ -237,6 +237,6 @@ const Login = () => {
             </Grid>
         </ThemeProvider>
     );
-} 
+}
 
 export default Login;

@@ -19,7 +19,6 @@ import java.nio.file.Paths;
 
 @Testcontainers
 public class DevelopEnvConfigTest {
-
     /* Images */
     private static final DockerImageName NGINX_IMAGE = DockerImageName.parse("nginx:latest");
     private static final DockerImageName PAYARA_IMAGE = DockerImageName.parse("payara/server-full:6.2023.3-jdk17");
@@ -103,5 +102,4 @@ public class DevelopEnvConfigTest {
         POSTGRES.stop();
         logger.info("Postgres container stopped.");
     }
-
 }
