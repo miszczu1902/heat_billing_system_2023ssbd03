@@ -14,13 +14,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 
 import java.util.Optional;
 
 import static io.restassured.RestAssured.*;
 import static io.restassured.RestAssured.baseURI;
 
-public class BasicE2EConfigTest extends DevelopEnvConfigTest {
+public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
 
     /* RestAssured config */
     protected static Logger logger = LoggerFactory.getLogger("e2e-tests");
@@ -37,7 +38,7 @@ public class BasicE2EConfigTest extends DevelopEnvConfigTest {
         String jsonObject = objectToJson(object);
 
         if (object != null) request.body(jsonObject);
-        if (!BEARER_TOKEN.equals("") && !path.equals("/auth/login")) //TODO - ten path /auth/login do zmiany
+        if (!BEARER_TOKEN.equals("") && !path.equals("/accounts/login"))
             request.header(new Header("Authorization", "Bearer " + BEARER_TOKEN));
 
         logBeforeRequest(method, path, jsonObject, contentType);
@@ -55,8 +56,9 @@ public class BasicE2EConfigTest extends DevelopEnvConfigTest {
         }
     }
 
-    protected static void auth() {
-        //TODO - zaimplementować gdy pojawi się uwierzytelnienie
+    protected static void auth(LoginDTO loginData) {
+        BEARER_TOKEN = sendRequestAndGetResponse(Method.POST, "/accounts/login", objectToJson(loginData), ContentType.JSON)
+                .getHeader("Bearer");
     }
 
     private static void logMetaData(Method method, String path, ContentType contentType) {
@@ -88,5 +90,4 @@ public class BasicE2EConfigTest extends DevelopEnvConfigTest {
         logger.info("Default port: " + port);
         logger.info("Default parser: " + defaultParser);
     }
-
 }
