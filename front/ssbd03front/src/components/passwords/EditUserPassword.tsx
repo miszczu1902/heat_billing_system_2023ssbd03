@@ -11,120 +11,64 @@ import ListItem from '@mui/material/ListItem';
 import axios from 'axios';
 import { API_URL } from '../../consts';
 import {useCookies} from 'react-cookie';
+import {useParams} from "react-router-dom";
 import {useEffect} from "react";
-import jwt from "jwt-decode";
 
 const EditPassword = () => {
     const [cookies] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
+    const username = useParams().username;
     const [etag, setEtag] = React.useState(false);
     const [version, setVersion] = React.useState("");
 
     const [open, setOpen] = React.useState(false);
     const [confirmOpen, setConfirmOpen] = React.useState(false);
-    const [oldPassword, setOldPassword] = React.useState("");
     const [newPassword, setNewPassword] = React.useState("");
     const [repeatedNewPassword, setRepeatedNewPassword] = React.useState("");
 
-    const [oldPasswordError, setOldPasswordError] = React.useState("");
     const [newPasswordError, setNewPasswordError] = React.useState("");
     const [repeatedNewPasswordError, setRepeatedNewPasswordError] = React.useState("");
-    const [oldAndNewPasswordSameError, setOldAndNewPasswordSameError] = React.useState("");
     const [newAndRepeatedNewPasswordNotSameError, setNewAndRepeatedNewPasswordNotSameError] = React.useState("");
     const [dataError, setDataError] = React.useState("");
 
-    const [newPasswordValid, setNewPasswordValid] = React.useState(false);
-    const [repeatedNewPasswordValid, setRepeatedNewPasswordValid] = React.useState(false);
-    const [oldPasswordValid, setOldPasswordValid] = React.useState(false);
-    const [oldAndNewPasswordSameValid, setOldAndNewPasswordSameValid] = React.useState(false);
-    const [newAndRepeatedNewPasswordNotSameValid, setNewAndRepeatedNewPasswordNotSameValid] = React.useState(false);
     const [validData, setValidData] = React.useState(false);
 
     const [successOpen, setSuccessOpen] = React.useState(false);
     const [errorOpen, setErrorOpen] = React.useState(false);
     const [errorOpenMessage, setErrorOpenMessage] = React.useState("");
 
-    useEffect(() => {
-        if (cookies.token !== "undefined" && cookies.token !== undefined) {
-            const decodedToken = jwt(cookies.token);
-            const username = JSON.parse(JSON.stringify(decodedToken)).sub;
-            const fetchData = async () => {
-                await axios.get(`${API_URL}/accounts/${username}`, {
-                    headers: {
-                        Authorization: token
-                    }
-                })
-                    .then(response => {
-                        setEtag(response.headers["etag"]);
-                        setVersion(response.data.version)
-                    });
-            };
-            fetchData();
-        }
-    }, []);
-
-    const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     }
 
-    const checkOldAndNewPasswords = (oldPassword: string, newPassword: string): boolean => {
-        if (oldPassword === newPassword) {
-            setOldAndNewPasswordSameError("Stare i nowe hasło nie mogą być takie same");
-            setOldAndNewPasswordSameValid(false);
-            return false;
-        }
-        setOldAndNewPasswordSameError("");
-        setOldAndNewPasswordSameValid(true);
-        return true;
-    }
-
-    const checkNewAndRepeatedNewPasswords = (newPassword: string, repeatedNewPassword: string): boolean => {
-        if (newPassword !== repeatedNewPassword) {
-            setNewAndRepeatedNewPasswordNotSameError("Nowe i powtórzone nowe hasło muszą być takie same");
-            setNewAndRepeatedNewPasswordNotSameValid(false);
-            return false;
-        }
-        setNewAndRepeatedNewPasswordNotSameError("");
-        setNewAndRepeatedNewPasswordNotSameValid(true);
-        return true;
-    }
-
-    const handleOldPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        let password = event.target.value;
-        setOldPassword(password)
-        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/;
-        let oldAndNewPasswordSameValidNow = checkOldAndNewPasswords(password, newPassword);
-
-        if (!regex.test(password)) {
-            setOldPasswordError("Hasło musi zawierać conajmniej 8 znaków, jedną wielką i małą literę, " +
-                "cyfrę i jeden ze znaków specjalnych: @$!%*?&");
-            setValidData(false);
-        } else {
-            setOldPasswordError("");
-            setOldPasswordValid(true);
-            if (newPasswordValid && repeatedNewPasswordValid && oldAndNewPasswordSameValidNow &&
-                newAndRepeatedNewPasswordNotSameValid) {
-                setValidData(true);
-            } else {
-                setValidData(false);
-            }
-        }
-    };
+    useEffect(() => {
+        const fetchData = async () => {
+            await axios.get(`${API_URL}/accounts/${username}`, {
+                headers: {
+                    Authorization: token
+                }
+            })
+                .then(response => {
+                    setEtag(response.headers["etag"]);
+                    setVersion(response.data.version)
+                });
+        };
+        fetchData();
+    }, []);
 
     const handleNewPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let password = event.target.value;
         setNewPassword(password);
+        let newAndRepeatedNewPasswordSame = checkNewAndRepeatedNewPasswords(password, repeatedNewPassword)
+
         const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/;
-        let oldAndNewPasswordSameValidNow = checkOldAndNewPasswords(oldPassword, password);
-        let newAndRepeatedNewPasswordNotSameValidNow = checkNewAndRepeatedNewPasswords(password, repeatedNewPassword);
         if (!regex.test(password)) {
             setNewPasswordError("Hasło musi zawierać conajmniej 8 znaków, jedną wielką i małą literę, " +
                 "cyfrę i jeden ze znaków specjalnych: @$!%*?&");
             setValidData(false);
         } else {
             setNewPasswordError("");
-            setNewPasswordValid(true);
-            if (oldPasswordValid && repeatedNewPasswordValid && oldAndNewPasswordSameValidNow && newAndRepeatedNewPasswordNotSameValidNow) {
+            if (newAndRepeatedNewPasswordSame) {
                 setValidData(true);
             } else {
                 setValidData(false);
@@ -135,23 +79,32 @@ const EditPassword = () => {
     const handleRepeatedNewPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let password = event.target.value;
         setRepeatedNewPassword(password);
+        let newAndRepeatedNewPasswordSame = checkNewAndRepeatedNewPasswords(newPassword, password)
+
         const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/;
-        let newAndRepeatedNewPasswordNotSameValidNow = checkNewAndRepeatedNewPasswords(newPassword, password);
         if (!regex.test(password)) {
             setRepeatedNewPasswordError("Hasło musi zawierać conajmniej 8 znaków, jedną wielką i małą literę, " +
                 "cyfrę i jeden ze znaków specjalnych: @$!%*?&");
-            setRepeatedNewPasswordValid(false);
             setValidData(false);
         } else {
             setRepeatedNewPasswordError("");
-            setRepeatedNewPasswordValid(true);
-            if (oldPasswordValid && newPasswordValid && oldAndNewPasswordSameValid && newAndRepeatedNewPasswordNotSameValidNow) {
+            if (newAndRepeatedNewPasswordSame) {
                 setValidData(true);
             } else {
                 setValidData(false);
             }
         }
     };
+
+    const checkNewAndRepeatedNewPasswords = (newPassword: string, repeatedNewPassword: string): boolean => {
+        if (newPassword !== repeatedNewPassword) {
+            setNewAndRepeatedNewPasswordNotSameError("Nowe i powtórzone nowe hasło muszą być takie same");
+            return false
+        } else {
+            setNewAndRepeatedNewPasswordNotSameError("");
+            return true
+        }
+    }
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -174,27 +127,26 @@ const EditPassword = () => {
             setConfirmOpen(false);
         }
         const passwordDTO = {
-            oldPassword: oldPassword.toString(),
             newPassword: newPassword.toString(),
             repeatedNewPassword: repeatedNewPassword.toString(),
             version: parseInt(version)
         }
 
-         axios.patch(`${API_URL}/accounts/self/password`,
-             passwordDTO, {
-                    headers: {
-                        'Authorization': token,
-                        'If-Match' : etag,
-                        'Content-Type': 'application/json'
-                    },
-                })
-                .then(response => {
-                    setSuccessOpen(true);
-                })
-                .catch(error => {
-                    setErrorOpenMessage(error.response.data.message)
-                    setErrorOpen(true);
-                });
+        axios.patch(`${API_URL}/accounts/${username}/password`,
+            passwordDTO, {
+                headers: {
+                    'Authorization': token,
+                    'If-Match' : etag,
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(() => {
+                setSuccessOpen(true);
+            })
+            .catch(error => {
+                setErrorOpenMessage(error.response.data.message)
+                setErrorOpen(true);
+            });
         handleClose(event, reason);
     }
 
@@ -208,7 +160,6 @@ const EditPassword = () => {
     }
 
     const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        setOldPassword("");
         setNewPassword("");
         setRepeatedNewPassword("");
         if (reason !== 'backdropClick') {
@@ -231,22 +182,8 @@ const EditPassword = () => {
                 <DialogTitle>Wypełnij formularz zmiany hasła</DialogTitle>
                 <DialogContent>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
-                        <form onSubmit={handleSumbit}>
+                        <form onSubmit={handleSubmit}>
                             <List component="nav" aria-label="mailbox folders">
-                                <ListItem>
-                                    <div className="form-group" onChange={handleOldPasswordChange}>
-                                        <TextField
-                                            id="outlined-helperText"
-                                            label="Stare hasło"
-                                            defaultValue= {oldPassword}
-                                            type="password"
-                                            helperText="Wprowadź stare hasło"
-                                        />
-                                        <div className="form-group">
-                                            {oldPasswordError}
-                                        </div>
-                                    </div>
-                                </ListItem>
                                 <ListItem>
                                     <div className="form-group" onChange={handleNewPasswordChange}>
                                         <TextField
@@ -277,9 +214,6 @@ const EditPassword = () => {
                                 </ListItem>
                             </List>
                             <div className="form-group">
-                                {oldAndNewPasswordSameError}
-                            </div>
-                            <div className="form-group">
                                 {newAndRepeatedNewPasswordNotSameError}
                             </div>
                             <div className="form-group">
@@ -295,7 +229,7 @@ const EditPassword = () => {
             </Dialog>
 
             <Dialog disableEscapeKeyDown open={confirmOpen} onClose={handleConfirmClose}>
-                <DialogTitle>Czy na pewno chcesz zmienić swoje hasło?</DialogTitle>
+                <DialogTitle>Czy na pewno chcesz zmienić hasło?</DialogTitle>
                 <DialogActions>
                     <Button onClick={handleConfirmClose}>Nie</Button>
                     <Button onClick={handleConfirmConfirm}>Tak</Button>
