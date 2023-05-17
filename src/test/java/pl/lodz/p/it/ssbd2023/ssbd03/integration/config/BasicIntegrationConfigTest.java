@@ -27,6 +27,10 @@ public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
     private static String BEARER_TOKEN = "";
     protected static String ETAG = "";
 
+    @Getter
+    @Setter
+    private static String ETAG = "";
+
     protected static Response sendRequestAndGetResponse(Method method, String path, Object object, ContentType contentType) {
         contentType = contentType == null ? ContentType.ANY : contentType;
         RequestSpecification request = given().contentType(contentType);

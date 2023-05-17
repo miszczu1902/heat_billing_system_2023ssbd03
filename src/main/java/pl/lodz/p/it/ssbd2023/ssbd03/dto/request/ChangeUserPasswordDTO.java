@@ -19,4 +19,10 @@ public class ChangeUserPasswordDTO extends VersionDTO {
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
             message = "Restrictions for password is: at least 8 characters length, at least one upper and lower case, number and special digit")
     private String repeatedNewPassword;
+
+    public ChangeUserPasswordDTO(String newPassword, String repeatedNewPassword, @NotNull Long version) {
+        super(version);
+        this.newPassword = newPassword;
+        this.repeatedNewPassword = repeatedNewPassword;
+    }
 }
