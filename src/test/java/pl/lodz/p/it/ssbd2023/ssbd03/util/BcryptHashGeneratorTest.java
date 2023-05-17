@@ -1,14 +1,11 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.util;
 
-import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BcryptHashGeneratorTest {
-
-    @Inject
-    BcryptHashGenerator bcryptHashGenerator;
+    private final BcryptHashGenerator bcryptHashGenerator = new BcryptHashGenerator();
 
     @Test
     void generateHash() {
