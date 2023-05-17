@@ -8,8 +8,6 @@ import { API_URL } from '../../consts';
 import { useParams} from "react-router-dom";
 import {useCookies} from 'react-cookie';
 import {useTranslation} from "react-i18next";
-import { useEffect } from 'react';
-import { set } from 'react-hook-form';
 
 const EnableAccount = () => {
   const {t, i18n} = useTranslation();
@@ -18,12 +16,15 @@ const EnableAccount = () => {
   const token = "Bearer " + cookies.token;
   const etag = cookies.etag;
   const [version, setVersion] = React.useState("");
+  const [enableState, setEnable] = React.useState(false);
 
   const [open, setOpen] = React.useState(false);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [errorOpen, setErrorOpen] = React.useState(false);
+
+  const [unblockedUserOpen, setUnblockedUserOpen] = React.useState(false);
 
     const fetchData = async () => {
       await axios.get(`${API_URL}/accounts/${username}`, {
@@ -34,6 +35,7 @@ const EnableAccount = () => {
       .then(response => {
         setCookie("etag", response.headers.etag);
         setVersion(response.data.version);
+        setEnable(response.data.isEnable);
       });
   };
 
@@ -71,6 +73,10 @@ const EnableAccount = () => {
     if (reason !== 'backdropClick') {
       setConfirmOpen(false);
     }
+    if(enableState) {
+      setUnblockedUserOpen(true);
+      return;
+    }
     enable();
     handleConfirmClose(event, reason);
   }
@@ -84,6 +90,13 @@ const EnableAccount = () => {
   const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
     if (reason !== 'backdropClick') {
       setErrorOpen(false);
+    }
+  };
+
+  const handleUnblockedUserOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+    if (reason !== 'backdropClick') {
+      setUnblockedUserOpen(false);
+      handleConfirmClose(event, reason);
     }
   };
 
@@ -109,6 +122,11 @@ const EnableAccount = () => {
         <DialogTitle>{t('enable_account.error')}{username}</DialogTitle>
         <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
       </Dialog>
+
+      <Dialog disableEscapeKeyDown open={unblockedUserOpen}>
+                <DialogTitle>{t('disable_account.unblocked_user_one')}{username}{t('disable_account.unblocked_user_two')}</DialogTitle>
+                <Button onClick={handleUnblockedUserOpen}>{t('confirm.ok')}</Button>
+            </Dialog>
     </div>
   );
 }
