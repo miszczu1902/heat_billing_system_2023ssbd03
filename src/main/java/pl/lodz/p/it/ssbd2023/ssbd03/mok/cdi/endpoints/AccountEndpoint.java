@@ -146,6 +146,15 @@ public class AccountEndpoint {
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
+    @PATCH
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/self/language")
+    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
+    public Response changeLanguage(@NotNull @Valid ChangeLanguageDTO changeLanguageDTO) {
+        accountService.changeLanguage(changeLanguageDTO.getLanguage());
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/self/personal-data")

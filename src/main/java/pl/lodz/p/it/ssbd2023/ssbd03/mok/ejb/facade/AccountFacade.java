@@ -76,7 +76,8 @@ public class AccountFacade extends AbstractFacade<Account> {
     public List<Account> getListOfAccountsWithFilterParams(String sortBy, int pageNumber, int pageSize, Boolean isEnable) {
         TypedQuery<Account> tq;
         if (isEnable != null) {
-            if (sortBy.equals("email")) tq = em.createNamedQuery("Account.getListOfAccountsByEmailAndEnableStatus", Account.class);
+            if (sortBy.equals("email"))
+                tq = em.createNamedQuery("Account.getListOfAccountsByEmailAndEnableStatus", Account.class);
             else tq = em.createNamedQuery("Account.getListOfAccountsByUsernameAndEnableStatus", Account.class);
             tq.setParameter("isEnable", isEnable);
         } else {

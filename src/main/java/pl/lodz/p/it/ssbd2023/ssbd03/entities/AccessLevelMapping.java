@@ -22,6 +22,10 @@ import java.util.Objects;
                 @UniqueConstraint(
                         name = "access_level_account_unique_constraint", columnNames = {"account_id", "access_level"})
         })
+@NamedQueries({
+        @NamedQuery(name = "AccessLevelMapping.findByUsername",
+                query = "SELECT k.account FROM AccessLevelMapping k WHERE k.account.username = :username")
+})
 public abstract class AccessLevelMapping extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,8 +34,15 @@ public abstract class AccessLevelMapping extends AbstractEntity implements Seria
 
     @Setter
     @ManyToOne
-    @JoinColumn(name = "account_id", updatable = false, referencedColumnName = "id")
+    @JoinColumn(name = "account_id", updatable = false, nullable = false, referencedColumnName = "id")
     private Account account;
+
+    @Column(name = "access_level", updatable = false, insertable = false)
+    private String accessLevel;
+
+    @Setter
+    @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean isActive = true;
 
     @Override
     public boolean equals(Object o) {
@@ -40,13 +51,6 @@ public abstract class AccessLevelMapping extends AbstractEntity implements Seria
         AccessLevelMapping that = (AccessLevelMapping) o;
         return Objects.equals(id, that.id);
     }
-
-    @Column(name = "access_level", updatable = false, insertable = false)
-    private String accessLevel;
-
-    @Setter
-    @Column(name = "is_active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean isActive = true;
 
     @Override
     public int hashCode() {

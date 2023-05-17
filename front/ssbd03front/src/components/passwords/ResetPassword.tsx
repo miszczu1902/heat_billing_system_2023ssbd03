@@ -15,8 +15,10 @@ import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {Icon} from "@mui/material";
 import Logo from "../../assets/logo.svg";
+import {useTranslation} from "react-i18next";
 
 const ResetPassword = () => {
+    const {t, i18n} = useTranslation();
     const [newPassword, setNewPassword] = React.useState("");
     const [repeatedNewPassword, setRepeatedNewPassword] = React.useState("");
     const theme = createTheme();
@@ -47,7 +49,7 @@ const ResetPassword = () => {
     }, [token, navigate]);
 
     if (showMessage) {
-        return <div>Brak ważnego tokenu do resetu hasła, trwa przekierowanie...</div>;
+        return <div>{t('reset_password.error_token')}</div>;
     }
     const handleNewPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         let password = event.target.value;
@@ -56,8 +58,8 @@ const ResetPassword = () => {
 
         const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/;
         if (!regex.test(password)) {
-            setNewPasswordError("Hasło musi zawierać conajmniej 8 znaków, jedną wielką i małą literę, " +
-                "cyfrę i jeden ze znaków specjalnych: @$!%*?&");
+            setNewPasswordError(t('edit_password.old_password_error_one') +
+                t('edit_password.old_password_error_two'));
             setValidData(false);
         } else {
             setNewPasswordError("");
@@ -76,8 +78,8 @@ const ResetPassword = () => {
 
         const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,32}$/;
         if (!regex.test(password)) {
-            setRepeatedNewPasswordError("Hasło musi zawierać conajmniej 8 znaków, jedną wielką i małą literę, " +
-                "cyfrę i jeden ze znaków specjalnych: @$!%*?&");
+            setRepeatedNewPasswordError(t('edit_password.old_password_error_one') +
+                t('edit_password.old_password_error_two'));
             setValidData(false);
         } else {
             setRepeatedNewPasswordError("");
@@ -91,7 +93,7 @@ const ResetPassword = () => {
 
     const checkNewAndRepeatedNewPasswords = (newPassword: string, repeatedNewPassword: string): boolean => {
         if (newPassword !== repeatedNewPassword) {
-            setNewAndRepeatedNewPasswordNotSameError("Nowe i powtórzone nowe hasło muszą być takie same");
+            setNewAndRepeatedNewPasswordNotSameError(t('edit_password.new_and_repeated_new_password_not_same_error'));
             return false
         } else {
             setNewAndRepeatedNewPasswordNotSameError("");
@@ -166,17 +168,17 @@ const ResetPassword = () => {
                         <Icon sx={{width: '10%', height: '10%', marginLeft: '1vh'}}>
                             <img src={Logo}/>
                         </Icon>
-                        <Typography variant="h5"> Zmiana hasła </Typography>
+                        <Typography variant="h5">{t('reset_password.password_change')}</Typography>
                         <Box component="form" onSubmit={handleSubmit}>
                             <Box component="form">
-                                <TextField fullWidth margin="normal" label="Nowe hasło" type="password"
+                                <TextField fullWidth margin="normal" label={t('reset_password.new_password')} type="password"
                                            value={newPassword}
-                                           helperText="Wprowadź nowe hasło" onChange={handleNewPasswordChange}/>
+                                           helperText={t('edit_password.help_text_new_password')} onChange={handleNewPasswordChange}/>
                                 <div className="form-group" style={{textAlign: "center"}}>
                                     {newPasswordError}
                                 </div>
-                                <TextField fullWidth margin="normal" label="Powtórzone nowe hasło" type="password"
-                                           helperText="Powtórz nowe hasło" onChange={handleRepeatedNewPasswordChange}
+                                <TextField fullWidth margin="normal" label={t('edit_password.label_text_new_password')} type="password"
+                                           helperText={t('edit_password.help_text_repeated_password')} onChange={handleRepeatedNewPasswordChange}
                                            value={repeatedNewPassword}/>
                                 <div className="form-group">
                                     {repeatedNewPasswordError}
@@ -185,21 +187,21 @@ const ResetPassword = () => {
                             <div className="form-group">
                                 {newAndRepeatedNewPasswordNotSameError}
                             </div>
-                            <Button onClick={handleConfirm} fullWidth variant="contained">Zmień hasło</Button>
+                            <Button onClick={handleConfirm} fullWidth variant="contained">{t('reset_password.change_password')}</Button>
                             <Dialog disableEscapeKeyDown open={confirmOpen} onClose={handleConfirmClose}>
-                                <DialogTitle>Czy na pewno chcesz zmienić swoje hasło?</DialogTitle>
+                                <DialogTitle>{t('edit_password.confirm_title')}</DialogTitle>
                                 <DialogActions>
-                                    <Button onClick={handleConfirmClose}>Nie</Button>
-                                    <Button onClick={handleConfirmConfirm}>Tak</Button>
+                                    <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
+                                    <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
                                 </DialogActions>
                             </Dialog>
                             <Dialog disableEscapeKeyDown open={successOpen}>
-                                <DialogTitle>Hasło zostało zmienione</DialogTitle>
-                                <Button onClick={handleSuccessClose}>Ok</Button>
+                                <DialogTitle>{t('edit_password.success_title')}</DialogTitle>
+                                <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
                             </Dialog>
                             <Dialog disableEscapeKeyDown open={errorOpen}>
                                 <DialogTitle>{errorOpenMessage}</DialogTitle>
-                                <Button onClick={handleErrorClose}>Ok</Button>
+                                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
                             </Dialog>
                         </Box>
                     </Box>
