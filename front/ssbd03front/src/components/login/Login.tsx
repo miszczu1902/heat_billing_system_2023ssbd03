@@ -19,6 +19,7 @@ import {useNavigate} from "react-router-dom";
 import {Icon} from "@mui/material";
 import Logo from './../../assets/logo.svg';
 import {useTranslation} from "react-i18next";
+import NavbarPanel from "../navigation/NavbarPanel";
 
 const theme = createTheme();
 
