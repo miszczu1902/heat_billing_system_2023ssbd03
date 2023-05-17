@@ -7,8 +7,6 @@ import io.restassured.http.Method;
 import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import lombok.Getter;
-import lombok.Setter;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +24,8 @@ public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
     private static ObjectMapper mapper = new ObjectMapper();
 
     /* Test data */
-    @Getter
-    @Setter
     private static String BEARER_TOKEN = "";
+    protected static String ETAG = "";
 
     protected static Response sendRequestAndGetResponse(Method method, String path, Object object, ContentType contentType) {
         contentType = contentType == null ? ContentType.ANY : contentType;
@@ -38,9 +35,12 @@ public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
         if (object != null) request.body(jsonObject);
         if (!BEARER_TOKEN.equals("") && !path.equals("/accounts/login") && !path.equals("/accounts/register"))
             request.header(new Header("Authorization", "Bearer " + BEARER_TOKEN));
+        if (!ETAG.equals("") && method.equals(Method.PATCH))
+            request.header(new Header("If-Match", ETAG));
 
         logBeforeRequest(method, path, jsonObject, contentType);
         Response response = request.request(method, baseURI + path);
+        ETAG = Optional.ofNullable(response.getHeader("ETag")).orElse("");
 
         logAfterRequest(response);
         return response;
@@ -74,7 +74,8 @@ public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
 
     protected static void logAfterRequest(Response response) {
         logger.info("Status code: " + response.getStatusCode() + "\n" +
-                "Response body: \n" + response.getBody().asPrettyString() + "\n");
+                "Response body: \n" + response.getBody().asPrettyString() + "\n"
+                + "ETag: " + ETAG + "\n");
     }
 
     @BeforeClass
