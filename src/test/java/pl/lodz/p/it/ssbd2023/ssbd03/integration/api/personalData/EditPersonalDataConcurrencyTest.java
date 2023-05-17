@@ -8,7 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.EditPersonalDataDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicE2EConfigTest;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +21,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Testcontainers
-public class EditPersonalDataConcurrencyTest extends BasicE2EConfigTest {
+public class EditPersonalDataConcurrencyTest extends BasicIntegrationConfigTest {
 
     @Before
     public void initialize() {
-        setETAG("");
-        setBEARER_TOKEN("");
-        auth("johndoe", "Password$123");
+        ETAG = "";
+        auth(new LoginDTO("johndoe", "Password$123"));
     }
 
     @Test
@@ -41,7 +41,7 @@ public class EditPersonalDataConcurrencyTest extends BasicE2EConfigTest {
 
         assertEquals(200, getUserPersonalDataResponse.getStatusCode());
 
-        setETAG(getUserPersonalDataResponse.header("ETag"));
+        ETAG = getUserPersonalDataResponse.header("ETag");
 
         JsonPath jsonPath = new JsonPath(getUserPersonalDataResponse.getBody().asString());
         int version = jsonPath.getInt("version");
@@ -74,7 +74,7 @@ public class EditPersonalDataConcurrencyTest extends BasicE2EConfigTest {
 
         assertEquals(200, getUserPersonalDataResponse2.getStatusCode());
 
-        setETAG(getUserPersonalDataResponse2.header("ETag"));
+        ETAG = getUserPersonalDataResponse2.header("ETag");
 
         JsonPath jsonPath2 = new JsonPath(getUserPersonalDataResponse2.getBody().asString());
         int version2 = jsonPath2.getInt("version");

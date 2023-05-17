@@ -8,18 +8,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.VersionDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicE2EConfigTest;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Testcontainers
-public class EnableAccountTest extends BasicE2EConfigTest {
+public class EnableAccountTest extends BasicIntegrationConfigTest {
 
     @Before
     public void initialize() {
-        setETAG("");
-        setBEARER_TOKEN("");
-        auth("johndoe", "Password$123");
+        ETAG = "";
+        auth(new LoginDTO("johndoe", "Password$123"));
     }
 
     @Test
@@ -31,7 +31,7 @@ public class EnableAccountTest extends BasicE2EConfigTest {
 
         assertEquals(200, getUserResponse.getStatusCode());
 
-        setETAG(getUserResponse.header("ETag"));
+        ETAG = getUserResponse.header("ETag");
 
         JsonPath jsonPath = new JsonPath(getUserResponse.getBody().asString());
         int version = jsonPath.getInt("version");
@@ -54,7 +54,7 @@ public class EnableAccountTest extends BasicE2EConfigTest {
 
         assertEquals(200, getUserResponse.getStatusCode());
 
-        setETAG(getUserResponse.header("ETag"));
+        ETAG = getUserResponse.header("ETag");
 
         JsonPath jsonPath = new JsonPath(getUserResponse.getBody().asString());
         int version = jsonPath.getInt("version");
@@ -71,7 +71,7 @@ public class EnableAccountTest extends BasicE2EConfigTest {
 
     @Test
     public void shouldNotManagerEnableSelfAccount() {
-        auth("janekowalski", "Password$123");
+        auth(new LoginDTO ("janekowalski", "Password$123"));
 
         Response getUserResponse = sendRequestAndGetResponse(Method.GET,
                 "/accounts/janekowalski",
@@ -80,7 +80,7 @@ public class EnableAccountTest extends BasicE2EConfigTest {
 
         assertEquals(200, getUserResponse.getStatusCode());
 
-        setETAG(getUserResponse.header("ETag"));
+        ETAG = getUserResponse.header("ETag");
 
         JsonPath jsonPath = new JsonPath(getUserResponse.getBody().asString());
         int version = jsonPath.getInt("version");
@@ -97,7 +97,7 @@ public class EnableAccountTest extends BasicE2EConfigTest {
 
     @Test
     public void shouldNotManagerEnableAdminAccount() {
-        auth("janekowalski", "Password$123");
+        auth(new LoginDTO ("janekowalski", "Password$123"));
 
         Response getUserResponse = sendRequestAndGetResponse(Method.GET,
                 "/accounts/johndoe",
@@ -106,7 +106,7 @@ public class EnableAccountTest extends BasicE2EConfigTest {
 
         assertEquals(200, getUserResponse.getStatusCode());
 
-        setETAG(getUserResponse.header("ETag"));
+        ETAG = getUserResponse.header("ETag");
 
         JsonPath jsonPath = new JsonPath(getUserResponse.getBody().asString());
         int version = jsonPath.getInt("version");
@@ -131,7 +131,7 @@ public class EnableAccountTest extends BasicE2EConfigTest {
 
         assertEquals(200, getUserResponse.getStatusCode());
 
-        setETAG(getUserResponse.header("ETag"));
+        ETAG = getUserResponse.header("ETag");
 
         JsonPath jsonPath = new JsonPath(getUserResponse.getBody().asString());
         int version = jsonPath.getInt("version");

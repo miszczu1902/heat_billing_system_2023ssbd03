@@ -8,18 +8,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.EditPersonalDataDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicE2EConfigTest;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Testcontainers
-public class EditPersonalDataTest extends BasicE2EConfigTest {
+public class EditPersonalDataTest extends BasicIntegrationConfigTest {
 
     @Before
     public void initialize() {
-        setETAG("");
-        setBEARER_TOKEN("");
-        auth("johndoe", "Password$123");
+        ETAG = "";
+        auth(new LoginDTO("johndoe", "Password$123"));
     }
 
     @Test
@@ -31,7 +31,7 @@ public class EditPersonalDataTest extends BasicE2EConfigTest {
 
         assertEquals(200, getUserPersonalDataResponse.getStatusCode());
 
-        setETAG(getUserPersonalDataResponse.header("ETag"));
+        ETAG = getUserPersonalDataResponse.header("ETag");
 
         JsonPath jsonPath = new JsonPath(getUserPersonalDataResponse.getBody().asString());
         int version = jsonPath.getInt("version");
@@ -54,7 +54,7 @@ public class EditPersonalDataTest extends BasicE2EConfigTest {
 
         assertEquals(200, getUserPersonalDataResponse.getStatusCode());
 
-        setETAG(getUserPersonalDataResponse.header("ETag"));
+        ETAG = getUserPersonalDataResponse.header("ETag");
 
         JsonPath jsonPath = new JsonPath(getUserPersonalDataResponse.getBody().asString());
         int version = jsonPath.getInt("version");
@@ -77,7 +77,7 @@ public class EditPersonalDataTest extends BasicE2EConfigTest {
 
         assertEquals(200, getUserPersonalDataResponse.getStatusCode());
 
-        setETAG("");
+        ETAG = "";
 
         JsonPath jsonPath = new JsonPath(getUserPersonalDataResponse.getBody().asString());
         int version = jsonPath.getInt("version");
@@ -100,7 +100,7 @@ public class EditPersonalDataTest extends BasicE2EConfigTest {
 
         assertEquals(200, getUserPersonalDataResponse.getStatusCode());
 
-        setETAG("");
+        ETAG = "";
 
         JsonPath jsonPath = new JsonPath(getUserPersonalDataResponse.getBody().asString());
         int version = jsonPath.getInt("version");
@@ -123,7 +123,7 @@ public class EditPersonalDataTest extends BasicE2EConfigTest {
 
         assertEquals(200, getUserPersonalDataResponse.getStatusCode());
 
-        setETAG(getUserPersonalDataResponse.header("ETag"));
+        ETAG = getUserPersonalDataResponse.header("ETag");
 
 
         Response changePersonalDataResponse = sendRequestAndGetResponse(Method.PATCH,
@@ -143,7 +143,7 @@ public class EditPersonalDataTest extends BasicE2EConfigTest {
 
         assertEquals(200, getUserPersonalDataResponse.getStatusCode());
 
-        setETAG(getUserPersonalDataResponse.header("ETag"));
+        ETAG = getUserPersonalDataResponse.header("ETag");
 
         JsonPath jsonPath = new JsonPath(getUserPersonalDataResponse.getBody().asString());
         int version = jsonPath.getInt("version");
