@@ -39,13 +39,15 @@ public interface AccountService {
 
     Admin getAdmin();
 
-    PersonalData getPersonalData(String username);
+    PersonalData getUserPersonalData(String username);
 
     PersonalData getSelfPersonalData();
 
     void editSelfPersonalData(String firstName, String surname, String etag, Long version);
 
     void editUserPersonalData(String username, String firstName, String surname, String etag, Long version);
+
+    void changeLanguage(String language);
 
     void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword, String etag, Long version);
 

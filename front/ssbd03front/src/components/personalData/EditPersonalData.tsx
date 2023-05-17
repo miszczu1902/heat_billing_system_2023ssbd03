@@ -13,11 +13,16 @@ import validator from "validator";
 import { API_URL } from '../../consts';
 import {useCookies} from 'react-cookie';
 import { useState, useEffect } from 'react';
+import {useTranslation} from "react-i18next";
 
 
 const EditPersonalData = () => {
-  const [cookies, setCookie] = useCookies(["token"]);
+  const {t, i18n} = useTranslation();
+  const [cookies, setCookie] = useCookies(["token", "etag", "version"]);
   const token = "Bearer " + cookies.token;
+  const etag = cookies.etag;
+  const [version, setVersion] = React.useState("");
+
   const [open, setOpen] = React.useState(false);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
 
@@ -33,7 +38,6 @@ const EditPersonalData = () => {
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [errorOpen, setErrorOpen] = React.useState(false);
 
-  useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(`${API_URL}/accounts/self/personal-data`, {
         headers: {
@@ -43,9 +47,13 @@ const EditPersonalData = () => {
       .then(response => {
         setName(response.data.firstName.toString());
         setSurname(response.data.surname.toString());
+        setCookie("etag", response.headers.etag);
+        setVersion(response.data.version.toString());
       });
   };
-  fetchData();
+
+  useEffect(() => { 
+    fetchData();
   }, []);
 
   const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -66,7 +74,7 @@ const EditPersonalData = () => {
       setNameError("");
       validateData(event);
     } else {
-      setNameError("Imię może zawierać tylko litery i musi mieć długość do 32 znaków");
+      setNameError(t('personal_data.name_error'));
       validateData(event);
     }
   };
@@ -77,21 +85,13 @@ const EditPersonalData = () => {
       setSurnameError("");
       validateData(event);
     } else {
-      setSurnameError("Nazwisko może zawierać tylko litery i musi mieć długość do 32 znaków");
+      setSurnameError(t('personal_data.surname_error'));
       validateData(event); 
     } 
   };
 
   const handleClickOpen = () => {
-    axios.get(`${API_URL}/accounts/self/personal-data`, {
-      headers: {
-        Authorization: 'Bearer ' + token
-      }
-    })
-    .then(response => {
-        setName(response.data.firstName.toString());
-        setSurname(response.data.surname.toString());
-    });
+    fetchData();
     setOpen(true);
   };
 
@@ -113,7 +113,8 @@ const EditPersonalData = () => {
     }
     const personalDataDTO = {
       firstName: name.toString(),
-      surname: surname.toString()
+      surname: surname.toString(),
+      version: version.toString()
     }
 
     if(nameError === "" && surnameError === "") {
@@ -121,7 +122,8 @@ const EditPersonalData = () => {
         personalDataDTO, {
          headers: {
           'Authorization': 'Bearer ' + token,
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'If-Match': etag
         }, 
       })
       .then(response => {
@@ -139,7 +141,7 @@ const EditPersonalData = () => {
       setDataError("");
       setConfirmOpen(true);
     } else {
-      setDataError("Wprowadź poprawne dane");
+      setDataError(t('personal_data.data_error'));
     }
   }
   
@@ -158,10 +160,10 @@ const EditPersonalData = () => {
   return (
     <div>
       <div>
-      <Button onClick={handleClickOpen} variant="contained">Edytuj dane</Button>
+      <Button onClick={handleClickOpen} variant="contained">{t('personal_data.edit_data')}</Button>
       </div>
       <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-        <DialogTitle>Wypełnij formularz edycji danych osobowych</DialogTitle>
+        <DialogTitle>{t('personal_data.dialog_title')}</DialogTitle>
         <DialogContent>
           <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
             <form onSubmit={handleSumbit}>
@@ -170,9 +172,9 @@ const EditPersonalData = () => {
                   <div className="form-group" onChange={handleNameChange}>
                     <TextField
                       id="outlined-helperText"
-                      label="Imię"
+                      label={t('personal_data.name')}
                       defaultValue= {name}
-                      helperText="Wprowadź imię o maksymalniej ilości znaków 32"
+                      helperText={t('personal_data.name_helper_text')}
                     />
                     <div className="form-group">
                       {nameError}
@@ -183,9 +185,9 @@ const EditPersonalData = () => {
                   <div className="form-group" onChange={handleSurnameChange}>
                     <TextField
                       id="outlined-helperText"
-                      label="Nazwisko"
+                      label={t('personal_data.surname')}
                       defaultValue= {surname}
-                      helperText="Wprowadź nazwisko o maksymalniej ilości znaków 32"
+                      helperText={t('personal_data.name_helper_text')}
                     />
                     <div className="form-group">
                       {surnameError}
@@ -200,27 +202,27 @@ const EditPersonalData = () => {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleConfirm} disabled={!validData}>Ok</Button>
+          <Button onClick={handleClose}>{t('confirm.cancel')}</Button>
+          <Button onClick={handleConfirm} disabled={!validData}>{t('confirm.ok')}</Button>
         </DialogActions>
       </Dialog>
 
       <Dialog disableEscapeKeyDown open={confirmOpen} onClose={handleConfirmClose}>
-        <DialogTitle>Czy na pewno chcesz zmienić dane osobowe użytkownika?</DialogTitle>
+        <DialogTitle>{t('personal_data.confirm')}</DialogTitle>
         <DialogActions>
-          <Button onClick={handleConfirmClose}>Nie</Button>
-          <Button onClick={handleConfirmConfirm}>Tak</Button>
+          <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
+          <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
         </DialogActions>
       </Dialog>
 
       <Dialog disableEscapeKeyDown open={successOpen}>
-        <DialogTitle>Dane osobowe zostały zmienione</DialogTitle>
-        <Button onClick={handleSuccessClose}>Ok</Button>
+        <DialogTitle>{t('personal_data.success')}</DialogTitle>
+        <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
       </Dialog> 
 
       <Dialog disableEscapeKeyDown open={errorOpen}>
-        <DialogTitle>Wystąpił błąd podczas zmiany danych osobowych</DialogTitle>
-        <Button onClick={handleErrorClose}>Ok</Button>
+        <DialogTitle>{t('personal_data.error')}</DialogTitle>
+        <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
       </Dialog>
     </div>
   );

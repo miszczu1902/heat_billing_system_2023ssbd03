@@ -17,11 +17,17 @@ public class AccountDTO extends AbstractDTO implements Signable {
         this.username = username;
     }
 
+    public AccountDTO(Long id, Long version, String email, String username) {
+        this.id = id;
+        this.version = version;
+        this.email = email;
+        this.username = username;
+    }
+
     @Override
     public String messageToSign() {
         return email
                 .concat(username)
-                .concat(password)
                 .concat(getId().toString())
                 .concat(getVersion().toString());
     }

@@ -120,7 +120,8 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     @RolesAllowed(Roles.GUEST)
     public String updateLoginData(String username, boolean flag) {
-        final Account account = accountFacade.findByUsername(username);
+        try {
+            final Account account = accountFacade.findByUsername(username);
             final LoginData loginData = loginDataFacade.findById(account);
             if (flag) {
                 if (account.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) {
@@ -140,6 +141,9 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             }
             loginDataFacade.edit(loginData);
             return account.getLanguage_();
+        } catch (Exception ex) {
+            throw AppException.invalidCredentialsException();
+        }
     }
 
     @Override
@@ -224,16 +228,8 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
-    @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public PersonalData getPersonalData(String username) {
-        final Account account = accountFacade.findByUsername(username);
-        return personalDataFacade.find(account.getId());
-    }
-
-    @Override
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
-    public PersonalData getSelfPersonalData() {
-        final String username = securityContext.getCallerPrincipal().getName();
+    public PersonalData getUserPersonalData(String username) {
         final Account account = accountFacade.findByUsername(username);
         return personalDataFacade.find(account.getId());
     }
@@ -311,12 +307,27 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         return admin;
     }
 
+    @Override
+    @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
+    public PersonalData getSelfPersonalData() {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Account account = accountFacade.findByUsername(username);
+        return personalDataFacade.find(account.getId());
+    }
 
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
     public void editSelfPersonalData(String firstName, String surname, String etag, Long version) {
         final String username = securityContext.getCallerPrincipal().getName();
         editPersonalData(username, firstName, surname, etag, version);
+    }
+
+    @Override
+    @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
+    public void changeLanguage(String language) {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Account account = accountFacade.findByUsername(username);
+        account.setLanguage_(language);
     }
 
     @Override

@@ -4,8 +4,10 @@ import axios from "axios";
 import {API_URL} from "../../consts";
 import {Button, Container, Grid, Typography} from "@mui/material";
 import logo from "../../assets/logo.svg";
+import {useTranslation} from "react-i18next";
 
 const ActivateFromEmail = () => {
+    const {t, i18n} = useTranslation();
     const navigate = useNavigate();
     const {activationToken} = useParams<{ activationToken: string }>();
     const [message, setMessage] = useState('');
@@ -20,7 +22,7 @@ const ActivateFromEmail = () => {
             axios.post(`${API_URL}/accounts/activate-from-email`,
                 {activationToken: activationToken}
             ).then(() => {
-                setMessage('Konto aktywowane');
+                setMessage(t('activate_from_email.success'));
                 setIsActivated(true)
             }).catch(error => {
                 setMessage(error.reason.message);
@@ -43,7 +45,7 @@ const ActivateFromEmail = () => {
                     <Grid item>
                         <Button className="landing-page-button" variant="contained" color="primary"
                                 onClick={() => handleButtonClick('/login')}>
-                            Zaloguj się
+                            {t('navbar.login')}
                         </Button>
                     </Grid>
                 }

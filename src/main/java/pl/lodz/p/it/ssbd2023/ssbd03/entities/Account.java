@@ -69,11 +69,11 @@ public class Account extends AbstractEntity implements Signable {
     @Column(name = "language_", nullable = false, columnDefinition = "VARCHAR DEFAULT 'PL'")
     private String language_;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = {CascadeType.ALL, CascadeType.REMOVE})
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "account", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
     private List<AccessLevelMapping> accessLevels = new ArrayList<>();
 
     @Setter
-    @OneToOne(mappedBy = "id", cascade = {CascadeType.ALL, CascadeType.REMOVE})
+    @OneToOne(mappedBy = "id", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
     private PersonalData personalData;
 
     @OneToOne(mappedBy = "id", cascade = CascadeType.ALL)
@@ -82,7 +82,6 @@ public class Account extends AbstractEntity implements Signable {
     public Account(String email, String username, String password, Boolean isEnable, Boolean isActive, String language_) {
         this.email = email;
         this.username = username;
-        this.password = password;
         this.isEnable = isEnable;
         this.isActive = isActive;
         this.language_ = language_;

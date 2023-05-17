@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @Table(name = "login_data")
 public class LoginData extends AbstractEntity implements Serializable {
     @Id
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "id", updatable = false, referencedColumnName = "id")
     private Account id;
 
