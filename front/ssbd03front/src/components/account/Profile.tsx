@@ -425,7 +425,7 @@ export default function Profile() {
                                     <DisableAccount/>
                                 </div>
                                 <Typography sx={{padding: '1vh'}}
-                                            variant="h5"><b>{t('enable_account.enable')}:</b> {account.isEnable ? t('account_list.confirmed') : t('account_list.unconfirmed')}
+                                            variant="h5"><b>{t('enable_account.enable')}:</b> {account.isEnable ? t('enable_account.enable') : t('disable_account.disable')}
                                 </Typography>
                             </Paper>
                             <Paper elevation={3} style={{position: 'relative'}}>
@@ -478,24 +478,24 @@ export default function Profile() {
                                     <>
                                         {!account.isUserOwner && (
                                             <Button onClick={handleClickOpenOwner} variant="contained" style={{height: "80px", margin: "10px"}}>
-                                                {t('profile.add')}<br/>{t('profile.access_lavel')}<br/>{t('profile.owner')}
+                                                {t('profile.add')}<br/>{t('profile.access_level')}<br/>{t('profile.owner')}
                                             </Button>
                                         )}
                                         {!account.isUserManager && (
                                             <Button onClick={handleClickOpenManager} variant="contained"
                                                     style={{height: "80px", margin: "10px"}}>
-                                                {t('profile.add')}<br/>{t('profile.access_lavel')}<br/>{t('profile.manager')}
+                                                {t('profile.add')}<br/>{t('profile.access_level')}<br/>{t('profile.manager')}
                                             </Button>
                                         )}
                                         {!account.isUserAdmin && (
                                             <Button onClick={handleClickOpenAdmin} variant="contained"
                                                     style={{height: "80px", margin: "10px"}}>
-                                                {t('profile.add')}<br/>{t('profile.access_lavel')}<br/>{t('profile.admin')}
+                                                {t('profile.add')}<br/>{t('profile.access_level')}<br/>{t('profile.admin')}
                                             </Button>
                                         )}
                                         <Button onClick={handleRemoveAccessLevel} variant="contained"
                                                 style={{height: "80px", margin: "10px"}}>
-                                            {t('profile.del')}<br/>{t('profile.access_lavel')}
+                                            {t('profile.del')}<br/>{t('profile.access_level')}
                                         </Button>
                                     </>
                                 )}
@@ -597,7 +597,7 @@ export default function Profile() {
                                     <form onSubmit={handleAddSubmit}>
                                         <FormControl fullWidth>
                                             {!selectedRole &&
-                                                <InputLabel id="access-level-label">{t('profile.select_access_lavel')}</InputLabel>}
+                                                <InputLabel id="access-level-label">{t('profile.select_access_level')}</InputLabel>}
                                             <Select
                                                 labelId="access-level-label"
                                                 value={selectedRole}
