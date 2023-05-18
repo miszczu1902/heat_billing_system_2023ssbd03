@@ -2,9 +2,12 @@ package pl.lodz.p.it.ssbd2023.ssbd03.integration.api;
 
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
 import org.junit.Before;
 import org.junit.Test;
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.VersionDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.Account;
@@ -12,7 +15,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTes
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AuthenticationTest extends BasicIntegrationConfigTest {
+public class AuthTest extends BasicIntegrationConfigTest {
 
     private static final CreateOwnerDTO initalizedOwner = new CreateOwnerDTO(
             "Bartosz",
@@ -127,7 +130,7 @@ public class AuthenticationTest extends BasicIntegrationConfigTest {
     @Test
     public void ValidCredentialsOnDisabledUser() {
         LoginDTO loginDTO = new LoginDTO(
-                Account.ADMIN, Account.PASSWORD + "!"
+                Account.OWNER, Account.PASSWORD + "!"
         );
 
         int statusCode = authenticate(loginDTO);
@@ -140,7 +143,7 @@ public class AuthenticationTest extends BasicIntegrationConfigTest {
         assertEquals(401, statusCode, "check if status code 401 after invalid password");
 
         LoginDTO loginDTOValidCredentials = new LoginDTO(
-                Account.ADMIN, Account.PASSWORD
+                Account.OWNER, Account.PASSWORD
         );
 
         statusCode = authenticate(loginDTOValidCredentials);
