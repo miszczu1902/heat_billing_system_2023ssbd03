@@ -16,6 +16,7 @@ import EditUserPassword from "../components/passwords/EditUserPassword";
 import Profile from "../components/account/Profile";
 import EditEmail from "../components/email/EditEmail";
 import ConfirmEmail from "../components/email/ConfirmEmail";
+import EditUserEmail from "../components/email/EditUserEmail";
 
 const router = createBrowserRouter([
     {
@@ -49,10 +50,10 @@ const router = createBrowserRouter([
                         path: '/accounts/:username/personal-data',
                         element: <EditUserPersonalData/>
                     },
-                    // {
-                    //     path: '/accounts/:username/email',
-                    //     element: <EditUserEmail/>
-                    // },
+                    {
+                        path: '/accounts/:username/email',
+                        element: <EditUserEmail/>
+                    },
                     {
                         path: '/accounts/:username/enable',
                         element: <EnableAccount/>

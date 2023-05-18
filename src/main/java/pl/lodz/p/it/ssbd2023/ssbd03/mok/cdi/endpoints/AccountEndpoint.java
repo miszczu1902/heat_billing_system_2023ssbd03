@@ -416,6 +416,7 @@ public class AccountEndpoint {
     @PATCH
     @Path("/self/confirm-new-email")
     @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({Roles.GUEST, Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
     public Response confirmNewEmail(@NotNull @Valid TokenFromEmailDTO activationTokenDTO) {
         accountService.confirmNewEmailAccountFromActivationLink(activationTokenDTO.getActivationToken());
         return Response.status(Response.Status.NO_CONTENT).build();

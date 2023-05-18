@@ -6,10 +6,15 @@ import {Button, Container, Grid, Typography} from "@mui/material";
 import logo from "../../assets/logo.svg";
 import {useTranslation} from "react-i18next";
 import Paper from "@mui/material/Paper";
+import {useCookies} from "react-cookie";
+import jwt from "jwt-decode";
 
 const ConfirmEmail = () => {
     const {t} = useTranslation();
     const navigate = useNavigate();
+    const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+    const [role, setRole] = React.useState('');
+    const token = "Bearer " + cookies.token;
     const {activationToken} = useParams<{ activationToken: string }>();
     const [message, setMessage] = useState('');
     const [isActivated, setIsActivated] = useState(false);
@@ -18,20 +23,38 @@ const ConfirmEmail = () => {
         navigate(path);
     }
 
+    const fetchData = async () => {
+        axios.patch(`${API_URL}/accounts/self/confirm-new-email`,
+            {activationToken: activationToken},
+            {
+                headers: {
+                    'Authorization': token,
+                    'Content-Type': 'application/json'
+                },
+            }).then(() => {
+            setMessage("Mail został potwierdzony!");
+            setIsActivated(true)
+        }).catch(error => {
+            setMessage(error.reason.message);
+            if (error.response.status == 403) navigate('/');
+        });
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            axios.post(`${API_URL}/accounts/self/confirm-new-email`,
-                {activationToken: activationToken}
-            ).then(() => {
-                setMessage(t('activate_from_email.success'));//dozmiany
-                setIsActivated(true)
-            }).catch(error => {
-                setMessage(error.reason.message);
-                if (error.response.status == 403) navigate('/');
-            });
-        };
-        fetchData();
-    });
+        if (cookies.token !== "undefined" && cookies.token !== undefined) {
+            const decodedToken = jwt(cookies.token);
+            const decodedRole = JSON.parse(JSON.stringify(decodedToken)).role;
+            setRole(decodedRole.split(','));
+            const currentTimestamp = Math.floor(new Date().getTime() / 1000);
+            if (JSON.parse(JSON.stringify(decodedToken)).exp < currentTimestamp) {
+                removeCookie('token');
+                navigate('');
+            }
+            fetchData();
+        } else {
+            navigate('/');
+        }
+    }, [cookies.token]);
 
     return (<div className="landing-page-root">
         <Container>

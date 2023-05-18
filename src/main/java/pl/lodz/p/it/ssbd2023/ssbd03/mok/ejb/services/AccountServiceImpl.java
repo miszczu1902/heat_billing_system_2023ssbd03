@@ -596,6 +596,19 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         changeEmail(newEmail, changedAccount);
     }
 
+//    final Boolean changedAccountIsManager = changedAccount.getAccessLevels().stream()
+//            .filter(accessLevel -> accessLevel instanceof Admin)
+//            .map(accessLevel -> (Admin) accessLevel)
+//            .findAny()
+//            .map(Admin::getIsActive)
+//            .orElse(null);
+//    final Boolean changingAccountIsAdmin = changingAccount.getAccessLevels().stream()
+//            .filter(accessLevel -> accessLevel instanceof Admin)
+//            .map(accessLevel -> (Admin) accessLevel)
+//            .findAny()
+//            .map(Admin::getIsActive)
+//            .orElse(null);
+
     @Override
     public void confirmNewEmailAccountFromActivationLink(String confirmationToken) {
         final EmailConfirmationToken emailConfirmationToken = emailConfirmationTokenFacade.getActivationTokenByTokenValue(confirmationToken);
