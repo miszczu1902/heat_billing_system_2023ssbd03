@@ -21,6 +21,12 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import {useTranslation} from "react-i18next";
 import {Account} from "../../types/account";
+import EditPersonalData from "../personalData/EditPersonalData";
+import EditUserPersonalData from "../personalData/EditUserPersonalData";
+import EnableAccount from "../accounts/EnableAccount";
+import DisableAccount from "../accounts/DisableAccount";
+import jwt from "jwt-decode";
+import EditUserPassword from "../passwords/EditUserPassword";
 
 const roles = [
     {value: "ADMIN", label: "Administrator"},
@@ -31,13 +37,14 @@ const roles = [
 export default function Profile() {
     const {t} = useTranslation();
     const navigate = useNavigate();
-    const [cookies] = useCookies(["token"]);
+    const [cookies, setCookie, removeCookie] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
     const [etag, setEtag] = React.useState(false);
     const [version, setVersion] = React.useState("");
     const [selectedRole, setSelectedRole] = useState("");
     const [license, setLicense] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
+    const [role, setRole] = React.useState('');
     const username = useParams().username;
     const [account, setAccount] = useState<Account | null>(null);
     const [phoneNumberError, setPhoneNumberError] = React.useState("");
@@ -53,9 +60,6 @@ export default function Profile() {
     const [isAdmin, setIsAdmin] = React.useState(false);
     const [isOwner, setIsOwner] = React.useState(false);
     const [isManager, setIsManager] = React.useState(false);
-    const [isUserAdmin, setIsUserAdmin] = useState(false);
-    const [isUserManager, setIsUserManager] = useState(false);
-    const [isUserOwner, setIsUserOwner] = useState(false);
     const [isRemoveAccessOpen, setIsRemoveAccessOpen] = useState(false);
     const [confirmRemove, setConfirmRemove] = React.useState(false);
     const [successOpenRemove, setSuccessOpenRemove] = React.useState(false);
@@ -74,19 +78,26 @@ export default function Profile() {
             }
         }).then(response => {
             setAccount(response.data);
-
-            const accessLevels = response.data.accessLevels;
-            setIsUserOwner(accessLevels.includes('OWNER'));
-            setIsUserManager(accessLevels.includes('MANAGER'));
-            setIsUserAdmin(accessLevels.includes('ADMIN'));
         }).catch(error => {
             if (error.response.status == 403) navigate('/');
         });
     };
 
     useEffect(() => {
-        fetchData();
-    }, [username]);
+        if (cookies.token !== "undefined" && cookies.token !== undefined) {
+            const decodedToken = jwt(cookies.token);
+            const decodedRole = JSON.parse(JSON.stringify(decodedToken)).role;
+            setRole(decodedRole.split(','));
+            const currentTimestamp = Math.floor(new Date().getTime() / 1000);
+            if (JSON.parse(JSON.stringify(decodedToken)).exp < currentTimestamp) {
+                removeCookie('token');
+                navigate('');
+            }
+            fetchData();
+        } else {
+            navigate('/');
+        }
+    }, [username, cookies.token]);
 
     const handleConfirmConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
         if (reason !== 'backdropClick') {
@@ -371,214 +382,268 @@ export default function Profile() {
                     <Box sx={{my: 30, display: 'flex', flexDirection: 'column', alignItems: 'left', margin: '2vh'}}>
                         {account !== null && (
                             <>
-                                <Typography sx={{padding: '1vh'}}
-                                            variant="h5"><b>{t('personal_data.name')}:</b> {account.firstName}
+                            <Paper elevation={3} style={{position: 'relative'}}>
+                                <div style={{position: 'absolute', top: '1vh', right: '1vh'}}>
+                                    <EditUserPersonalData/>
+                                </div>
+                                <Typography sx={{padding: '1vh'}} variant="h5">
+                                    <b>{t('personal_data.name')}:</b> {account.firstName}
                                 </Typography>
-                                <Typography sx={{padding: '1vh'}}
-                                            variant="h5"><b>{t('personal_data.surname')}:</b> {account.surname}
+                                <Typography sx={{padding: '1vh'}} variant="h5">
+                                    <b>{t('personal_data.surname')}:</b> {account.surname}
                                 </Typography>
+                            </Paper>
+                            <Paper elevation={3} style={{position: 'relative'}}>
                                 <Typography sx={{padding: '1vh'}}
                                             variant="h5"><b>{t('login.username')}:</b> {account.username}
                                 </Typography>
+                            </Paper>
+                            <Paper elevation={3} style={{position: 'relative'}}>
+                                <div style={{position: 'absolute', top: '1vh', right: '1vh'}}>
+                                    {/*Przycisk zmiany email*/}
+                                </div>
                                 <Typography sx={{padding: '1vh'}}
-                                            variant="h5"><b>{t('register.email')}:</b> {account.email}
-                                </Typography>
-                                {account.phoneNumber && (
+                                            variant="h5"><b>{t('register.email')}:</b> {account.email}</Typography>
+                            </Paper>
+
+                            {(account.phoneNumber && account.isUserOwner) && (
+                                <Paper elevation={3} style={{position: 'relative'}}>
                                     <Typography sx={{padding: '1vh'}}
                                                 variant="h5"><b>{t('register.phone_number')}:</b> {account.phoneNumber}
                                     </Typography>
-                                )}
+                                </Paper>
+                            )}
+                            <Paper elevation={3} style={{position: 'relative'}}>
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '1vh',
+                                    right: '1vh',
+                                    display: 'flex',
+                                    gap: '0.5vh'
+                                }}>
+                                    <EnableAccount/>
+                                    <DisableAccount/>
+                                </div>
                                 <Typography sx={{padding: '1vh'}}
-                                            variant="h5"><b>{t('enable_account.enable')}:</b> {account.isEnable ? t('account_list.confirmed') : t('account_list.unconfirmed')}
+                                            variant="h5"><b>{t('enable_account.enable')}:</b> {account.isEnable ? t('enable_account.enable') : t('disable_account.disable')}
                                 </Typography>
+                            </Paper>
+                            <Paper elevation={3} style={{position: 'relative'}}>
                                 <Typography sx={{padding: '1vh'}}
                                             variant="h5"><b>{t('account_list.active_status')}:</b> {account.isActive ? t('account_list.active') : t('account_list.inactive')}
                                 </Typography>
-                                {account.license && (
+                            </Paper>
+                            {!account.isUserManager && (
+                                <Paper elevation={3} style={{position: 'relative'}}>
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: '1vh',
+                                        right: '1vh',
+                                        display: 'flex',
+                                        gap: '0.5vh'
+                                    }}>
+                                        <EditUserPassword/>
+                                    </div>
+                                    <Typography sx={{padding: '1vh'}}
+                                                variant="h5"><b>{t('profile.user_password')}{account.username}</b>
+                                    </Typography>
+                                </Paper>
+                            )}
+                            {(account.license && account.isUserManager) && (
+                                <Paper elevation={3} style={{position: 'relative'}}>
                                     <Typography sx={{padding: '1vh'}}
                                                 variant="h5"><b>{t('profile.license')}:</b> {account.license}
                                     </Typography>
+                                </Paper>
+                            )}
+                            <div style={{display: 'flex', alignItems: 'center'}}>
+                                <Typography sx={{padding: '1vh'}} variant="h5">
+                                    <b>{t('profile.access_levels')}:</b>
+                                </Typography>
+                                <FormControlLabel
+                                    control={<Checkbox checked={account.isUserOwner} disabled/>}
+                                    label={t('profile.owner')}
+                                />
+                                <FormControlLabel
+                                    control={<Checkbox checked={account.isUserManager} disabled/>}
+                                    label={t('profile.manager')}
+                                />
+                                <FormControlLabel
+                                    control={<Checkbox checked={account.isUserAdmin} disabled/>}
+                                    label={t('profile.admin')}
+                                />
+                            </div>
+                            <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                                {role.includes('ADMIN') && (
+                                    <>
+                                        {!account.isUserOwner && (
+                                            <Button onClick={handleClickOpenOwner} variant="contained" style={{height: "80px", margin: "10px"}}>
+                                                {t('profile.add')}<br/>{t('profile.access_level')}<br/>{t('profile.owner')}
+                                            </Button>
+                                        )}
+                                        {!account.isUserManager && (
+                                            <Button onClick={handleClickOpenManager} variant="contained"
+                                                    style={{height: "80px", margin: "10px"}}>
+                                                {t('profile.add')}<br/>{t('profile.access_level')}<br/>{t('profile.manager')}
+                                            </Button>
+                                        )}
+                                        {!account.isUserAdmin && (
+                                            <Button onClick={handleClickOpenAdmin} variant="contained"
+                                                    style={{height: "80px", margin: "10px"}}>
+                                                {t('profile.add')}<br/>{t('profile.access_level')}<br/>{t('profile.admin')}
+                                            </Button>
+                                        )}
+                                        <Button onClick={handleRemoveAccessLevel} variant="contained"
+                                                style={{height: "80px", margin: "10px"}}>
+                                            {t('profile.del')}<br/>{t('profile.access_level')}
+                                        </Button>
+                                    </>
                                 )}
-                                <div style={{display: 'flex', alignItems: 'center'}}>
-                                    <Typography sx={{padding: '1vh'}} variant="h5">
-                                        <b>{t('profile.access_levels')}:</b>
-                                    </Typography>
-                                    <FormControlLabel
-                                        control={<Checkbox checked={isUserOwner} disabled/>}
-                                        label="Owner"
-                                    />
-                                    <FormControlLabel
-                                        control={<Checkbox checked={isUserManager} disabled/>}
-                                        label="Manager"
-                                    />
-                                    <FormControlLabel
-                                        control={<Checkbox checked={isUserAdmin} disabled/>}
-                                        label="Admin"
-                                    />
-                                </div>
-                                <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                                    <Button onClick={handleClickOpenManager} variant="contained"
-                                            style={{height: "80px", margin: "10px"}}>
-                                        Dodaj<br/>poziom dostępu<br/>manager
-                                    </Button>
-                                    <Button onClick={handleClickOpenOwner} variant="contained"
-                                            style={{height: "80px", margin: "10px"}}>
-                                        Dodaj<br/>poziom dostępu<br/>owner
-                                    </Button>
-                                    <Button onClick={handleClickOpenAdmin} variant="contained"
-                                            style={{height: "80px", margin: "10px"}}>
-                                        Dodaj<br/>poziom dostępu<br/>admin
-                                    </Button>
-                                    <Button onClick={handleRemoveAccessLevel} variant="contained"
-                                            style={{height: "80px", margin: "10px"}}>
-                                        Usuń<br/>poziom dostępu
-                                    </Button>
-
-                                    <Dialog disableEscapeKeyDown open={isManager} onClose={handleClose}>
-                                        <DialogTitle>Wypełnij formularz dodania uprawnien zarządcy</DialogTitle>
-                                        <DialogContent>
-                                            <Box sx={{display: 'flex', flexWrap: 'wrap'}}>
-                                                <form onSubmit={handleSumbit}>
-                                                    <List component="nav" aria-label="mailbox folders">
-                                                        <ListItem>
-                                                            <div className="form-group" onChange={handleLicense}>
-                                                                <TextField
-                                                                    id="outlined-helperText"
-                                                                    label="Licencja"
-                                                                    defaultValue={license}
-                                                                    type="licencja"
-                                                                    helperText="Wprowadź licencję"
-                                                                />
-                                                                <div className="form-group">
-                                                                    {licenseError}
-                                                                </div>
-                                                            </div>
-                                                        </ListItem>
-                                                    </List>
-                                                    <div className="form-group">
-                                                        {dataError}
+                            <Dialog disableEscapeKeyDown open={isManager} onClose={handleClose}>
+                                <DialogTitle>{t('profile.access_level_form_title')}</DialogTitle>
+                                <DialogContent>
+                                    <Box sx={{display: 'flex', flexWrap: 'wrap'}}>
+                                        <form onSubmit={handleSumbit}>
+                                            <List component="nav" aria-label="mailbox folders">
+                                                <ListItem>
+                                                    <div className="form-group" onChange={handleLicense}>
+                                                        <TextField
+                                                            id="outlined-helperText"
+                                                            label={t('profile.license')}
+                                                            defaultValue={license}
+                                                            type="licencja"
+                                                            helperText={t('profile.set_license')}
+                                                        />
+                                                        <div className="form-group">
+                                                            {licenseError}
+                                                        </div>
                                                     </div>
-                                                </form>
-                                            </Box>
-                                        </DialogContent>
-                                        <DialogActions>
-                                            <Button onClick={handleClose}>Anuluj</Button>
-                                            <Button onClick={handleConfirm} disabled={!licenseValid}>Dodaj</Button>
-                                        </DialogActions>
-                                    </Dialog>
+                                                </ListItem>
+                                            </List>
+                                            <div className="form-group">
+                                                {dataError}
+                                            </div>
+                                        </form>
+                                    </Box>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleClose}>{t('confirm.cancel')}</Button>
+                                    <Button onClick={handleConfirm} disabled={!licenseValid}>{t('profile.add')}</Button>
+                                </DialogActions>
+                            </Dialog>
 
-                                    <Dialog disableEscapeKeyDown open={isManager && confirmOpen}
-                                            onClose={handleConfirmClose}>
-                                        <DialogTitle>Czy na pewno chcesz dodać poziom dostępu zarządcy?</DialogTitle>
-                                        <DialogActions>
-                                            <Button onClick={handleConfirmClose}>Nie</Button>
-                                            <Button onClick={handleConfirmConfirm}>Tak</Button>
-                                        </DialogActions>
-                                    </Dialog>
+                            <Dialog disableEscapeKeyDown open={isManager && confirmOpen}
+                                    onClose={handleConfirmClose}>
+                                <DialogTitle>Czy na pewno chcesz dodać poziom dostępu zarządcy?</DialogTitle>
+                                <DialogActions>
+                                    <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
+                                    <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
+                                </DialogActions>
+                            </Dialog>
 
-                                    <Dialog disableEscapeKeyDown open={isOwner} onClose={handleClose}>
-                                        <DialogTitle>Wypełnij formularz dodania uprawnień właściciela</DialogTitle>
-                                        <DialogContent>
-                                            <Box sx={{display: 'flex', flexWrap: 'wrap'}}>
-                                                <form onSubmit={handleSumbit}>
-                                                    <List component="nav" aria-label="mailbox folders">
-                                                        <ListItem>
-                                                            <div className="form-group" onChange={handlePhoneNumber}>
-                                                                <TextField
-                                                                    id="outlined-helperText"
-                                                                    label="Numer telefonu"
-                                                                    defaultValue={phoneNumber}
-                                                                    type="phoneNumber"
-                                                                    helperText="Wprowadź numer telefonu"
-                                                                />
-                                                                <div className="form-group">
-                                                                    {phoneNumberError}
-                                                                </div>
-                                                            </div>
-                                                        </ListItem>
-                                                    </List>
-                                                    <div className="form-group">
-                                                        {dataError}
+                            <Dialog disableEscapeKeyDown open={isOwner} onClose={handleClose}>
+                                <DialogTitle>Wypełnij formularz dodania uprawnień właściciela</DialogTitle>
+                                <DialogContent>
+                                    <Box sx={{display: 'flex', flexWrap: 'wrap'}}>
+                                        <form onSubmit={handleSumbit}>
+                                            <List component="nav" aria-label="mailbox folders">
+                                                <ListItem>
+                                                    <div className="form-group" onChange={handlePhoneNumber}>
+                                                        <TextField
+                                                            id="outlined-helperText"
+                                                            label={t('register.phone_number')}
+                                                            defaultValue={phoneNumber}
+                                                            type="phoneNumber"
+                                                            helperText={t('profile.set_phone_number')}
+                                                        />
+                                                        <div className="form-group">
+                                                            {phoneNumberError}
+                                                        </div>
                                                     </div>
-                                                </form>
-                                            </Box>
-                                        </DialogContent>
-                                        <DialogActions>
-                                            <Button onClick={handleClose}>Anuluj</Button>
-                                            <Button onClick={handleConfirm} disabled={!phoneNumberValid}>Dodaj</Button>
-                                        </DialogActions>
-                                    </Dialog>
+                                                </ListItem>
+                                            </List>
+                                            <div className="form-group">
+                                                {dataError}
+                                            </div>
+                                        </form>
+                                    </Box>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleClose}>{t('confirm.cancel')}</Button>
+                                    <Button onClick={handleConfirm} disabled={!phoneNumberValid}>{t('profile.add')}</Button>
+                                </DialogActions>
+                            </Dialog>
 
-                                    <Dialog disableEscapeKeyDown open={isOwner && confirmOpen}
-                                            onClose={handleConfirmClose}>
-                                        <DialogTitle>Czy na pewno chcesz dodać poziom dostępu właściciela?</DialogTitle>
-                                        <DialogActions>
-                                            <Button onClick={handleConfirmClose}>Nie</Button>
-                                            <Button onClick={handleConfirmConfirm}>Tak</Button>
-                                        </DialogActions>
-                                    </Dialog>
+                            <Dialog disableEscapeKeyDown open={isOwner && confirmOpen}
+                                    onClose={handleConfirmClose}>
+                                <DialogTitle>Czy na pewno chcesz dodać poziom dostępu właściciela?</DialogTitle>
+                                <DialogActions>
+                                    <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
+                                    <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
+                                </DialogActions>
+                            </Dialog>
 
-                                    <Dialog disableEscapeKeyDown open={isAdmin} onClose={handleClose}>
-                                        <DialogTitle>Czy na pewno chcesz dodać poziom dostępu admin?</DialogTitle>
-                                        <DialogActions>
-                                            <Button onClick={handleClose}>Nie</Button>
-                                            <Button onClick={handleConfirmConfirm}>Tak</Button>
-                                        </DialogActions>
-                                    </Dialog>
+                            <Dialog disableEscapeKeyDown open={isAdmin} onClose={handleClose}>
+                                <DialogTitle>Czy na pewno chcesz dodać poziom dostępu admin?</DialogTitle>
+                                <DialogActions>
+                                    <Button onClick={handleClose}>{t('confirm.no')}</Button>
+                                    <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
+                                </DialogActions>
+                            </Dialog>
 
-                                    <Dialog disableEscapeKeyDown open={isRemoveAccessOpen} onClose={handleClose}>
-                                        <DialogTitle>Usuń poziom dostępu</DialogTitle>
-                                        <DialogContent>
-                                            <form onSubmit={handleAddSubmit}>
-                                                <FormControl fullWidth>
-                                                    {!selectedRole &&
-                                                        <InputLabel id="access-level-label">Wybierz poziom</InputLabel>}
-                                                    <Select
-                                                        labelId="access-level-label"
-                                                        value={selectedRole}
-                                                        onChange={(event: SelectChangeEvent<string>) => handleAccessLevelChange(event)}
-                                                        displayEmpty
-                                                    >
-                                                        {roles.map((role) => (
-                                                            <MenuItem key={role.value} value={role.value}>
-                                                                {role.label}
-                                                            </MenuItem>
-                                                        ))}
-                                                    </Select>
-                                                </FormControl>
-                                            </form>
-                                        </DialogContent>
-                                        <DialogActions>
-                                            <Button onClick={handleClose}>Anuluj</Button>
-                                            <Button onClick={handleConfirmRemove} disabled={!removeValid}>Usuń</Button>
-                                        </DialogActions>
-                                    </Dialog>
+                            <Dialog disableEscapeKeyDown open={isRemoveAccessOpen} onClose={handleClose}>
+                                <DialogTitle>Usuń poziom dostępu</DialogTitle>
+                                <DialogContent>
+                                    <form onSubmit={handleAddSubmit}>
+                                        <FormControl fullWidth>
+                                            {!selectedRole &&
+                                                <InputLabel id="access-level-label">{t('profile.select_access_level')}</InputLabel>}
+                                            <Select
+                                                labelId="access-level-label"
+                                                value={selectedRole}
+                                                onChange={(event: SelectChangeEvent<string>) => handleAccessLevelChange(event)}
+                                                displayEmpty
+                                            >
+                                                {roles.map((role) => (
+                                                    <MenuItem key={role.value} value={role.value}>
+                                                        {role.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </form>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleClose}>{t('confirm.cancel')}</Button>
+                                    <Button onClick={handleConfirmRemove} disabled={!removeValid}>{t('profile.del')}</Button>
+                                </DialogActions>
+                            </Dialog>
 
-                                    <Dialog disableEscapeKeyDown open={confirmRemove} onClose={handleConfirmClose}>
-                                        <DialogTitle>Czy na pewno chcesz odebrać poziom dostępu?</DialogTitle>
-                                        <DialogActions>
-                                            <Button onClick={handleConfirmClose}>Nie</Button>
-                                            <Button onClick={handleConfirmConfirm}>Tak</Button>
-                                        </DialogActions>
-                                    </Dialog>
+                            <Dialog disableEscapeKeyDown open={confirmRemove} onClose={handleConfirmClose}>
+                                <DialogTitle>Czy na pewno chcesz odebrać poziom dostępu?</DialogTitle>
+                                <DialogActions>
+                                    <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
+                                    <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
+                                </DialogActions>
+                            </Dialog>
 
-                                    <Dialog disableEscapeKeyDown open={successOpenRemove}>
-                                        <DialogTitle>Poziom dostępu został odebrany</DialogTitle>
-                                        <Button onClick={handleSuccessClose}>Ok</Button>
-                                    </Dialog>
+                            <Dialog disableEscapeKeyDown open={successOpenRemove}>
+                                <DialogTitle>Poziom dostępu został odebrany</DialogTitle>
+                                <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
+                            </Dialog>
 
-                                    <Dialog disableEscapeKeyDown open={successOpen}>
-                                        <DialogTitle>Poziom dostępu został dodany</DialogTitle>
-                                        <Button onClick={handleSuccessClose}>Ok</Button>
-                                    </Dialog>
+                            <Dialog disableEscapeKeyDown open={successOpen}>
+                                <DialogTitle>Poziom dostępu został dodany</DialogTitle>
+                                <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
+                            </Dialog>
 
-                                    <Dialog disableEscapeKeyDown open={errorOpen}>
-                                        <DialogTitle>{errorOpenMessage}</DialogTitle>
-                                        <Button onClick={handleErrorClose}>Ok</Button>
-                                    </Dialog>
-                                </div>
+                            <Dialog disableEscapeKeyDown open={errorOpen}>
+                                <DialogTitle>{errorOpenMessage}</DialogTitle>
+                                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
+                            </Dialog>
+                            </div>
                             </>
-                        )}
+                            )}
                     </Box>
                 </Grid>
             </Grid>

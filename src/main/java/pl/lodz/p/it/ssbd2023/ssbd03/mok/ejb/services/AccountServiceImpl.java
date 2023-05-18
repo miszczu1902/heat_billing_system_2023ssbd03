@@ -565,7 +565,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         if (!Objects.equals(version, account.getVersion())) {
             throw AppException.createOptimisticLockAppException();
         }
-
         changeEmail(newEmail, account);
     }
 

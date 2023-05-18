@@ -19,20 +19,24 @@ public class AccountInfoDTO extends AbstractDTO implements Signable {
     private Boolean isEnable;
     private Boolean isActive;
     private String registerDate;
-    private List<String> accessLevels;
+    private Boolean isUserOwner;
+    private Boolean isUserManager;
+    private Boolean isUserAdmin;
     private String firstName;
     private String surname;
     private String phoneNumber;
     private String license;
 
-    public AccountInfoDTO(Long id, Long version, String email, String username, Boolean isEnable, Boolean isActive, String registerDate, List<String> accessLevels, String firstName, String surname, String phoneNumber, String license) {
+    public AccountInfoDTO(Long id, Long version, String email, String username, Boolean isEnable, Boolean isActive, String registerDate, Boolean isUserOwner, Boolean isUserManager, Boolean isUserAdmin, String firstName, String surname, String phoneNumber, String license) {
         super(id, version);
         this.email = email;
         this.username = username;
         this.isEnable = isEnable;
         this.isActive = isActive;
         this.registerDate = registerDate;
-        this.accessLevels = accessLevels;
+        this.isUserOwner = isUserOwner;
+        this.isUserManager = isUserManager;
+        this.isUserAdmin = isUserAdmin;
         this.firstName = firstName;
         this.surname = surname;
         this.phoneNumber = phoneNumber;

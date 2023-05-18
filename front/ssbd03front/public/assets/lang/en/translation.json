@@ -158,9 +158,20 @@
   {
     "title": "Account info",
     "phone_number_error" : "The phone number must contain 9 digits.",
+    "set_phone_number" : "Enter phone number",
     "license_error" : "The license must consist of 20 characters.",
     "license" : "License",
-    "access_levels" : "Access levels"
+    "set_license" : "Enter the license",
+    "access_levels" : "Access levels",
+    "user_password" : "Password for user named ",
+    "add" : "Add",
+    "del" : "Delete",
+    "access_level" : "access level",
+    "select_access_level" : "Choose a level",
+    "owner" : "OWNER",
+    "manager" : "MANAGER",
+    "admin" : "ADMIN",
+    "access_level_form_title" : "Fill in the form of adding administrator permissions"
   },
   "page_not_found":
   {
