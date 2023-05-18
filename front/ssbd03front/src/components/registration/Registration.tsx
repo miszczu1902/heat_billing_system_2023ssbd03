@@ -49,6 +49,8 @@ const Registration = () => {
     const [errorOpen, setErrorOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
 
+    const [authorizationErrorOpen, setAuthorizationErrorOpen] = React.useState(false);
+
     const onSubmit = handleSubmit((data: RegistrationForm) => {
         let config = {
             method: 'post',
@@ -64,6 +66,10 @@ const Registration = () => {
                 setSuccessOpen(true);
             })
             .catch((error) => {
+                if(error.response.status === 409) {
+                    setAuthorizationErrorOpen(true);
+                    return;
+                  }
                 setRegisterError(error.response.data.message);
                     if (error.response.status == 403) navigate('/');
             });
@@ -159,6 +165,13 @@ const Registration = () => {
         }
         onSubmit();
     };
+
+    const handleAuthorizationErrorOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+        if (reason !== 'backdropClick') {
+          setAuthorizationErrorOpen(false);
+          handleConfirmClose(event, reason);
+        }
+      };
 
     const handleConfirm = () => {
         if (firstName.length > 32 || firstName.length == 0) setRegisterError(t('register.first_name_error'));
@@ -299,6 +312,10 @@ const Registration = () => {
                 <DialogTitle>{t('register.success_two')}</DialogTitle>
                 <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
             </Dialog>
+            <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
+                <DialogTitle>{t('register.user_exists')}</DialogTitle>
+                <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>
+      </Dialog>
         </ThemeProvider>
     );
 }

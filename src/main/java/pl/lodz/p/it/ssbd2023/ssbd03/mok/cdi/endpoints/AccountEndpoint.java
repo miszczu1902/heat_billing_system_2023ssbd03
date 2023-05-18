@@ -15,15 +15,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.VersionDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangeSelfPasswordDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
@@ -274,38 +266,46 @@ public class AccountEndpoint {
     }
 
     @PATCH
+    @EtagValidator
     @Path("/add-access-level-manager")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.ADMIN)
-    public Response addAccessLevelManager(@NotNull @Valid AddAccessLevelManagerDTO addAccessLevelManagerDTO) {
-        accountService.addAccessLevelManager(addAccessLevelManagerDTO.getUsername(), addAccessLevelManagerDTO.getLicense());
+    public Response addAccessLevelManager(@NotNull @Valid AddAccessLevelManagerDTO addAccessLevelManagerDTO, @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
+        accountService.addAccessLevelManager(addAccessLevelManagerDTO.getUsername(), addAccessLevelManagerDTO.getLicense(), etag, addAccessLevelManagerDTO.getVersion());
         return Response.noContent().build();
     }
 
     @PATCH
+    @EtagValidator
     @Path("/add-access-level-owner")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.ADMIN)
-    public Response addAccessLevelOwner(@NotNull @Valid AddAccessLevelOwnerDTO addAccessLevelOwnerDTO) {
-        accountService.addAccessLevelOwner(addAccessLevelOwnerDTO.getUsername(), addAccessLevelOwnerDTO.getPhoneNumber());
+    public Response addAccessLevelOwner(@NotNull @Valid AddAccessLevelOwnerDTO addAccessLevelOwnerDTO, @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
+        accountService.addAccessLevelOwner(addAccessLevelOwnerDTO.getUsername(), addAccessLevelOwnerDTO.getPhoneNumber(), etag, addAccessLevelOwnerDTO.getVersion());
         return Response.noContent().build();
     }
 
     @PATCH
+    @EtagValidator
     @Path("/add-access-level-admin")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.ADMIN)
-    public Response addAccessLevelAdmin(@NotNull @Valid AddAccessLevelAdminDTO addAccessLevelAdminDTO) {
-        accountService.addAccessLevelAdmin(addAccessLevelAdminDTO.getUsername());
+    public Response addAccessLevelAdmin(@NotNull @Valid AddAccessLevelAdminDTO addAccessLevelAdminDTO, @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
+        accountService.addAccessLevelAdmin(addAccessLevelAdminDTO.getUsername(), etag, addAccessLevelAdminDTO.getVersion());
         return Response.noContent().build();
     }
 
     @PATCH
+    @EtagValidator
     @Path("/revoke-access-level")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.ADMIN)
-    public Response revokeAccessLevel(@NotNull @Valid RevokeAccessLevelDTO revokeAccessLevelDTO) {
-        accountService.revokeAccessLevel(revokeAccessLevelDTO.getUsername(), revokeAccessLevelDTO.getAccessLevel());
+    public Response revokeAccessLevel(@NotNull @Valid RevokeAccessLevelDTO revokeAccessLevelDTO, @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
+        accountService.revokeAccessLevel(revokeAccessLevelDTO.getUsername(), revokeAccessLevelDTO.getAccessLevel(), etag, revokeAccessLevelDTO.getVersion());
         return Response.noContent().build();
     }
 

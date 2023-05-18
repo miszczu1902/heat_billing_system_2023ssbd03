@@ -115,7 +115,8 @@
     "register_confim": "Czy na pewno chcesz się zarejestrować?",
     "success": "Konto zarejestrowane",
     "success_two": "Konto zarejestrowane. Na podany adres email została wysłana wiadomość z linkiem aktywacyjnym",
-    "log_in": "Masz już konto? Zaloguj się"
+    "log_in": "Masz już konto? Zaloguj się",
+    "user_exists": "Użytkownik o podanym loginie lub emailu już istnieje"
   },
   "account_list":
   {
