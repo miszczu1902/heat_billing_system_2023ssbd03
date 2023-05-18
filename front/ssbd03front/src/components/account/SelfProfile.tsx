@@ -1,37 +1,24 @@
 import Box from "@mui/material/Box";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Select, {SelectChangeEvent} from '@mui/material/Select';
 import React, {useEffect, useState} from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
-import {Checkbox, FormControlLabel, Grid} from '@mui/material';
-import {useNavigate, useParams} from "react-router-dom";
+import {Grid} from '@mui/material';
+import {useNavigate} from "react-router-dom";
 import {API_URL} from "../../consts";
 import {useCookies} from "react-cookie";
 import axios from 'axios';
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import {useTranslation} from "react-i18next";
-import {Account} from "../../types/account";
 import EditPersonalData from "../personalData/EditPersonalData";
-import EnableAccount from "../accounts/EnableAccount";
-import DisableAccount from "../accounts/DisableAccount";
 import jwt from "jwt-decode";
 import EditPassword from "../passwords/EditPassword";
 import EditEmail from "../email/EditEmail";
 import {Owner} from "../../types/owner";
 import {Manager} from "../../types/manager";
 import {Admin} from "../../types/admin";
+import {getRoles} from "@testing-library/react";
+import EditUserEmail from "../email/EditUserEmail";
 
-export default function Profile() {
+const SelfProfile = () => {
     const {t} = useTranslation();
     const navigate = useNavigate();
     const [cookies, setCookie, removeCookie] = useCookies(["token"]);
@@ -84,20 +71,51 @@ export default function Profile() {
         });
     };
 
+    const fetchData = () => {
+        const fetchDataOwner = async () => {
+            axios.get(`${API_URL}/accounts/self/owner`, {
+                headers: {
+                    'Authorization': token
+                }
+            }).then(response => {
+                setOwner(response.data);
+            }).catch(error => {
+                if (error.response.status == 403) navigate('/');
+            });
+        };
+        const fetchDataManager = async () => {
+            axios.get(`${API_URL}/accounts/self/manager`, {
+                headers: {
+                    'Authorization': token
+                }
+            }).then(response => {
+                setManager(response.data);
+            }).catch(error => {
+                if (error.response.status == 403) navigate('/');
+            });
+        };
+        const fetchDataAdmin = async () => {
+            axios.get(`${API_URL}/accounts/self/admin`, {
+                headers: {
+                    'Authorization': token
+                }
+            }).then(response => {
+                setAdmin(response.data);
+            }).catch(error => {
+                if (error.response.status == 403) navigate('/');
+            });
+        };
+        if (role.includes('OWNER')) {
+            fetchDataOwner();
+        } else if (role.includes('MANAGER')) {
+            fetchDataManager();
+        } else if (role.includes('ADMIN')) {
+            fetchDataAdmin();
+        }
+    };
+
     useEffect(() => {
         if (cookies.token !== "undefined" && cookies.token !== undefined) {
-            const fetchData = async () => {
-                await axios.get(`${API_URL}/accounts/self`, {
-                    headers: {
-                        Authorization: token
-                    }
-                })
-                    .then(response => {
-                        setEtag(response.headers["etag"]);
-                        setVersion(response.data.version)
-                    });
-            };
-            fetchData();
             const decodedToken = jwt(cookies.token);
             const decodedRole = JSON.parse(JSON.stringify(decodedToken)).role;
             setRole(decodedRole.split(','));
@@ -105,24 +123,13 @@ export default function Profile() {
             if (JSON.parse(JSON.stringify(decodedToken)).exp < currentTimestamp) {
                 removeCookie('token');
                 navigate('/');
-            }
-
-            if (role.includes('OWNER'))
-            {
-                fetchDataOwner();
-            }
-            if (role.includes('MANAGER'))
-            {
-                fetchDataManager();
-            }
-            if (role.includes('ADMIN'))
-            {
-                fetchDataAdmin();
+            }else {
+                fetchData();
             }
         } else {
             navigate('/');
         }
-    }, [cookies.token]);
+    }, []);
 
     return (
         <div style={{height: '90.3vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0}}>
@@ -281,3 +288,5 @@ export default function Profile() {
         </div>
     );
 }
+
+export default SelfProfile;

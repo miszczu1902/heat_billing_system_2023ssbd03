@@ -91,7 +91,6 @@ const NavbarPanel: React.FC = () => {
         const languageDTO = {
             language: language
         }
-        console.log(language);
         if (language) {
             i18n.changeLanguage(language);
             if (cookies.token !== undefined) {
@@ -152,7 +151,16 @@ const NavbarPanel: React.FC = () => {
                         <>
                             <Button onClick={handleClickOpenLogout}
                                     style={{backgroundColor: navbarColor}}>{t('navbar.log_out')}</Button>
-                            <Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/accounts/self')}><UserInfoIcon/></Button>
+                            {
+                                (role.includes('OWNER')) && <Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/accounts/self/owner')}><UserInfoIcon/></Button>
+                            }
+                            {
+                                (role.includes('MANAGER')) && <Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/accounts/self/manager')}><UserInfoIcon/></Button>
+                            }
+                            {
+                                (role.includes('ADMIN')) && <Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/accounts/self/admin')}><UserInfoIcon/></Button>
+                            }
+                            {/*<Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/accounts/self')}><UserInfoIcon/></Button>*/}
                         </>
                     )}
                 </ButtonGroup>

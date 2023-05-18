@@ -18,6 +18,9 @@ import SelfProfile from "../components/account/SelfProfile";
 import EditEmail from "../components/email/EditEmail";
 import ConfirmEmail from "../components/email/ConfirmEmail";
 import EditUserEmail from "../components/email/EditUserEmail";
+import OwnerProfile from "../components/account/OwnerProfile";
+import ManagerProfile from "../components/account/ManagerProfile";
+import AdminProfile from "../components/account/AdminProfile";
 
 const router = createBrowserRouter([
     {
@@ -39,6 +42,18 @@ const router = createBrowserRouter([
                     {
                         path: '/accounts/self',
                         element: <SelfProfile/>
+                    },
+                    {
+                        path: '/accounts/self/owner',
+                        element: <OwnerProfile/>
+                    },
+                    {
+                        path: '/accounts/self/manager',
+                        element: <ManagerProfile/>
+                    },
+                    {
+                        path: '/accounts/self/admin',
+                        element: <AdminProfile/>
                     },
                     {
                         path: '/accounts/:username',
