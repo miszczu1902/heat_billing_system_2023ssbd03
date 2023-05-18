@@ -12,8 +12,9 @@ import axios from 'axios';
 import {API_URL} from '../../consts';
 import {useCookies} from 'react-cookie';
 import {useTranslation} from "react-i18next";
+import ConfirmEmail from "./ConfirmEmail";
 
-export default function EditEmail() {
+const EditEmail = () => {
     const {t} = useTranslation();
     const [cookies] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
@@ -184,3 +185,5 @@ export default function EditEmail() {
         </div>
     );
 }
+
+export default EditEmail;

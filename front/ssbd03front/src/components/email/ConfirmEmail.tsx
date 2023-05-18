@@ -55,4 +55,5 @@ const ConfirmEmail = () => {
         </Container>
     </div>);
 }
+
 export default ConfirmEmail;
