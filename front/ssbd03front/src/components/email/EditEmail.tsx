@@ -41,7 +41,7 @@ export default function EditEmail() {
         setEmail(email);
         const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{1,10}$/;
         if (!regex.test(email)) {
-            setEmailError(t('change_phone_number.error'));
+            setEmailError(t('register.email_error'));
             setEmailValid(false);
         } else {
             setEmailError("");
@@ -109,7 +109,7 @@ export default function EditEmail() {
             setDataError("");
             setConfirmOpen(true);
         } else {
-            setDataError(t('change_phone_number.data_error'));
+            setDataError(t('register.email_error'));
         }
     }
 
@@ -129,10 +129,10 @@ export default function EditEmail() {
     return (
         <div>
             <div>
-                <Button onClick={handleClickOpen} variant="contained">{t('change_phone_number.title')}</Button>
+                <Button onClick={handleClickOpen} variant="contained">{t('email.title')}</Button>
             </div>
             <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-                <DialogTitle>{t('change_phone_number.form_title')}</DialogTitle>
+                <DialogTitle>{t('email.form_title')}</DialogTitle>
                 <DialogContent>
                     <Box sx={{display: 'flex', flexWrap: 'wrap'}}>
                         <form onSubmit={handleSumbit}>
@@ -141,10 +141,10 @@ export default function EditEmail() {
                                     <div className="form-group" onChange={handleNewEmail}>
                                         <TextField
                                             id="outlined-helperText"
-                                            label={t('change_phone_number.new_number')}
+                                            label={t('email.new_email')}
                                             defaultValue={email}
                                             type="email"
-                                            helperText={t('change_phone_number.new_number_help_text')}
+                                            helperText={t('email.new_email_text')}
                                         />
                                         <div className="form-group">
                                             {emailError}
@@ -165,7 +165,7 @@ export default function EditEmail() {
             </Dialog>
 
             <Dialog disableEscapeKeyDown open={confirmOpen} onClose={handleConfirmClose}>
-                <DialogTitle>{t('change_phone_number.confirm_changes')}</DialogTitle>
+                <DialogTitle>{t('email.confirm_changes')}</DialogTitle>
                 <DialogActions>
                     <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
                     <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
@@ -173,7 +173,7 @@ export default function EditEmail() {
             </Dialog>
 
             <Dialog disableEscapeKeyDown open={successOpen}>
-                <DialogTitle>{t('change_phone_number.success')}</DialogTitle>
+                <DialogTitle>{t('email.success_title')}</DialogTitle>
                 <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
             </Dialog>
 

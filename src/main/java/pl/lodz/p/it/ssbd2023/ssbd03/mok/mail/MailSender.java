@@ -50,7 +50,7 @@ public class MailSender {
     }
 
     public void sendLinkToConfirmAnEmail(String to, String content) {
-        sendEmail(to, MAIL_SUBJECT_CONFIRMATION_LINK, properties.getProperty("mail.activation.url") + "?" + content);
+        sendEmail(to, MAIL_SUBJECT_CONFIRMATION_LINK, properties.getProperty("mail.activation.url") + "/" + content);
     }
 
     public void sendInformationAdminLoggedIn(String to, String ipAddress) {
