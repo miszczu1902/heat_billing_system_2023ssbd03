@@ -49,6 +49,7 @@ public class ChangePhoneNumberTest extends BasicIntegrationConfigTest {
 
         newPhoneNumber.setPhoneNumber("123456789");
 
+        sendRequestAndGetResponse(Method.GET, "/accounts/self/owner", null, null);
         response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/phone-number", newPhoneNumber, ContentType.JSON);
         statusCode = response.getStatusCode();
         assertEquals(409, statusCode, "Check if modification failed.");

@@ -96,6 +96,7 @@ const EnableAccount = () => {
   const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
     if (reason !== 'backdropClick') {
       setSuccessOpen(false);
+      window.location.reload();
     }
   }
 
