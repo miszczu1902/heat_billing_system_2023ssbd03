@@ -115,7 +115,8 @@
     "register_confim": "Are you sure you want to register?",
     "success": "Account registered",
     "success_two": "Account registered. A message with an activation link has been sent to the e-mail address provided",
-    "log_in": "Already have an account? Log in"
+    "log_in": "Already have an account? Log in",
+    "user_exists": "User already exists"
   },
   "account_list":
   {
