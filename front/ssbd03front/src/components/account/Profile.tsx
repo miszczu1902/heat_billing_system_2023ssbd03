@@ -21,12 +21,12 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import {useTranslation} from "react-i18next";
 import {Account} from "../../types/account";
-import EditPersonalData from "../personalData/EditPersonalData";
 import EditUserPersonalData from "../personalData/EditUserPersonalData";
 import EnableAccount from "../accounts/EnableAccount";
 import DisableAccount from "../accounts/DisableAccount";
 import jwt from "jwt-decode";
 import EditUserPassword from "../passwords/EditUserPassword";
+import EditUserEmail from "../email/EditUserEmail";
 
 const roles = [
     {value: "ADMIN", label: "Administrator"},
@@ -382,29 +382,29 @@ export default function Profile() {
                     <Box sx={{my: 30, display: 'flex', flexDirection: 'column', alignItems: 'left', margin: '2vh'}}>
                         {account !== null && (
                             <>
-                            <Paper elevation={3} style={{position: 'relative'}}>
-                                <div style={{position: 'absolute', top: '1vh', right: '1vh'}}>
-                                    <EditUserPersonalData/>
-                                </div>
-                                <Typography sx={{padding: '1vh'}} variant="h5">
-                                    <b>{t('personal_data.name')}:</b> {account.firstName}
-                                </Typography>
-                                <Typography sx={{padding: '1vh'}} variant="h5">
-                                    <b>{t('personal_data.surname')}:</b> {account.surname}
-                                </Typography>
-                            </Paper>
-                            <Paper elevation={3} style={{position: 'relative'}}>
-                                <Typography sx={{padding: '1vh'}}
-                                            variant="h5"><b>{t('login.username')}:</b> {account.username}
-                                </Typography>
-                            </Paper>
-                            <Paper elevation={3} style={{position: 'relative'}}>
-                                <div style={{position: 'absolute', top: '1vh', right: '1vh'}}>
-                                    {/*Przycisk zmiany email*/}
-                                </div>
-                                <Typography sx={{padding: '1vh'}}
-                                            variant="h5"><b>{t('register.email')}:</b> {account.email}</Typography>
-                            </Paper>
+                                <Paper elevation={3} style={{position: 'relative'}}>
+                                    <div style={{position: 'absolute', top: '1vh', right: '1vh'}}>
+                                        <EditUserPersonalData/>
+                                    </div>
+                                    <Typography sx={{padding: '1vh'}} variant="h5">
+                                        <b>{t('personal_data.name')}:</b> {account.firstName}
+                                    </Typography>
+                                    <Typography sx={{padding: '1vh'}} variant="h5">
+                                        <b>{t('personal_data.surname')}:</b> {account.surname}
+                                    </Typography>
+                                </Paper>
+                                <Paper elevation={3} style={{position: 'relative'}}>
+                                    <Typography sx={{padding: '1vh'}}
+                                                variant="h5"><b>{t('login.username')}:</b> {account.username}
+                                    </Typography>
+                                </Paper>
+                                <Paper elevation={3} style={{position: 'relative'}}>
+                                    <div style={{position: 'absolute', top: '1vh', right: '1vh'}}>
+                                        <EditUserEmail/>
+                                    </div>
+                                    <Typography sx={{padding: '1vh'}}
+                                                variant="h5"><b>{t('register.email')}:</b> {account.email}</Typography>
+                                </Paper>
 
                             {(account.phoneNumber && account.isUserOwner) && (
                                 <Paper elevation={3} style={{position: 'relative'}}>
@@ -532,118 +532,121 @@ export default function Profile() {
                                 </DialogActions>
                             </Dialog>
 
-                            <Dialog disableEscapeKeyDown open={isManager && confirmOpen}
-                                    onClose={handleConfirmClose}>
-                                <DialogTitle>Czy na pewno chcesz dodać poziom dostępu zarządcy?</DialogTitle>
-                                <DialogActions>
-                                    <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
-                                    <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
-                                </DialogActions>
-                            </Dialog>
+                                    <Dialog disableEscapeKeyDown open={isManager && confirmOpen}
+                                            onClose={handleConfirmClose}>
+                                        <DialogTitle>Czy na pewno chcesz dodać poziom dostępu zarządcy?</DialogTitle>
+                                        <DialogActions>
+                                            <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
+                                            <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
+                                        </DialogActions>
+                                    </Dialog>
 
-                            <Dialog disableEscapeKeyDown open={isOwner} onClose={handleClose}>
-                                <DialogTitle>Wypełnij formularz dodania uprawnień właściciela</DialogTitle>
-                                <DialogContent>
-                                    <Box sx={{display: 'flex', flexWrap: 'wrap'}}>
-                                        <form onSubmit={handleSumbit}>
-                                            <List component="nav" aria-label="mailbox folders">
-                                                <ListItem>
-                                                    <div className="form-group" onChange={handlePhoneNumber}>
-                                                        <TextField
-                                                            id="outlined-helperText"
-                                                            label={t('register.phone_number')}
-                                                            defaultValue={phoneNumber}
-                                                            type="phoneNumber"
-                                                            helperText={t('profile.set_phone_number')}
-                                                        />
-                                                        <div className="form-group">
-                                                            {phoneNumberError}
-                                                        </div>
+                                    <Dialog disableEscapeKeyDown open={isOwner} onClose={handleClose}>
+                                        <DialogTitle>Wypełnij formularz dodania uprawnień właściciela</DialogTitle>
+                                        <DialogContent>
+                                            <Box sx={{display: 'flex', flexWrap: 'wrap'}}>
+                                                <form onSubmit={handleSumbit}>
+                                                    <List component="nav" aria-label="mailbox folders">
+                                                        <ListItem>
+                                                            <div className="form-group" onChange={handlePhoneNumber}>
+                                                                <TextField
+                                                                    id="outlined-helperText"
+                                                                    label={t('register.phone_number')}
+                                                                    defaultValue={phoneNumber}
+                                                                    type="phoneNumber"
+                                                                    helperText={t('profile.set_phone_number')}
+                                                                />
+                                                                <div className="form-group">
+                                                                    {phoneNumberError}
+                                                                </div>
+                                                            </div>
+                                                        </ListItem>
+                                                    </List>
+                                                    <div className="form-group">
+                                                        {dataError}
                                                     </div>
-                                                </ListItem>
-                                            </List>
-                                            <div className="form-group">
-                                                {dataError}
-                                            </div>
-                                        </form>
-                                    </Box>
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button onClick={handleClose}>{t('confirm.cancel')}</Button>
-                                    <Button onClick={handleConfirm} disabled={!phoneNumberValid}>{t('profile.add')}</Button>
-                                </DialogActions>
-                            </Dialog>
+                                                </form>
+                                            </Box>
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button onClick={handleClose}>{t('confirm.cancel')}</Button>
+                                            <Button onClick={handleConfirm}
+                                                    disabled={!phoneNumberValid}>{t('profile.add')}</Button>
+                                        </DialogActions>
+                                    </Dialog>
 
-                            <Dialog disableEscapeKeyDown open={isOwner && confirmOpen}
-                                    onClose={handleConfirmClose}>
-                                <DialogTitle>Czy na pewno chcesz dodać poziom dostępu właściciela?</DialogTitle>
-                                <DialogActions>
-                                    <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
-                                    <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
-                                </DialogActions>
-                            </Dialog>
+                                    <Dialog disableEscapeKeyDown open={isOwner && confirmOpen}
+                                            onClose={handleConfirmClose}>
+                                        <DialogTitle>Czy na pewno chcesz dodać poziom dostępu właściciela?</DialogTitle>
+                                        <DialogActions>
+                                            <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
+                                            <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
+                                        </DialogActions>
+                                    </Dialog>
 
-                            <Dialog disableEscapeKeyDown open={isAdmin} onClose={handleClose}>
-                                <DialogTitle>Czy na pewno chcesz dodać poziom dostępu admin?</DialogTitle>
-                                <DialogActions>
-                                    <Button onClick={handleClose}>{t('confirm.no')}</Button>
-                                    <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
-                                </DialogActions>
-                            </Dialog>
+                                    <Dialog disableEscapeKeyDown open={isAdmin} onClose={handleClose}>
+                                        <DialogTitle>Czy na pewno chcesz dodać poziom dostępu admin?</DialogTitle>
+                                        <DialogActions>
+                                            <Button onClick={handleClose}>{t('confirm.no')}</Button>
+                                            <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
+                                        </DialogActions>
+                                    </Dialog>
 
-                            <Dialog disableEscapeKeyDown open={isRemoveAccessOpen} onClose={handleClose}>
-                                <DialogTitle>Usuń poziom dostępu</DialogTitle>
-                                <DialogContent>
-                                    <form onSubmit={handleAddSubmit}>
-                                        <FormControl fullWidth>
-                                            {!selectedRole &&
-                                                <InputLabel id="access-level-label">{t('profile.select_access_level')}</InputLabel>}
-                                            <Select
-                                                labelId="access-level-label"
-                                                value={selectedRole}
-                                                onChange={(event: SelectChangeEvent<string>) => handleAccessLevelChange(event)}
-                                                displayEmpty
-                                            >
-                                                {roles.map((role) => (
-                                                    <MenuItem key={role.value} value={role.value}>
-                                                        {role.label}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
-                                    </form>
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button onClick={handleClose}>{t('confirm.cancel')}</Button>
-                                    <Button onClick={handleConfirmRemove} disabled={!removeValid}>{t('profile.del')}</Button>
-                                </DialogActions>
-                            </Dialog>
+                                    <Dialog disableEscapeKeyDown open={isRemoveAccessOpen} onClose={handleClose}>
+                                        <DialogTitle>Usuń poziom dostępu</DialogTitle>
+                                        <DialogContent>
+                                            <form onSubmit={handleAddSubmit}>
+                                                <FormControl fullWidth>
+                                                    {!selectedRole &&
+                                                        <InputLabel
+                                                            id="access-level-label">{t('profile.select_access_level')}</InputLabel>}
+                                                    <Select
+                                                        labelId="access-level-label"
+                                                        value={selectedRole}
+                                                        onChange={(event: SelectChangeEvent<string>) => handleAccessLevelChange(event)}
+                                                        displayEmpty
+                                                    >
+                                                        {roles.map((role) => (
+                                                            <MenuItem key={role.value} value={role.value}>
+                                                                {role.label}
+                                                            </MenuItem>
+                                                        ))}
+                                                    </Select>
+                                                </FormControl>
+                                            </form>
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button onClick={handleClose}>{t('confirm.cancel')}</Button>
+                                            <Button onClick={handleConfirmRemove}
+                                                    disabled={!removeValid}>{t('profile.del')}</Button>
+                                        </DialogActions>
+                                    </Dialog>
 
-                            <Dialog disableEscapeKeyDown open={confirmRemove} onClose={handleConfirmClose}>
-                                <DialogTitle>Czy na pewno chcesz odebrać poziom dostępu?</DialogTitle>
-                                <DialogActions>
-                                    <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
-                                    <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
-                                </DialogActions>
-                            </Dialog>
+                                    <Dialog disableEscapeKeyDown open={confirmRemove} onClose={handleConfirmClose}>
+                                        <DialogTitle>Czy na pewno chcesz odebrać poziom dostępu?</DialogTitle>
+                                        <DialogActions>
+                                            <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
+                                            <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
+                                        </DialogActions>
+                                    </Dialog>
 
-                            <Dialog disableEscapeKeyDown open={successOpenRemove}>
-                                <DialogTitle>Poziom dostępu został odebrany</DialogTitle>
-                                <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
-                            </Dialog>
+                                    <Dialog disableEscapeKeyDown open={successOpenRemove}>
+                                        <DialogTitle>Poziom dostępu został odebrany</DialogTitle>
+                                        <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
+                                    </Dialog>
 
-                            <Dialog disableEscapeKeyDown open={successOpen}>
-                                <DialogTitle>Poziom dostępu został dodany</DialogTitle>
-                                <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
-                            </Dialog>
+                                    <Dialog disableEscapeKeyDown open={successOpen}>
+                                        <DialogTitle>Poziom dostępu został dodany</DialogTitle>
+                                        <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
+                                    </Dialog>
 
-                            <Dialog disableEscapeKeyDown open={errorOpen}>
-                                <DialogTitle>{errorOpenMessage}</DialogTitle>
-                                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
-                            </Dialog>
-                            </div>
+                                    <Dialog disableEscapeKeyDown open={errorOpen}>
+                                        <DialogTitle>{errorOpenMessage}</DialogTitle>
+                                        <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
+                                    </Dialog>
+                                </div>
                             </>
-                            )}
+                        )}
                     </Box>
                 </Grid>
             </Grid>

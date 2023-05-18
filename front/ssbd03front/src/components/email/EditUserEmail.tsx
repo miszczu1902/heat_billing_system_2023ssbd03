@@ -88,7 +88,6 @@ const EditUserEmail = () => {
             newEmail: email.toString(),
             version: parseInt(version)
         }
-        console.log(username);
         const fetchData = async () => {
             await axios.patch(`${API_URL}/accounts/${username}/email`,
                 changeEmailDTO, {
