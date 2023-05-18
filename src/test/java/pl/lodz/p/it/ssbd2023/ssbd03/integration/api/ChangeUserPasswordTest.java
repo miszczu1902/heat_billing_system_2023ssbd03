@@ -15,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ChangeUserPasswordTest extends BasicIntegrationConfigTest {
     private static final String PASSWORD = "Password$123";
     private static final String USERNAME = "johndoe";
-    private static final String USERNAME_FOR_PASSWORD_CHANGE= "mariasilva";
-    private static final String USERNAME_FOR_SUCCESS_PASSWORD_CHANGE= "janekowalski";
+    private static final String USERNAME_FOR_PASSWORD_CHANGE = "mariasilva";
+    private static final String USERNAME_FOR_SUCCESS_PASSWORD_CHANGE = "janekowalski";
     private static final String BAD_PASSWORD = "Pass";
     private static final String NEW_PASSWORD = PASSWORD + "1";
     private static final String URL_GET = "/accounts/" + USERNAME_FOR_PASSWORD_CHANGE;

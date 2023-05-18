@@ -15,5 +15,7 @@ public class LoginDTO {
             message = "Max length for username is between 6 - 16 ")
     private String username;
     @NotNull
+    @Size(min = 8, max = 32,
+            message = "Max length for password is between 8 - 32 ")
     private String password;
 }

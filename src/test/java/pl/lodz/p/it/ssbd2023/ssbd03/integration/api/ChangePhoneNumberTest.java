@@ -11,7 +11,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.OwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class ChangePhoneNumberTest extends BasicIntegrationConfigTest {
     @Before
