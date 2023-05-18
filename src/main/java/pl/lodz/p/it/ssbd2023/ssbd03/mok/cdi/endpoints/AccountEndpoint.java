@@ -228,7 +228,6 @@ public class AccountEndpoint {
         if (rollbackTX && retryTXCounter == 0) {
             throw AppException.createTransactionRollbackException();
         }
-        accountService.disableUserAccount(username, etag, versionDTO.getVersion());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
@@ -261,7 +260,6 @@ public class AccountEndpoint {
         if (rollbackTX && retryTXCounter == 0) {
             throw AppException.createTransactionRollbackException();
         }
-        accountService.enableUserAccount(username, etag, versionDTO.getVersion());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
