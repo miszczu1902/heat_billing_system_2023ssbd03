@@ -7,6 +7,7 @@ import io.restassured.http.Method;
 import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import lombok.Setter;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +25,9 @@ public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
     private static ObjectMapper mapper = new ObjectMapper();
 
     /* Test data */
+    @Setter
     private static String BEARER_TOKEN = "";
+    @Setter
     protected static String ETAG = "";
 
     protected static Response sendRequestAndGetResponse(Method method, String path, Object object, ContentType contentType) {

@@ -102,7 +102,7 @@ public class DisableEnableAccountTest extends BasicIntegrationConfigTest {
 
         JsonPath jsonPath = new JsonPath(getUserResponse.getBody().asString());
         int version = jsonPath.getInt("version");
-        VersionDTO versionDTO = new VersionDTO(version+1);
+        VersionDTO versionDTO = new VersionDTO(version + 1);
 
         Response enableUser = sendRequestAndGetResponse(Method.PATCH,
                 "/accounts/janekowalski/disable",

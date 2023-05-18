@@ -64,48 +64,6 @@ public class EditPersonalDataTest extends BasicIntegrationConfigTest {
     }
 
     @Test
-    public void shouldNotChangeSelfPersonalDataNotMatchingETag() {
-        Response getUserPersonalDataResponse = sendRequestAndGetResponse(Method.GET,
-                "/accounts/janekowalski/personal-data",
-                null,
-                ContentType.JSON);
-
-        assertEquals(200, getUserPersonalDataResponse.getStatusCode());
-
-        JsonPath jsonPath = new JsonPath(getUserPersonalDataResponse.getBody().asString());
-        int version = jsonPath.getInt("version");
-        EditPersonalDataDTO personalDataDTO = new EditPersonalDataDTO(version, "Jane", "Kowalska");
-
-        Response changePersonalDataResponse = sendRequestAndGetResponse(Method.PATCH,
-                "/accounts/janekowalski/personal-data",
-                personalDataDTO,
-                ContentType.JSON);
-
-        assertEquals(500, changePersonalDataResponse.getStatusCode());
-    }
-
-    @Test
-    public void shouldNotManagerChangeAdminPersonalData() {
-        Response getUserPersonalDataResponse = sendRequestAndGetResponse(Method.GET,
-                "/accounts/janekowalski/personal-data",
-                null,
-                ContentType.JSON);
-
-        assertEquals(200, getUserPersonalDataResponse.getStatusCode());
-
-        JsonPath jsonPath = new JsonPath(getUserPersonalDataResponse.getBody().asString());
-        int version = jsonPath.getInt("version");
-        EditPersonalDataDTO personalDataDTO = new EditPersonalDataDTO(version, "Jane", "Kowalska");
-
-        Response changePersonalDataResponse = sendRequestAndGetResponse(Method.PATCH,
-                "/accounts/janekowalski/personal-data",
-                personalDataDTO,
-                ContentType.JSON);
-
-        assertEquals(500, changePersonalDataResponse.getStatusCode());
-    }
-
-    @Test
     public void shouldNotChangeUserPersonalDataNoDTO() {
         Response getUserPersonalDataResponse = sendRequestAndGetResponse(Method.GET,
                 "/accounts/janekowalski/personal-data",

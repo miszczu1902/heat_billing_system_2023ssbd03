@@ -6,13 +6,11 @@ import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.interceptor.Interceptors;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
+import jakarta.persistence.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.ResetPasswordToken;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 
 import java.time.LocalDateTime;
@@ -40,7 +38,14 @@ public class ResetPasswordTokenFacade extends AbstractFacade<ResetPasswordToken>
     public ResetPasswordToken getResetPasswordByTokenValue(String tokenValue) {
         TypedQuery<ResetPasswordToken> query = em.createNamedQuery("ResetPasswordToken.getResetPasswordTokenByTokenValue", ResetPasswordToken.class);
         query.setParameter("tokenValue", tokenValue);
-        return query.getSingleResult();
+        try {
+            return query.getSingleResult();
+        } catch (PersistenceException pe) {
+            if (pe instanceof NoResultException) {
+                throw AppException.createNoResultException(pe.getCause());
+            }
+            throw AppException.createDatabaseException();
+        }
     }
 
     @RolesAllowed({Roles.GUEST, Roles.ADMIN})
