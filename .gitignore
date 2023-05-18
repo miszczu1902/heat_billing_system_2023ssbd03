@@ -40,4 +40,4 @@ build/
 .idea
 
 front/ssbd03front/src/consts.ts
-src/main/resources/config.properties
+#src/main/resources/config.properties
