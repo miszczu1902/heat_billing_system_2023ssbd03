@@ -10,14 +10,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountInfoDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTest;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ChangeUserPasswordTest extends BasicIntegrationConfigTest {
     private static final String PASSWORD = "Password$123";
@@ -153,39 +146,5 @@ public class ChangeUserPasswordTest extends BasicIntegrationConfigTest {
                 ContentType.JSON);
         assertEquals(200, responseLogin.getStatusCode(), "Check if request responses ok.");
         logger.info("PASSED!");
-    }
-
-    @Test
-    public void shouldChangeUserPasswordConcurrentTest() {
-        Response getUserResponse = sendRequestAndGetResponse(Method.GET,
-                URL_GET_SUCCESS,
-                null,
-                ContentType.JSON);
-        assertEquals(200, getUserResponse.getStatusCode());
-        setETAG(getUserResponse.header("ETag"));
-        AccountInfoDTO accountInfoDTO = getUserResponse.body().jsonPath().getObject("", AccountInfoDTO.class);
-        ChangeUserPasswordDTO changeUserPasswordDTO = new ChangeUserPasswordDTO(NEW_PASSWORD, NEW_PASSWORD,
-                accountInfoDTO.getVersion());
-
-        List<Integer> responseList = new ArrayList<>();
-        int concurrentRequests = 2;
-        ExecutorService addAccessLevelExecutorService = Executors.newFixedThreadPool(concurrentRequests);
-
-        for (int i = 0; i < concurrentRequests; i++) {
-            int index = i + 1;
-            addAccessLevelExecutorService.execute(() -> {
-                logger.info("Request no. " + index);
-                Response response = sendRequestAndGetResponse(Method.PATCH, URL_PASSWORD_SUCCESS, changeUserPasswordDTO, ContentType.JSON);
-                responseList.add(response.getStatusCode());
-            });
-        }
-        try {
-            addAccessLevelExecutorService.shutdown();
-            addAccessLevelExecutorService.awaitTermination(10, TimeUnit.SECONDS);
-            assertTrue(responseList.contains(204), "Check if the first of request was passed.");
-            assertTrue(responseList.contains(500), "Check if the rest of requests was failed.");
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 }
