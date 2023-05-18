@@ -143,12 +143,12 @@ const EnableAccount = () => {
       </Dialog>
 
       <Dialog disableEscapeKeyDown open={unblockedUserOpen}>
-                <DialogTitle>{t('disable_account.unblocked_user_one')}{username}{t('disable_account.unblocked_user_two')}</DialogTitle>
+                <DialogTitle>{t('enable_account.unblocked_user_one')}{username}{t('disable_account.unblocked_user_two')}</DialogTitle>
                 <Button onClick={handleUnblockedUserOpen}>{t('confirm.ok')}</Button>
       </Dialog>
 
       <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
-                <DialogTitle>{t('disable_account.authorization_error')}</DialogTitle>
+                <DialogTitle>{t('enable_account.authorization_error')}</DialogTitle>
                 <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>
             </Dialog>
     </div>

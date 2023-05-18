@@ -124,8 +124,8 @@
     "confirmation_status": "Stan potwierdzenia",
     "active": "Aktywny",
     "inactive": "Nieaktywny",
-    "confirmed": "Potwierdzony",
-    "unconfirmed": "Niepotwierdzony",
+    "confirmed": "Odblokowany",
+    "unconfirmed": "Zablokowany",
     "label_rows_per_page": "Wierszy na stronę"
   },
   "enable_account":
@@ -158,9 +158,20 @@
   {
     "title": "Informacje o koncie",
     "phone_number_error" : "Numer telefonu musi zawierać 9 cyfr.",
+    "set_phone_number" : "Wprowadź numer telefonu",
     "license_error" : "Licencja musi skladać się z 20 znaków.",
     "license" : "Licencja",
-    "access_levels" : "Poziom dostępu"
+    "set_license" : "Wprowadź licencję",
+    "access_levels" : "Poziom dostępu",
+    "user_password" : "Hasło użytkownika ",
+    "add" : "Dodaj",
+    "del" : "Usuń",
+    "access_level" : "poziom dostępu",
+    "select_access_level" : "Wybierz poziom",
+    "owner" : "WŁAŚCICIEL",
+    "manager" : "ZARZĄDCA",
+    "admin" : "ADMINISTRATOR",
+    "access_level_form_title" : "Wypełnij formularz dodania uprawnień zarządcy"
   },
   "page_not_found":
   {
