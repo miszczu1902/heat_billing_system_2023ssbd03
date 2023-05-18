@@ -145,7 +145,8 @@
     "success_two": " został zablokowany",
     "error": "Wystąpił błąd podczas zablokowania użytkownika ",
     "blocked_user_one": "Użytkownik ",
-    "blocked_user_two": " jest już zablokowany"
+    "blocked_user_two": " jest już zablokowany",
+    "authorization_error": "Nie masz uprawnień do zablokowania użytkownika "
   },
   "landing_page":
   {
@@ -159,5 +160,9 @@
     "license_error" : "Licencja musi skladać się z 20 znaków.",
     "license" : "Licencja",
     "access_levels" : "Poziom dostępu"
+  },
+  "page_not_found":
+  {
+    "title": "404 Strony nie znalezniono"
   }
 }

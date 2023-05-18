@@ -39,6 +39,8 @@ export default function EditUserPersonalData() {
   var [successOpen, setSuccessOpen] = React.useState(false);
   var [errorOpen, setErrorOpen] = React.useState(false);
 
+  const [authorizationErrorOpen, setAuthorizationErrorOpen] = React.useState(false);
+
     const fetchData = async () => {
       const response = await axios.get(`${API_URL}/accounts/${username}/personal-data`, {
         headers: {
@@ -50,6 +52,12 @@ export default function EditUserPersonalData() {
         setSurname(response.data.surname.toString());
         setCookie("etag", response.headers.etag);
         setVersion(response.data.version.toString());
+      })
+      .catch(error => {
+        if(error.response.status === 403) {
+          setAuthorizationErrorOpen(true);
+          return;
+        }
       });
   };
 
@@ -132,6 +140,10 @@ export default function EditUserPersonalData() {
         setSuccessOpen(true);
       })
       .catch(error => {
+        if(error.response.status === 403) {
+          setAuthorizationErrorOpen(true);
+          return;
+        }
         setErrorOpen(true);
       });
     }
@@ -156,6 +168,13 @@ export default function EditUserPersonalData() {
   const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
     if (reason !== 'backdropClick') {
       setErrorOpen(false);
+    }
+  };
+
+  const handleAuthorizationErrorOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+    if (reason !== 'backdropClick') {
+      setAuthorizationErrorOpen(false);
+      handleConfirmClose(event, reason);
     }
   };
 
@@ -226,6 +245,11 @@ export default function EditUserPersonalData() {
       <Dialog disableEscapeKeyDown open={errorOpen}>
         <DialogTitle>{t('personal_data.edit_error')}{username}</DialogTitle>
         <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
+      </Dialog>
+
+      <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
+                <DialogTitle>{t('disable_account.authorization_error')}</DialogTitle>
+                <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>
       </Dialog>
     </div>
   );
