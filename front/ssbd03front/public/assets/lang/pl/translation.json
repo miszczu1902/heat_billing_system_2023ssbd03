@@ -181,5 +181,14 @@
   "page_not_found":
   {
     "title": "404 Strony nie znalezniono"
+  },
+  "email":
+  {
+    "title": "Zmień email",
+    "new_email_text": "Wprowadź nowy email",
+    "form_title": "Wypełnij formularz zmiany emaila",
+    "new_email": "Nowy email",
+    "confirm_changes": "Czy jesteś pewien, że chcesz zmienić email?",
+    "success_title": "Link potwierdzający został wysłany na nowy adres email."
   }
 }
