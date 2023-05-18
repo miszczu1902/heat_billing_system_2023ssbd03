@@ -88,7 +88,7 @@ public class SystemScheduler {
                 account.setIsEnable(true);
                 account.getLoginData().setInvalidLoginCounter(0);
                 accountFacade.edit(account);
-                mailSender.sendInformationAccountEnabled(account.getEmail());
+                mailSender.sendInformationAccountEnabled(account.getEmail(),account.getLanguage_());
             });
         }
     }

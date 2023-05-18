@@ -96,6 +96,7 @@ const EnableAccount = () => {
   const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
     if (reason !== 'backdropClick') {
       setSuccessOpen(false);
+      window.location.reload();
     }
   }
 
@@ -143,7 +144,7 @@ const EnableAccount = () => {
       </Dialog>
 
       <Dialog disableEscapeKeyDown open={unblockedUserOpen}>
-                <DialogTitle>{t('enable_account.unblocked_user_one')}{username}{t('disable_account.unblocked_user_two')}</DialogTitle>
+        <DialogTitle>{t('enable_account.unblocked_user_one')}{username}{t('enable_account.unblocked_user_two')}</DialogTitle>
                 <Button onClick={handleUnblockedUserOpen}>{t('confirm.ok')}</Button>
       </Dialog>
 

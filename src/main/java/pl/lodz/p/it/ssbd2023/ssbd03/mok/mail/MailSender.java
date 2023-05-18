@@ -2,16 +2,22 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mok.mail;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.Stateless;
+import jakarta.inject.Inject;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.Internationalization;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 
 import java.util.Properties;
 
 @Stateless
 public class MailSender {
+
+    @Inject
+    private Internationalization internationalization;
+
     private static final String MAIL_SUBJECT_CONFIRMATION_LINK = "Confirm your new email";
     private static final String CHANGED_PASSWORD_BY_ADMIN_CONTENT_MESSAGE = """
             Administrator changed your password.
@@ -81,29 +87,26 @@ public class MailSender {
                         " access level has been removed from your account.");//TODO - tu trzeba zrobić resource bundle
     }
 
-    public void sendInformationAccountDisabled(String to) {
-        sendEmail(to, "Account has been disabled",
-                "Dear User, \n" +
-                        "Your account has been disabled");
+    public void sendInformationAccountDisabled(String to, String language) {
+        sendEmail(to, internationalization.getMessage("mail.account.disabled.title", language),
+                internationalization.getMessage("mail.account.disabled.message", language));
     }
 
-    public void sendInformationAccountEnabled(String to) {
-        sendEmail(to, "Account has been enabled",
-                "Dear User, \n" +
-                        "Your account has been enabled");
+    public void sendInformationAccountEnabled(String to, String language) {
+        sendEmail(to, internationalization.getMessage("mail.account.enabled.title", language),
+                internationalization.getMessage("mail.account.enabled.message", language));
     }
 
-    public void sendInformationAccountActivated(String to) {
-        sendEmail(to, "Account has been activated",
-                "Dear User, \n" +
-                        "Your account has been activated");
+    public void sendInformationAccountActivated(String to, String language) {
+        sendEmail(to, internationalization.getMessage("mail.account.activated.title", language),
+                internationalization.getMessage("mail.account.activated.message", language));
     }
 
     public void sendReminderAboutAccountConfirmation(String to, String activationToken) {
         sendEmail(to, "Account is waiting for activation",
                 "Dear User, \n" +
                         "Your account is waiting for activation. \n" +
-                "Activation link: " + properties.getProperty("activation.url") + activationToken);
+                        "Activation link: " + properties.getProperty("activation.url") + activationToken);
     }
 
     private void sendEmail(String to, String subject, String content) {
