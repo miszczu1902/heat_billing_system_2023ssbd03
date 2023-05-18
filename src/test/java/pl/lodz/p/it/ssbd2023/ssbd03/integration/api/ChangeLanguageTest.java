@@ -62,6 +62,4 @@ public class ChangeLanguageTest extends BasicIntegrationConfigTest {
 
         logger.info("PASSED!");
     }
-
-
 }

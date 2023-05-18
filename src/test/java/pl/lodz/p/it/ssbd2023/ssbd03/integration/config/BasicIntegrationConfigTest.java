@@ -19,7 +19,6 @@ import java.util.Optional;
 
 import static io.restassured.RestAssured.*;
 
-
 public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
     /* RestAssured config */
     protected static Logger logger = LoggerFactory.getLogger("e2e-tests");
