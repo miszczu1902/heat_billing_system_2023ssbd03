@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountInfoDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.OwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTest;
 
@@ -22,10 +23,10 @@ public class ChangePhoneNumberTest extends BasicIntegrationConfigTest {
 
     @Test
     public void changePhoneNumberTest() {
-        Response response = sendRequestAndGetResponse(Method.GET, "/accounts/self/owner", null, null);
-        OwnerDTO oldData = response.body().jsonPath().getObject("", OwnerDTO.class);
+        Response response = sendRequestAndGetResponse(Method.GET, "/accounts/self", null, null);
+        AccountInfoDTO accountInfoDTO = response.body().jsonPath().getObject("", AccountInfoDTO.class);
         ChangePhoneNumberDTO newPhoneNumber = new ChangePhoneNumberDTO(RandomStringUtils.randomNumeric(9));
-        newPhoneNumber.setVersion(oldData.getVersion());
+        newPhoneNumber.setVersion(accountInfoDTO.getVersion());
 
         response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/phone-number", newPhoneNumber, ContentType.JSON);
         int statusCode = response.getStatusCode();
@@ -33,15 +34,15 @@ public class ChangePhoneNumberTest extends BasicIntegrationConfigTest {
 
         String actualPhoneNumber = sendRequestAndGetResponse(Method.GET, "/accounts/self/owner", null, null)
                 .body().jsonPath().getObject("", OwnerDTO.class).getPhoneNumber();
-        assertNotEquals(oldData.getPhoneNumber(), actualPhoneNumber, "Compare phone numbers.");
+        assertNotEquals(accountInfoDTO.getPhoneNumber(), actualPhoneNumber, "Compare phone numbers.");
     }
 
     @Test
     public void tryToChangeOnNotUniquePhoneNumberTest() {
-        Response response = sendRequestAndGetResponse(Method.GET, "/accounts/self/owner", null, null);
-        OwnerDTO oldData = response.body().jsonPath().getObject("", OwnerDTO.class);
-        ChangePhoneNumberDTO newPhoneNumber = new ChangePhoneNumberDTO(oldData.getPhoneNumber());
-        newPhoneNumber.setVersion(oldData.getVersion());
+        Response response = sendRequestAndGetResponse(Method.GET, "/accounts/self", null, null);
+        AccountInfoDTO accountInfoDTO = response.body().jsonPath().getObject("", AccountInfoDTO.class);
+        ChangePhoneNumberDTO newPhoneNumber = new ChangePhoneNumberDTO(accountInfoDTO.getPhoneNumber());
+        newPhoneNumber.setVersion(accountInfoDTO.getVersion());
 
         response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/phone-number", newPhoneNumber, ContentType.JSON);
         int statusCode = response.getStatusCode();
@@ -49,7 +50,7 @@ public class ChangePhoneNumberTest extends BasicIntegrationConfigTest {
 
         newPhoneNumber.setPhoneNumber("123456789");
 
-        sendRequestAndGetResponse(Method.GET, "/accounts/self/owner", null, null);
+        sendRequestAndGetResponse(Method.GET, "/accounts/self", null, null);
         response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/phone-number", newPhoneNumber, ContentType.JSON);
         statusCode = response.getStatusCode();
         assertEquals(409, statusCode, "Check if modification failed.");
