@@ -26,6 +26,8 @@ const EnableAccount = () => {
 
   const [unblockedUserOpen, setUnblockedUserOpen] = React.useState(false);
 
+  const [authorizationErrorOpen, setAuthorizationErrorOpen] = React.useState(false);
+
     const fetchData = async () => {
       await axios.get(`${API_URL}/accounts/${username}`, {
         headers: {
@@ -36,6 +38,12 @@ const EnableAccount = () => {
         setCookie("etag", response.headers.etag);
         setVersion(response.data.version);
         setEnable(response.data.isEnable);
+      })
+      .catch(error => {
+        if(error.response.status === 403) {
+          setAuthorizationErrorOpen(true);
+          return;
+        }
       });
   };
 
@@ -54,6 +62,10 @@ const EnableAccount = () => {
       setSuccessOpen(true);
     })
     .catch(error => {
+      if(error.response.status === 403) {
+        setAuthorizationErrorOpen(true);
+        return;
+      }
       setErrorOpen(true);
     });
   };
@@ -100,6 +112,13 @@ const EnableAccount = () => {
     }
   };
 
+  const handleAuthorizationErrorOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+    if (reason !== 'backdropClick') {
+      setAuthorizationErrorOpen(false);
+      handleConfirmClose(event, reason);
+    }
+  };
+
   return (
     <div>
       <div>
@@ -126,6 +145,11 @@ const EnableAccount = () => {
       <Dialog disableEscapeKeyDown open={unblockedUserOpen}>
                 <DialogTitle>{t('disable_account.unblocked_user_one')}{username}{t('disable_account.unblocked_user_two')}</DialogTitle>
                 <Button onClick={handleUnblockedUserOpen}>{t('confirm.ok')}</Button>
+      </Dialog>
+
+      <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
+                <DialogTitle>{t('disable_account.authorization_error')}</DialogTitle>
+                <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>
             </Dialog>
     </div>
   );

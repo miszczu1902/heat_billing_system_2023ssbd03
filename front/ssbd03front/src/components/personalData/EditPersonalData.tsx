@@ -38,6 +38,8 @@ const EditPersonalData = () => {
   const [successOpen, setSuccessOpen] = React.useState(false);
   const [errorOpen, setErrorOpen] = React.useState(false);
 
+  const [authorizationErrorOpen, setAuthorizationErrorOpen] = React.useState(false);
+
     const fetchData = async () => {
       const response = await axios.get(`${API_URL}/accounts/self/personal-data`, {
         headers: {
@@ -49,6 +51,12 @@ const EditPersonalData = () => {
         setSurname(response.data.surname.toString());
         setCookie("etag", response.headers.etag);
         setVersion(response.data.version.toString());
+      })
+      .catch(error => {
+        if(error.response.status === 403) {
+          setAuthorizationErrorOpen(true);
+          return;
+        }
       });
   };
 
@@ -130,6 +138,10 @@ const EditPersonalData = () => {
         setSuccessOpen(true);
       })
       .catch(error => {
+        if(error.response.status === 403) {
+          setAuthorizationErrorOpen(true);
+          return;
+        }
         setErrorOpen(true);
       });
     }
@@ -154,6 +166,13 @@ const EditPersonalData = () => {
   const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
     if (reason !== 'backdropClick') {
       setErrorOpen(false);
+    }
+  };
+
+  const handleAuthorizationErrorOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+    if (reason !== 'backdropClick') {
+      setAuthorizationErrorOpen(false);
+      handleConfirmClose(event, reason);
     }
   };
 
@@ -223,6 +242,11 @@ const EditPersonalData = () => {
       <Dialog disableEscapeKeyDown open={errorOpen}>
         <DialogTitle>{t('personal_data.error')}</DialogTitle>
         <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
+      </Dialog>
+
+      <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
+                <DialogTitle>{t('disable_account.authorization_error')}</DialogTitle>
+                <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>
       </Dialog>
     </div>
   );

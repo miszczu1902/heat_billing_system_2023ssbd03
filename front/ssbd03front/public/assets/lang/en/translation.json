@@ -145,7 +145,8 @@
     "success_two": " has been blocked",
     "error": "An error occurred while blocking the user ",
     "blocked_user_one": "User ",
-    "blocked_user_two": " is already blocked"
+    "blocked_user_two": " is already blocked",
+    "authorization_error": "You do not have permission to block this user"
   },
   "landing_page":
   {
@@ -159,5 +160,9 @@
     "license_error" : "The license must consist of 20 characters.",
     "license" : "License",
     "access_levels" : "Access levels"
+  },
+  "page_not_found":
+  {
+    "title": "404 Page not found"
   }
 }
