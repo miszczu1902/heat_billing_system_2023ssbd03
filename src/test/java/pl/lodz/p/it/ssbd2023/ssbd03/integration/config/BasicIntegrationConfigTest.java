@@ -7,6 +7,7 @@ import io.restassured.http.Method;
 import io.restassured.parsing.Parser;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import lombok.Setter;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,13 +19,16 @@ import java.util.Optional;
 
 import static io.restassured.RestAssured.*;
 
+
 public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
     /* RestAssured config */
     protected static Logger logger = LoggerFactory.getLogger("e2e-tests");
     private static ObjectMapper mapper = new ObjectMapper();
 
     /* Test data */
+    @Setter
     private static String BEARER_TOKEN = "";
+    @Setter
     protected static String ETAG = "";
 
     protected static Response sendRequestAndGetResponse(Method method, String path, Object object, ContentType contentType) {

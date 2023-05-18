@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.integration.api;
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ResetPasswordDTO;
@@ -23,6 +24,12 @@ public class ResetPasswordTest extends BasicIntegrationConfigTest {
     );
     private static final String USERNAME_FOR_SUCCESS_REQUEST = "mariasilva";
     private static final String URL_RESET_PASSWORD = "/accounts/reset-password";
+
+    @BeforeClass
+    public static void prepareTest() {
+        setETAG("");
+        setBEARER_TOKEN("");
+    }
 
     @Test
     public void shouldReturnConflictForNotActivatedAccount() {
