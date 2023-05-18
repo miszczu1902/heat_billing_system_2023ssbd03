@@ -92,7 +92,7 @@
   {
     "error_token": "No valid password reset token, redirecting...",
     "password_change": "Password change",
-    "change_password": "Change passwords",
+    "change_password": "Change password",
     "new_password": "A new password"
   },
   "register":

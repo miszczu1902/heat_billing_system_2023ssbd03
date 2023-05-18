@@ -171,13 +171,13 @@ const ResetPassword = () => {
                         <Typography variant="h5">{t('reset_password.password_change')}</Typography>
                         <Box component="form" onSubmit={handleSubmit}>
                             <Box component="form">
-                                <TextField fullWidth margin="normal" label={t('reset_password.new_password')} type="password"
+                                <TextField fullWidth margin="normal" label={t('edit_password.label_text_new_password')} type="password"
                                            value={newPassword}
                                            helperText={t('edit_password.help_text_new_password')} onChange={handleNewPasswordChange}/>
                                 <div className="form-group" style={{textAlign: "center"}}>
                                     {newPasswordError}
                                 </div>
-                                <TextField fullWidth margin="normal" label={t('edit_password.label_text_new_password')} type="password"
+                                <TextField fullWidth margin="normal" label={t('edit_password.label_text_repeated_password')} type="password"
                                            helperText={t('edit_password.help_text_repeated_password')} onChange={handleRepeatedNewPasswordChange}
                                            value={repeatedNewPassword}/>
                                 <div className="form-group">
