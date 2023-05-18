@@ -172,5 +172,9 @@
     "manager" : "MANAGER",
     "admin" : "ADMIN",
     "access_level_form_title" : "Fill in the form of adding administrator permissions"
+  },
+  "page_not_found":
+  {
+    "title": "404 Page not found"
   }
 }
