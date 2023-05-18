@@ -17,6 +17,8 @@ export default function ChangePhoneNumber() {
     const {t, i18n} = useTranslation();
     const [cookies] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
+    const [etag, setEtag] = React.useState(false);
+    const [version, setVersion] = React.useState("");
     const [open, setOpen] = React.useState(false);
     const [confirmOpen, setConfirmOpen] = React.useState(false);
     const [phoneNumber, setPhoneNumber] = React.useState("");
@@ -48,6 +50,18 @@ export default function ChangePhoneNumber() {
     };
 
     const handleClickOpen = () => {
+        const fetchData = async () => {
+            await axios.get(`${API_URL}/accounts/self`, {
+                headers: {
+                    Authorization: token
+                }
+            })
+                .then(response => {
+                    setEtag(response.headers["etag"]);
+                    setVersion(response.data.version)
+                });
+        };
+        fetchData();
         setOpen(true);
     };
 
@@ -68,13 +82,15 @@ export default function ChangePhoneNumber() {
             setConfirmOpen(false);
         }
         const changePhoneNumberDTO = {
-            phoneNumber: phoneNumber.toString()
+            phoneNumber: phoneNumber.toString(),
+            version: parseInt(version)
         }
 
         axios.patch(`${API_URL}/accounts/self/phone-number`,
             changePhoneNumberDTO, {
                 headers: {
                     'Authorization': token,
+                    'If-Match': etag,
                     'Content-Type': 'application/json'
                 },
             })
