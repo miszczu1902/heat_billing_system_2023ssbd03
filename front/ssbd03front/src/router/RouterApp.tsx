@@ -15,6 +15,8 @@ import ChangePhoneNumber from "../components/owner/ChangePhoneNumber";
 import EditUserPassword from "../components/passwords/EditUserPassword";
 import Profile from "../components/account/Profile";
 import EditEmail from "../components/email/EditEmail";
+import ConfirmEmail from "../components/email/ConfirmEmail";
+import EditUserEmail from "../components/email/EditUserEmail";
 
 const router = createBrowserRouter([
     {
@@ -49,13 +51,9 @@ const router = createBrowserRouter([
                         element: <EditUserPersonalData/>
                     },
                     {
-                        path: '/accounts/self/email',
-                        element: <EditEmail/>
+                        path: '/accounts/:username/email',
+                        element: <EditUserEmail/>
                     },
-                    // {
-                    //     path: '/accounts/:username/email',
-                    //     element: <EditUserEmail/>
-                    // },
                     {
                         path: '/accounts/:username/enable',
                         element: <EnableAccount/>
@@ -93,6 +91,14 @@ const router = createBrowserRouter([
             {
                 path: "/accounts/self/phone-number",
                 element: <ChangePhoneNumber/>
+            },
+            {
+                path: '/accounts/self/email',
+                element: <EditEmail/>
+            },
+            {
+                path: '/accounts/self/confirm-new-email/:activationToken',
+                element: <ConfirmEmail/>
             }
         ]
     }

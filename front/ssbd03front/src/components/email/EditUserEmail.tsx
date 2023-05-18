@@ -13,8 +13,9 @@ import {API_URL} from '../../consts';
 import {useCookies} from 'react-cookie';
 import {useTranslation} from "react-i18next";
 import ConfirmEmail from "./ConfirmEmail";
+import {useParams} from "react-router-dom";
 
-const EditEmail = () => {
+const EditUserEmail = () => {
     const {t} = useTranslation();
     const [cookies] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
@@ -23,6 +24,7 @@ const EditEmail = () => {
     const [open, setOpen] = React.useState(false);
     const [confirmOpen, setConfirmOpen] = React.useState(false);
     const [email, setEmail] = React.useState("");
+    const username = useParams().username;
 
     const [emailError, setEmailError] = React.useState("");
     const [dataError, setDataError] = React.useState("");
@@ -52,7 +54,7 @@ const EditEmail = () => {
 
     const handleClickOpen = () => {
         const fetchData = async () => {
-            await axios.get(`${API_URL}/accounts/self`, {
+            await axios.get(`${API_URL}/accounts/${username}`, {
                 headers: {
                     Authorization: token
                 }
@@ -86,22 +88,25 @@ const EditEmail = () => {
             newEmail: email.toString(),
             version: parseInt(version)
         }
-
-        axios.patch(`${API_URL}/accounts/self/email`,
-            changeEmailDTO, {
-                headers: {
-                    'Authorization': token,
-                    'If-Match': etag,
-                    'Content-Type': 'application/json'
-                },
-            })
-            .then(response => {
-                setSuccessOpen(true);
-            })
-            .catch(error => {
-                setErrorOpenMessage(error.response.data.message)
-                setErrorOpen(true);
-            });
+        console.log(username);
+        const fetchData = async () => {
+            await axios.patch(`${API_URL}/accounts/${username}/email`,
+                changeEmailDTO, {
+                    headers: {
+                        'Authorization': token,
+                        'If-Match': etag,
+                        'Content-Type': 'application/json'
+                    },
+                })
+                .then(response => {
+                    setSuccessOpen(true);
+                })
+                .catch(error => {
+                    setErrorOpenMessage(error.response.data.message)
+                    setErrorOpen(true);
+                });
+        };
+        fetchData();
         handleClose(event, reason);
     }
 
@@ -186,4 +191,4 @@ const EditEmail = () => {
     );
 }
 
-export default EditEmail;
+export default EditUserEmail;

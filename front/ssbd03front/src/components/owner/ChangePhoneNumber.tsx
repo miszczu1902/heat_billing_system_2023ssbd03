@@ -13,7 +13,7 @@ import {API_URL} from '../../consts';
 import {useCookies} from 'react-cookie';
 import {useTranslation} from "react-i18next";
 
-export default function ChangePhoneNumber() {
+const ChangePhoneNumber = () => {
     const {t, i18n} = useTranslation();
     const [cookies] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
@@ -184,3 +184,5 @@ export default function ChangePhoneNumber() {
         </div>
     );
 }
+
+export default ChangePhoneNumber;
