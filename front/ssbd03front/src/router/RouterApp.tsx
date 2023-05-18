@@ -14,7 +14,6 @@ import ActivateFromEmail from "../components/registration/ActivateFromEmail";
 import ChangePhoneNumber from "../components/owner/ChangePhoneNumber";
 import EditUserPassword from "../components/passwords/EditUserPassword";
 import Profile from "../components/account/Profile";
-import SelfProfile from "../components/account/SelfProfile";
 import EditEmail from "../components/email/EditEmail";
 import ConfirmEmail from "../components/email/ConfirmEmail";
 import EditUserEmail from "../components/email/EditUserEmail";
@@ -38,10 +37,6 @@ const router = createBrowserRouter([
                     {
                         path: '/accounts',
                         element: <AccountsList/>
-                    },
-                    {
-                        path: '/accounts/self',
-                        element: <SelfProfile/>
                     },
                     {
                         path: '/accounts/self/owner',

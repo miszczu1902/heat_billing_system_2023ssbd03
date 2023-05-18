@@ -160,7 +160,6 @@ const NavbarPanel: React.FC = () => {
                             {
                                 (role.includes('ADMIN')) && <Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/accounts/self/admin')}><UserInfoIcon/></Button>
                             }
-                            {/*<Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/accounts/self')}><UserInfoIcon/></Button>*/}
                         </>
                     )}
                 </ButtonGroup>
