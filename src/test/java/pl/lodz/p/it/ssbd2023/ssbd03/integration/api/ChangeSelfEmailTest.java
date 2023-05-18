@@ -18,7 +18,7 @@ public class ChangeSelfEmailTest extends BasicIntegrationConfigTest {
     @Test
     public void ChangeSelfEmailTest() {
         initialize();
-        String email=RandomStringUtils.randomAlphanumeric(10) + "@fakemailik.com";
+        String email = RandomStringUtils.randomAlphanumeric(10) + "@fakemailik.com";
         Response response = sendRequestAndGetResponse(Method.GET, "/accounts/self", null, ContentType.JSON);
         assertEquals(200, response.getStatusCode());
         AccountInfoDTO accountInfoDTO = response.body().jsonPath().getObject("", AccountInfoDTO.class);
@@ -47,7 +47,7 @@ public class ChangeSelfEmailTest extends BasicIntegrationConfigTest {
     @Test
     public void ChangeSelfEmailNoEtagTest() {
         initialize();
-        String email=RandomStringUtils.randomAlphanumeric(10) + "@fakemailik.com";
+        String email = RandomStringUtils.randomAlphanumeric(10) + "@fakemailik.com";
         ChangeEmailDTO changeEmailDTO = new ChangeEmailDTO(email);
 
         Response response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/email", changeEmailDTO, ContentType.JSON);
@@ -58,12 +58,12 @@ public class ChangeSelfEmailTest extends BasicIntegrationConfigTest {
     @Test
     public void ChangeSelfEmailWrongVersionTest() {
         initialize();
-        String email=RandomStringUtils.randomAlphanumeric(10) + "@fakemailik.com";
+        String email = RandomStringUtils.randomAlphanumeric(10) + "@fakemailik.com";
         Response response = sendRequestAndGetResponse(Method.GET, "/accounts/self", null, ContentType.JSON);
         assertEquals(200, response.getStatusCode());
         AccountInfoDTO accountInfoDTO = response.body().jsonPath().getObject("", AccountInfoDTO.class);
         ChangeEmailDTO changeEmailDTO = new ChangeEmailDTO(email);
-        changeEmailDTO.setVersion(accountInfoDTO.getVersion()+1);
+        changeEmailDTO.setVersion(accountInfoDTO.getVersion() + 1);
 
         response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/email", changeEmailDTO, ContentType.JSON);
         int statusCode = response.getStatusCode();

@@ -10,7 +10,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTes
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ResetPasswordTest  extends BasicIntegrationConfigTest {
+public class ResetPasswordTest extends BasicIntegrationConfigTest {
     private static final CreateOwnerDTO USER_NOT_ACTIVE = new CreateOwnerDTO(
             "Bartosz",
             "Miszczak",

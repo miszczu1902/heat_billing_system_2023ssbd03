@@ -23,7 +23,7 @@ public class ChangeLanguageTest extends BasicIntegrationConfigTest {
         assertEquals(204, statusCode, "Check if request responses no content.");
 
         Response responseGet = sendRequestAndGetResponse(Method.GET, "/accounts/self/manager", null, null);
-         statusCode = responseGet.getStatusCode();
+        statusCode = responseGet.getStatusCode();
         ManagerDTO managerDTO = responseGet.body().as(ManagerDTO.class);
 
         assertEquals(200, statusCode, "Check if request responses ok.");

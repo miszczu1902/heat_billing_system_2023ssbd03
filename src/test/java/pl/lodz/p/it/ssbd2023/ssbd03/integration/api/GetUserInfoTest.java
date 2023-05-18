@@ -5,8 +5,8 @@ import io.restassured.response.Response;
 import org.junit.Test;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountInfoDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTest;
 import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.Account;
+import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
