@@ -218,10 +218,10 @@ const EditPassword = () => {
     return (
         <div>
             <div>
-                <Button onClick={handleClickOpen} variant="contained">Zmień hasło</Button>
+                <Button onClick={handleClickOpen} variant="contained">{t('edit_password.button_title')}</Button>
             </div>
             <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-                <DialogTitle>{t('edit_password.change_title')}</DialogTitle>
+                <DialogTitle>{t('edit_password.form_title')}</DialogTitle>
                 <DialogContent>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
                         <form onSubmit={handleSumbit}>
@@ -230,7 +230,7 @@ const EditPassword = () => {
                                     <div className="form-group" onChange={handleOldPasswordChange}>
                                         <TextField
                                             id="outlined-helperText"
-                                            label="Stare hasło"
+                                            label={t('edit_password.label_text_old_password')}
                                             defaultValue= {oldPassword}
                                             type="password"
                                             helperText={t('edit_password.help_text_old_password')}
@@ -244,7 +244,7 @@ const EditPassword = () => {
                                     <div className="form-group" onChange={handleNewPasswordChange}>
                                         <TextField
                                             id="outlined-helperText"
-                                            label="Nowe hasło"
+                                            label={t('edit_password.label_text_new_password')}
                                             defaultValue= {newPassword}
                                             type="password"
                                             helperText={t('edit_password.help_text_new_password')}
@@ -258,7 +258,7 @@ const EditPassword = () => {
                                     <div className="form-group" onChange={handleRepeatedNewPasswordChange}>
                                         <TextField
                                             id="outlined-helperText"
-                                            label="Powtórz nowe hasło"
+                                            label={t('edit_password.label_text_repeated_password')}
                                             defaultValue= {repeatedNewPassword}
                                             type="password"
                                             helperText={t('edit_password.help_text_repeated_password')}
@@ -283,7 +283,7 @@ const EditPassword = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>{t('confirm.cancel')}</Button>
-                    <Button onClick={handleConfirm} disabled={!validData}>Ok</Button>
+                    <Button onClick={handleConfirm} disabled={!validData}>{t("confirm.ok")}</Button>
                 </DialogActions>
             </Dialog>
 
