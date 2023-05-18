@@ -29,11 +29,15 @@
     "data_error": "Wprowadź poprawne dane",
     "help_text_old_password": "Wprowadź stare hasło",
     "help_text_new_password": "Wprowadź nowe hasło",
-    "label_text_new_password": "Powtórzone nowe hasło",
     "help_text_repeated_password": "Powtórz nowe hasło",
+    "label_text_old_password": "Stare hasło",
+    "label_text_new_password": "Nowe hasło",
+    "label_text_repeated_password": "Powtórzone nowe hasło",
     "change_title": "Wypełnij formularz zmiany hasła",
     "success_title": "Hasło zostało zmienione",
-    "confirm_title": "Czy na pewno chcesz zmienić swoje hasło?"
+    "confirm_title": "Czy na pewno chcesz zmienić swoje hasło?",
+    "form_title" : "Wypełnij formularz zmiany hasła",
+    "button_title" : "Zmień hasło"
   },
   "login":
   {
@@ -88,8 +92,9 @@
   {
     "error_token": "Brak ważnego tokenu do resetu hasła, trwa przekierowanie...",
     "password_change": "Zmiana hasła",
-    "change_password": "Zmień hasła",
-    "new_password": "Nowe hasło"
+    "change_password": "Zmień hasło",
+    "new_password": "Nowe hasło",
+    "back_to_login": "Powrót do logowania"
   },
   "register":
   {

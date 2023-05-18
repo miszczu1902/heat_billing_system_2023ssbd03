@@ -111,6 +111,10 @@ const ResetPassword = () => {
         }
     }
 
+    const backToLogin = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+        navigate('/login');
+    }
+
     const handleConfirmConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
 
         if (token !== null) {
@@ -171,13 +175,13 @@ const ResetPassword = () => {
                         <Typography variant="h5">{t('reset_password.password_change')}</Typography>
                         <Box component="form" onSubmit={handleSubmit}>
                             <Box component="form">
-                                <TextField fullWidth margin="normal" label={t('reset_password.new_password')} type="password"
+                                <TextField fullWidth margin="normal" label={t('edit_password.label_text_new_password')} type="password"
                                            value={newPassword}
                                            helperText={t('edit_password.help_text_new_password')} onChange={handleNewPasswordChange}/>
                                 <div className="form-group" style={{textAlign: "center"}}>
                                     {newPasswordError}
                                 </div>
-                                <TextField fullWidth margin="normal" label={t('edit_password.label_text_new_password')} type="password"
+                                <TextField fullWidth margin="normal" label={t('edit_password.label_text_repeated_password')} type="password"
                                            helperText={t('edit_password.help_text_repeated_password')} onChange={handleRepeatedNewPasswordChange}
                                            value={repeatedNewPassword}/>
                                 <div className="form-group">
@@ -187,12 +191,17 @@ const ResetPassword = () => {
                             <div className="form-group">
                                 {newAndRepeatedNewPasswordNotSameError}
                             </div>
-                            <Button onClick={handleConfirm} fullWidth variant="contained">{t('reset_password.change_password')}</Button>
+                            <Button onClick={handleConfirm} fullWidth variant="contained" style={{marginBottom: '5px'}}>{t('reset_password.change_password')}</Button>
+                            <Button onClick={backToLogin} fullWidth variant="contained">{t('reset_password.back_to_login')}</Button>
                             <Dialog disableEscapeKeyDown open={confirmOpen} onClose={handleConfirmClose}>
                                 <DialogTitle>{t('edit_password.confirm_title')}</DialogTitle>
                                 <DialogActions>
+                                    <div>
                                     <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
+                                    </div>
+                                    <div>
                                     <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
+                                    </div>
                                 </DialogActions>
                             </Dialog>
                             <Dialog disableEscapeKeyDown open={successOpen}>
