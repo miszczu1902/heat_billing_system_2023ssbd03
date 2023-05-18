@@ -152,7 +152,7 @@ const NavbarPanel: React.FC = () => {
                         <>
                             <Button onClick={handleClickOpenLogout}
                                     style={{backgroundColor: navbarColor}}>{t('navbar.log_out')}</Button>
-                            <Button style={{backgroundColor: navbarColor}}><UserInfoIcon/></Button>
+                            <Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/accounts/self')}><UserInfoIcon/></Button>
                         </>
                     )}
                 </ButtonGroup>
