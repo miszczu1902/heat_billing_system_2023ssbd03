@@ -93,7 +93,8 @@
     "error_token": "No valid password reset token, redirecting...",
     "password_change": "Password change",
     "change_password": "Change password",
-    "new_password": "A new password"
+    "new_password": "A new password",
+    "back_to_login": "Back to login"
   },
   "register":
   {

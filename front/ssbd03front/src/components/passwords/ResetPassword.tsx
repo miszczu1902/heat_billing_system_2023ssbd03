@@ -111,6 +111,10 @@ const ResetPassword = () => {
         }
     }
 
+    const backToLogin = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+        navigate('/login');
+    }
+
     const handleConfirmConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
 
         if (token !== null) {
@@ -187,12 +191,17 @@ const ResetPassword = () => {
                             <div className="form-group">
                                 {newAndRepeatedNewPasswordNotSameError}
                             </div>
-                            <Button onClick={handleConfirm} fullWidth variant="contained">{t('reset_password.change_password')}</Button>
+                            <Button onClick={handleConfirm} fullWidth variant="contained" style={{marginBottom: '5px'}}>{t('reset_password.change_password')}</Button>
+                            <Button onClick={backToLogin} fullWidth variant="contained">{t('reset_password.back_to_login')}</Button>
                             <Dialog disableEscapeKeyDown open={confirmOpen} onClose={handleConfirmClose}>
                                 <DialogTitle>{t('edit_password.confirm_title')}</DialogTitle>
                                 <DialogActions>
+                                    <div>
                                     <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
+                                    </div>
+                                    <div>
                                     <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
+                                    </div>
                                 </DialogActions>
                             </Dialog>
                             <Dialog disableEscapeKeyDown open={successOpen}>

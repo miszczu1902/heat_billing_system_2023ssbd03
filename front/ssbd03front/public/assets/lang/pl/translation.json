@@ -93,7 +93,8 @@
     "error_token": "Brak ważnego tokenu do resetu hasła, trwa przekierowanie...",
     "password_change": "Zmiana hasła",
     "change_password": "Zmień hasło",
-    "new_password": "Nowe hasło"
+    "new_password": "Nowe hasło",
+    "back_to_login": "Powrót do logowania"
   },
   "register":
   {
