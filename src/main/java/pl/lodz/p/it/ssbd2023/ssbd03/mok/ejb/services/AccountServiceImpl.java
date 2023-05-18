@@ -25,6 +25,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.mail.MailSender;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.Internationalization;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 
@@ -43,6 +44,9 @@ import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 public class AccountServiceImpl extends AbstractService implements AccountService, SessionSynchronization {
     @Inject
     private PersonalDataFacade personalDataFacade;
+
+    @Inject
+    private Internationalization internationalization;
 
     @Inject
     private OwnerFacade ownerFacade;
@@ -101,7 +105,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 tokenGenerator.createAccountConfirmationToken(), account);
         accountConfirmationTokenFacade.create(accountConfirmationToken);
 
-        mailSender.sendLinkToActivateAccount(account.getEmail(), "Activate account", accountConfirmationToken.getTokenValue());
+        mailSender.sendLinkToActivateAccount(account.getEmail(), internationalization.getMessage("mail.account.activate.title", account.getLanguage_()), accountConfirmationToken.getTokenValue());
     }
 
     @Override
@@ -112,9 +116,8 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         Account accountToActivate = accountConfirmationToken.getAccount();
         accountToActivate.setIsActive(true);
         accountFacade.edit(accountToActivate);
-
         accountConfirmationTokenFacade.remove(accountConfirmationToken);
-        mailSender.sendInformationAccountActivated(accountToActivate.getEmail());
+        mailSender.sendInformationAccountActivated(accountToActivate.getEmail(), accountConfirmationToken.getAccount().getLanguage_());
     }
 
     @Override
@@ -136,7 +139,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 loginData.setLastInvalidLoginDate(LocalDateTime.now(ZoneId.of(LoadConfig.loadPropertyFromConfig("zone"))));
                 if (loginData.getInvalidLoginCounter() == 3) {
                     account.setIsEnable(false);
-                    mailSender.sendInformationAccountDisabled(account.getEmail());
+                    mailSender.sendInformationAccountDisabled(account.getEmail(), account.getLanguage_());
                 }
             }
             loginDataFacade.edit(loginData);
@@ -677,9 +680,9 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             throw AppException.createNotAllowedActionException();
         }
         if (flag) {
-            mailSender.sendInformationAccountEnabled(editableAccount.getEmail());
+            mailSender.sendInformationAccountEnabled(editableAccount.getEmail(), editableAccount.getEmail());
         } else {
-            mailSender.sendInformationAccountDisabled(editableAccount.getEmail());
+            mailSender.sendInformationAccountDisabled(editableAccount.getEmail(), editableAccount.getLanguage_());
         }
     }
 
