@@ -450,9 +450,11 @@ export default function Profile() {
                                 </Paper>
                             )}
                             {(account.license && account.isUserManager) && (
-                                <Typography sx={{padding: '1vh'}}
-                                            variant="h5"><b>{t('profile.license')}:</b> {account.license}
-                                </Typography>
+                                <Paper elevation={3} style={{position: 'relative'}}>
+                                    <Typography sx={{padding: '1vh'}}
+                                                variant="h5"><b>{t('profile.license')}:</b> {account.license}
+                                    </Typography>
+                                </Paper>
                             )}
                             <div style={{display: 'flex', alignItems: 'center'}}>
                                 <Typography sx={{padding: '1vh'}} variant="h5">
