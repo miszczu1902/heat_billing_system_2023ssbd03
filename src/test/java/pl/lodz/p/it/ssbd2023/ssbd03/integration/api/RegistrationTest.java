@@ -14,25 +14,6 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RegistrationTest extends BasicIntegrationConfigTest {
-    private static final CreateOwnerDTO initalizedOwner = new CreateOwnerDTO(
-            "Bartosz",
-            "Miszczak",
-            "miszczu2137",
-            "mailik2111@fakemail.com",
-            "Password$123",
-            "Password$123",
-            "PL",
-            "997654321"
-    );
-
-    @BeforeClass
-    public static void prepareTest() {
-        int statusCode = sendRequestAndGetResponse(Method.POST, "/accounts/register", initalizedOwner, ContentType.JSON)
-                .getStatusCode();
-        assertEquals(201, statusCode);
-        logger.info("DATA PREPARED!");
-    }
-
     @Test
     public void registerOwnerTest() {
         CreateOwnerDTO owner = IntegrationTestObjectsFactory.createAccountToRegister();
@@ -85,9 +66,9 @@ public class RegistrationTest extends BasicIntegrationConfigTest {
         CreateOwnerDTO owner = IntegrationTestObjectsFactory.createAccountToRegister();
 
         switch (field) {
-            case "username" -> owner.setUsername(initalizedOwner.getUsername());
-            case "email" -> owner.setEmail(initalizedOwner.getEmail());
-            case "phoneNumber" -> owner.setPhoneNumber(initalizedOwner.getPhoneNumber());
+            case "username" -> owner.setUsername("johndoe");
+            case "email" -> owner.setEmail("johndoe@example.com");
+            case "phoneNumber" -> owner.setPhoneNumber("123456789");
         }
 
         return owner;
