@@ -62,13 +62,13 @@ public interface AccountService extends CommonManagerLocalInterface {
 
     void enableUserAccount(String username, String etag, Long version);
 
-    void addAccessLevelManager(String username, String license);
+    void addAccessLevelManager(String username, String license, String etag, Long version);
 
-    void addAccessLevelOwner(String username, String phoneNumber);
+    void addAccessLevelOwner(String username, String phoneNumber, String etag, Long version);
 
-    void addAccessLevelAdmin(String username);
+    void addAccessLevelAdmin(String username, String etag, Long version);
 
-    void revokeAccessLevel(String username, String accessLevel);
+    void revokeAccessLevel(String username, String accessLevel, String etag, Long version);
 
     List<Account> getListOfAccounts(String sortBy, int pageNumber, int pageSize, Boolean isEnable);
 }

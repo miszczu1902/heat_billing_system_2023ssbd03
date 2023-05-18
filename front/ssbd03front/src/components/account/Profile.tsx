@@ -33,6 +33,8 @@ export default function Profile() {
     const navigate = useNavigate();
     const [cookies] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
+    const [etag, setEtag] = React.useState(false);
+    const [version, setVersion] = React.useState("");
     const [selectedRole, setSelectedRole] = useState("");
     const [license, setLicense] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
@@ -94,13 +96,15 @@ export default function Profile() {
         if (isManager && !isOwner && !isAdmin) {
             const addAccessLevelManagerDTO = {
                 username: username,
-                license: license.toString()
+                license: license.toString(),
+                version: parseInt(version)
             }
 
             axios.patch(`${API_URL}/accounts/add-access-level-manager`,
                 addAccessLevelManagerDTO, {
                     headers: {
                         'Authorization': token,
+                        'If-Match': etag,
                         'Content-Type': 'application/json'
                     },
                 })
@@ -116,13 +120,15 @@ export default function Profile() {
         if (isOwner && !isManager && !isAdmin) {
             const addAccessLevelOwnerDTO = {
                 username: username,
-                phoneNumber: phoneNumber.toString()
+                phoneNumber: phoneNumber.toString(),
+                version: parseInt(version)
             }
 
             axios.patch(`${API_URL}/accounts/add-access-level-owner`,
                 addAccessLevelOwnerDTO, {
                     headers: {
                         'Authorization': token,
+                        'If-Match': etag,
                         'Content-Type': 'application/json'
                     },
                 })
@@ -137,13 +143,15 @@ export default function Profile() {
         }
         if (isAdmin && !isOwner && !isManager) {
             const addAccessLevelAdminDTO = {
-                username: username
+                username: username,
+                version: parseInt(version)
             }
 
             axios.patch(`${API_URL}/accounts/add-access-level-admin`,
                 addAccessLevelAdminDTO, {
                     headers: {
                         'Authorization': token,
+                        'If-Match': etag,
                         'Content-Type': 'application/json'
                     },
                 })
@@ -159,13 +167,15 @@ export default function Profile() {
         if (confirmRemove && !isAdmin && !isOwner && !isManager) {
             const removeAccessLevelDTO = {
                 username: username,
-                accessLevel: selectedRole.toString()
+                accessLevel: selectedRole.toString(),
+                version: parseInt(version)
             }
 
             axios.patch(`${API_URL}/accounts/revoke-access-level`,
                 removeAccessLevelDTO, {
                     headers: {
                         'Authorization': token,
+                        'If-Match': etag,
                         'Content-Type': 'application/json'
                     },
                 })
@@ -270,14 +280,50 @@ export default function Profile() {
     };
 
     const handleClickOpenManager = () => {
+        const fetchData = async () => {
+            await axios.get(`${API_URL}/accounts/${username}`, {
+                headers: {
+                    Authorization: token
+                }
+            })
+                .then(response => {
+                    setEtag(response.headers["etag"]);
+                    setVersion(response.data.version)
+                });
+        };
+        fetchData();
         setIsManager(true);
     };
 
     const handleClickOpenOwner = () => {
+        const fetchData = async () => {
+            await axios.get(`${API_URL}/accounts/${username}`, {
+                headers: {
+                    Authorization: token
+                }
+            })
+                .then(response => {
+                    setEtag(response.headers["etag"]);
+                    setVersion(response.data.version)
+                });
+        };
+        fetchData();
         setIsOwner(true);
     };
 
     const handleClickOpenAdmin = () => {
+        const fetchData = async () => {
+            await axios.get(`${API_URL}/accounts/${username}`, {
+                headers: {
+                    Authorization: token
+                }
+            })
+                .then(response => {
+                    setEtag(response.headers["etag"]);
+                    setVersion(response.data.version)
+                });
+        };
+        fetchData();
         setIsAdmin(true);
     };
 
@@ -292,6 +338,18 @@ export default function Profile() {
     };
 
     const handleRemoveAccessLevel = () => {
+        const fetchData = async () => {
+            await axios.get(`${API_URL}/accounts/${username}`, {
+                headers: {
+                    Authorization: token
+                }
+            })
+                .then(response => {
+                    setEtag(response.headers["etag"]);
+                    setVersion(response.data.version)
+                });
+        };
+        fetchData();
         setIsRemoveAccessOpen(true);
     };
 
@@ -313,16 +371,22 @@ export default function Profile() {
                     <Box sx={{my: 30, display: 'flex', flexDirection: 'column', alignItems: 'left', margin: '2vh'}}>
                         {account !== null && (
                             <>
-                                <Typography sx={{padding: '1vh'}} variant="h5"><b>{t('personal_data.name')}:</b> {account.firstName}
+                                <Typography sx={{padding: '1vh'}}
+                                            variant="h5"><b>{t('personal_data.name')}:</b> {account.firstName}
                                 </Typography>
-                                <Typography sx={{padding: '1vh'}} variant="h5"><b>{t('personal_data.surname')}:</b> {account.surname}
+                                <Typography sx={{padding: '1vh'}}
+                                            variant="h5"><b>{t('personal_data.surname')}:</b> {account.surname}
                                 </Typography>
-                                <Typography sx={{padding: '1vh'}} variant="h5"><b>{t('login.username')}:</b> {account.username}
+                                <Typography sx={{padding: '1vh'}}
+                                            variant="h5"><b>{t('login.username')}:</b> {account.username}
                                 </Typography>
-                                <Typography sx={{padding: '1vh'}} variant="h5"><b>{t('register.email')}:</b> {account.email}
+                                <Typography sx={{padding: '1vh'}}
+                                            variant="h5"><b>{t('register.email')}:</b> {account.email}
                                 </Typography>
                                 {account.phoneNumber && (
-                                    <Typography sx={{padding: '1vh'}} variant="h5"><b>{t('register.phone_number')}:</b> {account.phoneNumber}</Typography>
+                                    <Typography sx={{padding: '1vh'}}
+                                                variant="h5"><b>{t('register.phone_number')}:</b> {account.phoneNumber}
+                                    </Typography>
                                 )}
                                 <Typography sx={{padding: '1vh'}}
                                             variant="h5"><b>{t('enable_account.enable')}:</b> {account.isEnable ? t('account_list.confirmed') : t('account_list.unconfirmed')}
@@ -331,7 +395,9 @@ export default function Profile() {
                                             variant="h5"><b>{t('account_list.active_status')}:</b> {account.isActive ? t('account_list.active') : t('account_list.inactive')}
                                 </Typography>
                                 {account.license && (
-                                    <Typography sx={{padding: '1vh'}} variant="h5"><b>{t('profile.license')}:</b> {account.license}</Typography>
+                                    <Typography sx={{padding: '1vh'}}
+                                                variant="h5"><b>{t('profile.license')}:</b> {account.license}
+                                    </Typography>
                                 )}
                                 <div style={{display: 'flex', alignItems: 'center'}}>
                                     <Typography sx={{padding: '1vh'}} variant="h5">

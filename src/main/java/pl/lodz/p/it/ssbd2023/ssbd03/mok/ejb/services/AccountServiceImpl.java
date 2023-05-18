@@ -18,7 +18,6 @@ import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.TokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
-import pl.lodz.p.it.ssbd2023.ssbd03.common.CommonManagerLocalInterface;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
@@ -375,12 +374,19 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed(Roles.ADMIN)
-    public void addAccessLevelManager(String username, String license) {
+    public void addAccessLevelManager(String username, String license, String etag, Long version) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
         if (username.equals(adminUsername)) {
             throw AppException.addingAnAccessLevelToTheSameAdminAccount();
         }
         final Account account = accountFacade.findByUsername(username);
+        if (!etag.equals(messageSigner.sign(account))) {
+            throw AppException.createVerifierException();
+        }
+        if (!Objects.equals(version, account.getVersion())) {
+            throw AppException.createOptimisticLockAppException();
+        }
+
         if (!account.getIsActive()) {
             throw AppException.createAccountIsNotActivatedException();
         }
@@ -413,12 +419,19 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed(Roles.ADMIN)
-    public void addAccessLevelOwner(String username, String phoneNumber) {
+    public void addAccessLevelOwner(String username, String phoneNumber, String etag, Long version) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
         if (username.equals(adminUsername)) {
             throw AppException.addingAnAccessLevelToTheSameAdminAccount();
         }
         final Account account = accountFacade.findByUsername(username);
+        if (!etag.equals(messageSigner.sign(account))) {
+            throw AppException.createVerifierException();
+        }
+        if (!Objects.equals(version, account.getVersion())) {
+            throw AppException.createOptimisticLockAppException();
+        }
+
         if (!account.getIsActive()) {
             throw AppException.createAccountIsNotActivatedException();
         }
@@ -451,12 +464,19 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed(Roles.ADMIN)
-    public void addAccessLevelAdmin(String username) {
+    public void addAccessLevelAdmin(String username, String etag, Long version) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
         if (username.equals(adminUsername)) {
             throw AppException.addingAnAccessLevelToTheSameAdminAccount();
         }
         final Account account = accountFacade.findByUsername(username);
+        if (!etag.equals(messageSigner.sign(account))) {
+            throw AppException.createVerifierException();
+        }
+        if (!Objects.equals(version, account.getVersion())) {
+            throw AppException.createOptimisticLockAppException();
+        }
+
         if (!account.getIsActive()) {
             throw AppException.createAccountIsNotActivatedException();
         }
@@ -482,12 +502,19 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed(Roles.ADMIN)
-    public void revokeAccessLevel(String username, String access) {
+    public void revokeAccessLevel(String username, String access, String etag, Long version) {
         final String adminUsername = securityContext.getCallerPrincipal().getName();
         if (username.equals(adminUsername)) {
             throw AppException.revokeAnAccessLevelToTheSameAdminAccount();
         }
         final Account account = accountFacade.findByUsername(username);
+        if (!etag.equals(messageSigner.sign(account))) {
+            throw AppException.createVerifierException();
+        }
+        if (!Objects.equals(version, account.getVersion())) {
+            throw AppException.createOptimisticLockAppException();
+        }
+
         if (!account.getIsActive()) {
             throw AppException.createAccountIsNotActivatedException();
         }
@@ -591,10 +618,10 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 .findAny()
                 .orElseThrow(AppException::createAccountIsNotOwnerException);
 
-        if (!etag.equals(messageSigner.sign(owner))) {
+        if (!etag.equals(messageSigner.sign(account))) {
             throw AppException.createVerifierException();
         }
-        if (!Objects.equals(version, owner.getVersion())) {
+        if (!Objects.equals(version, account.getVersion())) {
             throw AppException.createOptimisticLockAppException();
         }
 
