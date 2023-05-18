@@ -26,20 +26,16 @@ public class ChangeUserPasswordTest extends BasicIntegrationConfigTest {
 
     @Before
     public void initialize() {
-        setETAG("");
-        setBEARER_TOKEN("");
         auth(new LoginDTO(USERNAME, PASSWORD));
     }
 
     @Test
     public void shouldReturnBadRequestWhenEtagNotMatch() {
         Response getUserResponse = sendRequestAndGetResponse(Method.GET,
-                URL_GET,
+                URL_GET_SUCCESS,
                 null,
                 ContentType.JSON);
-
         assertEquals(200, getUserResponse.getStatusCode());
-        setETAG("not matching ETag");
         Response enableUser = sendRequestAndGetResponse(Method.PATCH,
                 URL_PASSWORD,
                 null,
@@ -54,7 +50,6 @@ public class ChangeUserPasswordTest extends BasicIntegrationConfigTest {
                 null,
                 ContentType.JSON);
         assertEquals(200, getUserResponse.getStatusCode());
-        setETAG(getUserResponse.header("ETag"));
         AccountInfoDTO accountInfoDTO = getUserResponse.body().jsonPath().getObject("", AccountInfoDTO.class);
         ChangeUserPasswordDTO changeUserPasswordDTO = new ChangeUserPasswordDTO(NEW_PASSWORD, NEW_PASSWORD,
                 accountInfoDTO.getVersion() + 1);
@@ -70,7 +65,6 @@ public class ChangeUserPasswordTest extends BasicIntegrationConfigTest {
                 null,
                 ContentType.JSON);
         assertEquals(200, getUserResponse.getStatusCode());
-        setETAG(getUserResponse.header("ETag"));
         AccountInfoDTO accountInfoDTO = getUserResponse.body().jsonPath().getObject("", AccountInfoDTO.class);
         ChangeUserPasswordDTO changeUserPasswordDTO = new ChangeUserPasswordDTO(PASSWORD, PASSWORD,
                 accountInfoDTO.getVersion());
@@ -86,7 +80,6 @@ public class ChangeUserPasswordTest extends BasicIntegrationConfigTest {
                 null,
                 ContentType.JSON);
         assertEquals(200, getUserResponse.getStatusCode());
-        setETAG(getUserResponse.header("ETag"));
         AccountInfoDTO accountInfoDTO = getUserResponse.body().jsonPath().getObject("", AccountInfoDTO.class);
         ChangeUserPasswordDTO changeUserPasswordDTO = new ChangeUserPasswordDTO(NEW_PASSWORD, PASSWORD,
                 accountInfoDTO.getVersion());
@@ -102,7 +95,6 @@ public class ChangeUserPasswordTest extends BasicIntegrationConfigTest {
                 null,
                 ContentType.JSON);
         assertEquals(200, getUserResponse.getStatusCode());
-        setETAG(getUserResponse.header("ETag"));
         AccountInfoDTO accountInfoDTO = getUserResponse.body().jsonPath().getObject("", AccountInfoDTO.class);
         ChangeUserPasswordDTO changeUserPasswordDTO = new ChangeUserPasswordDTO(BAD_PASSWORD, PASSWORD,
                 accountInfoDTO.getVersion());
@@ -118,7 +110,6 @@ public class ChangeUserPasswordTest extends BasicIntegrationConfigTest {
                 null,
                 ContentType.JSON);
         assertEquals(200, getUserResponse.getStatusCode());
-        setETAG(getUserResponse.header("ETag"));
         AccountInfoDTO accountInfoDTO = getUserResponse.body().jsonPath().getObject("", AccountInfoDTO.class);
         ChangeUserPasswordDTO changeUserPasswordDTO = new ChangeUserPasswordDTO(PASSWORD, BAD_PASSWORD,
                 accountInfoDTO.getVersion());
@@ -134,7 +125,6 @@ public class ChangeUserPasswordTest extends BasicIntegrationConfigTest {
                 null,
                 ContentType.JSON);
         assertEquals(200, getUserResponse.getStatusCode());
-        setETAG(getUserResponse.header("ETag"));
         AccountInfoDTO accountInfoDTO = getUserResponse.body().jsonPath().getObject("", AccountInfoDTO.class);
         ChangeUserPasswordDTO changeUserPasswordDTO = new ChangeUserPasswordDTO(NEW_PASSWORD, NEW_PASSWORD,
                 accountInfoDTO.getVersion());
