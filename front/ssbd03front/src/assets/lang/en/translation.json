@@ -52,7 +52,8 @@
     "login_error_two": "The password must consist of 8-32 characters, one capital letter, a special character",
     "login_password_error_one": "The login can only contain letters, numbers, and the underscore ",
     "login_password_error_two": "must be between 8 and 16 characters long.",
-    "success_title": "An email with a hyperlink to the password change form has been sent to the email address assigned to this account."
+    "success_title": "An email with a hyperlink to the password change form has been sent to the email address assigned to this account.",
+    "login" : "Login"
   },
   "change_phone_number":
   {

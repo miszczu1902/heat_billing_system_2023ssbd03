@@ -14,7 +14,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import {Checkbox, FormControlLabel, Grid} from '@mui/material';
 import {useNavigate, useParams} from "react-router-dom";
-import {API_URL} from "../../consts";
+import {API_URL, ADMIN, MANAGER, OWNER, GUEST} from "../../consts";
 import {useCookies} from "react-cookie";
 import axios from 'axios';
 import Paper from "@mui/material/Paper";
@@ -29,9 +29,9 @@ import EditUserPassword from "../passwords/EditUserPassword";
 import EditUserEmail from "../email/EditUserEmail";
 
 const roles = [
-    {value: "ADMIN", label: "Administrator"},
-    {value: "MANAGER", label: "Manager"},
-    {value: "OWNER", label: "Właściciel"}
+    {value: ADMIN, label: "Administrator"},
+    {value: ADMIN, label: "Manager"},
+    {value: ADMIN, label: "Właściciel"}
 ];
 
 export default function Profile() {
@@ -474,7 +474,7 @@ export default function Profile() {
                                 />
                             </div>
                             <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                                {role.includes('ADMIN') && (
+                                {role.includes(ADMIN) && (
                                     <>
                                         {!account.isUserOwner && (
                                             <Button onClick={handleClickOpenOwner} variant="contained" style={{height: "80px", margin: "10px"}}>

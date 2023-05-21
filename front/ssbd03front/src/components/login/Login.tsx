@@ -19,7 +19,6 @@ import {useNavigate} from "react-router-dom";
 import {Icon} from "@mui/material";
 import Logo from './../../assets/logo.svg';
 import {useTranslation} from "react-i18next";
-import NavbarPanel from "../navigation/NavbarPanel";
 
 const theme = createTheme();
 
@@ -91,6 +90,7 @@ const Login = () => {
             };
             axios.request(config)
                 .then((response) => {
+                    console.log(response.headers["bearer"]);
                     setCookie("token", response.headers["bearer"]);
                     setCookie("language", response.headers["language"]);
                     i18n.changeLanguage(response.headers["language"]);
@@ -189,7 +189,7 @@ const Login = () => {
                                 alignItems: 'center',
                                 justifyContent: 'center'
                             }}>
-                                <Button type="submit" variant="contained" sx={{m: 2}}>Zaloguj</Button>
+                                <Button type="submit" variant="contained" sx={{m: 2}}>{t('login.login')}</Button>
                                 <Button onClick={handleClickOpen} variant="contained" sx={{m: 2}}>{t('login.password_forgot')}</Button>
                                 <div>
                                     <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>

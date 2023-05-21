@@ -52,7 +52,8 @@
     "login_error_two": "Hasło musi składać się z 8-32 znaków, jednej dużej litery, znak specjalny",
     "login_password_error_one": "Login może zawierać tylko litery, cyfry, znak podkreślenia oraz ",
     "login_password_error_two": "musi mieć długość od 8 do 16 znaków.",
-    "success_title": "Na adres email przypisany do tego konta została wysłana wiadomość z hiperłączem do formularza zmiany hasła."
+    "success_title": "Na adres email przypisany do tego konta została wysłana wiadomość z hiperłączem do formularza zmiany hasła.",
+    "login" : "Zaloguj"
   },
   "change_phone_number":
   {
