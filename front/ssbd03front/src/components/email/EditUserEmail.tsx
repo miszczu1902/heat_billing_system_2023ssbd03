@@ -101,7 +101,7 @@ const EditUserEmail = () => {
                     setSuccessOpen(true);
                 })
                 .catch(error => {
-                    setErrorOpenMessage(error.response.data.message)
+                    setErrorOpenMessage(t('email.failure_title'))
                     setErrorOpen(true);
                 });
         };

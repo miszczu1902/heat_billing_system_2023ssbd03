@@ -189,6 +189,7 @@
     "form_title": "Fill out the email change form",
     "new_email": "New email",
     "confirm_changes": "Are you sure you want to change your email?",
-    "success_title": "A confirmation link has been sent to new email address."
+    "success_title": "A confirmation link has been sent to new email address.",
+    "failure_title": "An error occurred while changing the email address."
   }
 }
