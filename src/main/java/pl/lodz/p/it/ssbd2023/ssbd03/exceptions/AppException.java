@@ -20,7 +20,6 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_UNKNOWN = "ERROR_UNKNOWN";
     protected final static String ERROR_GENERAL_PERSISTENCE = "ERROR_GENERAL_PERSISTENCE";
     protected final static String ERROR_OPTIMISTIC_LOCK = "ERROR_OPTIMISTIC_LOCK";
-    protected final static String ERROR_ACCESS_DENIED = "ERROR_ACCESS_DENIED";
     protected final static String ERROR_TRANSACTION_ROLLEDBACK = "ERROR_TRANSACTION_ROLLEDBACK";
     protected final static String ERROR_ACCOUNT_NOT_REGISTERED = "ERROR_ACCOUNT_NOT_REGISTERED";
 
@@ -42,7 +41,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ADDING_AN_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT = "You can't give yourself permissions"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_REVOKE_THE_ONLY_LEVEL_OF_ACCESS = "One level of access cannot be taken away"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_IS_NOT_ADMIN = "This account is not the admin"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_MANAGER_CAN_NOT_CHANGE_ADMINA = "This account does not have permission to change Admin email"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_MANAGER_CAN_NOT_CHANGE_ADMIN = "This account does not have permission to change Admin email"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_IS_NOT_MANAGER = "This account is not the manager"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCESS_LEVEL_IS_ALREADY_GRANTED = "This account already has this level of access"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_LICENSE_NOT_UNIQUE_MESSAGE = "License not unique"; //TODO - tu trzeba zrobić resource bundle
@@ -181,7 +180,7 @@ public class AppException extends WebApplicationException {
     }
 
     public static ManagerCanNotChangeAdminException createManagerCanNotChangeAdminException() {
-        return new ManagerCanNotChangeAdminException(AppException.ERROR_MANAGER_CAN_NOT_CHANGE_ADMINA, Response.Status.FORBIDDEN);
+        return new ManagerCanNotChangeAdminException(AppException.ERROR_MANAGER_CAN_NOT_CHANGE_ADMIN, Response.Status.FORBIDDEN);
     }
 
     public static AccountIsNotAdminException createAccountIsNotAdminException() {

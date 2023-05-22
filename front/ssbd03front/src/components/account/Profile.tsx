@@ -38,14 +38,14 @@ const roles = [
 export default function Profile() {
     const {t} = useTranslation();
     const navigate = useNavigate();
-    const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+    const [cookies, setCookie, removeCookie] = useCookies(["token", "role"]);
     const token = "Bearer " + cookies.token;
     const [etag, setEtag] = React.useState(false);
     const [version, setVersion] = React.useState("");
     const [selectedRole, setSelectedRole] = useState("");
     const [license, setLicense] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
-    const [role, setRole] = React.useState('');
+    const [role, setRole] = React.useState(cookies.role);
     const username = useParams().username;
     const [account, setAccount] = useState<Account | null>(null);
     const [phoneNumberError, setPhoneNumberError] = React.useState("");
@@ -81,7 +81,7 @@ export default function Profile() {
         if (cookies.token !== "undefined" && cookies.token !== undefined) {
             const decodedToken = jwt(cookies.token);
             const decodedRole = JSON.parse(JSON.stringify(decodedToken)).role;
-            setRole(decodedRole.split(','));
+            setRole(cookies.role);
             const currentTimestamp = Math.floor(new Date().getTime() / 1000);
             if (JSON.parse(JSON.stringify(decodedToken)).exp < currentTimestamp) {
                 removeCookie('token');

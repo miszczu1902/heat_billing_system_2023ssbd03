@@ -181,7 +181,7 @@
     "owner" : "OWNER",
     "manager" : "MANAGER",
     "admin" : "ADMIN",
-    "access_level_form_title" : "Fill in the form of adding administrator permissions",
+    "access_level_form_title" : "Fill in the form of adding permissions",
     "add_level": "Are you sure to grant access level?",
     "revoke_level": "Are you sure to revoke access level?",
     "added_level": "Access level granted",
