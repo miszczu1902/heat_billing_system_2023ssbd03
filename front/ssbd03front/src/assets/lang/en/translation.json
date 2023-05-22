@@ -14,7 +14,8 @@
     },
     "select_role": "Select role",
     "role": "Role",
-    "roles": "Roles"
+    "roles": "Roles",
+    "logged_as": "Logged as: "
   },
   "confirm":
   {
@@ -192,7 +193,7 @@
   },
   "page_not_found":
   {
-    "title": "404 Page not found"
+    "title": "Page not found"
   },
   "email":
   {

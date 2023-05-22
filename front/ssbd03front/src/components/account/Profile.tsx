@@ -31,8 +31,8 @@ import UserIcon from "../icons/UserIcon";
 
 const roles = [
     {value: ADMIN, label: "Administrator"},
-    {value: ADMIN, label: "Zarządca"},
-    {value: ADMIN, label: "Właściciel"}
+    {value: MANAGER, label: "Zarządca"},
+    {value: OWNER, label: "Właściciel"}
 ];
 
 export default function Profile() {
@@ -416,8 +416,8 @@ export default function Profile() {
                                     display: 'flex',
                                     gap: '0.5vh'
                                 }}>
-                                    {!account.isEnable && <EnableAccount/>}
-                                    {account.isEnable && <DisableAccount/>}
+                                    {(!account.isEnable && ((!account.isUserAdmin && role === MANAGER) || role === ADMIN)) && <EnableAccount/>}
+                                    {account.isEnable && ((!account.isUserAdmin && role === MANAGER) || role === ADMIN) && <DisableAccount/>}
                                 </div>
                                 <Typography sx={{padding: '1vh'}}
                                             variant="h5"><b>{t('enable_account.enable')}:</b> {account.isEnable ? t('enable_account.enable') : t('disable_account.disable')}

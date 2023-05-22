@@ -85,9 +85,9 @@ const AccountsList = () => {
                 </TableHead>
                 <TableBody>
                     {accounts.map((accounts) => (
-                        <TableRow key={accounts.id} onClick={() => goToAccount(accounts.username)}>
+                        <TableRow key={accounts.id} >
                             <TableCell component='th' scope='row'/>
-                            <TableCell>{accounts.username}</TableCell>
+                            <TableCell onClick={() => goToAccount(accounts.username)} sx={{cursor: 'pointer'}}>{accounts.username}</TableCell>
                             <TableCell>{accounts.email}</TableCell>
                             {accounts.isEnable ? <TableCell>{t('account_list.active')}</TableCell> : <TableCell>{t('account_list.inactive')}</TableCell>}
                             {accounts.isActive ? <TableCell>{t('account_list.confirmed')}</TableCell> :

@@ -14,7 +14,8 @@
     },
     "select_role": "Wybierz poziom dostępu",
     "role": "Poziom dostępu",
-    "roles": "Poziomy dostępu"
+    "roles": "Poziomy dostępu",
+    "logged_as": "Zalogowany jako: "
   },
   "confirm":
   {
@@ -192,7 +193,7 @@
   },
   "page_not_found":
   {
-    "title": "404 Strony nie znalezniono"
+    "title": "Strony nie znalezniono"
   },
   "email":
   {

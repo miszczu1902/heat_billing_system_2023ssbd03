@@ -23,6 +23,7 @@ import AdminProfile from "../components/account/AdminProfile";
 import {useCookies} from "react-cookie";
 import {ADMIN, GUEST, MANAGER, OWNER} from "../consts";
 import {useEffect} from "react";
+import NotFoundPage from "../components/notFound/NotFoundPage";
 
 interface PrivateRouteProps {
     component: React.ComponentType<any>;
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
             {
                 path: '/',
                 element: <LandingPage/>
+            },
+            {
+                path: '*',
+                element: <NotFoundPage/>
             },
             {
                 path: '/accounts',

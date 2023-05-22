@@ -35,25 +35,25 @@ const NavbarPanel = () => {
     const [cookies, setCookie, removeCookie] = useCookies(["token", "language", "role"]);
     const [roles, setRoles] = useState([GUEST]);
     const [currentRole, setCurrentRole] = useState(cookies.role);
+    const [username, setUsername] = useState('');
     const token = "Bearer " + cookies.token;
 
     useEffect(() => {
         if (cookies.token !== "undefined" && cookies.token !== undefined) {
-            const decodedToken = jwt(cookies.token);
+            const decodedToken = jwt(cookies.token) as string;
             const decodedRole = JSON.parse(JSON.stringify(decodedToken)).role;
             const roles = decodedRole.split(',').sort();
             const currentTimestamp = Math.floor(new Date().getTime() / 1000);
-
             if (JSON.parse(JSON.stringify(decodedToken)).exp < currentTimestamp) {
                 removeCookie('token');
                 navigate('/');
             }
-
             setRoles(roles);
             if (currentRole === GUEST) {
                 setCurrentRole(roles[0]);
                 setCookie("role", roles[0]);
             }
+            setUsername(decodedToken.sub);
         } else {
             setRoles([GUEST]);
             setCurrentRole(GUEST);
@@ -113,6 +113,7 @@ const NavbarPanel = () => {
 
     const handleClickOpenLogout = () => {
         removeCookie('token');
+        setCookie("role", GUEST);
         navigate('/');
         window.location.reload();
     };
@@ -137,17 +138,18 @@ const NavbarPanel = () => {
     return (
         <AppBar position="static" style={{backgroundColor: navbarColor}}>
             <Toolbar>
-                <Icon sx={{width: '3%', height: '3%', marginLeft: '1vh', marginRight: '1vh'}}>
+                <Icon sx={{width: '3%', height: '3%', marginLeft: '1vh', marginRight: '1vh', cursor: 'pointer'}}>
                     <img src={Logo} alt="Logo" onClick={() => navigate('/')}/>
                 </Icon>
                 {
                     (currentRole === ADMIN || currentRole === MANAGER) &&
-                    <Typography variant="h6" sx={{flexGrow: 1, marginLeft: 2}} onClick={() => navigate('/accounts')}>
+                    <Typography variant="h6" onClick={() => navigate('/accounts')} sx={{marginLeft: '1vh', cursor: 'pointer'}}>
                         {t('navbar.account_list')}
                     </Typography>
                 }
 
-                <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{marginLeft: 'auto'}}>
+                <Typography variant="h6" sx={{marginRight: '1vh', marginLeft: 'auto'}}>{t('navbar.logged_as') + username}</Typography>
+                <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{marginRight: '1vh'}}>
                     <Button onClick={handleClickOpen} style={{backgroundColor: navbarColor}}><GlobeIcon/></Button>
                     {cookies.token && (
                         <>
