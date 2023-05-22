@@ -41,6 +41,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({component: Component, access
         }
         if (!accessLevels.includes(userAccessLevel)) {
             navigate('/');
+            window.location.reload();
         }
     }, [cookies.role]);
 
@@ -55,11 +56,11 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '/',
-                element: <LandingPage/>
+                element: <PrivateRoute component={LandingPage} accessLevels={[ADMIN, MANAGER, OWNER, GUEST]}/>
             },
             {
                 path: '*',
-                element: <NotFoundPage/>
+                element: <PrivateRoute component={NotFoundPage} accessLevels={[ADMIN, MANAGER, OWNER, GUEST]}/>
             },
             {
                 path: '/accounts',
@@ -143,7 +144,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/accounts/self/confirm-new-email/:activationToken',
-                element: <ConfirmEmail/>
+                element: <PrivateRoute component={ConfirmEmail} accessLevels={[ADMIN, MANAGER, OWNER, GUEST]}/>
             }
         ]
     }
