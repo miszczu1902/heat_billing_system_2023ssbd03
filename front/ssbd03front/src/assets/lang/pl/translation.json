@@ -11,7 +11,11 @@
       "default": "Język",
       "pl": "Polski",
       "en": "Angielski"
-    }
+    },
+    "select_role": "Wybierz poziom dostępu",
+    "role": "Poziom dostępu",
+    "roles": "Poziomy dostępu",
+    "logged_as": "Zalogowany jako: "
   },
   "confirm":
   {
@@ -52,7 +56,8 @@
     "login_error_two": "Hasło musi składać się z 8-32 znaków, jednej dużej litery, znak specjalny",
     "login_password_error_one": "Login może zawierać tylko litery, cyfry, znak podkreślenia oraz ",
     "login_password_error_two": "musi mieć długość od 8 do 16 znaków.",
-    "success_title": "Na adres email przypisany do tego konta została wysłana wiadomość z hiperłączem do formularza zmiany hasła."
+    "success_title": "Na adres email przypisany do tego konta została wysłana wiadomość z hiperłączem do formularza zmiany hasła.",
+    "login" : "Zaloguj"
   },
   "change_phone_number":
   {
@@ -121,7 +126,8 @@
     "success": "Konto zarejestrowane",
     "success_two": "Konto zarejestrowane. Na podany adres email została wysłana wiadomość z linkiem aktywacyjnym",
     "log_in": "Masz już konto? Zaloguj się",
-    "user_exists": "Użytkownik o podanym loginie lub emailu już istnieje"
+    "user_exists": "Użytkownik o podanym loginie lub emailu już istnieje",
+    "mandatory" : "* - Wymagane pola"
   },
   "account_list":
   {
@@ -176,11 +182,18 @@
     "owner" : "WŁAŚCICIEL",
     "manager" : "ZARZĄDCA",
     "admin" : "ADMINISTRATOR",
-    "access_level_form_title" : "Wypełnij formularz dodania uprawnień zarządcy"
+    "access_level_form_title" : "Wypełnij formularz dodania uprawnień zarządcy",
+    "add_level": "Czy na pewno chcesz dodać poziom dostępu?",
+    "revoke_level": "Czy na pewno chcesz odebrać poziom dostępu?",
+    "added_level": "Poziom dostępu został dodany",
+    "revoked_level": "Poziom dostępu został odebrany",
+    "manager_form": "Podaj numer licencji zarządcy",
+    "owner_form": "Podaj numer telefonu do właściciela",
+    "revoke": "Odbierz poziom dostępu"
   },
   "page_not_found":
   {
-    "title": "404 Strony nie znalezniono"
+    "title": "Strony nie znalezniono"
   },
   "email":
   {
@@ -190,6 +203,7 @@
     "new_email": "Nowy email",
     "confirm_changes": "Czy jesteś pewien, że chcesz zmienić email?",
     "success_title": "Link potwierdzający został wysłany na nowy adres email.",
-    "failure_title": "Wystąpił błąd podczas zmiany adresu email."
+    "failure_title": "Wystąpił błąd podczas zmiany adresu email.",
+    "confirmed": "Email został potwierdzony"
   }
 }

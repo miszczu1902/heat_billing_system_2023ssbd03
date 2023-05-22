@@ -14,7 +14,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import {Checkbox, FormControlLabel, Grid} from '@mui/material';
 import {useNavigate, useParams} from "react-router-dom";
-import {API_URL} from "../../consts";
+import {API_URL, ADMIN, MANAGER, OWNER, GUEST} from "../../consts";
 import {useCookies} from "react-cookie";
 import axios from 'axios';
 import Paper from "@mui/material/Paper";
@@ -27,24 +27,25 @@ import DisableAccount from "../accounts/DisableAccount";
 import jwt from "jwt-decode";
 import EditUserPassword from "../passwords/EditUserPassword";
 import EditUserEmail from "../email/EditUserEmail";
+import UserIcon from "../icons/UserIcon";
 
 const roles = [
-    {value: "ADMIN", label: "Administrator"},
-    {value: "MANAGER", label: "Manager"},
-    {value: "OWNER", label: "Właściciel"}
+    {value: ADMIN, label: "Administrator"},
+    {value: MANAGER, label: "Zarządca"},
+    {value: OWNER, label: "Właściciel"}
 ];
 
 export default function Profile() {
     const {t} = useTranslation();
     const navigate = useNavigate();
-    const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+    const [cookies, setCookie, removeCookie] = useCookies(["token", "role"]);
     const token = "Bearer " + cookies.token;
     const [etag, setEtag] = React.useState(false);
     const [version, setVersion] = React.useState("");
     const [selectedRole, setSelectedRole] = useState("");
     const [license, setLicense] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
-    const [role, setRole] = React.useState('');
+    const [role, setRole] = React.useState(cookies.role);
     const username = useParams().username;
     const [account, setAccount] = useState<Account | null>(null);
     const [phoneNumberError, setPhoneNumberError] = React.useState("");
@@ -64,13 +65,6 @@ export default function Profile() {
     const [confirmRemove, setConfirmRemove] = React.useState(false);
     const [successOpenRemove, setSuccessOpenRemove] = React.useState(false);
 
-    const UserIcon = ({width = 24, height = 24}) => (
-        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="currentColor" className="bi bi-person-fill"
-             viewBox="0 0 16 16">
-            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
-        </svg>
-    )
-
     const fetchData = async () => {
         axios.get(`${API_URL}/accounts/${username}`, {
             headers: {
@@ -87,7 +81,7 @@ export default function Profile() {
         if (cookies.token !== "undefined" && cookies.token !== undefined) {
             const decodedToken = jwt(cookies.token);
             const decodedRole = JSON.parse(JSON.stringify(decodedToken)).role;
-            setRole(decodedRole.split(','));
+            setRole(cookies.role);
             const currentTimestamp = Math.floor(new Date().getTime() / 1000);
             if (JSON.parse(JSON.stringify(decodedToken)).exp < currentTimestamp) {
                 removeCookie('token');
@@ -233,6 +227,7 @@ export default function Profile() {
         if (reason !== 'backdropClick') {
             setSuccessOpen(false);
         }
+        window.location.reload();
     }
 
     const handleConfirm = () => {
@@ -421,8 +416,8 @@ export default function Profile() {
                                     display: 'flex',
                                     gap: '0.5vh'
                                 }}>
-                                    {!account.isEnable && <EnableAccount/>}
-                                    {account.isEnable && <DisableAccount/>}
+                                    {(!account.isEnable && ((!account.isUserAdmin && role === MANAGER) || role === ADMIN)) && <EnableAccount/>}
+                                    {account.isEnable && ((!account.isUserAdmin && role === MANAGER) || role === ADMIN) && <DisableAccount/>}
                                 </div>
                                 <Typography sx={{padding: '1vh'}}
                                             variant="h5"><b>{t('enable_account.enable')}:</b> {account.isEnable ? t('enable_account.enable') : t('disable_account.disable')}
@@ -474,7 +469,7 @@ export default function Profile() {
                                 />
                             </div>
                             <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                                {role.includes('ADMIN') && (
+                                {role.includes(ADMIN) && (
                                     <>
                                         {!account.isUserOwner && (
                                             <Button onClick={handleClickOpenOwner} variant="contained" style={{height: "80px", margin: "10px"}}>
@@ -534,7 +529,7 @@ export default function Profile() {
 
                                     <Dialog disableEscapeKeyDown open={isManager && confirmOpen}
                                             onClose={handleConfirmClose}>
-                                        <DialogTitle>Czy na pewno chcesz dodać poziom dostępu zarządcy?</DialogTitle>
+                                        <DialogTitle>{t('profile.add_level')}</DialogTitle>
                                         <DialogActions>
                                             <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
                                             <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
@@ -542,7 +537,7 @@ export default function Profile() {
                                     </Dialog>
 
                                     <Dialog disableEscapeKeyDown open={isOwner} onClose={handleClose}>
-                                        <DialogTitle>Wypełnij formularz dodania uprawnień właściciela</DialogTitle>
+                                        <DialogTitle>{t('profile.owner_form')}</DialogTitle>
                                         <DialogContent>
                                             <Box sx={{display: 'flex', flexWrap: 'wrap'}}>
                                                 <form onSubmit={handleSumbit}>
@@ -577,7 +572,7 @@ export default function Profile() {
 
                                     <Dialog disableEscapeKeyDown open={isOwner && confirmOpen}
                                             onClose={handleConfirmClose}>
-                                        <DialogTitle>Czy na pewno chcesz dodać poziom dostępu właściciela?</DialogTitle>
+                                        <DialogTitle>{t('profile.add_level')}</DialogTitle>
                                         <DialogActions>
                                             <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
                                             <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
@@ -585,7 +580,7 @@ export default function Profile() {
                                     </Dialog>
 
                                     <Dialog disableEscapeKeyDown open={isAdmin} onClose={handleClose}>
-                                        <DialogTitle>Czy na pewno chcesz dodać poziom dostępu admin?</DialogTitle>
+                                        <DialogTitle>{t('profile.add_level')}</DialogTitle>
                                         <DialogActions>
                                             <Button onClick={handleClose}>{t('confirm.no')}</Button>
                                             <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
@@ -593,7 +588,7 @@ export default function Profile() {
                                     </Dialog>
 
                                     <Dialog disableEscapeKeyDown open={isRemoveAccessOpen} onClose={handleClose}>
-                                        <DialogTitle>Usuń poziom dostępu</DialogTitle>
+                                        <DialogTitle>{t('profile.revoke_level')}</DialogTitle>
                                         <DialogContent>
                                             <form onSubmit={handleAddSubmit}>
                                                 <FormControl fullWidth>
@@ -623,7 +618,7 @@ export default function Profile() {
                                     </Dialog>
 
                                     <Dialog disableEscapeKeyDown open={confirmRemove} onClose={handleConfirmClose}>
-                                        <DialogTitle>Czy na pewno chcesz odebrać poziom dostępu?</DialogTitle>
+                                        <DialogTitle>{t('profile.revoke_level')}</DialogTitle>
                                         <DialogActions>
                                             <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
                                             <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
@@ -631,12 +626,12 @@ export default function Profile() {
                                     </Dialog>
 
                                     <Dialog disableEscapeKeyDown open={successOpenRemove}>
-                                        <DialogTitle>Poziom dostępu został odebrany</DialogTitle>
+                                        <DialogTitle>{t('profile.revoked_level')}</DialogTitle>
                                         <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
                                     </Dialog>
 
                                     <Dialog disableEscapeKeyDown open={successOpen}>
-                                        <DialogTitle>Poziom dostępu został dodany</DialogTitle>
+                                        <DialogTitle>{t('profile.added_level')}</DialogTitle>
                                         <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
                                     </Dialog>
 

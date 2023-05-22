@@ -5,12 +5,13 @@ import {useCookies} from "react-cookie";
 import NavbarPanel from "../navigation/NavbarPanel";
 import Logo from "../../assets/logo.svg";
 import {useTranslation} from "react-i18next";
+import {GUEST} from "../../consts";
 
 const LandingPage = () => {
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
     const [loggedIn, setLoggedIn] = useState(false);
-    const [cookies, setCookie] = useCookies(["token"]);
+    const [cookies, setCookie] = useCookies(["token", "role"]);
 
     const handleButtonClick = (path: string) => {
         navigate(path);
@@ -18,6 +19,7 @@ const LandingPage = () => {
 
     useEffect(() => {
         if (cookies.token) setLoggedIn(true);
+        else setCookie('role', GUEST);
     });
 
     return (

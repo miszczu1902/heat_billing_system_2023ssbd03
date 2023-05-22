@@ -19,7 +19,7 @@ import {useNavigate} from "react-router-dom";
 import {Icon} from "@mui/material";
 import Logo from './../../assets/logo.svg';
 import {useTranslation} from "react-i18next";
-import NavbarPanel from "../navigation/NavbarPanel";
+import jwt from "jwt-decode";
 
 const theme = createTheme();
 
@@ -189,7 +189,7 @@ const Login = () => {
                                 alignItems: 'center',
                                 justifyContent: 'center'
                             }}>
-                                <Button type="submit" variant="contained" sx={{m: 2}}>Zaloguj</Button>
+                                <Button type="submit" variant="contained" sx={{m: 2}}>{t('login.login')}</Button>
                                 <Button onClick={handleClickOpen} variant="contained" sx={{m: 2}}>{t('login.password_forgot')}</Button>
                                 <div>
                                     <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>

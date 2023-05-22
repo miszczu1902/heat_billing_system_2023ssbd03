@@ -118,6 +118,7 @@ const ChangePhoneNumber = () => {
         if (reason !== 'backdropClick') {
             setSuccessOpen(false);
         }
+        window.location.reload();
     }
 
     const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {

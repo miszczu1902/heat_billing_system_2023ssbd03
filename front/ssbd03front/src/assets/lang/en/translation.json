@@ -11,7 +11,11 @@
       "default": "Language",
       "pl": "Polish",
       "en": "English"
-    }
+    },
+    "select_role": "Select role",
+    "role": "Role",
+    "roles": "Roles",
+    "logged_as": "Logged as: "
   },
   "confirm":
   {
@@ -52,7 +56,8 @@
     "login_error_two": "The password must consist of 8-32 characters, one capital letter, a special character",
     "login_password_error_one": "The login can only contain letters, numbers, and the underscore ",
     "login_password_error_two": "must be between 8 and 16 characters long.",
-    "success_title": "An email with a hyperlink to the password change form has been sent to the email address assigned to this account."
+    "success_title": "An email with a hyperlink to the password change form has been sent to the email address assigned to this account.",
+    "login" : "Login"
   },
   "change_phone_number":
   {
@@ -121,7 +126,8 @@
     "success": "Account registered",
     "success_two": "Account registered. A message with an activation link has been sent to the e-mail address provided",
     "log_in": "Already have an account? Log in",
-    "user_exists": "User already exists"
+    "user_exists": "User already exists",
+    "mandatory" : "* - Mandatory fields"
   },
   "account_list":
   {
@@ -176,11 +182,18 @@
     "owner" : "OWNER",
     "manager" : "MANAGER",
     "admin" : "ADMIN",
-    "access_level_form_title" : "Fill in the form of adding administrator permissions"
+    "access_level_form_title" : "Fill in the form of adding permissions",
+    "add_level": "Are you sure to grant access level?",
+    "revoke_level": "Are you sure to revoke access level?",
+    "added_level": "Access level granted",
+    "revoked_level": "Access level revoked",
+    "manager_form": "Enter license number in the form",
+    "owner_form": "Enter phone number in the form",
+    "revoke": "Revoke access level"
   },
   "page_not_found":
   {
-    "title": "404 Page not found"
+    "title": "Page not found"
   },
   "email":
   {
@@ -190,6 +203,7 @@
     "new_email": "New email",
     "confirm_changes": "Are you sure you want to change your email?",
     "success_title": "A confirmation link has been sent to new email address.",
-    "failure_title": "An error occurred while changing the email address."
+    "failure_title": "An error occurred while changing the email address.",
+    "confirmed": "Email was confirmed"
   }
 }
