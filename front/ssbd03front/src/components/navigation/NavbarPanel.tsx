@@ -74,7 +74,6 @@ const NavbarPanel = () => {
             const decodedRole = JSON.parse(JSON.stringify(decodedToken)).role;
             const roles = decodedRole.split(',').sort();
             const currentTimestamp = Math.floor(new Date().getTime() / 1000);
-
             if (JSON.parse(JSON.stringify(decodedToken)).exp < currentTimestamp) {
                 removeCookie('token');
                 navigate('/');
