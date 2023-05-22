@@ -1,15 +1,5 @@
-import React from 'react';
-import {useState, useEffect} from 'react';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    TablePagination
-} from '@mui/material';
+import React, {useEffect, useState} from 'react';
+import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow} from '@mui/material';
 import {AccountFromList} from '../../types/accountFromList';
 import axios from 'axios';
 import {API_URL} from '../../consts';
@@ -20,14 +10,14 @@ import {useTranslation} from "react-i18next";
 const AccountsList = () => {
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
-    const [cookies, setCookie] = useCookies(['token']);
+    const [cookies, setCookie] = useCookies(['token', 'role']);
     const token = 'Bearer ' + cookies.token;
     const [accounts, setAccounts] = useState<AccountFromList[]>([]);
     const [pageNumber, setPageNumber] = useState(0);
     const [size, setSize] = useState(10);
     const [sortBy, setSortBy] = useState('username');
     const [total, setTotal] = useState<number>(0);
-    const [role, setRole] = useState('');
+    const [role, setRole] = useState(cookies.role);
 
     const fetchData = async () => {
         axios.get(`${API_URL}/accounts?sortBy=${sortBy}&pageNumber=${pageNumber}&pageSize=${size}`, {

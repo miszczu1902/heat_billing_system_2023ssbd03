@@ -9,7 +9,6 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import {useTranslation} from "react-i18next";
 import EditPersonalData from "../personalData/EditPersonalData";
-import jwt from "jwt-decode";
 import EditPassword from "../passwords/EditPassword";
 import EditEmail from "../email/EditEmail";
 import {Admin} from "../../types/admin";
@@ -20,9 +19,9 @@ const AdminProfile = () => {
     const navigate = useNavigate();
     const [cookies, setCookie, removeCookie] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
-    const [etag, setEtag] = React.useState(false);
-    const [version, setVersion] = React.useState("");
-    const [role, setRole] = React.useState('');
+    const [etag, setEtag] = useState(false);
+    const [version, setVersion] = useState("");
+    const [role, setRole] = useState('');
     const [admin, setAdmin] = useState<Admin | null>(null);
 
     const fetchData = async () => {
@@ -37,24 +36,9 @@ const AdminProfile = () => {
         });
     };
 
-
-
     useEffect(() => {
-        if (cookies.token !== "undefined" && cookies.token !== undefined) {
-            const decodedToken = jwt(cookies.token);
-            const decodedRole = JSON.parse(JSON.stringify(decodedToken)).role;
-            setRole(decodedRole.split(','));
-            const currentTimestamp = Math.floor(new Date().getTime() / 1000);
-            if (JSON.parse(JSON.stringify(decodedToken)).exp < currentTimestamp) {
-                removeCookie('token');
-                navigate('/');
-            }
-            fetchData();
-
-        } else {
-            navigate('/');
-        }
-    }, []);
+        fetchData();
+    });
 
     return (
         <div style={{height: '90.3vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0}}>

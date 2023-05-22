@@ -19,7 +19,7 @@ import {useNavigate} from "react-router-dom";
 import {Icon} from "@mui/material";
 import Logo from './../../assets/logo.svg';
 import {useTranslation} from "react-i18next";
-import jwt from "jwt-decode";
+import { useState } from 'react';
 
 const theme = createTheme();
 
@@ -27,19 +27,19 @@ const Login = () => {
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
     const [cookies, setCookie] = useCookies(["token", "language"]);
-    const [username, setUsername] = React.useState("");
-    const [password, setPassword] = React.useState("");
-    const [loginError, setLoginError] = React.useState("");
-    const [open, setOpen] = React.useState(false);
-    const [loginPassword, setLoginPassword] = React.useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [loginError, setLoginError] = useState("");
+    const [open, setOpen] = useState(false);
+    const [loginPassword, setLoginPassword] = useState("");
 
-    const [loginPasswordError, setLoginPasswordError] = React.useState("");
-    const [validData, setValidData] = React.useState(false);
-    const [successOpen, setSuccessOpen] = React.useState(false);
-    const [errorOpen, setErrorOpen] = React.useState(false);
-    const [errorOpenMessage, setErrorOpenMessage] = React.useState("");
-    const [loading, setLoading] = React.useState(true);
-    const [loggedIn, setLoggedIn] = React.useState(false);
+    const [loginPasswordError, setLoginPasswordError] = useState("");
+    const [validData, setValidData] = useState(false);
+    const [successOpen, setSuccessOpen] = useState(false);
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [errorOpenMessage, setErrorOpenMessage] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [loggedIn, setLoggedIn] = useState(false);
 
     React.useEffect(() => {
         if (cookies.token != "undefined" && cookies.token != undefined) {
@@ -190,7 +190,8 @@ const Login = () => {
                                 justifyContent: 'center'
                             }}>
                                 <Button type="submit" variant="contained" sx={{m: 2}}>{t('login.login')}</Button>
-                                <Button onClick={handleClickOpen} variant="contained" sx={{m: 2}}>{t('login.password_forgot')}</Button>
+                                <Button onClick={handleClickOpen} variant="contained"
+                                        sx={{m: 2}}>{t('login.password_forgot')}</Button>
                                 <div>
                                     <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
                                         <DialogTitle>{t('login.password_reminder')}</DialogTitle>

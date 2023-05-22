@@ -5,44 +5,45 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { TextField } from '@mui/material';
+import {TextField} from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import axios from 'axios';
-import { API_URL } from '../../consts';
+import {API_URL} from '../../consts';
 import {useCookies} from 'react-cookie';
 import {useTranslation} from "react-i18next";
+import { useState } from 'react';
 
 const EditPassword = () => {
     const {t, i18n} = useTranslation();
     const [cookies] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
-    const [etag, setEtag] = React.useState(false);
-    const [version, setVersion] = React.useState("");
+    const [etag, setEtag] = useState(false);
+    const [version, setVersion] = useState("");
 
-    const [open, setOpen] = React.useState(false);
-    const [confirmOpen, setConfirmOpen] = React.useState(false);
-    const [oldPassword, setOldPassword] = React.useState("");
-    const [newPassword, setNewPassword] = React.useState("");
-    const [repeatedNewPassword, setRepeatedNewPassword] = React.useState("");
+    const [open, setOpen] = useState(false);
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [oldPassword, setOldPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [repeatedNewPassword, setRepeatedNewPassword] = useState("");
 
-    const [oldPasswordError, setOldPasswordError] = React.useState("");
-    const [newPasswordError, setNewPasswordError] = React.useState("");
-    const [repeatedNewPasswordError, setRepeatedNewPasswordError] = React.useState("");
-    const [oldAndNewPasswordSameError, setOldAndNewPasswordSameError] = React.useState("");
-    const [newAndRepeatedNewPasswordNotSameError, setNewAndRepeatedNewPasswordNotSameError] = React.useState("");
-    const [dataError, setDataError] = React.useState("");
+    const [oldPasswordError, setOldPasswordError] = useState("");
+    const [newPasswordError, setNewPasswordError] = useState("");
+    const [repeatedNewPasswordError, setRepeatedNewPasswordError] = useState("");
+    const [oldAndNewPasswordSameError, setOldAndNewPasswordSameError] = useState("");
+    const [newAndRepeatedNewPasswordNotSameError, setNewAndRepeatedNewPasswordNotSameError] = useState("");
+    const [dataError, setDataError] = useState("");
 
-    const [newPasswordValid, setNewPasswordValid] = React.useState(false);
-    const [repeatedNewPasswordValid, setRepeatedNewPasswordValid] = React.useState(false);
-    const [oldPasswordValid, setOldPasswordValid] = React.useState(false);
-    const [oldAndNewPasswordSameValid, setOldAndNewPasswordSameValid] = React.useState(false);
-    const [newAndRepeatedNewPasswordNotSameValid, setNewAndRepeatedNewPasswordNotSameValid] = React.useState(false);
-    const [validData, setValidData] = React.useState(false);
+    const [newPasswordValid, setNewPasswordValid] = useState(false);
+    const [repeatedNewPasswordValid, setRepeatedNewPasswordValid] = useState(false);
+    const [oldPasswordValid, setOldPasswordValid] = useState(false);
+    const [oldAndNewPasswordSameValid, setOldAndNewPasswordSameValid] = useState(false);
+    const [newAndRepeatedNewPasswordNotSameValid, setNewAndRepeatedNewPasswordNotSameValid] = useState(false);
+    const [validData, setValidData] = useState(false);
 
-    const [successOpen, setSuccessOpen] = React.useState(false);
-    const [errorOpen, setErrorOpen] = React.useState(false);
-    const [errorOpenMessage, setErrorOpenMessage] = React.useState("");
+    const [successOpen, setSuccessOpen] = useState(false);
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [errorOpenMessage, setErrorOpenMessage] = useState("");
 
     const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -173,26 +174,26 @@ const EditPassword = () => {
             version: parseInt(version)
         }
 
-         axios.patch(`${API_URL}/accounts/self/password`,
-             passwordDTO, {
-                    headers: {
-                        'Authorization': token,
-                        'If-Match' : etag,
-                        'Content-Type': 'application/json'
-                    },
-                })
-                .then(response => {
-                    setSuccessOpen(true);
-                })
-                .catch(error => {
-                    setErrorOpenMessage(error.response.data.message)
-                    setErrorOpen(true);
-                });
+        axios.patch(`${API_URL}/accounts/self/password`,
+            passwordDTO, {
+                headers: {
+                    'Authorization': token,
+                    'If-Match': etag,
+                    'Content-Type': 'application/json'
+                },
+            })
+            .then(response => {
+                setSuccessOpen(true);
+            })
+            .catch(error => {
+                setErrorOpenMessage(error.response.data.message)
+                setErrorOpen(true);
+            });
         handleClose(event, reason);
     }
 
     const handleConfirm = () => {
-        if(validData) {
+        if (validData) {
             setDataError("");
             setConfirmOpen(true);
         } else {
@@ -224,7 +225,7 @@ const EditPassword = () => {
             <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
                 <DialogTitle>{t('edit_password.form_title')}</DialogTitle>
                 <DialogContent>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                    <Box sx={{display: 'flex', flexWrap: 'wrap'}}>
                         <form onSubmit={handleSumbit}>
                             <List component="nav" aria-label="mailbox folders">
                                 <ListItem>
@@ -232,7 +233,7 @@ const EditPassword = () => {
                                         <TextField
                                             id="outlined-helperText"
                                             label={t('edit_password.label_text_old_password')}
-                                            defaultValue= {oldPassword}
+                                            defaultValue={oldPassword}
                                             type="password"
                                             helperText={t('edit_password.help_text_old_password')}
                                         />
@@ -246,7 +247,7 @@ const EditPassword = () => {
                                         <TextField
                                             id="outlined-helperText"
                                             label={t('edit_password.label_text_new_password')}
-                                            defaultValue= {newPassword}
+                                            defaultValue={newPassword}
                                             type="password"
                                             helperText={t('edit_password.help_text_new_password')}
                                         />
@@ -260,7 +261,7 @@ const EditPassword = () => {
                                         <TextField
                                             id="outlined-helperText"
                                             label={t('edit_password.label_text_repeated_password')}
-                                            defaultValue= {repeatedNewPassword}
+                                            defaultValue={repeatedNewPassword}
                                             type="password"
                                             helperText={t('edit_password.help_text_repeated_password')}
                                         />

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useEffect, useState} from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
@@ -11,7 +12,6 @@ import axios from 'axios';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
-import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {Icon} from "@mui/material";
 import Logo from "../../assets/logo.svg";
@@ -19,20 +19,20 @@ import {useTranslation} from "react-i18next";
 
 const ResetPassword = () => {
     const {t, i18n} = useTranslation();
-    const [newPassword, setNewPassword] = React.useState("");
-    const [repeatedNewPassword, setRepeatedNewPassword] = React.useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [repeatedNewPassword, setRepeatedNewPassword] = useState("");
     const theme = createTheme();
 
-    const [newPasswordError, setNewPasswordError] = React.useState("");
-    const [repeatedNewPasswordError, setRepeatedNewPasswordError] = React.useState("");
-    const [newAndRepeatedNewPasswordNotSameError, setNewAndRepeatedNewPasswordNotSameError] = React.useState("");
+    const [newPasswordError, setNewPasswordError] = useState("");
+    const [repeatedNewPasswordError, setRepeatedNewPasswordError] = useState("");
+    const [newAndRepeatedNewPasswordNotSameError, setNewAndRepeatedNewPasswordNotSameError] = useState("");
 
-    const [successOpen, setSuccessOpen] = React.useState(false);
-    const [errorOpen, setErrorOpen] = React.useState(false);
-    const [errorOpenMessage, setErrorOpenMessage] = React.useState("");
-    const [confirmOpen, setConfirmOpen] = React.useState(false);
-    const [validData, setValidData] = React.useState(true);
-    const [open, setOpen] = React.useState(false);
+    const [successOpen, setSuccessOpen] = useState(false);
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [errorOpenMessage, setErrorOpenMessage] = useState("");
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [validData, setValidData] = useState(true);
+    const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     const searchParams = new URLSearchParams(window.location.search);
     const token = searchParams.get('token');
@@ -166,7 +166,8 @@ const ResetPassword = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <Grid container justifyContent="center" alignItems="center" sx={{background: '#1c8de4', height: '100vh', width: '100vw'}}>
+            <Grid container justifyContent="center" alignItems="center"
+                  sx={{background: '#1c8de4', height: '100vh', width: '100vw'}}>
                 <Grid my={2} item sm={8} md={5} component={Paper} elevation={6}>
                     <Box sx={{my: 30, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                         <Icon sx={{width: '10%', height: '10%', marginLeft: '1vh'}}>
@@ -175,14 +176,18 @@ const ResetPassword = () => {
                         <Typography variant="h5">{t('reset_password.password_change')}</Typography>
                         <Box component="form" onSubmit={handleSubmit}>
                             <Box component="form">
-                                <TextField fullWidth margin="normal" label={t('edit_password.label_text_new_password')} type="password"
+                                <TextField fullWidth margin="normal" label={t('edit_password.label_text_new_password')}
+                                           type="password"
                                            value={newPassword}
-                                           helperText={t('edit_password.help_text_new_password')} onChange={handleNewPasswordChange}/>
+                                           helperText={t('edit_password.help_text_new_password')}
+                                           onChange={handleNewPasswordChange}/>
                                 <div className="form-group" style={{textAlign: "center"}}>
                                     {newPasswordError}
                                 </div>
-                                <TextField fullWidth margin="normal" label={t('edit_password.label_text_repeated_password')} type="password"
-                                           helperText={t('edit_password.help_text_repeated_password')} onChange={handleRepeatedNewPasswordChange}
+                                <TextField fullWidth margin="normal"
+                                           label={t('edit_password.label_text_repeated_password')} type="password"
+                                           helperText={t('edit_password.help_text_repeated_password')}
+                                           onChange={handleRepeatedNewPasswordChange}
                                            value={repeatedNewPassword}/>
                                 <div className="form-group">
                                     {repeatedNewPasswordError}
@@ -191,16 +196,18 @@ const ResetPassword = () => {
                             <div className="form-group">
                                 {newAndRepeatedNewPasswordNotSameError}
                             </div>
-                            <Button onClick={handleConfirm} fullWidth variant="contained" style={{marginBottom: '5px'}}>{t('reset_password.change_password')}</Button>
-                            <Button onClick={backToLogin} fullWidth variant="contained">{t('reset_password.back_to_login')}</Button>
+                            <Button onClick={handleConfirm} fullWidth variant="contained"
+                                    style={{marginBottom: '5px'}}>{t('reset_password.change_password')}</Button>
+                            <Button onClick={backToLogin} fullWidth
+                                    variant="contained">{t('reset_password.back_to_login')}</Button>
                             <Dialog disableEscapeKeyDown open={confirmOpen} onClose={handleConfirmClose}>
                                 <DialogTitle>{t('edit_password.confirm_title')}</DialogTitle>
                                 <DialogActions>
                                     <div>
-                                    <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
+                                        <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
                                     </div>
                                     <div>
-                                    <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
+                                        <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
                                     </div>
                                 </DialogActions>
                             </Dialog>

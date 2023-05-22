@@ -2,7 +2,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {API_URL} from "../../consts";
-import {Button, Container, Grid, Typography} from "@mui/material";
+import {Container, Grid, Typography} from "@mui/material";
 import logo from "../../assets/logo.svg";
 import {useTranslation} from "react-i18next";
 import Paper from "@mui/material/Paper";
@@ -13,7 +13,7 @@ const ConfirmEmail = () => {
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
     const [cookies, setCookie, removeCookie] = useCookies(["token"]);
-    const [role, setRole] = React.useState('');
+    const [role, setRole] = useState('');
     const token = "Bearer " + cookies.token;
     const {activationToken} = useParams<{ activationToken: string }>();
     const [message, setMessage] = useState('');

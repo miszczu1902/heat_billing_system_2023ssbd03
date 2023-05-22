@@ -20,7 +20,7 @@ import {useNavigate} from "react-router-dom";
 import Logo from "../../assets/logo.svg";
 import "../../i18n";
 import {useTranslation} from "react-i18next";
-import {API_URL, ADMIN, MANAGER, OWNER, GUEST} from "../../consts";
+import {ADMIN, API_URL, GUEST, MANAGER, OWNER} from "../../consts";
 import axios from "axios";
 import UserInfoIcon from '../icons/UserInfoIcon';
 import GlobeIcon from '../icons/GlobeIcon';
@@ -58,7 +58,22 @@ const NavbarPanel = () => {
             setRoles([GUEST]);
             setCurrentRole(GUEST);
         }
-    }, [cookies.token]);
+
+        switch (currentRole) {
+            case ADMIN :
+                setNavbarColor('#58d1fa');
+                break;
+            case MANAGER :
+                setNavbarColor('#1c75ec');
+                break;
+            case OWNER :
+                setNavbarColor('#7b79d4');
+                break;
+            default :
+                setNavbarColor('#1c8de4');
+                break;
+        }
+    }, [cookies.token, currentRole]);
 
     const handleChange = (event: SelectChangeEvent) => {
         localStorage.setItem("selectedLanguage", event.target.value);
@@ -112,28 +127,11 @@ const NavbarPanel = () => {
     };
 
     const handleClickOpenLogout = () => {
+        navigate("/");
+        removeCookie('role');
         removeCookie('token');
-        setCookie("role", GUEST);
-        navigate('/');
         window.location.reload();
     };
-
-    useEffect(() => {
-        switch (currentRole) {
-            case ADMIN :
-                setNavbarColor('#58d1fa');
-                break;
-            case MANAGER :
-                setNavbarColor('#1c75ec');
-                break;
-            case OWNER :
-                setNavbarColor('#7b79d4');
-                break;
-            default :
-                setNavbarColor('#1c8de4');
-                break;
-        }
-    }, [currentRole]);
 
     return (
         <AppBar position="static" style={{backgroundColor: navbarColor}}>
@@ -148,7 +146,7 @@ const NavbarPanel = () => {
                     </Typography>
                 }
 
-                <Typography variant="h6" sx={{marginRight: '1vh', marginLeft: 'auto'}}>{t('navbar.logged_as') + username}</Typography>
+                <Typography variant="h6" sx={{marginRight: '1vh', marginLeft: 'auto'}}>{cookies.token && t('navbar.logged_as') + username}</Typography>
                 <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{marginRight: '1vh'}}>
                     <Button onClick={handleClickOpen} style={{backgroundColor: navbarColor}}><GlobeIcon/></Button>
                     {cookies.token && (

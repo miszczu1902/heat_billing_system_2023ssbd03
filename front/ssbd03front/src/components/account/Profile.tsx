@@ -14,7 +14,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import {Checkbox, FormControlLabel, Grid} from '@mui/material';
 import {useNavigate, useParams} from "react-router-dom";
-import {API_URL, ADMIN, MANAGER, OWNER, GUEST} from "../../consts";
+import {ADMIN, API_URL, MANAGER, OWNER} from "../../consts";
 import {useCookies} from "react-cookie";
 import axios from 'axios';
 import Paper from "@mui/material/Paper";
@@ -24,7 +24,6 @@ import {Account} from "../../types/account";
 import EditUserPersonalData from "../personalData/EditUserPersonalData";
 import EnableAccount from "../accounts/EnableAccount";
 import DisableAccount from "../accounts/DisableAccount";
-import jwt from "jwt-decode";
 import EditUserPassword from "../passwords/EditUserPassword";
 import EditUserEmail from "../email/EditUserEmail";
 import UserIcon from "../icons/UserIcon";
@@ -40,30 +39,30 @@ export default function Profile() {
     const navigate = useNavigate();
     const [cookies, setCookie, removeCookie] = useCookies(["token", "role"]);
     const token = "Bearer " + cookies.token;
-    const [etag, setEtag] = React.useState(false);
-    const [version, setVersion] = React.useState("");
+    const [etag, setEtag] = useState(false);
+    const [version, setVersion] = useState("");
     const [selectedRole, setSelectedRole] = useState("");
     const [license, setLicense] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
-    const [role, setRole] = React.useState(cookies.role);
+    const [role, setRole] = useState(cookies.role);
     const username = useParams().username;
     const [account, setAccount] = useState<Account | null>(null);
-    const [phoneNumberError, setPhoneNumberError] = React.useState("");
-    const [licenseError, setLicenseError] = React.useState("");
-    const [phoneNumberValid, setPhoneNumberValid] = React.useState(false);
-    const [removeValid, setRemoveValid] = React.useState(false);
-    const [licenseValid, setLicenseValid] = React.useState(false);
-    const [confirmOpen, setConfirmOpen] = React.useState(false);
-    const [successOpen, setSuccessOpen] = React.useState(false);
-    const [errorOpen, setErrorOpen] = React.useState(false);
-    const [errorOpenMessage, setErrorOpenMessage] = React.useState("");
-    const [dataError, setDataError] = React.useState("");
-    const [isAdmin, setIsAdmin] = React.useState(false);
-    const [isOwner, setIsOwner] = React.useState(false);
-    const [isManager, setIsManager] = React.useState(false);
+    const [phoneNumberError, setPhoneNumberError] = useState("");
+    const [licenseError, setLicenseError] = useState("");
+    const [phoneNumberValid, setPhoneNumberValid] = useState(false);
+    const [removeValid, setRemoveValid] = useState(false);
+    const [licenseValid, setLicenseValid] = useState(false);
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [successOpen, setSuccessOpen] = useState(false);
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [errorOpenMessage, setErrorOpenMessage] = useState("");
+    const [dataError, setDataError] = useState("");
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [isOwner, setIsOwner] = useState(false);
+    const [isManager, setIsManager] = useState(false);
     const [isRemoveAccessOpen, setIsRemoveAccessOpen] = useState(false);
-    const [confirmRemove, setConfirmRemove] = React.useState(false);
-    const [successOpenRemove, setSuccessOpenRemove] = React.useState(false);
+    const [confirmRemove, setConfirmRemove] = useState(false);
+    const [successOpenRemove, setSuccessOpenRemove] = useState(false);
 
     const fetchData = async () => {
         axios.get(`${API_URL}/accounts/${username}`, {
@@ -78,20 +77,8 @@ export default function Profile() {
     };
 
     useEffect(() => {
-        if (cookies.token !== "undefined" && cookies.token !== undefined) {
-            const decodedToken = jwt(cookies.token);
-            const decodedRole = JSON.parse(JSON.stringify(decodedToken)).role;
-            setRole(cookies.role);
-            const currentTimestamp = Math.floor(new Date().getTime() / 1000);
-            if (JSON.parse(JSON.stringify(decodedToken)).exp < currentTimestamp) {
-                removeCookie('token');
-                navigate('');
-            }
-            fetchData();
-        } else {
-            navigate('/');
-        }
-    }, [username, cookies.token]);
+        fetchData();
+    }, [username]);
 
     const handleConfirmConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
         if (reason !== 'backdropClick') {

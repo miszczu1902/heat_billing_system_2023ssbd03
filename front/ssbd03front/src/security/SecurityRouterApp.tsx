@@ -1,4 +1,4 @@
-import {createBrowserRouter, Outlet, Route, useNavigate} from 'react-router-dom';
+import {createBrowserRouter, Outlet, useNavigate} from 'react-router-dom';
 import NavbarPanel from '../components/navigation/NavbarPanel';
 import EditPersonalData from '../components/personalData/EditPersonalData';
 import Login from '../components/login/Login';

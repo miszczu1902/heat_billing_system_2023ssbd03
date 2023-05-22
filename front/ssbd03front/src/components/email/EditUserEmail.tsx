@@ -12,28 +12,28 @@ import axios from 'axios';
 import {API_URL} from '../../consts';
 import {useCookies} from 'react-cookie';
 import {useTranslation} from "react-i18next";
-import ConfirmEmail from "./ConfirmEmail";
 import {useParams} from "react-router-dom";
+import { useState } from 'react';
 
 const EditUserEmail = () => {
     const {t} = useTranslation();
     const [cookies] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
-    const [etag, setEtag] = React.useState(false);
-    const [version, setVersion] = React.useState("");
-    const [open, setOpen] = React.useState(false);
-    const [confirmOpen, setConfirmOpen] = React.useState(false);
-    const [email, setEmail] = React.useState("");
+    const [etag, setEtag] = useState(false);
+    const [version, setVersion] = useState("");
+    const [open, setOpen] = useState(false);
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [email, setEmail] = useState("");
     const username = useParams().username;
 
-    const [emailError, setEmailError] = React.useState("");
-    const [dataError, setDataError] = React.useState("");
+    const [emailError, setEmailError] = useState("");
+    const [dataError, setDataError] = useState("");
 
-    const [emailValid, setEmailValid] = React.useState(false);
+    const [emailValid, setEmailValid] = useState(false);
 
-    const [successOpen, setSuccessOpen] = React.useState(false);
-    const [errorOpen, setErrorOpen] = React.useState(false);
-    const [errorOpenMessage, setErrorOpenMessage] = React.useState("");
+    const [successOpen, setSuccessOpen] = useState(false);
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [errorOpenMessage, setErrorOpenMessage] = useState("");
 
     const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
