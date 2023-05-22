@@ -17,11 +17,12 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackE
 
 @ApplicationException(rollback = true)
 public class AppException extends WebApplicationException {
-    protected final static String ERROR_UNKNOWN = "ERROR_UNKNOWN";
-    protected final static String ERROR_GENERAL_PERSISTENCE = "ERROR_GENERAL_PERSISTENCE";
-    protected final static String ERROR_OPTIMISTIC_LOCK = "ERROR_OPTIMISTIC_LOCK";
-    protected final static String ERROR_TRANSACTION_ROLLEDBACK = "ERROR_TRANSACTION_ROLLEDBACK";
-    protected final static String ERROR_ACCOUNT_NOT_REGISTERED = "ERROR_ACCOUNT_NOT_REGISTERED";
+    protected final static String ERROR_UNKNOWN = "exception.error.unknown";
+    protected final static String ERROR_GENERAL_PERSISTENCE = "exception.error.general_persistence";
+    protected final static String ERROR_OPTIMISTIC_LOCK = "exception.error.optimistic_lock";
+    protected final static String ERROR_ACCESS_DENIED = "exception.error.access_denied";
+    protected final static String ERROR_TRANSACTION_ROLLEDBACK = "exception.error.transaction_rolledback";
+    protected final static String ERROR_ACCOUNT_NOT_REGISTERED = "exception.error.account_not_registered";
 
     protected final static String ERROR_PASSWORDS_NOT_SAME_MESSAGE = "Passwords are not the same"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_PASSWORDS_OLD_AND_NEW_SAME_EXCEPTION = "Old and new passwords are the same"; //TODO - tu trzeba zrobić resource bundle
@@ -41,7 +42,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ADDING_AN_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT = "You can't give yourself permissions"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_REVOKE_THE_ONLY_LEVEL_OF_ACCESS = "One level of access cannot be taken away"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_IS_NOT_ADMIN = "This account is not the admin"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_MANAGER_CAN_NOT_CHANGE_ADMIN = "This account does not have permission to change Admin email"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_MANAGER_CAN_NOT_CHANGE_ADMINA = "This account does not have permission to change Admin email"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_IS_NOT_MANAGER = "This account is not the manager"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCESS_LEVEL_IS_ALREADY_GRANTED = "This account already has this level of access"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_LICENSE_NOT_UNIQUE_MESSAGE = "License not unique"; //TODO - tu trzeba zrobić resource bundle

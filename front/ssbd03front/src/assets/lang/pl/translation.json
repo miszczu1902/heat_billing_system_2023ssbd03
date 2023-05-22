@@ -205,5 +205,50 @@
     "success_title": "Link potwierdzający został wysłany na nowy adres email.",
     "failure_title": "Wystąpił błąd podczas zmiany adresu email.",
     "confirmed": "Email został potwierdzony"
+  },
+  "exception":
+  {
+    "error":
+    {
+      "unknown": "BŁĄD_NIEZNANY",
+      "general_persistence":"BŁĄD_PERSISTENCJI",
+      "optimistic_lock": "BŁĄD_OPTYMISTYCZNEGO_BLOKOWANIA",
+      "access_denied": "BŁĄD_ODMOWY_DOSTĘPU",
+      "transaction_rolledback": "BŁĄD_WYCOFANIA_TRANSAKCJI",
+      "account_not_registered": "BŁĄD_KONTO_NIEZAREJESTROWANE"
+    },
+    "password":
+    {
+      "not_same_message": "Hasła nie są identyczne",
+      "old_and_new_same": "Stare i nowe hasła są identyczne",
+      "old_incorrect": "Stare hasło jest nieprawidłowe"
+    },
+    "account":
+    {
+      "email_not_unique": "Adres e-mail nie jest unikalny",
+      "username_not_unique": "Nazwa użytkownika nie jest unikalna",
+      "phone_number_not_unique": "Numer telefonu nie jest unikalny",
+      "current_phone_number": "To jest Twój obecny numer telefonu",
+      "current_email": "To jest Twój obecny adres e-mail",
+      "account_is_not_owner": "To konto nie jest właścicielem",
+      "account_exists": "Konto już istnieje",
+      "account_not_exists": "Konto o podanych danych nie istnieje",
+      "result_not_found": "Nie znaleziono wyników zapytania",
+      "action_not_allowed": "Akcja nie jest dozwolona przy tych uprawnieniach",
+      "personal_data_validation": "Każdy element danych osobowych może mieć maksymalnie 32 znaki",
+      "invalid_credentials": "Nieprawidłowa nazwa użytkownika lub hasło",
+      "adding_an_access_level_to_the_same_admin_account": "Nie możesz przyznawać sobie uprawnień",
+      "revoke_the_only_level_of_access": "Nie można odebrać jedynego poziomu dostępu",
+      "account_is_not_admin": "To konto nie jest administratorem",
+      "manager_con_not_change_admin": "To konto nie ma uprawnień do zmiany adresu e-mail administratora",
+      "account_is_not_manager": "To konto nie jest menedżerem",
+      "access_level_is_already_granted": "To konto ma już ten poziom dostępu",
+      "license_not_unique": "Licencja nie jest unikalna",
+      "account_is_not_activated": "To konto nie jest aktywowane",
+      "account_is_blocked": "To konto jest zablokowane",
+      "revoke_access_level_to_the_same_admin_account": "Nie możesz odebrać sobie uprawnień",
+      "etag_verifier": "Nie można zweryfikować eTag",
+      "etag_singer": "Nie można podpisać eTag"
+    }
   }
 }
