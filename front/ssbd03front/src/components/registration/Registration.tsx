@@ -32,7 +32,7 @@ const Registration = () => {
 
     const {register, handleSubmit} = useForm<RegistrationForm>();
     const navigate = useNavigate();
-    const [cookies, setCookie] = useCookies(["token"]);
+    const [cookies, setCookie] = useCookies(["token", "role"]);
     const [firstName, setFirstName] = useState('');
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState("");

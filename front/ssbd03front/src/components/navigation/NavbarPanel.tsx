@@ -33,26 +33,30 @@ const NavbarPanel = () => {
     const [openRole, setOpenRole] = useState(false);
     const [navbarColor, setNavbarColor] = useState('#ffffff');
     const [cookies, setCookie, removeCookie] = useCookies(["token", "language", "role"]);
-    const [role, setRole] = useState([GUEST]);
-    const [currentRole, setCurrentRole] = useState(GUEST);
+    const [roles, setRoles] = useState([GUEST]);
+    const [currentRole, setCurrentRole] = useState(cookies.role);
     const token = "Bearer " + cookies.token;
 
     useEffect(() => {
-        console.log(cookies);
         if (cookies.token !== "undefined" && cookies.token !== undefined) {
             const decodedToken = jwt(cookies.token);
             const decodedRole = JSON.parse(JSON.stringify(decodedToken)).role;
             const roles = decodedRole.split(',').sort();
             const currentTimestamp = Math.floor(new Date().getTime() / 1000);
 
-            setRole(roles);
-            setCurrentRole(currentRole === '' ? GUEST : roles[0]);
-            setCookie("role", currentRole);
-
             if (JSON.parse(JSON.stringify(decodedToken)).exp < currentTimestamp) {
                 removeCookie('token');
                 navigate('/');
             }
+
+            setRoles(roles);
+            if (currentRole === GUEST) {
+                setCurrentRole(roles[0]);
+                setCookie("role", roles[0]);
+            }
+        } else {
+            setRoles([GUEST]);
+            setCurrentRole(GUEST);
         }
     }, [cookies.token]);
 
@@ -96,19 +100,19 @@ const NavbarPanel = () => {
     }
 
     const handleChangeRole = (event: SelectChangeEvent) => {
-        setCurrentRole(event.target.value);
-        setCookie("role", event.target.value);
+        localStorage.setItem("selectedRole", event.target.value);
     };
 
     const handleCloseRole = (event: React.SyntheticEvent<unknown>, reason?: string) => {
         if (reason !== 'backdropClick') {
             setOpenRole(false);
         }
+        setCookie("role", localStorage.getItem("selectedRole"));
+        window.location.reload();
     };
 
     const handleClickOpenLogout = () => {
         removeCookie('token');
-        removeCookie('role');
         navigate('/');
         window.location.reload();
     };
@@ -162,7 +166,8 @@ const NavbarPanel = () => {
                                 && <Button style={{backgroundColor: navbarColor}}
                                            onClick={() => navigate('/accounts/self/admin')}><UserInfoIcon/></Button>
                             }
-                            <Button onClick={handleOpenRole} style={{backgroundColor: navbarColor}}><SwitchUserIcon/></Button>
+                            <Button onClick={handleOpenRole}
+                                    style={{backgroundColor: navbarColor}}><SwitchUserIcon/></Button>
                             <Button onClick={handleClickOpenLogout}
                                     style={{backgroundColor: navbarColor}}>{t('navbar.log_out')}</Button>
                         </>
@@ -198,13 +203,13 @@ const NavbarPanel = () => {
                     <Box component="form" sx={{display: 'flex', flexWrap: 'wrap'}}>
                         <FormControl sx={{m: 1, minWidth: 200}}>
                             <InputLabel
-                                id="demo-dialog-select-label">{t('navbar.role')}</InputLabel>
+                                id="demo-dialog-select-label">{t('navbar.roles')}</InputLabel>
                             <Select
                                 labelId="demo-dialog-select-label"
                                 id="demo-dialog-select"
                                 onChange={handleChangeRole}
                                 input={<OutlinedInput label={t('navbar.languages.default')}/>}>
-                                {role.map((roleToDisplay) => (
+                                {roles.map((roleToDisplay) => (
                                     <MenuItem
                                         value={roleToDisplay}>{t('profile.' + roleToDisplay.toLowerCase())}</MenuItem>
                                 ))}

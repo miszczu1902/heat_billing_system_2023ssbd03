@@ -11,7 +11,10 @@
       "default": "Język",
       "pl": "Polski",
       "en": "Angielski"
-    }
+    },
+    "select_role": "Wybierz poziom dostępu",
+    "role": "Poziom dostępu",
+    "roles": "Poziomy dostępu"
   },
   "confirm":
   {
@@ -122,7 +125,8 @@
     "success": "Konto zarejestrowane",
     "success_two": "Konto zarejestrowane. Na podany adres email została wysłana wiadomość z linkiem aktywacyjnym",
     "log_in": "Masz już konto? Zaloguj się",
-    "user_exists": "Użytkownik o podanym loginie lub emailu już istnieje"
+    "user_exists": "Użytkownik o podanym loginie lub emailu już istnieje",
+    "mandatory" : "* - Wymagane pola"
   },
   "account_list":
   {

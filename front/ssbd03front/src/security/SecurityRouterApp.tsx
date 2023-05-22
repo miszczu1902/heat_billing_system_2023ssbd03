@@ -1,4 +1,4 @@
-import {createBrowserRouter, Outlet} from 'react-router-dom';
+import {createBrowserRouter, Outlet, Route, useNavigate} from 'react-router-dom';
 import NavbarPanel from '../components/navigation/NavbarPanel';
 import EditPersonalData from '../components/personalData/EditPersonalData';
 import Login from '../components/login/Login';
@@ -20,6 +20,32 @@ import EditUserEmail from "../components/email/EditUserEmail";
 import OwnerProfile from "../components/account/OwnerProfile";
 import ManagerProfile from "../components/account/ManagerProfile";
 import AdminProfile from "../components/account/AdminProfile";
+import {useCookies} from "react-cookie";
+import {ADMIN, GUEST, MANAGER, OWNER} from "../consts";
+import {useEffect} from "react";
+
+interface PrivateRouteProps {
+    component: React.ComponentType<any>;
+    accessLevels: string[];
+}
+
+const PrivateRoute: React.FC<PrivateRouteProps> = ({component: Component, accessLevels, ...rest}) => {
+    const [cookies, setCookie] = useCookies(['token', 'role']);
+    const userAccessLevel = cookies.role;
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (cookies.token === "undefined" || cookies.token === undefined) {
+            setCookie("role", GUEST);
+        }
+        if (!accessLevels.includes(userAccessLevel)) {
+            navigate('/');
+        }
+    }, [cookies.role]);
+
+
+    return <Component {...rest} />;
+};
 
 const router = createBrowserRouter([
     {
@@ -36,77 +62,79 @@ const router = createBrowserRouter([
                 children: [
                     {
                         path: '/accounts',
-                        element: <AccountsList/>
+                        element: <PrivateRoute component={AccountsList} accessLevels={[ADMIN, MANAGER]}/>
                     },
                     {
                         path: '/accounts/self/owner',
-                        element: <OwnerProfile/>
+                        element: <PrivateRoute component={OwnerProfile} accessLevels={[OWNER]}/>
                     },
                     {
                         path: '/accounts/self/manager',
-                        element: <ManagerProfile/>
+                        element: <PrivateRoute component={ManagerProfile} accessLevels={[MANAGER]}/>
                     },
                     {
                         path: '/accounts/self/admin',
-                        element: <AdminProfile/>
+                        element: <PrivateRoute component={AdminProfile} accessLevels={[ADMIN]}/>
                     },
                     {
                         path: '/accounts/:username',
-                        element: <Profile/>
+                        element: <PrivateRoute component={Profile} accessLevels={[ADMIN, MANAGER, OWNER]}/>
                     },
                     {
                         path: '/accounts/self/personal-data',
-                        element: <EditPersonalData/>
+                        element: <PrivateRoute component={EditPersonalData} accessLevels={[ADMIN, MANAGER, OWNER]}/>
                     },
                     {
                         path: '/accounts/:username/personal-data',
-                        element: <EditUserPersonalData/>
+                        element: <PrivateRoute component={EditUserPersonalData} accessLevels={[ADMIN, MANAGER]}/>
                     },
                     {
                         path: '/accounts/:username/email',
-                        element: <EditUserEmail/>
+                        element: <PrivateRoute component={EditUserEmail} accessLevels={[ADMIN, MANAGER]}/>
                     },
                     {
                         path: '/accounts/:username/enable',
-                        element: <EnableAccount/>
+                        element: <PrivateRoute component={EnableAccount} accessLevels={[ADMIN]}/>
                     },
                     {
                         path: '/accounts/:username/disable',
-                        element: <DisableAccount/>
+                        element: <PrivateRoute component={DisableAccount} accessLevels={[ADMIN]}/>
                     },
                 ]
             },
             {
                 path: "/accounts/self/password",
-                element: <EditPassword/>
+                element: <PrivateRoute component={EditPassword} accessLevels={[ADMIN, MANAGER, OWNER]}/>
             },
             {
                 path: "/accounts/reset-password",
-                element: <ResetPassword/>
+                element: <PrivateRoute component={ResetPassword} accessLevels={[GUEST]}/>
             },
             {
                 path: "/accounts/:username/password",
-                element: <EditUserPassword/>
+                element: <PrivateRoute component={EditUserPassword} accessLevels={[ADMIN, MANAGER]}/>
+
             },
             {
                 path: '/login',
-                element: <Login/>
+                element: <PrivateRoute component={Login} accessLevels={[GUEST]}/>
             },
             {
                 path: '/register',
-                element: <Registration/>
+                element: <PrivateRoute component={Registration} accessLevels={[GUEST]}/>
+
             },
             {
                 path: '/activate-from-email/:activationToken',
-                element: <ActivateFromEmail/>
+                element: <PrivateRoute component={ActivateFromEmail} accessLevels={[GUEST]}/>
             },
             {
                 path: "/accounts/self/phone-number",
-                element: <ChangePhoneNumber/>
+                element: <PrivateRoute component={ChangePhoneNumber} accessLevels={[OWNER]}/>
             },
             {
                 path: '/accounts/self/email',
-                element: <EditEmail/>
+                element: <PrivateRoute component={EditEmail} accessLevels={[ADMIN, MANAGER, OWNER]}/>
             },
             {
                 path: '/accounts/self/confirm-new-email/:activationToken',

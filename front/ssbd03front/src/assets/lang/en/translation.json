@@ -11,7 +11,10 @@
       "default": "Language",
       "pl": "Polish",
       "en": "English"
-    }
+    },
+    "select_role": "Select role",
+    "role": "Role",
+    "roles": "Roles"
   },
   "confirm":
   {
@@ -122,7 +125,8 @@
     "success": "Account registered",
     "success_two": "Account registered. A message with an activation link has been sent to the e-mail address provided",
     "log_in": "Already have an account? Log in",
-    "user_exists": "User already exists"
+    "user_exists": "User already exists",
+    "mandatory" : "* - Mandatory fields"
   },
   "account_list":
   {
