@@ -39,30 +39,34 @@ const NavbarPanel = () => {
     const token = "Bearer " + cookies.token;
 
     useEffect(() => {
-        console.log(cookies.token);
         if (cookies.token !== "undefined" && cookies.token !== undefined) {
-            let data = JSON.stringify({
-                "token": cookies.token,
-            });
-            let config = {
-                method: 'post',
-                maxBodyLength: Infinity,
-                url: API_URL + '/accounts/refresh-token',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': token
-                },
-                data: data
-            };
-            axios.request(config)
-                .then((response) => {
-                    setCookie("token", response.headers["bearer"]);
-                })
-                .catch((error) => {
-                    console.log("Błąd: ", error.response);
+            const decodedToken = jwt(cookies.token) as { exp: number };
+            const currentTimestamp = Math.floor(new Date().getTime() / 1000);
+            if (decodedToken.exp < currentTimestamp) {
+                removeCookie("token",{path: '/'});
+                window.location.reload();
+            } else {
+                let data = JSON.stringify({
+                    "token": cookies.token,
                 });
+                let config = {
+                    method: 'post',
+                    maxBodyLength: Infinity,
+                    url: API_URL + '/accounts/refresh-token',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    },
+                    data: data
+                };
+                axios.request(config)
+                    .then((response) => {
+                        setCookie("token", response.headers["bearer"]);
+                    })
+            }
         }
-    }, [cookies.token]);
+
+    });
 
     useEffect(() => {
         if (cookies.token !== "undefined" && cookies.token !== undefined) {
