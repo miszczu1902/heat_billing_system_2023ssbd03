@@ -63,6 +63,10 @@ const router = createBrowserRouter([
                 element: <PrivateRoute component={NotFoundPage} accessLevels={[ADMIN, MANAGER, OWNER, GUEST]}/>
             },
             {
+                path: '*',
+                element: <NotFoundPage/>
+            },
+            {
                 path: '/accounts',
                 element: (<><NavbarPanel/><Outlet/></>),
                 children: [
