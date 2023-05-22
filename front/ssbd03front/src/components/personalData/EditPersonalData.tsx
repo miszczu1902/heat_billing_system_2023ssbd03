@@ -107,7 +107,6 @@ const EditPersonalData = () => {
     if (reason !== 'backdropClick') {
       setOpen(false);
     }
-    window.location.reload();
   };
 
   const handleConfirmClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
@@ -162,6 +161,7 @@ const EditPersonalData = () => {
     if (reason !== 'backdropClick') {
       setSuccessOpen(false);
     }
+    window.location.reload();
   }
 
   const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
