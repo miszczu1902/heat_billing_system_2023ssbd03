@@ -50,6 +50,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_REVOKE_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT = "You cannot take away your permissions"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ETAG_VERIFIER = "Cannot verify eTag"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ETAG_SIGNER = "Cannot sign with eTag"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String TOKEN_IS_NOT_VALID = "Cannot verify token"; //TODO - tu trzeba zrobić resource bundle
 
     @Getter
     private Throwable cause;
@@ -217,6 +218,9 @@ public class AppException extends WebApplicationException {
 
     public static SignerException createSignerException() {
         return new SignerException(ERROR_ETAG_SIGNER, Response.Status.BAD_REQUEST);
+    }
+    public static InvalidTokenException tokenIsNotValidException() {
+        return new InvalidTokenException(TOKEN_IS_NOT_VALID, Response.Status.BAD_REQUEST);
     }
 
     public static TransactionRollbackException createTransactionRollbackException() {

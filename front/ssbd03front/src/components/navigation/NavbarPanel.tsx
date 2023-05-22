@@ -39,6 +39,32 @@ const NavbarPanel = () => {
     const token = "Bearer " + cookies.token;
 
     useEffect(() => {
+        console.log(cookies.token);
+        if (cookies.token !== "undefined" && cookies.token !== undefined) {
+            let data = JSON.stringify({
+                "token": cookies.token,
+            });
+            let config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: API_URL + '/accounts/refresh-token',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                },
+                data: data
+            };
+            axios.request(config)
+                .then((response) => {
+                    setCookie("token", response.headers["bearer"]);
+                })
+                .catch((error) => {
+                    console.log("Błąd: ", error.response);
+                });
+        }
+    }, [cookies.token]);
+
+    useEffect(() => {
         if (cookies.token !== "undefined" && cookies.token !== undefined) {
             const decodedToken = jwt(cookies.token) as string;
             const decodedRole = JSON.parse(JSON.stringify(decodedToken)).role;

@@ -165,6 +165,16 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
+    public String refreshToken(String token) {
+        try {
+            return jwtGenerator.refreshTokenJWT(token);
+        } catch (Exception e) {
+            throw AppException.tokenIsNotValidException();
+        }
+    }
+
+    @Override
     @RolesAllowed({Roles.GUEST})
     public void resetPassword(String username) {
         final Account accountToChangePassword = accountFacade.findByUsername(username);
