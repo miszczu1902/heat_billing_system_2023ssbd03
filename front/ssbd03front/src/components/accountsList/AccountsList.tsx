@@ -1,14 +1,15 @@
-import React from 'react';
-import {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
+    Container,
+    Grid,
+    Pagination,
+    Paper,
     Table,
     TableBody,
     TableCell,
     TableContainer,
     TableHead,
-    TableRow,
-    Paper,
-    TablePagination
+    TableRow
 } from '@mui/material';
 import {AccountFromList} from '../../types/accountFromList';
 import axios from 'axios';
@@ -20,14 +21,14 @@ import {useTranslation} from "react-i18next";
 const AccountsList = () => {
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
-    const [cookies, setCookie] = useCookies(['token']);
+    const [cookies, setCookie] = useCookies(['token', 'role']);
     const token = 'Bearer ' + cookies.token;
     const [accounts, setAccounts] = useState<AccountFromList[]>([]);
     const [pageNumber, setPageNumber] = useState(0);
-    const [size, setSize] = useState(10);
+    const [size, setSize] = useState(1);
     const [sortBy, setSortBy] = useState('username');
     const [total, setTotal] = useState<number>(0);
-    const [role, setRole] = useState('');
+    const [role, setRole] = useState(cookies.role);
 
     const fetchData = async () => {
         axios.get(`${API_URL}/accounts?sortBy=${sortBy}&pageNumber=${pageNumber}&pageSize=${size}`, {
@@ -64,44 +65,39 @@ const AccountsList = () => {
     }
 
     return (
-        <TableContainer component={Paper}>
-            <Table aria-label='simple table'>
-                <TableHead>
-                    <TableRow>
-                        <TableCell/>
-                        <TableCell onClick={() => handleSort('username')}>
-                            {t('login.username')}
-                        </TableCell>
-                        <TableCell onClick={() => handleSort('email')}>
-                            {t('register.email')}
-                        </TableCell>
-                        <TableCell>
-                            {t('account_list.active_status')}
-                        </TableCell>
-                        <TableCell>
-                            {t('account_list.confirmation_status')}
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {accounts.map((accounts) => (
-                        <TableRow key={accounts.id} >
-                            <TableCell component='th' scope='row'/>
-                            <TableCell onClick={() => goToAccount(accounts.username)} sx={{cursor: 'pointer'}}>{accounts.username}</TableCell>
-                            <TableCell>{accounts.email}</TableCell>
-                            {accounts.isEnable ? <TableCell>{t('account_list.active')}</TableCell> : <TableCell>{t('account_list.inactive')}</TableCell>}
-                            {accounts.isActive ? <TableCell>{t('account_list.confirmed')}</TableCell> :
-                                <TableCell>{t('account_list.unconfirmed')}</TableCell>}
+            <TableContainer component={Paper}>
+                <Table aria-label='simple table'>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell/>
+                            <TableCell onClick={() => handleSort('username')}>
+                                {t('login.username')}
+                            </TableCell>
+                            <TableCell onClick={() => handleSort('email')}>
+                                {t('register.email')}
+                            </TableCell>
+                            <TableCell>
+                                {t('account_list.active_status')}
+                            </TableCell>
+                            <TableCell>
+                                {t('account_list.confirmation_status')}
+                            </TableCell>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-            <TablePagination rowsPerPageOptions={[1, 5, 10, 25]}
-                             count={total} page={pageNumber} rowsPerPage={size}
-                             onPageChange={handleChangePage} onRowsPerPageChange={handleChangeRowsPerPage}
-                             labelRowsPerPage={t('account_list.label_rows_per_page')}
-                             labelDisplayedRows={({from, to, count}) => `${from}-${to} z ${count}`}></TablePagination>
-        </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                        {accounts.map((accounts) => (
+                            <TableRow key={accounts.id} >
+                                <TableCell component='th' scope='row'/>
+                                <TableCell onClick={() => goToAccount(accounts.username)} sx={{cursor: 'pointer'}}>{accounts.username}</TableCell>
+                                <TableCell>{accounts.email}</TableCell>
+                                {accounts.isEnable ? <TableCell>{t('account_list.active')}</TableCell> : <TableCell>{t('account_list.inactive')}</TableCell>}
+                                {accounts.isActive ? <TableCell>{t('account_list.confirmed')}</TableCell> :
+                                    <TableCell>{t('account_list.unconfirmed')}</TableCell>}
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
     );
 }
 

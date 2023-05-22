@@ -4,10 +4,11 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios';
-import { API_URL } from '../../consts';
-import { useParams } from "react-router-dom";
-import { useCookies } from 'react-cookie';
+import {API_URL} from '../../consts';
+import {useParams} from "react-router-dom";
+import {useCookies} from 'react-cookie';
 import {useTranslation} from "react-i18next";
+import { useState } from 'react';
 
 const DisableAccount = () => {
     const {t, i18n} = useTranslation();
@@ -15,61 +16,61 @@ const DisableAccount = () => {
     const [cookies, setCookie] = useCookies(["token", "etag"]);
     const token = "Bearer " + cookies.token;
     const etag = cookies.etag;
-    const [version, setVersion] = React.useState("");
-    const [enable, setEnable] = React.useState(false);
+    const [version, setVersion] = useState("");
+    const [enable, setEnable] = useState(false);
 
-    const [open, setOpen] = React.useState(false);
-    const [confirmOpen, setConfirmOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
-    const [successOpen, setSuccessOpen] = React.useState(false);
-    const [errorOpen, setErrorOpen] = React.useState(false);
+    const [successOpen, setSuccessOpen] = useState(false);
+    const [errorOpen, setErrorOpen] = useState(false);
 
-    const [blockedUserOpen, setBlockedUserOpen] = React.useState(false);
+    const [blockedUserOpen, setBlockedUserOpen] = useState(false);
 
-    const [authorizationErrorOpen, setAuthorizationErrorOpen] = React.useState(false);
+    const [authorizationErrorOpen, setAuthorizationErrorOpen] = useState(false);
 
 
     const fetchData = async () => {
-      await axios.get(`${API_URL}/accounts/${username}`, {
-        headers: {
-          Authorization: token
-        }
-      })
-      .then(response => {
-        setCookie("etag", response.headers.etag);
-        setVersion(response.data.version.toString());
-        setEnable(response.data.isEnable);
-      })
-      .catch(error => {
-        if(error.response.status === 403) {
-          setAuthorizationErrorOpen(true);
-          return;
-        }
-      });
-  };
+        await axios.get(`${API_URL}/accounts/${username}`, {
+            headers: {
+                Authorization: token
+            }
+        })
+            .then(response => {
+                setCookie("etag", response.headers.etag);
+                setVersion(response.data.version.toString());
+                setEnable(response.data.isEnable);
+            })
+            .catch(error => {
+                if (error.response.status === 403) {
+                    setAuthorizationErrorOpen(true);
+                    return;
+                }
+            });
+    };
 
-  const disable = async () => {
-    axios.patch(`${API_URL}/accounts/${username}/disable`, 
-    {
-      version: version
-    }, 
-    {
-       headers: {
-        'Authorization': token,
-        'If-Match': etag
-      },
-    })
-    .then(response => {
-      setSuccessOpen(true);
-    })
-    .catch(error => {
-      if(error.response.status === 403) {
-        setAuthorizationErrorOpen(true);
-        return;
-      }
-      setErrorOpen(true);
-    });
-  };
+    const disable = async () => {
+        axios.patch(`${API_URL}/accounts/${username}/disable`,
+            {
+                version: version
+            },
+            {
+                headers: {
+                    'Authorization': token,
+                    'If-Match': etag
+                },
+            })
+            .then(response => {
+                setSuccessOpen(true);
+            })
+            .catch(error => {
+                if (error.response.status === 403) {
+                    setAuthorizationErrorOpen(true);
+                    return;
+                }
+                setErrorOpen(true);
+            });
+    };
 
     const handleClickOpen = () => {
         fetchData();
@@ -83,42 +84,42 @@ const DisableAccount = () => {
     }
 
     const handleConfirmConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-      if (reason !== 'backdropClick') {
-        setConfirmOpen(false);
-      }
-      if(!enable) {
-        setBlockedUserOpen(true);
-        return;
-      }
-      disable();
-      handleConfirmClose(event, reason);
+        if (reason !== 'backdropClick') {
+            setConfirmOpen(false);
+        }
+        if (!enable) {
+            setBlockedUserOpen(true);
+            return;
+        }
+        disable();
+        handleConfirmClose(event, reason);
     }
 
     const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-      if (reason !== 'backdropClick') {
-        setSuccessOpen(false);
-        window.location.reload();
-      }
+        if (reason !== 'backdropClick') {
+            setSuccessOpen(false);
+            window.location.reload();
+        }
     }
 
     const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-      if (reason !== 'backdropClick') {
-        setErrorOpen(false);
-      }
+        if (reason !== 'backdropClick') {
+            setErrorOpen(false);
+        }
     };
 
     const handleBlockedUserOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-      if (reason !== 'backdropClick') {
-        setBlockedUserOpen(false);
-        handleConfirmClose(event, reason);
-      }
+        if (reason !== 'backdropClick') {
+            setBlockedUserOpen(false);
+            handleConfirmClose(event, reason);
+        }
     };
 
     const handleAuthorizationErrorOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-      if (reason !== 'backdropClick') {
-        setAuthorizationErrorOpen(false);
-        handleConfirmClose(event, reason);
-      }
+        if (reason !== 'backdropClick') {
+            setAuthorizationErrorOpen(false);
+            handleConfirmClose(event, reason);
+        }
     };
 
     return (

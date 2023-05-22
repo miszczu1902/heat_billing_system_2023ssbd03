@@ -12,25 +12,26 @@ import axios from 'axios';
 import {API_URL} from '../../consts';
 import {useCookies} from 'react-cookie';
 import {useTranslation} from "react-i18next";
+import { useState } from 'react';
 
 const ChangePhoneNumber = () => {
     const {t, i18n} = useTranslation();
     const [cookies] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
-    const [etag, setEtag] = React.useState(false);
-    const [version, setVersion] = React.useState("");
-    const [open, setOpen] = React.useState(false);
-    const [confirmOpen, setConfirmOpen] = React.useState(false);
-    const [phoneNumber, setPhoneNumber] = React.useState("");
+    const [etag, setEtag] = useState(false);
+    const [version, setVersion] = useState("");
+    const [open, setOpen] = useState(false);
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [phoneNumber, setPhoneNumber] = useState("");
 
-    const [phoneNumberError, setPhoneNumberError] = React.useState("");
-    const [dataError, setDataError] = React.useState("");
+    const [phoneNumberError, setPhoneNumberError] = useState("");
+    const [dataError, setDataError] = useState("");
 
-    const [phoneNumberValid, setPhoneNumberValid] = React.useState(false);
+    const [phoneNumberValid, setPhoneNumberValid] = useState(false);
 
-    const [successOpen, setSuccessOpen] = React.useState(false);
-    const [errorOpen, setErrorOpen] = React.useState(false);
-    const [errorOpenMessage, setErrorOpenMessage] = React.useState("");
+    const [successOpen, setSuccessOpen] = useState(false);
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [errorOpenMessage, setErrorOpenMessage] = useState("");
 
     const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
