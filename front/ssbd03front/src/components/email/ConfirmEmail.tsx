@@ -10,7 +10,7 @@ import {useCookies} from "react-cookie";
 import jwt from "jwt-decode";
 
 const ConfirmEmail = () => {
-    const {t} = useTranslation();
+    const {t, i18n} = useTranslation();
     const navigate = useNavigate();
     const [cookies, setCookie, removeCookie] = useCookies(["token"]);
     const [role, setRole] = React.useState('');
@@ -69,7 +69,7 @@ const ConfirmEmail = () => {
                     <Grid item>
                         <Paper elevation={3} style={{position: 'relative'}}>
                             <Typography sx={{padding: '1vh'}}
-                                        variant="h5"><b>Email został potwierdzony oraz zmieniony!</b>
+                                        variant="h5"><b>{t('email.confirmed')}</b>
                             </Typography>
                         </Paper>
                     </Grid>

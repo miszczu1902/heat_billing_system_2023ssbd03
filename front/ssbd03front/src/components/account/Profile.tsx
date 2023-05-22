@@ -31,7 +31,7 @@ import UserIcon from "../icons/UserIcon";
 
 const roles = [
     {value: ADMIN, label: "Administrator"},
-    {value: ADMIN, label: "Manager"},
+    {value: ADMIN, label: "Zarządca"},
     {value: ADMIN, label: "Właściciel"}
 ];
 
@@ -529,7 +529,7 @@ export default function Profile() {
 
                                     <Dialog disableEscapeKeyDown open={isManager && confirmOpen}
                                             onClose={handleConfirmClose}>
-                                        <DialogTitle>Czy na pewno chcesz dodać poziom dostępu zarządcy?</DialogTitle>
+                                        <DialogTitle>{t('profile.add_level')}</DialogTitle>
                                         <DialogActions>
                                             <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
                                             <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
@@ -537,7 +537,7 @@ export default function Profile() {
                                     </Dialog>
 
                                     <Dialog disableEscapeKeyDown open={isOwner} onClose={handleClose}>
-                                        <DialogTitle>Wypełnij formularz dodania uprawnień właściciela</DialogTitle>
+                                        <DialogTitle>{t('profile.owner_form')}</DialogTitle>
                                         <DialogContent>
                                             <Box sx={{display: 'flex', flexWrap: 'wrap'}}>
                                                 <form onSubmit={handleSumbit}>
@@ -572,7 +572,7 @@ export default function Profile() {
 
                                     <Dialog disableEscapeKeyDown open={isOwner && confirmOpen}
                                             onClose={handleConfirmClose}>
-                                        <DialogTitle>Czy na pewno chcesz dodać poziom dostępu właściciela?</DialogTitle>
+                                        <DialogTitle>{t('profile.add_level')}</DialogTitle>
                                         <DialogActions>
                                             <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
                                             <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
@@ -580,7 +580,7 @@ export default function Profile() {
                                     </Dialog>
 
                                     <Dialog disableEscapeKeyDown open={isAdmin} onClose={handleClose}>
-                                        <DialogTitle>Czy na pewno chcesz dodać poziom dostępu admin?</DialogTitle>
+                                        <DialogTitle>{t('profile.add_level')}</DialogTitle>
                                         <DialogActions>
                                             <Button onClick={handleClose}>{t('confirm.no')}</Button>
                                             <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
@@ -588,7 +588,7 @@ export default function Profile() {
                                     </Dialog>
 
                                     <Dialog disableEscapeKeyDown open={isRemoveAccessOpen} onClose={handleClose}>
-                                        <DialogTitle>Usuń poziom dostępu</DialogTitle>
+                                        <DialogTitle>{t('profile.revoke_level')}</DialogTitle>
                                         <DialogContent>
                                             <form onSubmit={handleAddSubmit}>
                                                 <FormControl fullWidth>
@@ -618,7 +618,7 @@ export default function Profile() {
                                     </Dialog>
 
                                     <Dialog disableEscapeKeyDown open={confirmRemove} onClose={handleConfirmClose}>
-                                        <DialogTitle>Czy na pewno chcesz odebrać poziom dostępu?</DialogTitle>
+                                        <DialogTitle>{t('profile.revoke_level')}</DialogTitle>
                                         <DialogActions>
                                             <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
                                             <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
@@ -626,12 +626,12 @@ export default function Profile() {
                                     </Dialog>
 
                                     <Dialog disableEscapeKeyDown open={successOpenRemove}>
-                                        <DialogTitle>Poziom dostępu został odebrany</DialogTitle>
+                                        <DialogTitle>{t('profile.revoked_level')}</DialogTitle>
                                         <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
                                     </Dialog>
 
                                     <Dialog disableEscapeKeyDown open={successOpen}>
-                                        <DialogTitle>Poziom dostępu został dodany</DialogTitle>
+                                        <DialogTitle>{t('profile.added_level')}</DialogTitle>
                                         <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
                                     </Dialog>
 

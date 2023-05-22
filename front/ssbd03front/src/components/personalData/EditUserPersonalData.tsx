@@ -182,7 +182,7 @@ export default function EditUserPersonalData() {
   return (
     <div>
       <div>
-      <Button onClick={handleClickOpen} variant="contained">Edytuj dane</Button>
+      <Button onClick={handleClickOpen} variant="contained">{t('personal_data.edit_data')}</Button>
       </div>
       <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
         <DialogTitle>{t('personal_data.edit_title')}{username}</DialogTitle>
