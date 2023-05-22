@@ -2,7 +2,6 @@ package pl.lodz.p.it.ssbd2023.ssbd03.integration.api;
 
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;

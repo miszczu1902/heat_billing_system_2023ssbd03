@@ -6,7 +6,6 @@ import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
-import jakarta.interceptor.Interceptors;
 import jakarta.persistence.PersistenceException;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.credential.Password;
@@ -21,7 +20,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
-import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.mail.MailSender;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
@@ -40,7 +38,6 @@ import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-@Interceptors({TrackerInterceptor.class})
 public class AccountServiceImpl extends AbstractService implements AccountService, SessionSynchronization {
     @Inject
     private PersonalDataFacade personalDataFacade;
@@ -661,7 +658,10 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             throw AppException.createOptimisticLockAppException();
         }
 
-        if ((editorAccount.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) || (editableAccount.getAccessLevels().stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN)))) {
+        if ((editorAccount.getAccessLevels().stream()
+                .anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN)))
+                || (editableAccount.getAccessLevels()
+                .stream().noneMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN)))) {
             setUserEnableFlag(username, flag);
         } else {
             throw AppException.createNotAllowedActionException();
