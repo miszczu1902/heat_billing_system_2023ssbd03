@@ -24,6 +24,7 @@ import {API_URL, ADMIN, MANAGER, OWNER, GUEST} from "../../consts";
 import axios from "axios";
 import UserInfoIcon from '../icons/UserInfoIcon';
 import GlobeIcon from '../icons/GlobeIcon';
+import SwitchUserIcon from "../icons/SwitchUserIcon";
 
 const NavbarPanel = () => {
     const {t, i18n} = useTranslation();
@@ -31,9 +32,9 @@ const NavbarPanel = () => {
     const [open, setOpen] = useState(false);
     const [openRole, setOpenRole] = useState(false);
     const [navbarColor, setNavbarColor] = useState('#ffffff');
-    const [cookies, setCookie, removeCookie] = useCookies(["token", "language"]);
+    const [cookies, setCookie, removeCookie] = useCookies(["token", "language", "role"]);
     const [role, setRole] = useState([GUEST]);
-    const [currentRole, setCurrentRole] = useState('');
+    const [currentRole, setCurrentRole] = useState(GUEST);
     const token = "Bearer " + cookies.token;
 
     useEffect(() => {
@@ -45,15 +46,13 @@ const NavbarPanel = () => {
             const currentTimestamp = Math.floor(new Date().getTime() / 1000);
 
             setRole(roles);
-            setCurrentRole(roles[0]);
+            setCurrentRole(currentRole === '' ? GUEST : roles[0]);
+            setCookie("role", currentRole);
+
             if (JSON.parse(JSON.stringify(decodedToken)).exp < currentTimestamp) {
                 removeCookie('token');
                 navigate('/');
             }
-
-        } else {
-            setRole([GUEST]);
-            setCurrentRole(GUEST);
         }
     }, [cookies.token]);
 
@@ -98,6 +97,7 @@ const NavbarPanel = () => {
 
     const handleChangeRole = (event: SelectChangeEvent) => {
         setCurrentRole(event.target.value);
+        setCookie("role", event.target.value);
     };
 
     const handleCloseRole = (event: React.SyntheticEvent<unknown>, reason?: string) => {
@@ -107,9 +107,10 @@ const NavbarPanel = () => {
     };
 
     const handleClickOpenLogout = () => {
+        removeCookie('token');
+        removeCookie('role');
         navigate('/');
         window.location.reload();
-        removeCookie('token');
     };
 
     useEffect(() => {
@@ -121,7 +122,7 @@ const NavbarPanel = () => {
                 setNavbarColor('#1c75ec');
                 break;
             case OWNER :
-                setNavbarColor('#1c8de4');
+                setNavbarColor('#7b79d4');
                 break;
             default :
                 setNavbarColor('#1c8de4');
@@ -136,7 +137,7 @@ const NavbarPanel = () => {
                     <img src={Logo} alt="Logo" onClick={() => navigate('/')}/>
                 </Icon>
                 {
-                    (role.includes(ADMIN) || role.includes(MANAGER)) &&
+                    (currentRole === ADMIN || currentRole === MANAGER) &&
                     <Typography variant="h6" sx={{flexGrow: 1, marginLeft: 2}} onClick={() => navigate('/accounts')}>
                         {t('navbar.account_list')}
                     </Typography>
@@ -161,8 +162,7 @@ const NavbarPanel = () => {
                                 && <Button style={{backgroundColor: navbarColor}}
                                            onClick={() => navigate('/accounts/self/admin')}><UserInfoIcon/></Button>
                             }
-                            <Button onClick={handleOpenRole}>
-                            </Button>
+                            <Button onClick={handleOpenRole} style={{backgroundColor: navbarColor}}><SwitchUserIcon/></Button>
                             <Button onClick={handleClickOpenLogout}
                                     style={{backgroundColor: navbarColor}}>{t('navbar.log_out')}</Button>
                         </>
@@ -213,7 +213,6 @@ const NavbarPanel = () => {
                     </Box>
                 </DialogContent>
                 <DialogActions sx={{alignItems: 'center', justifyContent: 'center'}}>
-                    <Button onClick={handleCloseRole}>{t('confirm.cancel')}</Button>
                     <Button onClick={handleCloseRole}>{t('confirm.ok')}</Button>
                 </DialogActions>
             </Dialog>

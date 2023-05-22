@@ -19,6 +19,7 @@ import {useNavigate} from "react-router-dom";
 import {Icon} from "@mui/material";
 import Logo from './../../assets/logo.svg';
 import {useTranslation} from "react-i18next";
+import jwt from "jwt-decode";
 
 const theme = createTheme();
 
@@ -90,7 +91,6 @@ const Login = () => {
             };
             axios.request(config)
                 .then((response) => {
-                    console.log(response.headers["bearer"]);
                     setCookie("token", response.headers["bearer"]);
                     setCookie("language", response.headers["language"]);
                     i18n.changeLanguage(response.headers["language"]);
