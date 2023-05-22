@@ -1,9 +1,13 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.common;
 
+import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.OptimisticLockException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.BasicFacadeExceptionInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 
+@Interceptors({TrackerInterceptor.class, BasicFacadeExceptionInterceptor.class})
 public abstract class AbstractFacade<T> {
     public Class<T> entityClass;
 

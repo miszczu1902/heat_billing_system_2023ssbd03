@@ -5,14 +5,13 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
-import jakarta.interceptor.Interceptors;
-import jakarta.persistence.*;
-import org.hibernate.exception.ConstraintViolationException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
-import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -23,7 +22,6 @@ import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
-@Interceptors({TrackerInterceptor.class})
 public class AccountFacade extends AbstractFacade<Account> {
     @PersistenceContext(unitName = "ssbd03mokPU")
     private EntityManager em;
@@ -40,15 +38,7 @@ public class AccountFacade extends AbstractFacade<Account> {
     @Override
     @RolesAllowed(Roles.GUEST)
     public void create(Account entity) {
-        try {
-            super.create(entity);
-        } catch (PersistenceException pe) {
-            if (pe.getCause() instanceof ConstraintViolationException) {
-                throw AppException.createAccountExistsException(pe.getCause());
-            }
-
-            throw AppException.createDatabaseException();
-        }
+        super.create(entity);
     }
 
     @Override
@@ -61,15 +51,7 @@ public class AccountFacade extends AbstractFacade<Account> {
     public Account findByUsername(String username) {
         TypedQuery<Account> tq = em.createNamedQuery("Account.findByUsername", Account.class);
         tq.setParameter("username", username);
-        try {
-            return tq.getSingleResult();
-        } catch (PersistenceException pe) {
-            if (pe instanceof NoResultException) {
-                throw AppException.createNoResultException(pe.getCause());
-            }
-
-            throw AppException.createDatabaseException();
-        }
+        return tq.getSingleResult();
     }
 
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
