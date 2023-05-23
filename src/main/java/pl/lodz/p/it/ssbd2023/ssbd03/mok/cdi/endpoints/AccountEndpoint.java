@@ -79,7 +79,7 @@ public class AccountEndpoint {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/refresh-token")
+    @Path("/self/refresh-token")
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
     public Response refreshToken(RefreshTokenDTO refreshTokenDTO) {
         final String token = accountService.refreshToken(refreshTokenDTO.getToken());

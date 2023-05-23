@@ -132,7 +132,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/logout',
-                element: <PrivateRoute component={Logout} accessLevels={[ADMIN, MANAGER,OWNER]}/>
+                element: <PrivateRoute component={Logout} accessLevels={[ADMIN, MANAGER, OWNER]}/>
             },
             {
                 path: '/register',

@@ -205,5 +205,10 @@
     "success_title": "A confirmation link has been sent to new email address.",
     "failure_title": "An error occurred while changing the email address.",
     "confirmed": "Email was confirmed"
+  },
+
+  "token":
+  {
+    "token_not_valid_message": "Your session expired, you need to authenticate again"
   }
 }

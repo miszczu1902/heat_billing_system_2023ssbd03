@@ -27,6 +27,7 @@ import GlobeIcon from '../icons/GlobeIcon';
 import SwitchUserIcon from "../icons/SwitchUserIcon";
 
 const NavbarPanel = () => {
+    const [windowOpen, setWindowOpen] = useState(false);
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
@@ -41,18 +42,13 @@ const NavbarPanel = () => {
     useEffect(() => {
 
         if (cookies.token !== "undefined" && cookies.token !== undefined) {
-            const decodedToken = jwt(cookies.token) as { exp: number };
-            const currentTimestamp = Math.floor(new Date().getTime() / 1000);
-            if (decodedToken.exp < currentTimestamp) {
-                navigate("/logout");
-            } else {
                 let data = JSON.stringify({
                     "token": cookies.token,
                 });
                 let config = {
                     method: 'post',
                     maxBodyLength: Infinity,
-                    url: API_URL + '/accounts/refresh-token',
+                    url: API_URL + '/accounts/self/refresh-token',
                     headers: {
                         'Content-Type': 'application/json',
                         'Authorization': token
@@ -63,8 +59,10 @@ const NavbarPanel = () => {
                     .then((response) => {
                         setCookie("token", response.headers["bearer"]);
                     })
+                    .catch((error) => {
+                        setWindowOpen(true);
+                    });
             }
-        }
     });
 
     useEffect(() => {
@@ -181,13 +179,21 @@ const NavbarPanel = () => {
 
     const handleClickOpenLogout = () => {
         navigate("/logout");
-        // navigate("/");
-        // removeCookie('role');
-        // removeCookie('token');
-        // window.location.reload();
+    };
+
+    const handleConfirm = () => {
+        navigate("/logout");
     };
 
     return (
+        <div>
+            <Dialog disableEscapeKeyDown open={windowOpen}>
+                <DialogTitle>{t('token.token_not_valid_message')}</DialogTitle>
+                <DialogActions>
+                    <Button onClick={handleConfirm}>OK</Button>
+                </DialogActions>
+            </Dialog>
+
         <AppBar position="static" style={{backgroundColor: navbarColor}}>
             <Toolbar>
                 <Icon sx={{width: '3%', height: '3%', marginLeft: '1vh', marginRight: '1vh', cursor: 'pointer'}}>
@@ -276,6 +282,7 @@ const NavbarPanel = () => {
                 </DialogActions>
             </Dialog>
         </AppBar>
+</div>
     );
 };
 

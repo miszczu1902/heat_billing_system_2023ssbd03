@@ -205,5 +205,9 @@
     "success_title": "Link potwierdzający został wysłany na nowy adres email.",
     "failure_title": "Wystąpił błąd podczas zmiany adresu email.",
     "confirmed": "Email został potwierdzony"
+  },
+  "token":
+  {
+    "token_not_valid_message": "Twoja sesja wygasła, musisz się ponownie uwierzytelnić"
   }
 }

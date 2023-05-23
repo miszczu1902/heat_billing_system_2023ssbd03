@@ -1,5 +1,8 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services;
 
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.SessionSynchronization;
 import jakarta.ejb.Stateful;
@@ -167,11 +170,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
     public String refreshToken(String token) {
-        try {
             return jwtGenerator.refreshTokenJWT(token);
-        } catch (Exception e) {
-            throw AppException.tokenIsNotValidException();
-        }
     }
 
     @Override
