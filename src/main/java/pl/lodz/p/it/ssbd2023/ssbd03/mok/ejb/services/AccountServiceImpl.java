@@ -617,7 +617,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 .findAny()
                 .orElseThrow(AppException::createAccountIsNotOwnerException);
 
-        if (!etag.equals(messageSigner.sign(account))) {
+        if (!etag.equals(messageSigner.sign(owner))) {
             throw AppException.createVerifierException();
         }
         if (!Objects.equals(version, account.getVersion())) {

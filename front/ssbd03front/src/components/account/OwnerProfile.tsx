@@ -40,7 +40,7 @@ const OwnerProfile = () => {
 
     useEffect(() => {
         fetchData();
-    });
+    }, [role]);
 
     return (
         <div style={{height: '90.3vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0}}>
