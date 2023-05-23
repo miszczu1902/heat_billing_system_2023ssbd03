@@ -77,13 +77,13 @@ public class MailSender {
 
     public void sendInformationAddingAnAccessLevel(String to, String role, String language) {
         sendEmail(to, internationalization.getMessage("mail.account.information.title", language),
-                internationalization.getMessage("mail.account.information.the", language) + " " + role + " " + internationalization.getMessage("mail.account.information.end", language));
+                internationalization.getMessage("mail.account.information.message.start", language) + " " + role + " " + internationalization.getMessage("mail.account.information.message.end", language));
     }
 
     public void sendInformationRevokeAnAccessLevel(String to, String role, String language) {
         sendEmail(to, internationalization.getMessage("mail.account.information.title", language),
-                internationalization.getMessage("mail.account.information.the", language) + " " + role +
-                        " " + internationalization.getMessage("mail.account.information.end", language));
+                internationalization.getMessage("mail.account.information.message.start", language) + " " + role +
+                        " " + internationalization.getMessage("mail.account.information.message.end", language));
     }
 
     public void sendInformationAccountDisabled(String to, String language) {

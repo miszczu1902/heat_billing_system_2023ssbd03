@@ -248,7 +248,7 @@
       "account_is_blocked": "This account is blocked",
       "revoke_access_level_to_the_same_admin_account": "You cannot take away your permissions",
       "etag_verifier": "Cannot verify eTag",
-      "etag_singer": "Cannot sign with eTag"
+      "etag_signer": "Cannot sign with eTag"
     }
   }
 }

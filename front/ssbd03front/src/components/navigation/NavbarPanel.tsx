@@ -116,15 +116,17 @@ const NavbarPanel = () => {
     };
 
     const fetchData = async () => {
-        await axios.get(`${API_URL}/accounts/self`, {
-            headers: {
-                Authorization: token
-            }
-        })
-            .then(response => {
-                setCookie("etag", response.headers.etag);
-                setVersion(response.data.version.toString());
-            });
+        if (cookies.token !== undefined) {
+            await axios.get(`${API_URL}/accounts/self`, {
+                headers: {
+                    Authorization: token
+                }
+            })
+                .then(response => {
+                    setCookie("etag", response.headers.etag);
+                    setVersion(response.data.version.toString());
+                });
+        }
     };
 
     const handleOpenRole = () => {
@@ -161,12 +163,16 @@ const NavbarPanel = () => {
                 </Icon>
                 {
                     (currentRole === ADMIN || currentRole === MANAGER) &&
-                    <Typography variant="h6" onClick={() => navigate('/accounts')} sx={{marginLeft: '1vh', cursor: 'pointer'}}>
+                    <Typography variant="h6" onClick={() => navigate('/accounts')}
+                                sx={{marginLeft: '1vh', cursor: 'pointer'}}>
                         {t('navbar.account_list')}
                     </Typography>
                 }
 
-                <Typography variant="h6" sx={{marginRight: '1vh', marginLeft: 'auto'}}>{cookies.token && t('navbar.logged_as') + username}</Typography>
+                <Typography variant="h6" sx={{
+                    marginRight: '1vh',
+                    marginLeft: 'auto'
+                }}>{cookies.token && t('navbar.logged_as') + username}</Typography>
                 <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{marginRight: '1vh'}}>
                     <Button onClick={handleClickOpen} style={{backgroundColor: navbarColor}}><GlobeIcon/></Button>
                     {cookies.token && (

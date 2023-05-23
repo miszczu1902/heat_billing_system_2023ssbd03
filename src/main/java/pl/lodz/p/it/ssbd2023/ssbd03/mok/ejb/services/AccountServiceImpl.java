@@ -125,7 +125,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             final LoginData loginData = loginDataFacade.findById(account);
             if (flag) {
                 if (account.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) {
-                    adminLoggedInEmail(account.getEmail());
+                    adminLoggedInEmail(account.getEmail(), account.getLanguage_());
                 }
                 loginData.setInvalidLoginCounter(0);
                 loginData.setLastValidLogicAddress(httpServletRequest.getRemoteAddr());
@@ -148,9 +148,8 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed(Roles.GUEST)
-    public void adminLoggedInEmail(String email) {
-        final Account account = accountFacade.findByEmail(email);
-        mailSender.sendInformationAdminLoggedIn(email, httpServletRequest.getRemoteAddr(), account.getLanguage_());
+    public void adminLoggedInEmail(String email, String language) {
+        mailSender.sendInformationAdminLoggedIn(email, httpServletRequest.getRemoteAddr(), language);
     }
 
     @Override
@@ -343,6 +342,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             throw AppException.createOptimisticLockAppException();
         }
         account.setLanguage_(language);
+        accountFacade.edit(account);
     }
 
     @Override

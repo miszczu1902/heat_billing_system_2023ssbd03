@@ -24,7 +24,7 @@ public interface AccountService extends CommonManagerLocalInterface {
 
     void changePhoneNumber(String newPhoneNumber, String etag, Long version);
 
-    void adminLoggedInEmail(String email);
+    void adminLoggedInEmail(String email, String language);
 
     void changeSelfEmail(String newEmail, String etag, Long version);
 

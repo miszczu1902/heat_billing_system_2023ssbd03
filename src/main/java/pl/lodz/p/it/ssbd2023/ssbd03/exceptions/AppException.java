@@ -51,7 +51,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ACCOUNT_IS_BLOCKED = "exception.account.account_is_blocked";
     protected final static String ERROR_REVOKE_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT = "exception.account.revoke_access_level_to_the_same_admin_account";
     protected final static String ERROR_ETAG_VERIFIER = "exception.account.etag_verifier";
-    protected final static String ERROR_ETAG_SIGNER = "exception.account.etag_singer";
+    protected final static String ERROR_ETAG_SIGNER = "exception.account.etag_signer";
 
     @Getter
     private Throwable cause;
