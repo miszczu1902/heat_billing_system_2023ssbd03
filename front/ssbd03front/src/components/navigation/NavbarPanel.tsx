@@ -39,12 +39,12 @@ const NavbarPanel = () => {
     const token = "Bearer " + cookies.token;
 
     useEffect(() => {
+
         if (cookies.token !== "undefined" && cookies.token !== undefined) {
             const decodedToken = jwt(cookies.token) as { exp: number };
             const currentTimestamp = Math.floor(new Date().getTime() / 1000);
             if (decodedToken.exp < currentTimestamp) {
-                removeCookie("token",{path: '/'});
-                window.location.reload();
+                navigate("/logout");
             } else {
                 let data = JSON.stringify({
                     "token": cookies.token,
@@ -65,40 +65,10 @@ const NavbarPanel = () => {
                     })
             }
         }
-
     });
 
     useEffect(() => {
-        if (cookies.token !== "undefined" && cookies.token !== undefined) {
-            const decodedToken = jwt(cookies.token) as { exp: number };
-            const currentTimestamp = Math.floor(new Date().getTime() / 1000);
-            if (decodedToken.exp < currentTimestamp) {
-                removeCookie("token",{path: '/'});
-                window.location.reload();
-            } else {
-                let data = JSON.stringify({
-                    "token": cookies.token,
-                });
-                let config = {
-                    method: 'post',
-                    maxBodyLength: Infinity,
-                    url: API_URL + '/accounts/refresh-token',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': token
-                    },
-                    data: data
-                };
-                axios.request(config)
-                    .then((response) => {
-                        setCookie("token", response.headers["bearer"]);
-                    })
-            }
-        }
-
-    });
-
-    useEffect(() => {
+        console.log(cookies)
         if (cookies.token !== "undefined" && cookies.token !== undefined) {
             const decodedToken = jwt(cookies.token) as string;
             const decodedRole = JSON.parse(JSON.stringify(decodedToken)).role;
@@ -211,10 +181,11 @@ const NavbarPanel = () => {
     };
 
     const handleClickOpenLogout = () => {
-        navigate("/");
-        removeCookie('role');
-        removeCookie('token');
-        window.location.reload();
+        navigate("/logout");
+        // navigate("/");
+        // removeCookie('role');
+        // removeCookie('token');
+        // window.location.reload();
     };
 
     return (

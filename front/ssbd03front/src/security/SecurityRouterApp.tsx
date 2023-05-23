@@ -24,6 +24,7 @@ import {useCookies} from "react-cookie";
 import {ADMIN, GUEST, MANAGER, OWNER} from "../consts";
 import {useEffect} from "react";
 import NotFoundPage from "../components/notFound/NotFoundPage";
+import Logout from "../components/login/Logout";
 
 interface PrivateRouteProps {
     component: React.ComponentType<any>;
@@ -128,6 +129,10 @@ const router = createBrowserRouter([
             {
                 path: '/login',
                 element: <PrivateRoute component={Login} accessLevels={[GUEST]}/>
+            },
+            {
+                path: '/logout',
+                element: <PrivateRoute component={Logout} accessLevels={[ADMIN, MANAGER,OWNER]}/>
             },
             {
                 path: '/register',
