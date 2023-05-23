@@ -105,7 +105,7 @@ public class MailSender {
         sendEmail(to, internationalization.getMessage("mail.account.reminder.title", language),
                 internationalization.getMessage("mail.account.reminder.message.one", language) + ", \n" +
                         internationalization.getMessage("mail.account.reminder.message.two", language) + " \n" +
-                        internationalization.getMessage("mail.account.reminder.message.two", language) + ": " + properties.getProperty("activation.url") + activationToken);
+                        internationalization.getMessage("mail.account.reminder.message.link", language) + ": " + properties.getProperty("activation.url") + activationToken);
     }
 
     private void sendEmail(String to, String subject, String content) {
