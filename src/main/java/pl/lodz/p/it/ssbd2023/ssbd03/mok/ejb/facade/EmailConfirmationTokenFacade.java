@@ -43,4 +43,10 @@ public class EmailConfirmationTokenFacade extends AbstractFacade<EmailConfirmati
         query.setParameter("currentTime", LocalDateTime.now(TIME_ZONE));
         return query.getResultList();
     }
+
+    @Override
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
+    public void create(EmailConfirmationToken entity) {
+        super.create(entity);
+    }
 }
