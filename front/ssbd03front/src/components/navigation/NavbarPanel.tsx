@@ -68,7 +68,6 @@ const NavbarPanel = () => {
     });
 
     useEffect(() => {
-        console.log(cookies)
         if (cookies.token !== "undefined" && cookies.token !== undefined) {
             const decodedToken = jwt(cookies.token) as string;
             const decodedRole = JSON.parse(JSON.stringify(decodedToken)).role;
