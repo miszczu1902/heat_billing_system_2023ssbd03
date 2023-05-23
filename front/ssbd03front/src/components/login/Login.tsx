@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useState} from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
@@ -19,9 +20,6 @@ import {useNavigate} from "react-router-dom";
 import {Icon} from "@mui/material";
 import Logo from './../../assets/logo.svg';
 import {useTranslation} from "react-i18next";
-import NavbarPanel from "../navigation/NavbarPanel";
-import {useState} from "react";
-import {loadLanguages} from "i18next";
 
 const theme = createTheme();
 
