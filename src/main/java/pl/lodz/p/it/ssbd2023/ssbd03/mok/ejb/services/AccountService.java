@@ -50,7 +50,7 @@ public interface AccountService extends CommonManagerLocalInterface {
 
     void editUserPersonalData(String username, String firstName, String surname, String etag, Long version);
 
-    void changeLanguage(String language);
+    void changeLanguage(String language, String etag, Long version);
 
     void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword, String etag, Long version);
 

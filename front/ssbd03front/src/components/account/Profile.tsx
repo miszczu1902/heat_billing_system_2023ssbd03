@@ -349,7 +349,7 @@ export default function Profile() {
     return (
         <div style={{height: '93.3vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0}}>
             <Grid container justifyContent="center" alignItems="center"
-                  sx={{background: '#1c8de4', height: '100%', width: '100%'}}>
+                  sx={{background: 'rgb(120 193 255 / 12%)', height: '100%', width: '100%'}}>
                 <Grid my={2} item sm={8} md={5} component={Paper} elevation={6}>
                     <Box component="form" sx={{
                         display: 'flex',

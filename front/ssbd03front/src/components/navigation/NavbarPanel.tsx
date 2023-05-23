@@ -32,7 +32,9 @@ const NavbarPanel = () => {
     const [open, setOpen] = useState(false);
     const [openRole, setOpenRole] = useState(false);
     const [navbarColor, setNavbarColor] = useState('#ffffff');
-    const [cookies, setCookie, removeCookie] = useCookies(["token", "language", "role"]);
+    const [cookies, setCookie, removeCookie] = useCookies(["token", "etag", "language", "role"]);
+    const etag = cookies.etag;
+    const [version, setVersion] = useState("");
     const [roles, setRoles] = useState([GUEST]);
     const [currentRole, setCurrentRole] = useState(cookies.role);
     const [username, setUsername] = useState('');
@@ -80,6 +82,7 @@ const NavbarPanel = () => {
     };
 
     const handleClickOpen = () => {
+        fetchData();
         setOpen(true);
     };
 
@@ -94,20 +97,34 @@ const NavbarPanel = () => {
         }
         const language = localStorage.getItem("selectedLanguage");
         const languageDTO = {
+            version: version,
             language: language
         }
         if (language) {
-            i18n.changeLanguage(language.toLowerCase());
             if (cookies.token !== undefined) {
+                i18n.changeLanguage(language.toLowerCase());
                 axios.patch(`${API_URL}/accounts/self/language`,
                     languageDTO, {
                         headers: {
                             'Authorization': token,
+                            'If-Match': etag,
                             'Content-Type': 'application/json'
                         },
                     })
             }
         }
+    };
+
+    const fetchData = async () => {
+        await axios.get(`${API_URL}/accounts/self`, {
+            headers: {
+                Authorization: token
+            }
+        })
+            .then(response => {
+                setCookie("etag", response.headers.etag);
+                setVersion(response.data.version.toString());
+            });
     };
 
     const handleOpenRole = () => {
@@ -122,8 +139,11 @@ const NavbarPanel = () => {
         if (reason !== 'backdropClick') {
             setOpenRole(false);
         }
-        setCookie("role", localStorage.getItem("selectedRole"));
-        window.location.reload();
+        const selectedRole = localStorage.getItem("selectedRole");
+        if (selectedRole) {
+            setCookie("role", selectedRole);
+            window.location.reload();
+        }
     };
 
     const handleClickOpenLogout = () => {

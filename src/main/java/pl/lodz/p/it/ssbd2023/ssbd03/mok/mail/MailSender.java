@@ -59,32 +59,31 @@ public class MailSender {
         sendEmail(to, MAIL_SUBJECT_CONFIRMATION_LINK, properties.getProperty("mail.activation.url") + "/" + content);
     }
 
-    public void sendInformationAdminLoggedIn(String to, String ipAddress) {
-        sendEmail(to, "Security Alert!",
-                "Someone from ip address: " + ipAddress +
-                        " just logged in to your account");//TODO - tu trzeba zrobić resource bundle
+    public void sendInformationAdminLoggedIn(String to, String ipAddress, String language) {
+        sendEmail(to, internationalization.getMessage("mail.account.information.title", language),
+                internationalization.getMessage("mail.account.information.message.one", language) + ": " + ipAddress +
+                        " " + internationalization.getMessage("mail.account.information.message.two", language));
     }
 
-    public void sendInformationAboutChangedPasswordByAdmin(String to, String token) {
-        sendEmail(to, "Password changed!",
+    public void sendInformationAboutChangedPasswordByAdmin(String to, String token, String language) {
+        sendEmail(to, internationalization.getMessage("mail.account.password.changed.title", language),
                 CHANGED_PASSWORD_BY_ADMIN_CONTENT_MESSAGE.formatted(properties.getProperty("reset.password.url"), token));
     }
 
-    public void sendInformationAboutResettingPassword(String to, String token) {
-        sendEmail(to, "Reset password",
+    public void sendInformationAboutResettingPassword(String to, String token, String language) {
+        sendEmail(to, internationalization.getMessage("mail.account.password.reset.title", language),
                 RESET_PASSWORD_CONTENT_MESSAGE.formatted(properties.getProperty("reset.password.url"), token));
     }
 
-    public void sendInformationAddingAnAccessLevel(String to, String role) {
-        sendEmail(to, "Security Alert!",
-                "The " + role +
-                        " access level has been added to your account.");//TODO - tu trzeba zrobić resource bundle
+    public void sendInformationAddingAnAccessLevel(String to, String role, String language) {
+        sendEmail(to, internationalization.getMessage("mail.account.information.title", language),
+                internationalization.getMessage("mail.account.information.the", language) + " " + role + " " + internationalization.getMessage("mail.account.information.end", language));
     }
 
-    public void sendInformationRevokeAnAccessLevel(String to, String role) {
-        sendEmail(to, "Security Alert!",
-                "The " + role +
-                        " access level has been removed from your account.");//TODO - tu trzeba zrobić resource bundle
+    public void sendInformationRevokeAnAccessLevel(String to, String role, String language) {
+        sendEmail(to, internationalization.getMessage("mail.account.information.title", language),
+                internationalization.getMessage("mail.account.information.the", language) + " " + role +
+                        " " + internationalization.getMessage("mail.account.information.end", language));
     }
 
     public void sendInformationAccountDisabled(String to, String language) {
@@ -102,11 +101,11 @@ public class MailSender {
                 internationalization.getMessage("mail.account.activated.message", language));
     }
 
-    public void sendReminderAboutAccountConfirmation(String to, String activationToken) {
-        sendEmail(to, "Account is waiting for activation",
-                "Dear User, \n" +
-                        "Your account is waiting for activation. \n" +
-                        "Activation link: " + properties.getProperty("activation.url") + activationToken);
+    public void sendReminderAboutAccountConfirmation(String to, String activationToken, String language) {
+        sendEmail(to, internationalization.getMessage("mail.account.reminder.title", language),
+                internationalization.getMessage("mail.account.reminder.message.one", language) + ", \n" +
+                        internationalization.getMessage("mail.account.reminder.message.two", language) + " \n" +
+                        internationalization.getMessage("mail.account.reminder.message.two", language) + ": " + properties.getProperty("activation.url") + activationToken);
     }
 
     private void sendEmail(String to, String subject, String content) {

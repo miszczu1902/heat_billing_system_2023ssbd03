@@ -54,6 +54,13 @@ public class AccountFacade extends AbstractFacade<Account> {
         return tq.getSingleResult();
     }
 
+    @RolesAllowed({Roles.GUEST, Roles.OWNER, Roles.ADMIN, Roles.MANAGER})
+    public Account findByEmail(String email) {
+        TypedQuery<Account> tq = em.createNamedQuery("Account.findByEmail", Account.class);
+        tq.setParameter("email", email);
+        return tq.getSingleResult();
+    }
+
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public List<Account> getListOfAccountsWithFilterParams(String sortBy, int pageNumber, int pageSize, Boolean isEnable) {
         TypedQuery<Account> tq;
