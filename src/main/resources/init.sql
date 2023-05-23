@@ -71,7 +71,7 @@ INSERT INTO heat_distribution_centre_pay_off (id, date_, consumption, consumptio
 
 INSERT INTO building (id, total_area, communal_area_aggregate, address_id, heat_distribution_centre_id, version, creation_date_time, last_modification_date_time) VALUES (0, 200.00, 50.00, 0, 0, 1, NOW(), NOW());
 
-INSERT INTO place (id, area, hot_water_connection, central_heating_connection, predicted_hot_water_consumption, building_id, owner_id, version, creation_date_time, last_modification_date_time) VALUES (0, 50.25, TRUE, TRUE, 15.55, 0, -2, 1, NOW(), NOW());
+INSERT INTO place (id, place_number, area, hot_water_connection, central_heating_connection, predicted_hot_water_consumption, building_id, owner_id, version, creation_date_time, last_modification_date_time) VALUES (0, 1, 50.25, TRUE, TRUE, 15.55, 0, -2, 1, NOW(), NOW());
 
 INSERT INTO past_quarter_hot_water_pay_off (id, average_consumption, days_number_in_quarter, version, creation_date_time, last_modification_date_time) VALUES (0, 12.34, 90, 1, NOW(), NOW());
 

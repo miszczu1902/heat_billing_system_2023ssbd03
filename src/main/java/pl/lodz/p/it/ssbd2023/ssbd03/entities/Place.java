@@ -25,6 +25,9 @@ public class Place extends AbstractEntity implements Serializable {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "place_number", nullable = false)
+    private Short placeNumber;
+
     @Setter
     @DecimalMin(value = "0")
     @Column(name = "area", nullable = false, precision = 10, scale = 2)
