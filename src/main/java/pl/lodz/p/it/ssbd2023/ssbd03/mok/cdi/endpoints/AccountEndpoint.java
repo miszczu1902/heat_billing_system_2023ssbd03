@@ -368,9 +368,10 @@ public class AccountEndpoint {
         final Owner owner = accountService.getOwner();
         final OwnerDTO ownerDTO = AccountMapper.createOwnerDTOEntity(owner,
                 accountService.getUserPersonalData(owner.getAccount().getUsername()));
+        final OwnerETagDTO ownerETagDTO = new OwnerETagDTO(owner.getId(), owner.getAccount().getVersion(), owner.getPhoneNumber());
         return Response.ok()
                 .entity(ownerDTO)
-                .header("ETag", messageSigner.sign(ownerDTO))
+                .header("ETag", messageSigner.sign(ownerETagDTO))
                 .build();
     }
 
