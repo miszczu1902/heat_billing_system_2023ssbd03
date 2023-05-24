@@ -87,7 +87,8 @@
     "confirm_edit": "Are you sure you want to change the user's personal information ",
     "edit_success_one": "User's personal data ",
     "edit_success_two": " were changed",
-    "edit_error": "An error occurred while changing the user's personal information "
+    "edit_error": "An error occurred while changing the user's personal information ",
+    "authorization_error": "You are not authorized to edit this user's personal information"
   },
   "activate_from_email":
   {
