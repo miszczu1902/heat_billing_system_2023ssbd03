@@ -258,10 +258,10 @@ const NavbarPanel = () => {
                 <DialogActions sx={{alignItems: 'center', justifyContent: 'center'}}>
                     <Button onClick={handleCloseRole}>{t('confirm.ok')}</Button>
                 </DialogActions>
-                <Dialog disableEscapeKeyDown open={errorOpen}>
-                    <DialogTitle>{errorOpenMessage}</DialogTitle>
-                    <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
-                </Dialog>
+            </Dialog>
+            <Dialog disableEscapeKeyDown open={errorOpen}>
+                <DialogTitle>{errorOpenMessage}</DialogTitle>
+                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
             </Dialog>
         </AppBar>
     );
