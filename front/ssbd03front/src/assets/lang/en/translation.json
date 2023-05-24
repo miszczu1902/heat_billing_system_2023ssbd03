@@ -9,6 +9,7 @@
     {
       "title": "Change language",
       "default": "Language",
+      "error": "An error occurred while changing language.",
       "pl": "Polish",
       "en": "English"
     },

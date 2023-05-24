@@ -38,6 +38,8 @@ const NavbarPanel = () => {
     const [roles, setRoles] = useState([GUEST]);
     const [currentRole, setCurrentRole] = useState(cookies.role);
     const [username, setUsername] = useState('');
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [errorOpenMessage, setErrorOpenMessage] = useState("");
     const token = "Bearer " + cookies.token;
 
     useEffect(() => {
@@ -100,7 +102,7 @@ const NavbarPanel = () => {
             i18n.changeLanguage(language.toLowerCase());
             if (cookies.token !== undefined) {
                 const languageDTO = {
-                    version: version,
+                    version: parseInt(version),
                     language: language
                 }
                 axios.patch(`${API_URL}/accounts/self/language`,
@@ -111,6 +113,10 @@ const NavbarPanel = () => {
                             'Content-Type': 'application/json'
                         },
                     })
+                    .catch(error => {
+                    setErrorOpenMessage(t('navbar.languages.error'))
+                    setErrorOpen(true);
+                });
             }
         }
     };
@@ -153,6 +159,12 @@ const NavbarPanel = () => {
         removeCookie('role');
         removeCookie('token');
         window.location.reload();
+    };
+
+    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+        if (reason !== 'backdropClick') {
+            setErrorOpen(false);
+        }
     };
 
     return (
@@ -246,6 +258,10 @@ const NavbarPanel = () => {
                 <DialogActions sx={{alignItems: 'center', justifyContent: 'center'}}>
                     <Button onClick={handleCloseRole}>{t('confirm.ok')}</Button>
                 </DialogActions>
+                <Dialog disableEscapeKeyDown open={errorOpen}>
+                    <DialogTitle>{errorOpenMessage}</DialogTitle>
+                    <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
+                </Dialog>
             </Dialog>
         </AppBar>
     );

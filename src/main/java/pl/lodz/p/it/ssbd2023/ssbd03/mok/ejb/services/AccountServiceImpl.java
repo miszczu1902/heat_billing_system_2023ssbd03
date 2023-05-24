@@ -604,6 +604,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed({Roles.GUEST, Roles.OWNER, Roles.ADMIN, Roles.MANAGER})
     public void confirmNewEmailAccountFromActivationLink(String confirmationToken) {
         final EmailConfirmationToken emailConfirmationToken = emailConfirmationTokenFacade.getActivationTokenByTokenValue(confirmationToken);
         Account account = emailConfirmationToken.getAccount();
