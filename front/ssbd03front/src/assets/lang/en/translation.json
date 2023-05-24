@@ -88,7 +88,8 @@
     "confirm_edit": "Are you sure you want to change the user's personal information ",
     "edit_success_one": "User's personal data ",
     "edit_success_two": " were changed",
-    "edit_error": "An error occurred while changing the user's personal information "
+    "edit_error": "An error occurred while changing the user's personal information ",
+    "authorization_error": "You are not authorized to edit this user's personal information"
   },
   "activate_from_email":
   {
@@ -206,6 +207,10 @@
     "success_title": "A confirmation link has been sent to new email address.",
     "failure_title": "An error occurred while changing the email address.",
     "confirmed": "Email was confirmed"
+  },
+  "token":
+  {
+    "token_not_valid_message": "Your session expired, you need to authenticate again"
   },
   "exception":
   {

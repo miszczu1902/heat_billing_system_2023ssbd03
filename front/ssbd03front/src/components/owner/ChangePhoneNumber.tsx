@@ -52,7 +52,7 @@ const ChangePhoneNumber = () => {
 
     const handleClickOpen = () => {
         const fetchData = async () => {
-            await axios.get(`${API_URL}/accounts/self`, {
+            await axios.get(`${API_URL}/accounts/self/owner`, {
                 headers: {
                     Authorization: token
                 }

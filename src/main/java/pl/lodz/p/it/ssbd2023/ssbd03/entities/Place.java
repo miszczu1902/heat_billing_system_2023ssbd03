@@ -18,12 +18,19 @@ import java.util.List;
         indexes = {
                 @Index(name = "place_building_id", columnList = "building_id"),
                 @Index(name = "place_owner_id", columnList = "owner_id")
+        },
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "place_number_building_id_unique_constraint", columnNames = {"place_number", "building_id"})
         })
 public class Place extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
+    @Column(name = "place_number", nullable = false)
+    private Short placeNumber;
 
     @Setter
     @DecimalMin(value = "0")

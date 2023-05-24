@@ -20,6 +20,8 @@ public interface AccountService extends CommonManagerLocalInterface {
 
     String authenticate(String username, String password);
 
+    String refreshToken(String token);
+
     String updateLoginData(String username, boolean flag);
 
     void changePhoneNumber(String newPhoneNumber, String etag, Long version);

@@ -51,8 +51,8 @@ create table account (
 create table personal_data (
     id BIGINT PRIMARY KEY,
     FOREIGN KEY (id) REFERENCES account(id),
-    first_name VARCHAR(32) NOT NULL,
-    surname VARCHAR(32) NOT NULL,
+    first_name VARCHAR(32) NOT NULL CHECK (first_name ~* '^[A-Za-z''-]+$'),
+    surname VARCHAR(32) NOT NULL CHECK (surname ~* '^[A-Za-z''-]+$'),
     version BIGINT NOT NULL
 );
 

@@ -77,6 +77,15 @@ public class AccountEndpoint {
         }
     }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/self/refresh-token")
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
+    public Response refreshToken(RefreshTokenDTO refreshTokenDTO) {
+        final String token = accountService.refreshToken(refreshTokenDTO.getToken());
+            return Response.ok().header("Bearer", token).build();
+    }
+
     @PATCH
     @EtagValidator
     @Consumes(MediaType.APPLICATION_JSON)
@@ -369,9 +378,10 @@ public class AccountEndpoint {
         final Owner owner = accountService.getOwner();
         final OwnerDTO ownerDTO = AccountMapper.createOwnerDTOEntity(owner,
                 accountService.getUserPersonalData(owner.getAccount().getUsername()));
+        final OwnerETagDTO ownerETagDTO = new OwnerETagDTO(owner.getId(), owner.getAccount().getVersion(), owner.getPhoneNumber());
         return Response.ok()
                 .entity(ownerDTO)
-                .header("ETag", messageSigner.sign(ownerDTO))
+                .header("ETag", messageSigner.sign(ownerETagDTO))
                 .build();
     }
 

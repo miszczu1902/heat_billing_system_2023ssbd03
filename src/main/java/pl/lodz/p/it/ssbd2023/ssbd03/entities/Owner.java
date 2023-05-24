@@ -43,8 +43,7 @@ public class Owner extends AccessLevelMapping implements Serializable, Signable 
 
     @Override
     public String messageToSign() {
-        return super.getAccount().messageToSign()
-                .concat(getPhoneNumber())
+        return phoneNumber
                 .concat(getId().toString())
                 .concat(getVersion().toString());
     }

@@ -1,5 +1,8 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services;
 
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.SessionSynchronization;
 import jakarta.ejb.Stateful;
@@ -162,6 +165,12 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             return jwtGenerator.generateJWT(username, roles);
         }
         throw AppException.invalidCredentialsException();
+    }
+
+    @Override
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
+    public String refreshToken(String token) {
+            return jwtGenerator.refreshTokenJWT(token);
     }
 
     @Override
@@ -625,7 +634,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 .findAny()
                 .orElseThrow(AppException::createAccountIsNotOwnerException);
 
-        if (!etag.equals(messageSigner.sign(account))) {
+        if (!etag.equals(messageSigner.sign(owner))) {
             throw AppException.createVerifierException();
         }
         if (!Objects.equals(version, account.getVersion())) {
@@ -694,14 +703,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
         personalData.setFirstName(firstName);
         personalData.setSurname(surname);
-
-        try {
-            personalDataFacade.edit(personalData);
-        } catch (PersistenceException pe) {
-            if (pe.getCause() instanceof ConstraintViolationException) {
-                throw AppException.createPersonalDataConstraintViolationException();
-            }
-        }
+        personalDataFacade.edit(personalData);
     }
 
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})

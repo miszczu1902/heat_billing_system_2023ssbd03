@@ -88,7 +88,8 @@
     "confirm_edit": "Czy na pewno chcesz zmienić dane osobowe użytkownika ",
     "edit_success_one": "Dane osobowe użytkownika ",
     "edit_success_two": " zostały zmienione",
-    "edit_error": "Wystąpił błąd podczas zmiany danych osobowych użytkownika "
+    "edit_error": "Wystąpił błąd podczas zmiany danych osobowych użytkownika ",
+    "authorization_error": "Nie masz uprawnień do zmiany danych osobowych użytkownika "
   },
   "activate_from_email":
   {
@@ -206,6 +207,10 @@
     "success_title": "Link potwierdzający został wysłany na nowy adres email.",
     "failure_title": "Wystąpił błąd podczas zmiany adresu email.",
     "confirmed": "Email został potwierdzony"
+  },
+  "token":
+  {
+    "token_not_valid_message": "Twoja sesja wygasła, musisz się ponownie uwierzytelnić"
   },
   "exception":
   {

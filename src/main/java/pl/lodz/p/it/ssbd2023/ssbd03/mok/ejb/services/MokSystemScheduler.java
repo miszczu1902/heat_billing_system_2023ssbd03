@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.system;
+package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services;
 
 import jakarta.annotation.security.RunAs;
 import jakarta.ejb.*;
@@ -23,7 +23,7 @@ import java.util.List;
 @RunAs(Roles.ADMIN)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @Interceptors(TrackerInterceptor.class)
-public class SystemScheduler {
+public class MokSystemScheduler {
     @Inject
     private AccountConfirmationTokenFacade accountConfirmationTokenFacade;
 
@@ -81,7 +81,7 @@ public class SystemScheduler {
     }
 
     @Schedule(hour = "*", minute = "*/1", persistent = false)
-    public void unlockAccounts() {
+    private void unlockAccounts() {
         final List<Account> accounts = accountFacade.findAllBlockedAccounts();
         if (!accounts.isEmpty()) {
             accounts.forEach(account -> {
