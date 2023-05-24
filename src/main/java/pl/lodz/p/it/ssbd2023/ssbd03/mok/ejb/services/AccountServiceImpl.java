@@ -686,14 +686,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
         personalData.setFirstName(firstName);
         personalData.setSurname(surname);
-
-        try {
-            personalDataFacade.edit(personalData);
-        } catch (PersistenceException pe) {
-            if (pe.getCause() instanceof ConstraintViolationException) {
-                throw AppException.createPersonalDataConstraintViolationException();
-            }
-        }
+        personalDataFacade.edit(personalData);
     }
 
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})

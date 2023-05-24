@@ -8,7 +8,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyPlaceOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.PlaceService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 
@@ -48,7 +47,7 @@ public class PlaceEndpoint {
     @Path("/owner/{placeId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.MANAGER)
-    public Response modifyPlaceOwner(@NotBlank @PathParam("placeId") String placeId, ModifyPlaceOwnerDTO modifyPlaceOwnerDTO) {
+    public Response modifyPlaceOwner(@NotBlank @PathParam("placeId") String placeId) {
         placeService.modifyPlaceOwner();
         return Response.status(200).build();
     }

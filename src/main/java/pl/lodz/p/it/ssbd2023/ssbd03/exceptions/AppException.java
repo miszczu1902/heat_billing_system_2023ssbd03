@@ -6,7 +6,6 @@ import jakarta.ws.rs.core.Response;
 import lombok.Getter;
 import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.DatabaseException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.SignerException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.VerifierException;
@@ -33,7 +32,6 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_CURRENT_EMAIL = "This is your current email"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_IS_NOT_OWNER = "This account is not the owner"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACCOUNT_EXISTS_MESSAGE = "Account already exists"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_ACCOUNT_NOT_EXISTS_MESSAGE = "Account with provided data not exists"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_RESULT_NOT_FOUND = "Query result not found"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_ACTION_NOT_ALLOWED = "Action is not allowed with this privileges"; //TODO - tu trzeba zrobić resource bundle
     protected final static String ERROR_PERSONAL_DATA_VALIDATION = "Each element of personal data can have up to 32 characters"; //TODO - tu trzeba zrobić resource bundle
@@ -81,10 +79,6 @@ public class AppException extends WebApplicationException {
         return new AppException(Response.Status.INTERNAL_SERVER_ERROR, key, cause);
     }
 
-    public static AppException createGeneralException(String key, Throwable cause) {
-        return new AppException(Response.Status.INTERNAL_SERVER_ERROR, key, cause);
-    }
-
     public static AppException createPersistenceException(Throwable cause) {
         return new AppException(Response.Status.INTERNAL_SERVER_ERROR, ERROR_GENERAL_PERSISTENCE, cause);
     }
@@ -99,10 +93,6 @@ public class AppException extends WebApplicationException {
 
     public static NotAllowedActionException createNotAllowedActionException() {
         return new NotAllowedActionException(Response.Status.METHOD_NOT_ALLOWED, ERROR_ACTION_NOT_ALLOWED);
-    }
-
-    public static DatabaseException createDatabaseException() {
-        return new DatabaseException();
     }
 
     public static PasswordsNotSameException createPasswordsNotSameException() {
@@ -139,10 +129,6 @@ public class AppException extends WebApplicationException {
         return new PersonalDataConstraintViolationException();
     }
 
-    public static AccountNotExistsException createAccountNotExistsException(Throwable cause) {
-        return new AccountNotExistsException(AppException.ERROR_ACCOUNT_NOT_EXISTS_MESSAGE, Response.Status.NOT_FOUND, cause);
-    }
-
     public static InvalidCredentialsException invalidCredentialsException() {
         return new InvalidCredentialsException(AppException.ERROR_INVALID_CREDENTIALS, Response.Status.UNAUTHORIZED);
     }
@@ -163,12 +149,12 @@ public class AppException extends WebApplicationException {
         return new AccountWithNumberExistsException(AppException.ERROR_PHONE_NUMBER_NOT_UNIQUE_MESSAGE, Response.Status.CONFLICT);
     }
 
-    public static CurrentPhoneNumberException createCurrentEmailException() {
-        return new CurrentPhoneNumberException(AppException.ERROR_CURRENT_EMAIL, Response.Status.CONFLICT);
+    public static CurrentEmailException createCurrentEmailException() {
+        return new CurrentEmailException(AppException.ERROR_CURRENT_EMAIL, Response.Status.CONFLICT);
     }
 
-    public static AccountWithNumberExistsException createAccountWithEmailExistsException() {
-        return new AccountWithNumberExistsException(AppException.ERROR_EMAIL_NOT_UNIQUE_MESSAGE, Response.Status.CONFLICT);
+    public static AccountWithEmailExistsException createAccountWithEmailExistsException() {
+        return new AccountWithEmailExistsException(AppException.ERROR_EMAIL_NOT_UNIQUE_MESSAGE, Response.Status.CONFLICT);
     }
 
     public static AccessLevelToTheSameAdminAccountException addingAnAccessLevelToTheSameAdminAccount() {
