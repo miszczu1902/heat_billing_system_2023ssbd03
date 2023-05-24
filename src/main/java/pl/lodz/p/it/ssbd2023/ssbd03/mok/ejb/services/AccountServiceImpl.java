@@ -6,14 +6,12 @@ import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
-import jakarta.persistence.PersistenceException;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.credential.Password;
 import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.servlet.http.HttpServletRequest;
-import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.TokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
@@ -362,14 +360,14 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public void disableUserAccount(String username, String etag, Long version) {
-        editUserEnableFlag(username, false, etag, version);
+    public void disableUserAccount(String username) {
+        editUserEnableFlag(username, false);
     }
 
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public void enableUserAccount(String username, String etag, Long version) {
-        editUserEnableFlag(username, true, etag, version);
+    public void enableUserAccount(String username) {
+        editUserEnableFlag(username, true);
     }
 
     @Override
@@ -642,20 +640,13 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    private void editUserEnableFlag(String username, boolean flag, String etag, Long version) {
+    private void editUserEnableFlag(String username, boolean flag) {
         final String editor = securityContext.getCallerPrincipal().getName();
         final Account editorAccount = accountFacade.findByUsername(editor);
         final Account editableAccount = accountFacade.findByUsername(username);
 
         if (editorAccount.equals(editableAccount)) {
             throw AppException.createNotAllowedActionException();
-        }
-
-        if (!etag.equals(messageSigner.sign(editableAccount))) {
-            throw AppException.createVerifierException();
-        }
-        if (!Objects.equals(version, editableAccount.getVersion())) {
-            throw AppException.createOptimisticLockAppException();
         }
 
         if ((editorAccount.getAccessLevels().stream()

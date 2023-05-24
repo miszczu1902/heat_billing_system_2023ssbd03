@@ -13,9 +13,8 @@ import { useState } from 'react';
 const DisableAccount = () => {
     const {t, i18n} = useTranslation();
     const username = useParams().username;
-    const [cookies, setCookie] = useCookies(["token", "etag"]);
+    const [cookies, setCookie] = useCookies(["token"]);
     const token = "Bearer " + cookies.token;
-    const etag = cookies.etag;
     const [version, setVersion] = useState("");
     const [enable, setEnable] = useState(false);
 
@@ -37,7 +36,6 @@ const DisableAccount = () => {
             }
         })
             .then(response => {
-                setCookie("etag", response.headers.etag);
                 setVersion(response.data.version.toString());
                 setEnable(response.data.isEnable);
             })
@@ -51,13 +49,10 @@ const DisableAccount = () => {
 
     const disable = async () => {
         axios.patch(`${API_URL}/accounts/${username}/disable`,
-            {
-                version: version
-            },
+            {},
             {
                 headers: {
                     'Authorization': token,
-                    'If-Match': etag
                 },
             })
             .then(response => {
@@ -98,8 +93,8 @@ const DisableAccount = () => {
     const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
         if (reason !== 'backdropClick') {
             setSuccessOpen(false);
-            window.location.reload();
         }
+        window.location.reload();
     }
 
     const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {

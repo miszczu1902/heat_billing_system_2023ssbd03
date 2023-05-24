@@ -58,9 +58,9 @@ public interface AccountService extends CommonManagerLocalInterface {
 
     void resetPassword(String username);
 
-    void disableUserAccount(String username, String etag, Long version);
+    void disableUserAccount(String username);
 
-    void enableUserAccount(String username, String etag, Long version);
+    void enableUserAccount(String username);
 
     void addAccessLevelManager(String username, String license, String etag, Long version);
 
