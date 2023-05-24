@@ -58,7 +58,7 @@ public class MokSystemScheduler {
                 if (!accountConfirmationToken.getIsReminderSent()) {
                     accountConfirmationToken.setIsReminderSent(true);
                     mailSender.sendReminderAboutAccountConfirmation(
-                            accountConfirmationToken.getAccount().getEmail(), accountConfirmationToken.getTokenValue());
+                            accountConfirmationToken.getAccount().getEmail(), accountConfirmationToken.getTokenValue(), accountConfirmationToken.getAccount().getLanguage_());
                 }
             });
         }

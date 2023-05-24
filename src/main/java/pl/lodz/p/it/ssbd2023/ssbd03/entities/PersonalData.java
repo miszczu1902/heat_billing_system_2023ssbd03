@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,10 +27,12 @@ public class PersonalData extends AbstractEntity implements Serializable, Signab
 
     @Setter
     @Column(name = "first_name", nullable = false, length = 32)
+    @Pattern(regexp = "^[A-Za-z'-]+$", message = "Invalid first name format")
     private String firstName;
 
     @Setter
     @Column(name = "surname", nullable = false, length = 32)
+    @Pattern(regexp = "^[A-Za-z'-]+$", message = "Invalid surname format")
     private String surname;
 
     @Override

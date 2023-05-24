@@ -20,11 +20,13 @@ public interface AccountService extends CommonManagerLocalInterface {
 
     String authenticate(String username, String password);
 
+    String refreshToken(String token);
+
     String updateLoginData(String username, boolean flag);
 
     void changePhoneNumber(String newPhoneNumber, String etag, Long version);
 
-    void adminLoggedInEmail(String email);
+    void adminLoggedInEmail(String email, String language);
 
     void changeSelfEmail(String newEmail, String etag, Long version);
 
@@ -50,7 +52,7 @@ public interface AccountService extends CommonManagerLocalInterface {
 
     void editUserPersonalData(String username, String firstName, String surname, String etag, Long version);
 
-    void changeLanguage(String language);
+    void changeLanguage(String language, String etag, Long version);
 
     void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword, String etag, Long version);
 

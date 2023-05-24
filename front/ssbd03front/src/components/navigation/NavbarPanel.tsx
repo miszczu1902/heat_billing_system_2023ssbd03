@@ -27,16 +27,47 @@ import GlobeIcon from '../icons/GlobeIcon';
 import SwitchUserIcon from "../icons/SwitchUserIcon";
 
 const NavbarPanel = () => {
+    const [windowOpen, setWindowOpen] = useState(false);
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [openRole, setOpenRole] = useState(false);
     const [navbarColor, setNavbarColor] = useState('#ffffff');
-    const [cookies, setCookie, removeCookie] = useCookies(["token", "language", "role"]);
+    const [cookies, setCookie, removeCookie] = useCookies(["token", "etag", "language", "role"]);
+    const etag = cookies.etag;
+    const [version, setVersion] = useState("");
     const [roles, setRoles] = useState([GUEST]);
     const [currentRole, setCurrentRole] = useState(cookies.role);
     const [username, setUsername] = useState('');
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [errorOpenMessage, setErrorOpenMessage] = useState("");
     const token = "Bearer " + cookies.token;
+
+    useEffect(() => {
+
+        if (cookies.token !== "undefined" && cookies.token !== undefined) {
+                let data = JSON.stringify({
+                    "token": cookies.token,
+                });
+                let config = {
+                    method: 'post',
+                    maxBodyLength: Infinity,
+                    url: API_URL + '/accounts/self/refresh-token',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token
+                    },
+                    data: data
+                };
+                axios.request(config)
+                    .then((response) => {
+                        setCookie("token", response.headers["bearer"]);
+                    })
+                    .catch((error) => {
+                        setWindowOpen(true);
+                    });
+            }
+    });
 
     useEffect(() => {
         if (cookies.token !== "undefined" && cookies.token !== undefined) {
@@ -75,11 +106,36 @@ const NavbarPanel = () => {
         }
     }, [cookies.token, currentRole]);
 
+    const GlobeIcon = ({width = 24, height = 24}) => (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width={width}
+            height={height}
+            fill="currentColor"
+            className="bi bi-globe"
+            viewBox="0 0 16 16"
+        >
+            <path
+                d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm7.5-6.923c-.67.204-1.335.82-1.887 1.855A7.97 7.97 0 0 0 5.145 4H7.5V1.077zM4.09 4a9.267 9.267 0 0 1 .64-1.539 6.7 6.7 0 0 1 .597-.933A7.025 7.025 0 0 0 2.255 4H4.09zm-.582 3.5c.03-.877.138-1.718.312-2.5H1.674a6.958 6.958 0 0 0-.656 2.5h2.49zM4.847 5a12.5 12.5 0 0 0-.338 2.5H7.5V5H4.847zM8.5 5v2.5h2.99a12.495 12.495 0 0 0-.337-2.5H8.5zM4.51 8.5a12.5 12.5 0 0 0 .337 2.5H7.5V8.5H4.51zm3.99 0V11h2.653c.187-.765.306-1.608.338-2.5H8.5zM5.145 12c.138.386.295.744.468 1.068.552 1.035 1.218 1.65 1.887 1.855V12H5.145zm.182 2.472a6.696 6.696 0 0 1-.597-.933A9.268 9.268 0 0 1 4.09 12H2.255a7.024 7.024 0 0 0 3.072 2.472zM3.82 11a13.652 13.652 0 0 1-.312-2.5h-2.49c.062.89.291 1.733.656 2.5H3.82zm6.853 3.472A7.024 7.024 0 0 0 13.745 12H11.91a9.27 9.27 0 0 1-.64 1.539 6.688 6.688 0 0 1-.597.933zM8.5 12v2.923c.67-.204 1.335-.82 1.887-1.855.173-.324.33-.682.468-1.068H8.5zm3.68-1h2.146c.365-.767.594-1.61.656-2.5h-2.49a13.65 13.65 0 0 1-.312 2.5zm2.802-3.5a6.959 6.959 0 0 0-.656-2.5H12.18c.174.782.282 1.623.312 2.5h2.49zM11.27 2.461c.247.464.462.98.64 1.539h1.835a7.024 7.024 0 0 0-3.072-2.472c.218.284.418.598.597.933zM10.855 4a7.966 7.966 0 0 0-.468-1.068C9.835 1.897 9.17 1.282 8.5 1.077V4h2.355z"/>
+        </svg>
+    )
+    const UserInfoIcon = ({width = 24, height = 24}) => (
+        <svg xmlns="http://www.w3.org/2000/svg"
+             width={width}
+             height={height}
+             fill="currentColor"
+             className="bi bi-person-lines-fill" viewBox="0 0 16 16">
+            <path
+                d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z"/>
+        </svg>
+    )
+
     const handleChange = (event: SelectChangeEvent) => {
         localStorage.setItem("selectedLanguage", event.target.value);
     };
 
     const handleClickOpen = () => {
+        fetchData();
         setOpen(true);
     };
 
@@ -93,20 +149,40 @@ const NavbarPanel = () => {
             setOpen(false);
         }
         const language = localStorage.getItem("selectedLanguage");
-        const languageDTO = {
-            language: language
-        }
         if (language) {
             i18n.changeLanguage(language.toLowerCase());
             if (cookies.token !== undefined) {
+                const languageDTO = {
+                    version: parseInt(version),
+                    language: language
+                }
                 axios.patch(`${API_URL}/accounts/self/language`,
                     languageDTO, {
                         headers: {
                             'Authorization': token,
+                            'If-Match': etag,
                             'Content-Type': 'application/json'
                         },
                     })
+                    .catch(error => {
+                    setErrorOpenMessage(t('navbar.languages.error'))
+                    setErrorOpen(true);
+                });
             }
+        }
+    };
+
+    const fetchData = async () => {
+        if (cookies.token !== undefined) {
+            await axios.get(`${API_URL}/accounts/self`, {
+                headers: {
+                    Authorization: token
+                }
+            })
+                .then(response => {
+                    setCookie("etag", response.headers.etag);
+                    setVersion(response.data.version.toString());
+                });
         }
     };
 
@@ -122,18 +198,36 @@ const NavbarPanel = () => {
         if (reason !== 'backdropClick') {
             setOpenRole(false);
         }
-        setCookie("role", localStorage.getItem("selectedRole"));
-        window.location.reload();
+        const selectedRole = localStorage.getItem("selectedRole");
+        if (selectedRole) {
+            setCookie("role", selectedRole);
+            window.location.reload();
+        }
     };
 
     const handleClickOpenLogout = () => {
-        navigate("/");
-        removeCookie('role');
-        removeCookie('token');
-        window.location.reload();
+        navigate("/logout");
+    };
+
+    const handleConfirm = () => {
+        navigate("/logout");
+    };
+
+    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+        if (reason !== 'backdropClick') {
+            setErrorOpen(false);
+        }
     };
 
     return (
+        <div>
+            <Dialog disableEscapeKeyDown open={windowOpen}>
+                <DialogTitle>{t('token.token_not_valid_message')}</DialogTitle>
+                <DialogActions>
+                    <Button onClick={handleConfirm}>OK</Button>
+                </DialogActions>
+            </Dialog>
+
         <AppBar position="static" style={{backgroundColor: navbarColor}}>
             <Toolbar>
                 <Icon sx={{width: '3%', height: '3%', marginLeft: '1vh', marginRight: '1vh', cursor: 'pointer'}}>
@@ -141,12 +235,16 @@ const NavbarPanel = () => {
                 </Icon>
                 {
                     (currentRole === ADMIN || currentRole === MANAGER) &&
-                    <Typography variant="h6" onClick={() => navigate('/accounts')} sx={{marginLeft: '1vh', cursor: 'pointer'}}>
+                    <Typography variant="h6" onClick={() => navigate('/accounts')}
+                                sx={{marginLeft: '1vh', cursor: 'pointer'}}>
                         {t('navbar.account_list')}
                     </Typography>
                 }
 
-                <Typography variant="h6" sx={{marginRight: '1vh', marginLeft: 'auto'}}>{cookies.token && t('navbar.logged_as') + username}</Typography>
+                <Typography variant="h6" sx={{
+                    marginRight: '1vh',
+                    marginLeft: 'auto'
+                }}>{cookies.token && t('navbar.logged_as') + username}</Typography>
                 <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{marginRight: '1vh'}}>
                     <Button onClick={handleClickOpen} style={{backgroundColor: navbarColor}}><GlobeIcon/></Button>
                     {cookies.token && (
@@ -221,7 +319,12 @@ const NavbarPanel = () => {
                     <Button onClick={handleCloseRole}>{t('confirm.ok')}</Button>
                 </DialogActions>
             </Dialog>
+            <Dialog disableEscapeKeyDown open={errorOpen}>
+                <DialogTitle>{errorOpenMessage}</DialogTitle>
+                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
+            </Dialog>
         </AppBar>
+</div>
     );
 };
 
