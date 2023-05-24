@@ -28,23 +28,23 @@ public class JwtGenerator {
     }
 
     public Jws<Claims> parseJWT(String jwt) {
-            return Jwts.parser()
-                    .setSigningKey(secret)
-                    .parseClaimsJws(jwt);
+        return Jwts.parser()
+                .setSigningKey(secret)
+                .parseClaimsJws(jwt);
     }
 
     public String refreshTokenJWT(String token) {
         try {
-        Set<String> roles = new HashSet<>();
-        final Claims claims = parseJWT(token).getBody();
-        final String rolesString = claims.get("role", String.class);
-        final String[] rolesArray = rolesString.split(",");
-        for (String role : rolesArray) {
-            roles.add(role.trim());
-        }
-        final String username = claims.get("sub", String.class);
-        return generateJWT(username, roles);
-        }catch (SignatureException | MalformedJwtException e) {
+            Set<String> roles = new HashSet<>();
+            final Claims claims = parseJWT(token).getBody();
+            final String rolesString = claims.get("role", String.class);
+            final String[] rolesArray = rolesString.split(",");
+            for (String role : rolesArray) {
+                roles.add(role.trim());
+            }
+            final String username = claims.get("sub", String.class);
+            return generateJWT(username, roles);
+        } catch (SignatureException | MalformedJwtException e) {
             throw AppException.tokenIsNotValidException();
         }
     }
