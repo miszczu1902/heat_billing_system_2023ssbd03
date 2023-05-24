@@ -232,7 +232,6 @@ public class AccountEndpoint {
                 rollbackTX = accountService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
-
             } catch (EJBTransactionRolledbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
