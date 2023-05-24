@@ -51,6 +51,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_REVOKE_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT = "exception.account.revoke_access_level_to_the_same_admin_account";
     protected final static String ERROR_ETAG_VERIFIER = "exception.account.etag_verifier";
     protected final static String ERROR_ETAG_SIGNER = "exception.account.etag_signer";
+    protected final static String TOKEN_IS_NOT_VALID = "exception.account.not_valid_token";
 
     @Getter
     private Throwable cause;
