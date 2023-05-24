@@ -127,7 +127,7 @@ const EditPersonalData = () => {
                     headers: {
                         'Authorization': cookies.token,
                         'Content-Type': 'application/json',
-                        'If-Match': cookies.etag
+                        'If-Match': etag
                     },
                 })
                 .then(response => {

@@ -15,13 +15,13 @@ import {API_URL} from '../../consts';
 import {useCookies} from 'react-cookie';
 import {useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import { set } from 'react-hook-form';
 
 export default function EditUserPersonalData() {
     const {t, i18n} = useTranslation();
     const username = useParams().username;
     const [cookies, setCookie] = useCookies(["token", "etag"]);
     const token = "Bearer " + cookies.token;
+    const etag = cookies.etag;
     const [version, setVersion] = useState("");
 
     const [open, setOpen] = useState(false);
@@ -125,9 +125,9 @@ export default function EditUserPersonalData() {
             axios.patch(`${API_URL}/accounts/${username}/personal-data`,
                 personalDataDTO, {
                     headers: {
-                        'Authorization': cookies.token,
+                        'Authorization': token,
                         'Content-Type': 'application/json',
-                        'If-Match': cookies.etag
+                        'If-Match': etag
                     },
                 })
                 .then(response => {
