@@ -96,13 +96,13 @@ const NavbarPanel = () => {
             setOpen(false);
         }
         const language = localStorage.getItem("selectedLanguage");
-        const languageDTO = {
-            version: version,
-            language: language
-        }
         if (language) {
+            i18n.changeLanguage(language.toLowerCase());
             if (cookies.token !== undefined) {
-                i18n.changeLanguage(language.toLowerCase());
+                const languageDTO = {
+                    version: version,
+                    language: language
+                }
                 axios.patch(`${API_URL}/accounts/self/language`,
                     languageDTO, {
                         headers: {

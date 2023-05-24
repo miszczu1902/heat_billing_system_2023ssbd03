@@ -92,8 +92,7 @@ const Login = () => {
             axios.request(config)
                 .then((response) => {
                     setCookie("token", response.headers["bearer"]);
-                    setCookie("language", response.headers["language"]);
-                    i18n.changeLanguage(cookies.language.toLowerCase());
+                    i18n.changeLanguage(response.headers["language"].toLowerCase());
                     navigate('/');
                 })
                 .catch((error) => {
