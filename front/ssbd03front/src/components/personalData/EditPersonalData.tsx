@@ -14,8 +14,6 @@ import validator from "validator";
 import {API_URL} from '../../consts';
 import {useCookies} from 'react-cookie';
 import {useTranslation} from "react-i18next";
-import { set } from 'react-hook-form';
-
 
 const EditPersonalData = () => {
     const {t, i18n} = useTranslation();
@@ -125,7 +123,7 @@ const EditPersonalData = () => {
             axios.patch(`${API_URL}/accounts/self/personal-data`,
                 personalDataDTO, {
                     headers: {
-                        'Authorization': cookies.token,
+                        'Authorization': token,
                         'Content-Type': 'application/json',
                         'If-Match': etag
                     },
