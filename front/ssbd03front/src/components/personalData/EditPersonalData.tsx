@@ -14,6 +14,7 @@ import validator from "validator";
 import {API_URL} from '../../consts';
 import {useCookies} from 'react-cookie';
 import {useTranslation} from "react-i18next";
+import { set } from 'react-hook-form';
 
 
 const EditPersonalData = () => {
@@ -33,12 +34,13 @@ const EditPersonalData = () => {
     const [surnameError, setSurnameError] = useState("");
     const [dataError, setDataError] = useState("");
 
-    const [validData, setValidData] = useState(false);
-
     const [successOpen, setSuccessOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
 
     const [authorizationErrorOpen, setAuthorizationErrorOpen] = useState(false);
+
+    const [nameValid, setNameValid] = useState(false);
+    const [surnameValid, setSurnameValid] = useState(false);
 
     const fetchData = async () => {
         const response = await axios.get(`${API_URL}/accounts/self/personal-data`, {
@@ -51,6 +53,8 @@ const EditPersonalData = () => {
                 setSurname(response.data.surname.toString());
                 setCookie("etag", response.headers.etag);
                 setVersion(response.data.version.toString());
+                setNameValid(true);
+                setSurnameValid(true);
             })
             .catch(error => {
                 if (error.response.status === 403) {
@@ -68,22 +72,14 @@ const EditPersonalData = () => {
         e.preventDefault();
     }
 
-    const validateData = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (nameError === "" && surnameError === "" && name !== "" && surname !== "" && event.target.value.length > 0) {
-            setValidData(true);
-        } else {
-            setValidData(false);
-        }
-    }
-
     const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setName(event.target.value)
         if (validator.isAlpha(event.target.value) && event.target.value.length <= 32 && event.target.value.length > 0) {
             setNameError("");
-            validateData(event);
+            setNameValid(true);
         } else {
             setNameError(t('personal_data.name_error'));
-            validateData(event);
+            setNameValid(false);
         }
     };
 
@@ -91,10 +87,10 @@ const EditPersonalData = () => {
         setSurname(event.target.value);
         if (validator.isAlpha(event.target.value) && event.target.value.length <= 32 && event.target.value.length > 0) {
             setSurnameError("");
-            validateData(event);
+            setSurnameValid(true);
         } else {
             setSurnameError(t('personal_data.surname_error'));
-            validateData(event);
+            setSurnameValid(false);
         }
     };
 
@@ -149,12 +145,7 @@ const EditPersonalData = () => {
     }
 
     const handleConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (validData) {
-            setDataError("");
-            setConfirmOpen(true);
-        } else {
-            setDataError(t('personal_data.data_error'));
-        }
+        setConfirmOpen(true);
     }
 
     const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
@@ -223,7 +214,7 @@ const EditPersonalData = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>{t('confirm.cancel')}</Button>
-                    <Button onClick={handleConfirm} disabled={!validData}>{t('confirm.ok')}</Button>
+                    <Button onClick={handleConfirm} disabled={!(nameValid && surnameValid)}>{t('confirm.ok')}</Button>
                 </DialogActions>
             </Dialog>
 

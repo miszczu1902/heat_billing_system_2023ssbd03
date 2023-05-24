@@ -122,8 +122,11 @@ const NavbarPanel = () => {
         if (reason !== 'backdropClick') {
             setOpenRole(false);
         }
-        setCookie("role", localStorage.getItem("selectedRole"));
-        window.location.reload();
+        const selectedRole = localStorage.getItem("selectedRole");
+        if (selectedRole) {
+            setCookie("role", selectedRole);
+            window.location.reload();
+        }
     };
 
     const handleClickOpenLogout = () => {
