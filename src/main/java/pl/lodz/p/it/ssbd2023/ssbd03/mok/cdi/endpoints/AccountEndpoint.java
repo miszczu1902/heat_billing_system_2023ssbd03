@@ -159,8 +159,9 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/self/language")
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public Response changeLanguage(@NotNull @Valid ChangeLanguageDTO changeLanguageDTO) {
-        accountService.changeLanguage(changeLanguageDTO.getLanguage());
+    public Response changeLanguage(@NotNull @Valid ChangeLanguageDTO changeLanguageDTO, @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
+        accountService.changeLanguage(changeLanguageDTO.getLanguage(), etag, changeLanguageDTO.getVersion());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 

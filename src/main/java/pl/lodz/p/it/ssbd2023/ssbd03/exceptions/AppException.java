@@ -16,39 +16,42 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackE
 
 @ApplicationException(rollback = true)
 public class AppException extends WebApplicationException {
-    protected final static String ERROR_UNKNOWN = "ERROR_UNKNOWN";
-    protected final static String ERROR_GENERAL_PERSISTENCE = "ERROR_GENERAL_PERSISTENCE";
-    protected final static String ERROR_OPTIMISTIC_LOCK = "ERROR_OPTIMISTIC_LOCK";
-    protected final static String ERROR_TRANSACTION_ROLLEDBACK = "ERROR_TRANSACTION_ROLLEDBACK";
-    protected final static String ERROR_ACCOUNT_NOT_REGISTERED = "ERROR_ACCOUNT_NOT_REGISTERED";
+    protected final static String ERROR_UNKNOWN = "exception.error.unknown";
+    protected final static String ERROR_GENERAL_PERSISTENCE = "exception.error.general_persistence";
+    protected final static String ERROR_OPTIMISTIC_LOCK = "exception.error.optimistic_lock";
+    protected final static String ERROR_ACCESS_DENIED = "exception.error.access_denied";
+    protected final static String ERROR_TRANSACTION_ROLLEDBACK = "exception.error.transaction_rolledback";
+    protected final static String ERROR_ACCOUNT_NOT_REGISTERED = "exception.error.account_not_registered";
 
-    protected final static String ERROR_PASSWORDS_NOT_SAME_MESSAGE = "Passwords are not the same"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_PASSWORDS_OLD_AND_NEW_SAME_EXCEPTION = "Old and new passwords are the same"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_PASSWORD_OLD_INCORRECT_EXCEPTION = "Old password is incorrect"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_EMAIL_NOT_UNIQUE_MESSAGE = "Email not unique"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_USERNAME_NOT_UNIQUE_MESSAGE = "Username not unique"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_PHONE_NUMBER_NOT_UNIQUE_MESSAGE = "Phone number not unique"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_CURRENT_PHONE_NUMBER = "This is your current phone number"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_CURRENT_EMAIL = "This is your current email"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_ACCOUNT_IS_NOT_OWNER = "This account is not the owner"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_ACCOUNT_EXISTS_MESSAGE = "Account already exists"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_RESULT_NOT_FOUND = "Query result not found"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_ACTION_NOT_ALLOWED = "Action is not allowed with this privileges"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_PERSONAL_DATA_VALIDATION = "Each element of personal data can have up to 32 characters"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_INVALID_CREDENTIALS = "Invalid username or password"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_ADDING_AN_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT = "You can't give yourself permissions"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_REVOKE_THE_ONLY_LEVEL_OF_ACCESS = "One level of access cannot be taken away"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_ACCOUNT_IS_NOT_ADMIN = "This account is not the admin"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_MANAGER_CAN_NOT_CHANGE_ADMIN = "This account does not have permission to change Admin email"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_ACCOUNT_IS_NOT_MANAGER = "This account is not the manager"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_ACCESS_LEVEL_IS_ALREADY_GRANTED = "This account already has this level of access"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_LICENSE_NOT_UNIQUE_MESSAGE = "License not unique"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_ACCOUNT_IS_NOT_ACTIVATED = "This account is not activated"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_ACCOUNT_IS_BLOCKED = "This account is blocked"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_REVOKE_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT = "You cannot take away your permissions"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_ETAG_VERIFIER = "Cannot verify eTag"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String ERROR_ETAG_SIGNER = "Cannot sign with eTag"; //TODO - tu trzeba zrobić resource bundle
-    protected final static String TOKEN_IS_NOT_VALID = "Cannot verify token"; //TODO - tu trzeba zrobić resource bundle
+    protected final static String ERROR_PASSWORDS_NOT_SAME_MESSAGE = "exception.password.not_same_message";
+    protected final static String ERROR_PASSWORDS_OLD_AND_NEW_SAME_EXCEPTION = "exception.password.old_and_new_same";
+    protected final static String ERROR_PASSWORD_OLD_INCORRECT_EXCEPTION = "exception.password.old_incorrect";
+
+    protected final static String ERROR_EMAIL_NOT_UNIQUE_MESSAGE = "exception.account.email_not_unique";
+    protected final static String ERROR_USERNAME_NOT_UNIQUE_MESSAGE = "exception.account.username_not_unique";
+    protected final static String ERROR_PHONE_NUMBER_NOT_UNIQUE_MESSAGE = "exception.account.phone_number_not_unique";
+    protected final static String ERROR_CURRENT_PHONE_NUMBER = "exception.account.current_phone_number";
+    protected final static String ERROR_CURRENT_EMAIL = "exception.account.current_email";
+    protected final static String ERROR_ACCOUNT_IS_NOT_OWNER = "exception.account.account_is_not_owner";
+    protected final static String ERROR_ACCOUNT_EXISTS_MESSAGE = "exception.account.account_exists";
+    protected final static String ERROR_ACCOUNT_NOT_EXISTS_MESSAGE = "exception.account.account_not_exists";
+    protected final static String ERROR_RESULT_NOT_FOUND = "exception.account.result_not_found";
+    protected final static String ERROR_ACTION_NOT_ALLOWED = "exception.account.action_not_allowed";
+    protected final static String ERROR_PERSONAL_DATA_VALIDATION = "exception.account.personal_data_validation";
+    protected final static String ERROR_INVALID_CREDENTIALS = "exception.account.invalid_credentials";
+    protected final static String ERROR_ADDING_AN_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT = "exception.account.adding_an_access_level_to_the_same_admin_account";
+    protected final static String ERROR_REVOKE_THE_ONLY_LEVEL_OF_ACCESS = "exception.account.revoke_the_only_level_of_access";
+    protected final static String ERROR_ACCOUNT_IS_NOT_ADMIN = "exception.account.account_is_not_admin";
+    protected final static String ERROR_MANAGER_CAN_NOT_CHANGE_ADMIN = "exception.account.manager_con_not_change_admin";
+    protected final static String ERROR_ACCOUNT_IS_NOT_MANAGER = "exception.account.account_is_not_manager";
+    protected final static String ERROR_ACCESS_LEVEL_IS_ALREADY_GRANTED = "exception.account.access_level_is_already_granted";
+    protected final static String ERROR_LICENSE_NOT_UNIQUE_MESSAGE = "exception.account.license_not_unique";
+    protected final static String ERROR_ACCOUNT_IS_NOT_ACTIVATED = "exception.account.account_is_not_activated";
+    protected final static String ERROR_ACCOUNT_IS_BLOCKED = "exception.account.account_is_blocked";
+    protected final static String ERROR_REVOKE_ACCESS_LEVEL_TO_THE_SAME_ADMIN_ACCOUNT = "exception.account.revoke_access_level_to_the_same_admin_account";
+    protected final static String ERROR_ETAG_VERIFIER = "exception.account.etag_verifier";
+    protected final static String ERROR_ETAG_SIGNER = "exception.account.etag_signer";
+    protected final static String TOKEN_IS_NOT_VALID = "exception.account.not_valid_token";
 
     @Getter
     private Throwable cause;

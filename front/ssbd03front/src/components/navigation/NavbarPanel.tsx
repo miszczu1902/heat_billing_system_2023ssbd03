@@ -33,10 +33,14 @@ const NavbarPanel = () => {
     const [open, setOpen] = useState(false);
     const [openRole, setOpenRole] = useState(false);
     const [navbarColor, setNavbarColor] = useState('#ffffff');
-    const [cookies, setCookie, removeCookie] = useCookies(["token", "language", "role"]);
+    const [cookies, setCookie, removeCookie] = useCookies(["token", "etag", "language", "role"]);
+    const etag = cookies.etag;
+    const [version, setVersion] = useState("");
     const [roles, setRoles] = useState([GUEST]);
     const [currentRole, setCurrentRole] = useState(cookies.role);
     const [username, setUsername] = useState('');
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [errorOpenMessage, setErrorOpenMessage] = useState("");
     const token = "Bearer " + cookies.token;
 
     useEffect(() => {
@@ -131,6 +135,7 @@ const NavbarPanel = () => {
     };
 
     const handleClickOpen = () => {
+        fetchData();
         setOpen(true);
     };
 
@@ -144,20 +149,40 @@ const NavbarPanel = () => {
             setOpen(false);
         }
         const language = localStorage.getItem("selectedLanguage");
-        const languageDTO = {
-            language: language
-        }
         if (language) {
             i18n.changeLanguage(language.toLowerCase());
             if (cookies.token !== undefined) {
+                const languageDTO = {
+                    version: parseInt(version),
+                    language: language
+                }
                 axios.patch(`${API_URL}/accounts/self/language`,
                     languageDTO, {
                         headers: {
                             'Authorization': token,
+                            'If-Match': etag,
                             'Content-Type': 'application/json'
                         },
                     })
+                    .catch(error => {
+                    setErrorOpenMessage(t('navbar.languages.error'))
+                    setErrorOpen(true);
+                });
             }
+        }
+    };
+
+    const fetchData = async () => {
+        if (cookies.token !== undefined) {
+            await axios.get(`${API_URL}/accounts/self`, {
+                headers: {
+                    Authorization: token
+                }
+            })
+                .then(response => {
+                    setCookie("etag", response.headers.etag);
+                    setVersion(response.data.version.toString());
+                });
         }
     };
 
@@ -188,6 +213,12 @@ const NavbarPanel = () => {
         navigate("/logout");
     };
 
+    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+        if (reason !== 'backdropClick') {
+            setErrorOpen(false);
+        }
+    };
+
     return (
         <div>
             <Dialog disableEscapeKeyDown open={windowOpen}>
@@ -204,12 +235,16 @@ const NavbarPanel = () => {
                 </Icon>
                 {
                     (currentRole === ADMIN || currentRole === MANAGER) &&
-                    <Typography variant="h6" onClick={() => navigate('/accounts')} sx={{marginLeft: '1vh', cursor: 'pointer'}}>
+                    <Typography variant="h6" onClick={() => navigate('/accounts')}
+                                sx={{marginLeft: '1vh', cursor: 'pointer'}}>
                         {t('navbar.account_list')}
                     </Typography>
                 }
 
-                <Typography variant="h6" sx={{marginRight: '1vh', marginLeft: 'auto'}}>{cookies.token && t('navbar.logged_as') + username}</Typography>
+                <Typography variant="h6" sx={{
+                    marginRight: '1vh',
+                    marginLeft: 'auto'
+                }}>{cookies.token && t('navbar.logged_as') + username}</Typography>
                 <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{marginRight: '1vh'}}>
                     <Button onClick={handleClickOpen} style={{backgroundColor: navbarColor}}><GlobeIcon/></Button>
                     {cookies.token && (
@@ -283,6 +318,10 @@ const NavbarPanel = () => {
                 <DialogActions sx={{alignItems: 'center', justifyContent: 'center'}}>
                     <Button onClick={handleCloseRole}>{t('confirm.ok')}</Button>
                 </DialogActions>
+            </Dialog>
+            <Dialog disableEscapeKeyDown open={errorOpen}>
+                <DialogTitle>{errorOpenMessage}</DialogTitle>
+                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
             </Dialog>
         </AppBar>
 </div>

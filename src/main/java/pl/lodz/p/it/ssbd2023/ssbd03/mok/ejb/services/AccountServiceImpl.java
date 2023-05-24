@@ -128,7 +128,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             final LoginData loginData = loginDataFacade.findById(account);
             if (flag) {
                 if (account.getAccessLevels().stream().anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals(Roles.ADMIN))) {
-                    adminLoggedInEmail(account.getEmail());
+                    adminLoggedInEmail(account.getEmail(), account.getLanguage_());
                 }
                 loginData.setInvalidLoginCounter(0);
                 loginData.setLastValidLogicAddress(httpServletRequest.getRemoteAddr());
@@ -151,8 +151,8 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed(Roles.GUEST)
-    public void adminLoggedInEmail(String email) {
-        mailSender.sendInformationAdminLoggedIn(email, httpServletRequest.getRemoteAddr());
+    public void adminLoggedInEmail(String email, String language) {
+        mailSender.sendInformationAdminLoggedIn(email, httpServletRequest.getRemoteAddr(), language);
     }
 
     @Override
@@ -192,7 +192,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 token, accountToChangePassword);
         resetPasswordTokenFacade.create(resetPasswordToken);
 
-        mailSender.sendInformationAboutResettingPassword(accountToChangePassword.getEmail(), token);
+        mailSender.sendInformationAboutResettingPassword(accountToChangePassword.getEmail(), token, accountToChangePassword.getLanguage_());
     }
 
     @Override
@@ -267,7 +267,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 token, accountToChangePassword);
         resetPasswordTokenFacade.create(resetPasswordToken);
 
-        mailSender.sendInformationAboutChangedPasswordByAdmin(accountToChangePassword.getEmail(), token);
+        mailSender.sendInformationAboutChangedPasswordByAdmin(accountToChangePassword.getEmail(), token, accountToChangePassword.getLanguage_());
     }
 
     @Override
@@ -341,10 +341,17 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public void changeLanguage(String language) {
+    public void changeLanguage(String language, String etag, Long version) {
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
+        if (!etag.equals(messageSigner.sign(account))) {
+            throw AppException.createVerifierException();
+        }
+        if (!Objects.equals(version, account.getVersion())) {
+            throw AppException.createOptimisticLockAppException();
+        }
         account.setLanguage_(language);
+        accountFacade.edit(account);
     }
 
     @Override
@@ -416,12 +423,12 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                         managerAccess.setIsActive(true);
                         managerAccess.setLicense(license);
                     }
-                    mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "manager");
+                    mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "manager", account.getLanguage_());
                 }, () -> {
                     final Manager newManager = new Manager(license);
                     newManager.setAccount(account);
                     account.getAccessLevels().add(newManager);
-                    mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "manager");
+                    mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "manager", account.getLanguage_());
                 }
         );
     }
@@ -461,12 +468,12 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                         ownerAccess.setIsActive(true);
                         ownerAccess.setPhoneNumber(phoneNumber);
                     }
-                    mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "owner");
+                    mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "owner", account.getLanguage_());
                 }, () -> {
                     final Owner newOwner = new Owner(phoneNumber);
                     newOwner.setAccount(account);
                     account.getAccessLevels().add(newOwner);
-                    mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "owner");
+                    mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "owner", account.getLanguage_());
                 }
         );
     }
@@ -498,13 +505,13 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                         throw AppException.theAccessLevelisAlreadyGranted();
                     } else {
                         adminAccess.setIsActive(true);
-                        mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "admin");
+                        mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "admin", account.getLanguage_());
                     }
                 }, () -> {
                     final Admin newAdmin = new Admin();
                     newAdmin.setAccount(account);
                     account.getAccessLevels().add(newAdmin);
-                    mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "admin");
+                    mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "admin", account.getLanguage_());
                 }
         );
     }
@@ -540,7 +547,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                     .findAny()
                     .orElseThrow(AppException::createAccountIsNotManagerException);
             manager.setIsActive(false);
-            mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "manager");
+            mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "manager", account.getLanguage_());
         }
         if (access.equals(Roles.ADMIN)) {
             final Admin admin = account.getAccessLevels().stream()
@@ -549,7 +556,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                     .findAny()
                     .orElseThrow(AppException::createAccountIsNotAdminException);
             admin.setIsActive(false);
-            mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "admin");
+            mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "admin", account.getLanguage_());
         }
         if (access.equals(Roles.OWNER)) {
             final Owner owner = account.getAccessLevels().stream()
@@ -558,7 +565,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                     .findAny()
                     .orElseThrow(AppException::createAccountIsNotOwnerException);
             owner.setIsActive(false);
-            mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "owner");
+            mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "owner", account.getLanguage_());
         }
     }
 
@@ -606,6 +613,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
+    @RolesAllowed({Roles.GUEST, Roles.OWNER, Roles.ADMIN, Roles.MANAGER})
     public void confirmNewEmailAccountFromActivationLink(String confirmationToken) {
         final EmailConfirmationToken emailConfirmationToken = emailConfirmationTokenFacade.getActivationTokenByTokenValue(confirmationToken);
         Account account = emailConfirmationToken.getAccount();

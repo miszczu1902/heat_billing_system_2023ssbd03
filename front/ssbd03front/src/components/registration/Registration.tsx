@@ -284,7 +284,7 @@ const Registration = () => {
                         margin: '2vh'
                     }}>
                         <Typography sx={{padding: '1vh'}} variant="h5">{t('navbar.register')}</Typography>
-                        <Icon sx={{width: '10%', height: '10%', marginLeft: '1vh'}}>
+                        <Icon onClick={() => navigate('/')} sx={{width: '10%', height: '10%', marginLeft: '1vh', cursor: 'pointer'}}>
                             <img src={Logo}/>
                         </Icon>
                     </Box>

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useState} from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
@@ -19,7 +20,6 @@ import {useNavigate} from "react-router-dom";
 import {Icon} from "@mui/material";
 import Logo from './../../assets/logo.svg';
 import {useTranslation} from "react-i18next";
-import { useState } from 'react';
 
 const theme = createTheme();
 
@@ -92,8 +92,7 @@ const Login = () => {
             axios.request(config)
                 .then((response) => {
                     setCookie("token", response.headers["bearer"]);
-                    setCookie("language", response.headers["language"]);
-                    i18n.changeLanguage(response.headers["language"]);
+                    i18n.changeLanguage(response.headers["language"].toLowerCase());
                     navigate('/');
                 })
                 .catch((error) => {
@@ -172,7 +171,7 @@ const Login = () => {
                   sx={{background: '#1c8de4', height: '100vh', width: '100vw'}}>
                 <Grid my={2} item sm={8} md={5} component={Paper} elevation={6}>
                     <Box sx={{my: 20, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                        <Icon sx={{width: '10%', height: '10%', marginLeft: '1vh'}}>
+                        <Icon onClick={() => navigate('/')} sx={{width: '10%', height: '10%', marginLeft: '1vh', cursor: 'pointer'}}>
                             <img src={Logo}/>
                         </Icon>
                         <Typography variant="h5">{t('login.title')}</Typography>

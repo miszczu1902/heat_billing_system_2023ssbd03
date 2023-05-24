@@ -9,6 +9,7 @@
     {
       "title": "Change language",
       "default": "Language",
+      "error": "An error occurred while changing language.",
       "pl": "Polish",
       "en": "English"
     },
@@ -210,5 +211,51 @@
   "token":
   {
     "token_not_valid_message": "Your session expired, you need to authenticate again"
+  },
+  "exception":
+  {
+    "error":
+    {
+      "unknown": "ERROR_UNKNOWN",
+      "general_persistence":"ERROR_GENERAL_PERSISTENCE",
+      "optimistic_lock": "ERROR_OPTIMISTIC_LOCK",
+      "access_denied": "ERROR_ACCESS_DENIED",
+      "transaction_rolledback": "ERROR_TRANSACTION_ROLLEDBACK",
+      "account_not_registered": "ERROR_ACCOUNT_NOT_REGISTERED"
+    },
+    "password":
+    {
+      "not_same_message": "Passwords are not the same",
+      "old_and_new_same": "Old and new passwords are the same",
+      "old_incorrect": "Old password is incorrect"
+    },
+    "account":
+    {
+      "email_not_unique": "Email not unique",
+      "username_not_unique": "Username not unique",
+      "phone_number_not_unique": "Phone number not unique",
+      "current_phone_number": "This is your current phone number",
+      "current_email": "This is your current email",
+      "account_is_not_owner": "This account is not the owner",
+      "account_exists": "Account already exists",
+      "account_not_exists": "Account with provided data not exists",
+      "result_not_found": "Query result not found",
+      "action_not_allowed": "Action is not allowed with this privileges",
+      "personal_data_validation": "Each element of personal data can have up to 32 characters",
+      "invalid_credentials": "Invalid username or password",
+      "adding_an_access_level_to_the_same_admin_account": "You can't give yourself permissions",
+      "revoke_the_only_level_of_access": "One level of access cannot be taken away",
+      "account_is_not_admin": "This account is not the admin",
+      "manager_con_not_change_admin": "This account does not have permission to change Admin email",
+      "account_is_not_manager": "This account is not the manager",
+      "access_level_is_already_granted": "This account already has this level of access",
+      "license_not_unique": "License not unique",
+      "account_is_not_activated": "This account is not activated",
+      "account_is_blocked": "This account is blocked",
+      "revoke_access_level_to_the_same_admin_account": "You cannot take away your permissions",
+      "etag_verifier": "Cannot verify eTag",
+      "etag_signer": "Cannot sign with eTag",
+      "not_valid_token": "Can not verify token."
+    }
   }
 }
