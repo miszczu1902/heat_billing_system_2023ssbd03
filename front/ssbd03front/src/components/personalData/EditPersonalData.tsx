@@ -125,9 +125,9 @@ const EditPersonalData = () => {
             axios.patch(`${API_URL}/accounts/self/personal-data`,
                 personalDataDTO, {
                     headers: {
-                        'Authorization': 'Bearer ' + token,
+                        'Authorization': cookies.token,
                         'Content-Type': 'application/json',
-                        'If-Match': etag
+                        'If-Match': cookies.etag
                     },
                 })
                 .then(response => {
@@ -237,7 +237,7 @@ const EditPersonalData = () => {
             </Dialog>
 
             <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
-                <DialogTitle>{t('disable_account.authorization_error')}</DialogTitle>
+                <DialogTitle>{t('personal_data.authorization_error')}</DialogTitle>
                 <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>
             </Dialog>
         </div>

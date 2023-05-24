@@ -22,7 +22,6 @@ export default function EditUserPersonalData() {
     const username = useParams().username;
     const [cookies, setCookie] = useCookies(["token", "etag"]);
     const token = "Bearer " + cookies.token;
-    const etag = cookies.etag;
     const [version, setVersion] = useState("");
 
     const [open, setOpen] = useState(false);
@@ -126,9 +125,9 @@ export default function EditUserPersonalData() {
             axios.patch(`${API_URL}/accounts/${username}/personal-data`,
                 personalDataDTO, {
                     headers: {
-                        'Authorization': token,
+                        'Authorization': cookies.token,
                         'Content-Type': 'application/json',
-                        'If-Match': etag
+                        'If-Match': cookies.etag
                     },
                 })
                 .then(response => {
@@ -239,7 +238,7 @@ export default function EditUserPersonalData() {
             </Dialog>
 
             <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
-                <DialogTitle>{t('disable_account.authorization_error')}</DialogTitle>
+                <DialogTitle>{t('personal_data.authorization_error')}</DialogTitle>
                 <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>
             </Dialog>
         </div>
