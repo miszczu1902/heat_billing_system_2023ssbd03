@@ -14,7 +14,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import {ButtonGroup, Icon} from '@mui/material';
-import {useCookies} from 'react-cookie';
 import {useNavigate} from "react-router-dom";
 import Logo from "../../assets/logo.svg";
 import "../../i18n";
@@ -42,7 +41,7 @@ const NavbarPanel = () => {
     const token = "Bearer " + localStorage.getItem("token");
 
     useEffect(() => {
-        if (localStorage.getItem("token")!=null) {
+        if (localStorage.getItem("token") != null) {
             const dataToken = decode(token);
             const currentTimestamp = Math.floor(new Date().getTime() / 1000);
             if (JSON.parse(JSON.stringify(dataToken)).exp < currentTimestamp) {
@@ -63,7 +62,7 @@ const NavbarPanel = () => {
             };
             axios.request(config)
                 .then((response) => {
-                        localStorage.setItem("token", response.headers["bearer"]);
+                    localStorage.setItem("token", response.headers["bearer"]);
                 })
                 .catch((error) => {
                     setWindowOpen(true);
@@ -72,14 +71,14 @@ const NavbarPanel = () => {
     });
 
     useEffect(() => {
-        if (localStorage.getItem("token")!=null) {
+        if (localStorage.getItem("token") != null) {
             const data = decode(token);
             const decodedRole = JSON.parse(JSON.stringify(data)).role;
             const roles = decodedRole.split(',').sort();
             setRoles(roles);
             if (currentRole === GUEST) {
                 setCurrentRole(roles[0]);
-                localStorage.setItem("role",roles[0]);
+                localStorage.setItem("role", roles[0]);
             }
             setUsername(JSON.parse(JSON.stringify(data)).sub);
         } else {
@@ -162,9 +161,9 @@ const NavbarPanel = () => {
                         },
                     })
                     .catch(error => {
-                    setErrorOpenMessage(t('navbar.languages.error'))
-                    setErrorOpen(true);
-                });
+                        setErrorOpenMessage(t('navbar.languages.error'))
+                        setErrorOpen(true);
+                    });
             }
         }
     };
@@ -177,7 +176,7 @@ const NavbarPanel = () => {
                 }
             })
                 .then(response => {
-                    localStorage.setItem("etag",response.headers.etag);
+                    localStorage.setItem("etag", response.headers.etag);
                     setVersion(response.data.version.toString());
                 });
         }
@@ -197,7 +196,7 @@ const NavbarPanel = () => {
         }
         const selectedRole = localStorage.getItem("selectedRole");
         if (selectedRole) {
-            localStorage.setItem("role",selectedRole);
+            localStorage.setItem("role", selectedRole);
             window.location.reload();
         }
     };
@@ -227,103 +226,104 @@ const NavbarPanel = () => {
                 </DialogActions>
             </Dialog>
 
-        <AppBar position="static" style={{backgroundColor: navbarColor}}>
-            <Toolbar>
-                <Icon sx={{width: '3%', height: '3%', marginLeft: '1vh', marginRight: '1vh', cursor: 'pointer'}}>
-                    <img src={Logo} alt="Logo" onClick={() => navigate('/')}/>
-                </Icon>
-                {
-                    (currentRole === ADMIN || currentRole === MANAGER) &&
-                    <Typography variant="h6" onClick={() => navigate('/accounts')}
-                                sx={{marginLeft: '1vh', cursor: 'pointer'}}>
-                        {t('navbar.account_list')}
-                    </Typography>
-                }
+            <AppBar position="static" style={{backgroundColor: navbarColor}}>
+                <Toolbar>
+                    <Icon sx={{width: '3%', height: '3%', marginLeft: '1vh', marginRight: '1vh', cursor: 'pointer'}}>
+                        <img src={Logo} alt="Logo" onClick={() => navigate('/')}/>
+                    </Icon>
+                    {
+                        (currentRole === ADMIN || currentRole === MANAGER) &&
+                        <Typography variant="h6" onClick={() => navigate('/accounts')}
+                                    sx={{marginLeft: '1vh', cursor: 'pointer'}}>
+                            {t('navbar.account_list')}
+                        </Typography>
+                    }
 
-                <Typography variant="h6" sx={{
-                    marginRight: '1vh',
-                    marginLeft: 'auto'
-                }}>{localStorage.getItem("token") && t('navbar.logged_as') + username}</Typography>
-                <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{marginRight: '1vh'}}>
-                    <Button onClick={handleClickOpen} style={{backgroundColor: navbarColor}}><GlobeIcon/></Button>
-                    {localStorage.getItem("token") && (
-                        <>
-                            {
-                                (currentRole === OWNER)
-                                && <Button style={{backgroundColor: navbarColor}}
-                                           onClick={() => navigate('/accounts/self/owner')}><UserInfoIcon/></Button>
-                            }
-                            {
-                                (currentRole === MANAGER)
-                                && <Button style={{backgroundColor: navbarColor}}
-                                           onClick={() => navigate('/accounts/self/manager')}><UserInfoIcon/></Button>
-                            }
-                            {
-                                (currentRole === ADMIN)
-                                && <Button style={{backgroundColor: navbarColor}}
-                                           onClick={() => navigate('/accounts/self/admin')}><UserInfoIcon/></Button>
-                            }
-                            <Button onClick={handleOpenRole}
-                                    style={{backgroundColor: navbarColor}}><SwitchUserIcon/></Button>
-                            <Button onClick={handleClickOpenLogout}
-                                    style={{backgroundColor: navbarColor}}>{t('navbar.log_out')}</Button>
-                        </>
-                    )}
-                </ButtonGroup>
-            </Toolbar>
-            <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-                <DialogTitle>{t('navbar.languages.title')}</DialogTitle>
-                <DialogContent>
-                    <Box component="form" sx={{display: 'flex', flexWrap: 'wrap'}}>
-                        <FormControl sx={{m: 1, minWidth: 120}}>
-                            <InputLabel id="demo-dialog-select-label">{t('navbar.languages.default')}</InputLabel>
-                            <Select
-                                labelId="demo-dialog-select-label"
-                                id="demo-dialog-select"
-                                onChange={handleChange}
-                                input={<OutlinedInput label={t('navbar.languages.default')}/>}
-                            >
-                                <MenuItem value={'PL'}>{t('navbar.languages.pl')}</MenuItem>
-                                <MenuItem value={'EN'}>{t('navbar.languages.en')}</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Box>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCancel}>{t('confirm.cancel')}</Button>
-                    <Button onClick={handleClose}>{t('confirm.ok')}</Button>
-                </DialogActions>
-            </Dialog>
-            <Dialog disableEscapeKeyDown open={openRole} onClose={handleCloseRole}>
-                <DialogTitle>{t('navbar.select_role')}</DialogTitle>
-                <DialogContent>
-                    <Box component="form" sx={{display: 'flex', flexWrap: 'wrap'}}>
-                        <FormControl sx={{m: 1, minWidth: 200}}>
-                            <InputLabel
-                                id="demo-dialog-select-label">{t('navbar.roles')}</InputLabel>
-                            <Select
-                                labelId="demo-dialog-select-label"
-                                id="demo-dialog-select"
-                                onChange={handleChangeRole}
-                                input={<OutlinedInput label={t('navbar.languages.default')}/>}>
-                                {roles.map((roleToDisplay) => (
-                                    <MenuItem
-                                        value={roleToDisplay}>{t('profile.' + roleToDisplay.toLowerCase())}</MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Box>
-                </DialogContent>
-                <DialogActions sx={{alignItems: 'center', justifyContent: 'center'}}>
-                    <Button onClick={handleCloseRole}>{t('confirm.ok')}</Button>
-                </DialogActions>
-            </Dialog>
-            <Dialog disableEscapeKeyDown open={errorOpen}>
-                <DialogTitle>{t(errorOpenMessage)}</DialogTitle>
-                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
-            </Dialog>
-        </AppBar>
-</div>
+                    <Typography variant="h6" sx={{
+                        marginRight: '1vh',
+                        marginLeft: 'auto'
+                    }}>{localStorage.getItem("token") && t('navbar.logged_as') + username}</Typography>
+                    <ButtonGroup variant="contained" aria-label="outlined primary button group"
+                                 sx={{marginRight: '1vh'}}>
+                        <Button onClick={handleClickOpen} style={{backgroundColor: navbarColor}}><GlobeIcon/></Button>
+                        {localStorage.getItem("token") && (
+                            <>
+                                {
+                                    (currentRole === OWNER)
+                                    && <Button style={{backgroundColor: navbarColor}}
+                                               onClick={() => navigate('/accounts/self/owner')}><UserInfoIcon/></Button>
+                                }
+                                {
+                                    (currentRole === MANAGER)
+                                    && <Button style={{backgroundColor: navbarColor}}
+                                               onClick={() => navigate('/accounts/self/manager')}><UserInfoIcon/></Button>
+                                }
+                                {
+                                    (currentRole === ADMIN)
+                                    && <Button style={{backgroundColor: navbarColor}}
+                                               onClick={() => navigate('/accounts/self/admin')}><UserInfoIcon/></Button>
+                                }
+                                <Button onClick={handleOpenRole}
+                                        style={{backgroundColor: navbarColor}}><SwitchUserIcon/></Button>
+                                <Button onClick={handleClickOpenLogout}
+                                        style={{backgroundColor: navbarColor}}>{t('navbar.log_out')}</Button>
+                            </>
+                        )}
+                    </ButtonGroup>
+                </Toolbar>
+                <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
+                    <DialogTitle>{t('navbar.languages.title')}</DialogTitle>
+                    <DialogContent>
+                        <Box component="form" sx={{display: 'flex', flexWrap: 'wrap'}}>
+                            <FormControl sx={{m: 1, minWidth: 120}}>
+                                <InputLabel id="demo-dialog-select-label">{t('navbar.languages.default')}</InputLabel>
+                                <Select
+                                    labelId="demo-dialog-select-label"
+                                    id="demo-dialog-select"
+                                    onChange={handleChange}
+                                    input={<OutlinedInput label={t('navbar.languages.default')}/>}
+                                >
+                                    <MenuItem value={'PL'}>{t('navbar.languages.pl')}</MenuItem>
+                                    <MenuItem value={'EN'}>{t('navbar.languages.en')}</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Box>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleCancel}>{t('confirm.cancel')}</Button>
+                        <Button onClick={handleClose}>{t('confirm.ok')}</Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog disableEscapeKeyDown open={openRole} onClose={handleCloseRole}>
+                    <DialogTitle>{t('navbar.select_role')}</DialogTitle>
+                    <DialogContent>
+                        <Box component="form" sx={{display: 'flex', flexWrap: 'wrap'}}>
+                            <FormControl sx={{m: 1, minWidth: 200}}>
+                                <InputLabel
+                                    id="demo-dialog-select-label">{t('navbar.roles')}</InputLabel>
+                                <Select
+                                    labelId="demo-dialog-select-label"
+                                    id="demo-dialog-select"
+                                    onChange={handleChangeRole}
+                                    input={<OutlinedInput label={t('navbar.languages.default')}/>}>
+                                    {roles.map((roleToDisplay) => (
+                                        <MenuItem
+                                            value={roleToDisplay}>{t('profile.' + roleToDisplay.toLowerCase())}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Box>
+                    </DialogContent>
+                    <DialogActions sx={{alignItems: 'center', justifyContent: 'center'}}>
+                        <Button onClick={handleCloseRole}>{t('confirm.ok')}</Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog disableEscapeKeyDown open={errorOpen}>
+                    <DialogTitle>{t(errorOpenMessage)}</DialogTitle>
+                    <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
+                </Dialog>
+            </AppBar>
+        </div>
     );
 };
 

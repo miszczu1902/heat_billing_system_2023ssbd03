@@ -9,7 +9,6 @@ import Typography from '@mui/material/Typography';
 import {API_URL} from '../../consts';
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import axios from 'axios';
-import {useCookies} from 'react-cookie';
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -26,7 +25,6 @@ const theme = createTheme();
 const Login = () => {
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
-    const [cookies, setCookie] = useCookies(["token", "language"]);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loginError, setLoginError] = useState("");
@@ -42,7 +40,7 @@ const Login = () => {
     const [loggedIn, setLoggedIn] = useState(false);
 
     React.useEffect(() => {
-        if (localStorage.getItem("token")!=null) {
+        if (localStorage.getItem("token") != null) {
             setLoggedIn(true);
         }
         setLoading(false);
@@ -91,7 +89,7 @@ const Login = () => {
             };
             axios.request(config)
                 .then((response) => {
-                    localStorage.setItem("token",response.headers["bearer"]);
+                    localStorage.setItem("token", response.headers["bearer"]);
                     i18n.changeLanguage(response.headers["language"].toLowerCase());
                     navigate('/');
                 })
@@ -171,7 +169,8 @@ const Login = () => {
                   sx={{background: '#1c8de4', height: '100vh', width: '100vw'}}>
                 <Grid my={2} item sm={8} md={5} component={Paper} elevation={6}>
                     <Box sx={{my: 20, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-                        <Icon onClick={() => navigate('/')} sx={{width: '10%', height: '10%', marginLeft: '1vh', cursor: 'pointer'}}>
+                        <Icon onClick={() => navigate('/')}
+                              sx={{width: '10%', height: '10%', marginLeft: '1vh', cursor: 'pointer'}}>
                             <img src={Logo}/>
                         </Icon>
                         <Typography variant="h5">{t('login.title')}</Typography>

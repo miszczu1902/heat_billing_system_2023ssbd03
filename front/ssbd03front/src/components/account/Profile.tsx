@@ -15,7 +15,6 @@ import TextField from '@mui/material/TextField';
 import {Checkbox, FormControlLabel, Grid} from '@mui/material';
 import {useNavigate, useParams} from "react-router-dom";
 import {ADMIN, API_URL, MANAGER, OWNER} from "../../consts";
-import {useCookies} from "react-cookie";
 import axios from 'axios';
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -279,7 +278,7 @@ export default function Profile() {
                 }
             })
                 .then(response => {
-                    localStorage.setItem("etag",response.headers["etag"]);
+                    localStorage.setItem("etag", response.headers["etag"]);
                     setVersion(response.data.version)
                 });
         };
@@ -295,7 +294,7 @@ export default function Profile() {
                 }
             })
                 .then(response => {
-                    localStorage.setItem("etag",response.headers["etag"]);
+                    localStorage.setItem("etag", response.headers["etag"]);
                     setVersion(response.data.version)
                 });
         };
@@ -311,7 +310,7 @@ export default function Profile() {
                 }
             })
                 .then(response => {
-                    localStorage.setItem("etag",response.headers["etag"]);
+                    localStorage.setItem("etag", response.headers["etag"]);
                     setVersion(response.data.version)
                 });
         };
@@ -337,7 +336,7 @@ export default function Profile() {
                 }
             })
                 .then(response => {
-                    localStorage.setItem("etag",response.headers["etag"]);
+                    localStorage.setItem("etag", response.headers["etag"]);
                     setVersion(response.data.version)
                 });
         };
@@ -403,9 +402,9 @@ export default function Profile() {
                                         gap: '0.5vh'
                                     }}>
                                         {(!account.isEnable && ((!account.isUserAdmin && role === MANAGER) || role === ADMIN)) &&
-                                            <EnableAccount/>}
+                                        <EnableAccount/>}
                                         {account.isEnable && ((!account.isUserAdmin && role === MANAGER) || role === ADMIN) &&
-                                            <DisableAccount/>}
+                                        <DisableAccount/>}
                                     </div>
                                     <Typography sx={{padding: '1vh'}}
                                                 variant="h5"><b>{t('enable_account.enable')}:</b> {account.isEnable ? t('enable_account.enable') : t('disable_account.disable')}
@@ -583,8 +582,8 @@ export default function Profile() {
                                             <form onSubmit={handleAddSubmit}>
                                                 <FormControl fullWidth>
                                                     {!selectedRole &&
-                                                        <InputLabel
-                                                            id="access-level-label">{t('profile.select_access_level')}</InputLabel>}
+                                                    <InputLabel
+                                                        id="access-level-label">{t('profile.select_access_level')}</InputLabel>}
                                                     <Select
                                                         labelId="access-level-label"
                                                         value={selectedRole}

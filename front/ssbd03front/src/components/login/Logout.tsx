@@ -1,7 +1,6 @@
 import * as React from 'react';
-import {useCookies} from "react-cookie";
+import {useEffect} from 'react';
 import {useNavigate} from "react-router-dom";
-import {useEffect, useState} from "react";
 
 const Logout = () => {
 

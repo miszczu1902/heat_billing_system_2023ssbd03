@@ -6,7 +6,6 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
-import {useCookies} from "react-cookie";
 import {Box, Button, Grid, Icon} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -32,7 +31,6 @@ const Registration = () => {
 
     const {register, handleSubmit} = useForm<RegistrationForm>();
     const navigate = useNavigate();
-    const [cookies, setCookie] = useCookies(["token", "role"]);
     const [firstName, setFirstName] = useState('');
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState("");
@@ -80,7 +78,7 @@ const Registration = () => {
             setLoggedIn(true);
         }
         setLoading(false);
-    }, [cookies]);
+    }, []);
 
     if (loading) {
         return <p></p>;
@@ -276,7 +274,8 @@ const Registration = () => {
                         margin: '2vh'
                     }}>
                         <Typography sx={{padding: '1vh'}} variant="h5">{t('navbar.register')}</Typography>
-                        <Icon onClick={() => navigate('/')} sx={{width: '10%', height: '10%', marginLeft: '1vh', cursor: 'pointer'}}>
+                        <Icon onClick={() => navigate('/')}
+                              sx={{width: '10%', height: '10%', marginLeft: '1vh', cursor: 'pointer'}}>
                             <img src={Logo}/>
                         </Icon>
                     </Box>

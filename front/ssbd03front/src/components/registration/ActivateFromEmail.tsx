@@ -42,12 +42,12 @@ const ActivateFromEmail = () => {
                     <Typography variant="h4" component="h1">{message}</Typography>
                 </Grid>
                 {isActivated &&
-                    <Grid item>
-                        <Button className="landing-page-button" variant="contained" color="primary"
-                                onClick={() => handleButtonClick('/login')}>
-                            {t('navbar.login')}
-                        </Button>
-                    </Grid>
+                <Grid item>
+                    <Button className="landing-page-button" variant="contained" color="primary"
+                            onClick={() => handleButtonClick('/login')}>
+                        {t('navbar.login')}
+                    </Button>
+                </Grid>
                 }
             </Grid>
         </Container>

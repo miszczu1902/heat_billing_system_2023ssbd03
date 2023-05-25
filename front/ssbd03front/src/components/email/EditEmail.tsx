@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useState} from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -10,13 +11,10 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import axios from 'axios';
 import {API_URL} from '../../consts';
-import {useCookies} from 'react-cookie';
 import {useTranslation} from "react-i18next";
-import { useState } from 'react';
 
 const EditEmail = () => {
     const {t} = useTranslation();
-    const [cookies] = useCookies(["token"]);
     const token = "Bearer " + localStorage.getItem("token");
     const [version, setVersion] = useState("");
     const [open, setOpen] = useState(false);
@@ -57,7 +55,7 @@ const EditEmail = () => {
                 }
             })
                 .then(response => {
-                    localStorage.setItem("etag",response.headers["etag"]);
+                    localStorage.setItem("etag", response.headers["etag"]);
                     setVersion(response.data.version)
                 });
         };

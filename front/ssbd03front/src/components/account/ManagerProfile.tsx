@@ -3,7 +3,6 @@ import React, {useEffect, useState} from 'react';
 import {Grid} from '@mui/material';
 import {useNavigate} from "react-router-dom";
 import {API_URL} from "../../consts";
-import {useCookies} from "react-cookie";
 import axios from 'axios';
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useState} from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -6,9 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios';
 import {API_URL} from '../../consts';
 import {useParams} from "react-router-dom";
-import {useCookies} from 'react-cookie';
 import {useTranslation} from "react-i18next";
-import { useState } from 'react';
 
 const DisableAccount = () => {
     const {t, i18n} = useTranslation();
@@ -16,10 +15,13 @@ const DisableAccount = () => {
     const token = "Bearer " + localStorage.getItem("token");
     const [version, setVersion] = useState("");
     const [enable, setEnable] = useState(false);
+
     const [open, setOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
+
     const [successOpen, setSuccessOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
+
     const [blockedUserOpen, setBlockedUserOpen] = useState(false);
 
     const [authorizationErrorOpen, setAuthorizationErrorOpen] = useState(false);

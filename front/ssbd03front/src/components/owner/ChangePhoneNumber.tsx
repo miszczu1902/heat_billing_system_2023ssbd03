@@ -11,7 +11,6 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import axios from 'axios';
 import {API_URL} from '../../consts';
-import {useCookies} from 'react-cookie';
 import {useTranslation} from "react-i18next";
 
 const ChangePhoneNumber = () => {
@@ -56,7 +55,7 @@ const ChangePhoneNumber = () => {
                 }
             })
                 .then(response => {
-                    localStorage.setItem("etag",response.headers["etag"]);
+                    localStorage.setItem("etag", response.headers["etag"]);
                     setVersion(response.data.version)
                 });
         };
