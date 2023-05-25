@@ -1,8 +1,5 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services;
 
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.security.SignatureException;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.SessionSynchronization;
 import jakarta.ejb.Stateful;
@@ -54,6 +51,9 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Inject
     private ManagerFacade managerFacade;
+
+    @Inject
+    private AdminFacade adminFacade;
 
     @Inject
     private AccountConfirmationTokenFacade accountConfirmationTokenFacade;
@@ -168,7 +168,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
     public String refreshToken(String token) {
-            return jwtGenerator.refreshTokenJWT(token);
+        return jwtGenerator.refreshTokenJWT(token);
     }
 
     @Override
@@ -417,15 +417,19 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                     }
                     if (managerAccess.getLicense().equals(license)) {
                         managerAccess.setIsActive(true);
+                        managerFacade.edit(managerAccess);
                     } else {
                         managerAccess.setIsActive(true);
                         managerAccess.setLicense(license);
+                        managerFacade.edit(managerAccess);
                     }
                     mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "manager", account.getLanguage_());
                 }, () -> {
                     final Manager newManager = new Manager(license);
                     newManager.setAccount(account);
+                    managerFacade.create(newManager);
                     account.getAccessLevels().add(newManager);
+                    accountFacade.edit(account);
                     mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "manager", account.getLanguage_());
                 }
         );
@@ -462,15 +466,19 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                     }
                     if (ownerAccess.getPhoneNumber().equals(phoneNumber)) {
                         ownerAccess.setIsActive(true);
+                        ownerFacade.edit(ownerAccess);
                     } else {
                         ownerAccess.setIsActive(true);
                         ownerAccess.setPhoneNumber(phoneNumber);
+                        ownerFacade.edit(ownerAccess);
                     }
                     mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "owner", account.getLanguage_());
                 }, () -> {
                     final Owner newOwner = new Owner(phoneNumber);
                     newOwner.setAccount(account);
+                    ownerFacade.create(newOwner);
                     account.getAccessLevels().add(newOwner);
+                    accountFacade.edit(account);
                     mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "owner", account.getLanguage_());
                 }
         );
@@ -503,12 +511,15 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                         throw AppException.theAccessLevelisAlreadyGranted();
                     } else {
                         adminAccess.setIsActive(true);
+                        adminFacade.edit(adminAccess);
                         mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "admin", account.getLanguage_());
                     }
                 }, () -> {
                     final Admin newAdmin = new Admin();
                     newAdmin.setAccount(account);
+                    adminFacade.create(newAdmin);
                     account.getAccessLevels().add(newAdmin);
+                    accountFacade.edit(account);
                     mailSender.sendInformationAddingAnAccessLevel(account.getEmail(), "admin", account.getLanguage_());
                 }
         );
@@ -545,6 +556,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                     .findAny()
                     .orElseThrow(AppException::createAccountIsNotManagerException);
             manager.setIsActive(false);
+            managerFacade.edit(manager);
             mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "manager", account.getLanguage_());
         }
         if (access.equals(Roles.ADMIN)) {
@@ -554,6 +566,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                     .findAny()
                     .orElseThrow(AppException::createAccountIsNotAdminException);
             admin.setIsActive(false);
+            adminFacade.edit(admin);
             mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "admin", account.getLanguage_());
         }
         if (access.equals(Roles.OWNER)) {
@@ -563,6 +576,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                     .findAny()
                     .orElseThrow(AppException::createAccountIsNotOwnerException);
             owner.setIsActive(false);
+            ownerFacade.edit(owner);
             mailSender.sendInformationRevokeAnAccessLevel(account.getEmail(), "owner", account.getLanguage_());
         }
     }

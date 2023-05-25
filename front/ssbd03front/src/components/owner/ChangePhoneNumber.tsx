@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useState} from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -12,7 +13,6 @@ import axios from 'axios';
 import {API_URL} from '../../consts';
 import {useCookies} from 'react-cookie';
 import {useTranslation} from "react-i18next";
-import { useState } from 'react';
 
 const ChangePhoneNumber = () => {
     const {t, i18n} = useTranslation();
@@ -180,7 +180,7 @@ const ChangePhoneNumber = () => {
             </Dialog>
 
             <Dialog disableEscapeKeyDown open={errorOpen}>
-                <DialogTitle>{errorOpenMessage}</DialogTitle>
+                <DialogTitle>{t(errorOpenMessage)}</DialogTitle>
                 <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
             </Dialog>
         </div>

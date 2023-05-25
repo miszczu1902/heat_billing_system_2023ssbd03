@@ -28,12 +28,6 @@ import EditUserPassword from "../passwords/EditUserPassword";
 import EditUserEmail from "../email/EditUserEmail";
 import UserIcon from "../icons/UserIcon";
 
-const roles = [
-    {value: ADMIN, label: "Administrator"},
-    {value: MANAGER, label: "Zarządca"},
-    {value: OWNER, label: "Właściciel"}
-];
-
 export default function Profile() {
     const {t} = useTranslation();
     const navigate = useNavigate();
@@ -63,6 +57,12 @@ export default function Profile() {
     const [isRemoveAccessOpen, setIsRemoveAccessOpen] = useState(false);
     const [confirmRemove, setConfirmRemove] = useState(false);
     const [successOpenRemove, setSuccessOpenRemove] = useState(false);
+
+    const roles = [
+        {value: 'ADMIN', label: t('profile.admin')},
+        {value: 'MANAGER', label: t('profile.manager')},
+        {value: 'OWNER', label: t('profile.owner')}
+    ];
 
     const fetchData = async () => {
         axios.get(`${API_URL}/accounts/${username}`, {
@@ -193,6 +193,7 @@ export default function Profile() {
 
     const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
         if (reason !== 'backdropClick') {
+            setErrorOpenMessage("");
             setErrorOpen(false);
             setConfirmOpen(false);
             setIsManager(false);
@@ -388,34 +389,13 @@ export default function Profile() {
                                                 variant="h5"><b>{t('register.email')}:</b> {account.email}</Typography>
                                 </Paper>
 
-                            {(account.phoneNumber && account.isUserOwner) && (
-                                <Paper elevation={3} style={{position: 'relative'}}>
-                                    <Typography sx={{padding: '1vh'}}
-                                                variant="h5"><b>{t('register.phone_number')}:</b> {account.phoneNumber}
-                                    </Typography>
-                                </Paper>
-                            )}
-                            <Paper elevation={3} style={{position: 'relative'}}>
-                                <div style={{
-                                    position: 'absolute',
-                                    top: '1vh',
-                                    right: '1vh',
-                                    display: 'flex',
-                                    gap: '0.5vh'
-                                }}>
-                                    {(!account.isEnable && ((!account.isUserAdmin && role === MANAGER) || role === ADMIN)) && <EnableAccount/>}
-                                    {account.isEnable && ((!account.isUserAdmin && role === MANAGER) || role === ADMIN) && <DisableAccount/>}
-                                </div>
-                                <Typography sx={{padding: '1vh'}}
-                                            variant="h5"><b>{t('enable_account.enable')}:</b> {account.isEnable ? t('enable_account.enable') : t('disable_account.disable')}
-                                </Typography>
-                            </Paper>
-                            <Paper elevation={3} style={{position: 'relative'}}>
-                                <Typography sx={{padding: '1vh'}}
-                                            variant="h5"><b>{t('account_list.active_status')}:</b> {account.isActive ? t('account_list.active') : t('account_list.inactive')}
-                                </Typography>
-                            </Paper>
-                            {!account.isUserManager && (
+                                {(account.phoneNumber && account.isUserOwner) && (
+                                    <Paper elevation={3} style={{position: 'relative'}}>
+                                        <Typography sx={{padding: '1vh'}}
+                                                    variant="h5"><b>{t('register.phone_number')}:</b> {account.phoneNumber}
+                                        </Typography>
+                                    </Paper>
+                                )}
                                 <Paper elevation={3} style={{position: 'relative'}}>
                                     <div style={{
                                         position: 'absolute',
@@ -424,95 +404,120 @@ export default function Profile() {
                                         display: 'flex',
                                         gap: '0.5vh'
                                     }}>
-                                        <EditUserPassword/>
+                                        {(!account.isEnable && ((!account.isUserAdmin && role === MANAGER) || role === ADMIN)) &&
+                                            <EnableAccount/>}
+                                        {account.isEnable && ((!account.isUserAdmin && role === MANAGER) || role === ADMIN) &&
+                                            <DisableAccount/>}
                                     </div>
                                     <Typography sx={{padding: '1vh'}}
-                                                variant="h5"><b>{t('profile.user_password')}{account.username}</b>
+                                                variant="h5"><b>{t('enable_account.enable')}:</b> {account.isEnable ? t('enable_account.enable') : t('disable_account.disable')}
                                     </Typography>
                                 </Paper>
-                            )}
-                            {(account.license && account.isUserManager) && (
                                 <Paper elevation={3} style={{position: 'relative'}}>
                                     <Typography sx={{padding: '1vh'}}
-                                                variant="h5"><b>{t('profile.license')}:</b> {account.license}
+                                                variant="h5"><b>{t('account_list.active_status')}:</b> {account.isActive ? t('account_list.active') : t('account_list.inactive')}
                                     </Typography>
                                 </Paper>
-                            )}
-                            <div style={{display: 'flex', alignItems: 'center'}}>
-                                <Typography sx={{padding: '1vh'}} variant="h5">
-                                    <b>{t('profile.access_levels')}:</b>
-                                </Typography>
-                                <FormControlLabel
-                                    control={<Checkbox checked={account.isUserOwner} disabled/>}
-                                    label={t('profile.owner')}
-                                />
-                                <FormControlLabel
-                                    control={<Checkbox checked={account.isUserManager} disabled/>}
-                                    label={t('profile.manager')}
-                                />
-                                <FormControlLabel
-                                    control={<Checkbox checked={account.isUserAdmin} disabled/>}
-                                    label={t('profile.admin')}
-                                />
-                            </div>
-                            <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                                {role.includes(ADMIN) && (
-                                    <>
-                                        {!account.isUserOwner && (
-                                            <Button onClick={handleClickOpenOwner} variant="contained" style={{height: "80px", margin: "10px"}}>
-                                                {t('profile.add')}<br/>{t('profile.access_level')}<br/>{t('profile.owner')}
-                                            </Button>
-                                        )}
-                                        {!account.isUserManager && (
-                                            <Button onClick={handleClickOpenManager} variant="contained"
-                                                    style={{height: "80px", margin: "10px"}}>
-                                                {t('profile.add')}<br/>{t('profile.access_level')}<br/>{t('profile.manager')}
-                                            </Button>
-                                        )}
-                                        {!account.isUserAdmin && (
-                                            <Button onClick={handleClickOpenAdmin} variant="contained"
-                                                    style={{height: "80px", margin: "10px"}}>
-                                                {t('profile.add')}<br/>{t('profile.access_level')}<br/>{t('profile.admin')}
-                                            </Button>
-                                        )}
-                                        <Button onClick={handleRemoveAccessLevel} variant="contained"
-                                                style={{height: "80px", margin: "10px"}}>
-                                            {t('profile.del')}<br/>{t('profile.access_level')}
-                                        </Button>
-                                    </>
+                                {!account.isUserManager && (
+                                    <Paper elevation={3} style={{position: 'relative'}}>
+                                        <div style={{
+                                            position: 'absolute',
+                                            top: '1vh',
+                                            right: '1vh',
+                                            display: 'flex',
+                                            gap: '0.5vh'
+                                        }}>
+                                            <EditUserPassword/>
+                                        </div>
+                                        <Typography sx={{padding: '1vh'}}
+                                                    variant="h5"><b>{t('profile.user_password')}{account.username}</b>
+                                        </Typography>
+                                    </Paper>
                                 )}
-                            <Dialog disableEscapeKeyDown open={isManager} onClose={handleClose}>
-                                <DialogTitle>{t('profile.access_level_form_title')}</DialogTitle>
-                                <DialogContent>
-                                    <Box sx={{display: 'flex', flexWrap: 'wrap'}}>
-                                        <form onSubmit={handleSumbit}>
-                                            <List component="nav" aria-label="mailbox folders">
-                                                <ListItem>
-                                                    <div className="form-group" onChange={handleLicense}>
-                                                        <TextField
-                                                            id="outlined-helperText"
-                                                            label={t('profile.license')}
-                                                            defaultValue={license}
-                                                            type="licencja"
-                                                            helperText={t('profile.set_license')}
-                                                        />
-                                                        <div className="form-group">
-                                                            {licenseError}
-                                                        </div>
+                                {(account.license && account.isUserManager) && (
+                                    <Paper elevation={3} style={{position: 'relative'}}>
+                                        <Typography sx={{padding: '1vh'}}
+                                                    variant="h5"><b>{t('profile.license')}:</b> {account.license}
+                                        </Typography>
+                                    </Paper>
+                                )}
+                                <div style={{display: 'flex', alignItems: 'center'}}>
+                                    <Typography sx={{padding: '1vh'}} variant="h5">
+                                        <b>{t('profile.access_levels')}:</b>
+                                    </Typography>
+                                    <FormControlLabel
+                                        control={<Checkbox checked={account.isUserOwner} disabled/>}
+                                        label={t('profile.owner')}
+                                    />
+                                    <FormControlLabel
+                                        control={<Checkbox checked={account.isUserManager} disabled/>}
+                                        label={t('profile.manager')}
+                                    />
+                                    <FormControlLabel
+                                        control={<Checkbox checked={account.isUserAdmin} disabled/>}
+                                        label={t('profile.admin')}
+                                    />
+                                </div>
+                                <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                                    {role.includes(ADMIN) && (
+                                        <>
+                                            {!account.isUserOwner && (
+                                                <Button onClick={handleClickOpenOwner} variant="contained"
+                                                        style={{height: "80px", margin: "10px"}}>
+                                                    {t('profile.add')}<br/>{t('profile.access_level')}<br/>{t('profile.owner')}
+                                                </Button>
+                                            )}
+                                            {!account.isUserManager && (
+                                                <Button onClick={handleClickOpenManager} variant="contained"
+                                                        style={{height: "80px", margin: "10px"}}>
+                                                    {t('profile.add')}<br/>{t('profile.access_level')}<br/>{t('profile.manager')}
+                                                </Button>
+                                            )}
+                                            {!account.isUserAdmin && (
+                                                <Button onClick={handleClickOpenAdmin} variant="contained"
+                                                        style={{height: "80px", margin: "10px"}}>
+                                                    {t('profile.add')}<br/>{t('profile.access_level')}<br/>{t('profile.admin')}
+                                                </Button>
+                                            )}
+                                            <Button onClick={handleRemoveAccessLevel} variant="contained"
+                                                    style={{height: "80px", margin: "10px"}}>
+                                                {t('profile.del')}<br/>{t('profile.access_level')}
+                                            </Button>
+                                        </>
+                                    )}
+                                    <Dialog disableEscapeKeyDown open={isManager} onClose={handleClose}>
+                                        <DialogTitle>{t('profile.access_level_form_title')}</DialogTitle>
+                                        <DialogContent>
+                                            <Box sx={{display: 'flex', flexWrap: 'wrap'}}>
+                                                <form onSubmit={handleSumbit}>
+                                                    <List component="nav" aria-label="mailbox folders">
+                                                        <ListItem>
+                                                            <div className="form-group" onChange={handleLicense}>
+                                                                <TextField
+                                                                    id="outlined-helperText"
+                                                                    label={t('profile.license')}
+                                                                    defaultValue={license}
+                                                                    type="licencja"
+                                                                    helperText={t('profile.set_license')}
+                                                                />
+                                                                <div className="form-group">
+                                                                    {licenseError}
+                                                                </div>
+                                                            </div>
+                                                        </ListItem>
+                                                    </List>
+                                                    <div className="form-group">
+                                                        {dataError}
                                                     </div>
-                                                </ListItem>
-                                            </List>
-                                            <div className="form-group">
-                                                {dataError}
-                                            </div>
-                                        </form>
-                                    </Box>
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button onClick={handleClose}>{t('confirm.cancel')}</Button>
-                                    <Button onClick={handleConfirm} disabled={!licenseValid}>{t('profile.add')}</Button>
-                                </DialogActions>
-                            </Dialog>
+                                                </form>
+                                            </Box>
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button onClick={handleClose}>{t('confirm.cancel')}</Button>
+                                            <Button onClick={handleConfirm}
+                                                    disabled={!licenseValid}>{t('profile.add')}</Button>
+                                        </DialogActions>
+                                    </Dialog>
 
                                     <Dialog disableEscapeKeyDown open={isManager && confirmOpen}
                                             onClose={handleConfirmClose}>
@@ -623,7 +628,7 @@ export default function Profile() {
                                     </Dialog>
 
                                     <Dialog disableEscapeKeyDown open={errorOpen}>
-                                        <DialogTitle>{errorOpenMessage}</DialogTitle>
+                                        <DialogTitle>{t(errorOpenMessage)}</DialogTitle>
                                         <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
                                     </Dialog>
                                 </div>
