@@ -30,4 +30,16 @@ public class AdminFacade extends AbstractFacade<Admin> {
     public void remove(Admin entity) {
         super.remove(entity);
     }
+
+    @Override
+    @RolesAllowed(Roles.ADMIN)
+    public void create(Admin entity) {
+        super.create(entity);
+    }
+
+    @Override
+    @RolesAllowed(Roles.ADMIN)
+    public void edit(Admin entity) {
+        super.edit(entity);
+    }
 }

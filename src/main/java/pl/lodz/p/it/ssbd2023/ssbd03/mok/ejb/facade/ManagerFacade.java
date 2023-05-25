@@ -45,4 +45,16 @@ public class ManagerFacade extends AbstractFacade<Manager> {
     public void remove(Manager entity) {
         super.remove(entity);
     }
+
+    @Override
+    @RolesAllowed(Roles.ADMIN)
+    public void create(Manager entity) {
+        super.create(entity);
+    }
+
+    @Override
+    @RolesAllowed(Roles.ADMIN)
+    public void edit(Manager entity) {
+        super.edit(entity);
+    }
 }

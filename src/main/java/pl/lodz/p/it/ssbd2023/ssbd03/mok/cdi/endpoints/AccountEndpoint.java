@@ -83,7 +83,7 @@ public class AccountEndpoint {
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
     public Response refreshToken(RefreshTokenDTO refreshTokenDTO) {
         final String token = accountService.refreshToken(refreshTokenDTO.getToken());
-            return Response.ok().header("Bearer", token).build();
+        return Response.ok().header("Bearer", token).build();
     }
 
     @PATCH
@@ -93,8 +93,30 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.OWNER)
     public Response changePhoneNumber(@Valid ChangePhoneNumberDTO changePhoneNumberDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
+
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                accountService.changePhoneNumber(changePhoneNumberDTO.getPhoneNumber(), etag, changePhoneNumberDTO.getVersion());
+                rollbackTX = accountService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return Response.status(Response.Status.NO_CONTENT).build();
+            } catch (EJBTransactionRolledbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
         accountService.changePhoneNumber(changePhoneNumberDTO.getPhoneNumber(), etag, changePhoneNumberDTO.getVersion());
-        return Response.noContent().build();
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @PATCH
@@ -324,8 +346,35 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.ADMIN)
     public Response addAccessLevelManager(@NotNull @Valid AddAccessLevelManagerDTO addAccessLevelManagerDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        accountService.addAccessLevelManager(addAccessLevelManagerDTO.getUsername(), addAccessLevelManagerDTO.getLicense(), etag, addAccessLevelManagerDTO.getVersion());
-        return Response.noContent().build();
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                accountService.addAccessLevelManager(addAccessLevelManagerDTO.getUsername(),
+                        addAccessLevelManagerDTO.getLicense(),
+                        etag,
+                        addAccessLevelManagerDTO.getVersion());
+                rollbackTX = accountService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return Response.status(Response.Status.NO_CONTENT).build();
+            } catch (EJBTransactionRolledbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
+        accountService.addAccessLevelManager(addAccessLevelManagerDTO.getUsername(),
+                addAccessLevelManagerDTO.getLicense(),
+                etag,
+                addAccessLevelManagerDTO.getVersion());
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @PATCH
@@ -335,8 +384,36 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.ADMIN)
     public Response addAccessLevelOwner(@NotNull @Valid AddAccessLevelOwnerDTO addAccessLevelOwnerDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        accountService.addAccessLevelOwner(addAccessLevelOwnerDTO.getUsername(), addAccessLevelOwnerDTO.getPhoneNumber(), etag, addAccessLevelOwnerDTO.getVersion());
-        return Response.noContent().build();
+
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                accountService.addAccessLevelOwner(addAccessLevelOwnerDTO.getUsername(),
+                        addAccessLevelOwnerDTO.getPhoneNumber(),
+                        etag,
+                        addAccessLevelOwnerDTO.getVersion());
+                rollbackTX = accountService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return Response.status(Response.Status.NO_CONTENT).build();
+            } catch (EJBTransactionRolledbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
+        accountService.addAccessLevelOwner(addAccessLevelOwnerDTO.getUsername(),
+                addAccessLevelOwnerDTO.getPhoneNumber(),
+                etag,
+                addAccessLevelOwnerDTO.getVersion());
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @PATCH
@@ -347,7 +424,33 @@ public class AccountEndpoint {
     public Response addAccessLevelAdmin(@NotNull @Valid AddAccessLevelAdminDTO addAccessLevelAdminDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
         accountService.addAccessLevelAdmin(addAccessLevelAdminDTO.getUsername(), etag, addAccessLevelAdminDTO.getVersion());
-        return Response.noContent().build();
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                accountService.addAccessLevelAdmin(addAccessLevelAdminDTO.getUsername(),
+                        etag,
+                        addAccessLevelAdminDTO.getVersion());
+                rollbackTX = accountService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return Response.status(Response.Status.NO_CONTENT).build();
+            } catch (EJBTransactionRolledbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
+        accountService.addAccessLevelAdmin(addAccessLevelAdminDTO.getUsername(),
+                etag,
+                addAccessLevelAdminDTO.getVersion());
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @PATCH
@@ -358,7 +461,34 @@ public class AccountEndpoint {
     public Response revokeAccessLevel(@NotNull @Valid RevokeAccessLevelDTO revokeAccessLevelDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
         accountService.revokeAccessLevel(revokeAccessLevelDTO.getUsername(), revokeAccessLevelDTO.getAccessLevel(), etag, revokeAccessLevelDTO.getVersion());
-        return Response.noContent().build();
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                accountService.revokeAccessLevel(revokeAccessLevelDTO.getUsername(), revokeAccessLevelDTO.getAccessLevel(),
+                        etag,
+                        revokeAccessLevelDTO.getVersion());
+                rollbackTX = accountService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return Response.status(Response.Status.NO_CONTENT).build();
+            } catch (EJBTransactionRolledbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
+        accountService.revokeAccessLevel(revokeAccessLevelDTO.getUsername(),
+                revokeAccessLevelDTO.getAccessLevel(),
+                etag,
+                revokeAccessLevelDTO.getVersion());
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @GET
