@@ -216,7 +216,7 @@ const ResetPassword = () => {
                                 <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
                             </Dialog>
                             <Dialog disableEscapeKeyDown open={errorOpen}>
-                                <DialogTitle>{errorOpenMessage}</DialogTitle>
+                                <DialogTitle>{t(errorOpenMessage)}</DialogTitle>
                                 <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
                             </Dialog>
                         </Box>

@@ -303,7 +303,7 @@ const EditPassword = () => {
             </Dialog>
 
             <Dialog disableEscapeKeyDown open={errorOpen}>
-                <DialogTitle>{errorOpenMessage}</DialogTitle>
+                <DialogTitle>{t(errorOpenMessage)}</DialogTitle>
                 <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
             </Dialog>
         </div>

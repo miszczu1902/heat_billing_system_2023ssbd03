@@ -210,6 +210,27 @@ public class AccountEndpoint {
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
     public Response changeLanguage(@NotNull @Valid ChangeLanguageDTO changeLanguageDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                accountService.changeLanguage(changeLanguageDTO.getLanguage(), etag, changeLanguageDTO.getVersion());
+                rollbackTX = accountService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return Response.status(Response.Status.NO_CONTENT).build();
+            } catch (EJBTransactionRolledbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
         accountService.changeLanguage(changeLanguageDTO.getLanguage(), etag, changeLanguageDTO.getVersion());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
@@ -538,6 +559,27 @@ public class AccountEndpoint {
                                     @PathParam("username") String username,
                                     @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                accountService.changeUserEmail(changeEmailDTO.getNewEmail(), username, etag, changeEmailDTO.getVersion());
+                rollbackTX = accountService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return Response.status(Response.Status.NO_CONTENT).build();
+            } catch (EJBTransactionRolledbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
         accountService.changeUserEmail(changeEmailDTO.getNewEmail(), username, etag, changeEmailDTO.getVersion());
         return Response.noContent().build();
     }
@@ -592,6 +634,27 @@ public class AccountEndpoint {
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
     public Response changeSelfEmail(@NotNull @Valid ChangeEmailDTO changeEmailDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                accountService.changeSelfEmail(changeEmailDTO.getNewEmail(), etag, changeEmailDTO.getVersion());
+                rollbackTX = accountService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return Response.status(Response.Status.NO_CONTENT).build();
+            } catch (EJBTransactionRolledbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
         accountService.changeSelfEmail(changeEmailDTO.getNewEmail(), etag, changeEmailDTO.getVersion());
         return Response.noContent().build();
     }
