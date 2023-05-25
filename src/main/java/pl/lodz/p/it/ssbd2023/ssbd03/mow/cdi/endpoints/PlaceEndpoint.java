@@ -26,15 +26,7 @@ public class PlaceEndpoint {
 
     protected static final Logger LOGGER = Logger.getGlobal();
 
-    @POST
-    @Path("/place")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @RolesAllowed(Roles.MANAGER)
-    public Response addPlace() {
-        placeService.addPlace();
-        return Response.status(200).build();
-    }
-
+    //MOW 10
     @GET
     @Path("/place/{placeId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -43,6 +35,7 @@ public class PlaceEndpoint {
         return Response.status(200).entity(placeService.getPlace(placeId)).build();
     }
 
+    //MOW 20
     @PATCH
     @Path("/owner/{placeId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -52,6 +45,7 @@ public class PlaceEndpoint {
         return Response.status(200).build();
     }
 
+    //MOW 21
     @PATCH
     @Path("/place/{placeId}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -61,6 +55,7 @@ public class PlaceEndpoint {
         return Response.status(200).build();
     }
 
+    //MOW 16
     @POST
     @Path("/place/{placeId}/hot-water-watermeter")
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
@@ -69,6 +64,7 @@ public class PlaceEndpoint {
         return Response.status(200).build();
     }
 
+    //MOW M17
     @POST
     @Path("/place/{placeId}/predicted-hot-water-consumption")
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
@@ -77,6 +73,7 @@ public class PlaceEndpoint {
         return Response.status(200).build();
     }
 
+    //MOW
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{ownerUsername}")
@@ -85,6 +82,7 @@ public class PlaceEndpoint {
         return Response.status(200).entity(placeService.getOwnerAllPlaces(ownerUsername)).build();
     }
 
+    //MOW 11
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/self")

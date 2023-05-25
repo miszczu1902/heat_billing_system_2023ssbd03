@@ -65,12 +65,6 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
     }
 
     @Override
-    @RolesAllowed(Roles.MANAGER)
-    public void addPlace() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     @RolesAllowed({Roles.MANAGER})
     public List<Place> getOwnerAllPlaces(String ownerUsername) {
         throw new UnsupportedOperationException();

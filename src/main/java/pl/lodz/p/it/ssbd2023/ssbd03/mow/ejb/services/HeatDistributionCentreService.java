@@ -16,4 +16,6 @@ public interface HeatDistributionCentreService extends CommonManagerLocalInterfa
 
     void modifyConsumptionCost(BigDecimal consumptionCostValue);
 
+    void addHeatingAreaFactor(BigDecimal heatingAreaFactor);
+
 }
