@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.cdi.endpoints;
 
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,7 +13,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.VersionDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
@@ -137,7 +137,7 @@ public class AccountEndpoint {
     @Path("/reset-password-from-email")
     @RolesAllowed(Roles.GUEST)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response ResetPasswordFromEmail(@NotNull @Valid ResetPasswordFromEmailDTO resetPasswordTokenDTO) {
+    public Response resetPasswordFromEmail(@NotNull @Valid ResetPasswordFromEmailDTO resetPasswordTokenDTO) {
         accountService.changePasswordFromResetPasswordLink(resetPasswordTokenDTO.getResetPasswordToken(),
                 resetPasswordTokenDTO.getNewPassword(), resetPasswordTokenDTO.getRepeatedNewPassword());
         return Response.status(Response.Status.NO_CONTENT).build();
@@ -151,7 +151,34 @@ public class AccountEndpoint {
     public Response editPersonalData(@NotNull @Valid EditPersonalDataDTO editPersonalDataDTO,
                                      @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        accountService.editSelfPersonalData(editPersonalDataDTO.getFirstName(), editPersonalDataDTO.getSurname(), etag, editPersonalDataDTO.getVersion());
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                accountService.editSelfPersonalData(editPersonalDataDTO.getFirstName(),
+                        editPersonalDataDTO.getSurname(),
+                        etag,
+                        editPersonalDataDTO.getVersion());
+                rollbackTX = accountService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return Response.status(Response.Status.NO_CONTENT).build();
+            } catch (EJBTransactionRolledbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
+        accountService.editSelfPersonalData(editPersonalDataDTO.getFirstName(),
+                editPersonalDataDTO.getSurname(),
+                etag,
+                editPersonalDataDTO.getVersion());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
@@ -202,6 +229,31 @@ public class AccountEndpoint {
                                          @PathParam("username") String username,
                                          @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                accountService.editUserPersonalData(username,
+                        editPersonalDataDTO.getFirstName(),
+                        editPersonalDataDTO.getSurname(),
+                        etag, editPersonalDataDTO.getVersion());
+                rollbackTX = accountService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return Response.status(Response.Status.NO_CONTENT).build();
+            } catch (EJBTransactionRolledbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
+
         accountService.editUserPersonalData(username,
                 editPersonalDataDTO.getFirstName(),
                 editPersonalDataDTO.getSurname(),
@@ -210,24 +262,19 @@ public class AccountEndpoint {
     }
 
     @PATCH
-    @EtagValidator
     @Path("/{username}/disable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public Response disableUserAccount(@PathParam("username") String username,
-                                       @NotNull @Valid VersionDTO versionDTO,
-                                       @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
-
+    public Response disableUserAccount(@PathParam("username") String username) {
         int retryTXCounter = txRetries; //limit prób ponowienia transakcji
         boolean rollbackTX = false;
 
         do {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
-                accountService.disableUserAccount(username, etag, versionDTO.getVersion());
+                accountService.disableUserAccount(username);
                 rollbackTX = accountService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
-            } catch (OptimisticLockAppException ex) {
+            } catch (OptimisticLockAppException | EJBTransactionRolledbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -238,28 +285,24 @@ public class AccountEndpoint {
         if (rollbackTX && retryTXCounter == 0) {
             throw AppException.createTransactionRollbackException();
         }
+        accountService.disableUserAccount(username);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     @PATCH
-    @EtagValidator
     @Path("/{username}/enable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    public Response enableUserAccount(@PathParam("username") String username,
-                                      @NotNull @Valid VersionDTO versionDTO,
-                                      @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
-
+    public Response enableUserAccount(@PathParam("username") String username) {
         int retryTXCounter = txRetries; //limit prób ponowienia transakcji
         boolean rollbackTX = false;
 
         do {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
-                accountService.enableUserAccount(username, etag, versionDTO.getVersion());
+                accountService.enableUserAccount(username);
                 rollbackTX = accountService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
-            } catch (OptimisticLockAppException ex) {
+            } catch (OptimisticLockAppException | EJBTransactionRolledbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -270,6 +313,7 @@ public class AccountEndpoint {
         if (rollbackTX && retryTXCounter == 0) {
             throw AppException.createTransactionRollbackException();
         }
+        accountService.enableUserAccount(username);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
