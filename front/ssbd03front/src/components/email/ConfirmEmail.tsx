@@ -46,13 +46,13 @@ const ConfirmEmail = () => {
                     <Typography variant="h4" component="h1">{message}</Typography>
                 </Grid>
                 {isActivated &&
-                    <Grid item>
-                        <Paper elevation={3} style={{position: 'relative'}}>
-                            <Typography sx={{padding: '1vh'}}
-                                        variant="h5"><b>{t('email.confirmed')}</b>
-                            </Typography>
-                        </Paper>
-                    </Grid>
+                <Grid item>
+                    <Paper elevation={3} style={{position: 'relative'}}>
+                        <Typography sx={{padding: '1vh'}}
+                                    variant="h5"><b>{t('email.confirmed')}</b>
+                        </Typography>
+                    </Paper>
+                </Grid>
                 }
             </Grid>
         </Container>
