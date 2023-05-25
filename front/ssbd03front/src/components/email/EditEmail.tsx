@@ -18,7 +18,6 @@ const EditEmail = () => {
     const {t} = useTranslation();
     const [cookies] = useCookies(["token"]);
     const token = "Bearer " + localStorage.getItem("token");
-    const [etag, setEtag] = useState(false);
     const [version, setVersion] = useState("");
     const [open, setOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
@@ -58,7 +57,7 @@ const EditEmail = () => {
                 }
             })
                 .then(response => {
-                    setEtag(response.headers["etag"]);
+                    localStorage.setItem("etag",response.headers["etag"]);
                     setVersion(response.data.version)
                 });
         };
@@ -92,7 +91,7 @@ const EditEmail = () => {
             changeEmailDTO, {
                 headers: {
                     'Authorization': token,
-                    'If-Match': etag,
+                    'If-Match': localStorage.getItem("etag"),
                     'Content-Type': 'application/json'
                 },
             })

@@ -33,8 +33,6 @@ const NavbarPanel = () => {
     const [open, setOpen] = useState(false);
     const [openRole, setOpenRole] = useState(false);
     const [navbarColor, setNavbarColor] = useState('#ffffff');
-    const [cookies, setCookie, removeCookie] = useCookies(["etag", "language"]);
-    const etag = cookies.etag;
     const [version, setVersion] = useState("");
     const [roles, setRoles] = useState([GUEST]);
     const [currentRole, setCurrentRole] = useState(localStorage.getItem("role"));
@@ -159,7 +157,7 @@ const NavbarPanel = () => {
                     languageDTO, {
                         headers: {
                             'Authorization': token,
-                            'If-Match': etag,
+                            'If-Match': localStorage.getItem("etag"),
                             'Content-Type': 'application/json'
                         },
                     })
@@ -179,7 +177,7 @@ const NavbarPanel = () => {
                 }
             })
                 .then(response => {
-                    setCookie("etag", response.headers.etag);
+                    localStorage.setItem("etag",response.headers.etag);
                     setVersion(response.data.version.toString());
                 });
         }

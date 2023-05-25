@@ -6,14 +6,10 @@ import {Container, Grid, Typography} from "@mui/material";
 import logo from "../../assets/logo.svg";
 import {useTranslation} from "react-i18next";
 import Paper from "@mui/material/Paper";
-import {useCookies} from "react-cookie";
-import jwt from "jwt-decode";
 
 const ConfirmEmail = () => {
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
-    const [cookies, setCookie, removeCookie] = useCookies(["token"]);
-    const [role, setRole] = useState('');
     const token = "Bearer " + localStorage.getItem("token");
     const {activationToken} = useParams<{ activationToken: string }>();
     const [message, setMessage] = useState('');
@@ -23,7 +19,7 @@ const ConfirmEmail = () => {
         navigate(path);
     }
 
-    const fetchData = async () => {
+    useEffect(() => {
         axios.patch(`${API_URL}/accounts/self/confirm-new-email`,
             {activationToken: activationToken},
             {
@@ -38,23 +34,7 @@ const ConfirmEmail = () => {
             setMessage(error.reason.message);
             if (error.response.status == 403) navigate('/');
         });
-    };
-
-    useEffect(() => {
-        if (localStorage.getItem("token") !== "undefined" && localStorage.getItem("token") !== undefined) {
-            const decodedToken = localStorage.getItem("token");
-            const decodedRole = JSON.parse(JSON.stringify(decodedToken)).role;
-            setRole(decodedRole.split(','));
-            const currentTimestamp = Math.floor(new Date().getTime() / 1000);
-            if (JSON.parse(JSON.stringify(decodedToken)).exp < currentTimestamp) {
-                removeCookie('token');
-                navigate('');
-            }
-            fetchData();
-        } else {
-            navigate('/');
-        }
-    }, [localStorage.getItem("token")]);
+    }, []);
 
     return (<div className="landing-page-root">
         <Container>

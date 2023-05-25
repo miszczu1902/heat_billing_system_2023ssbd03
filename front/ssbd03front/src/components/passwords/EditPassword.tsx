@@ -18,7 +18,6 @@ const EditPassword = () => {
     const {t, i18n} = useTranslation();
     const [cookies] = useCookies(["token"]);
     const token = "Bearer " + localStorage.getItem("token");
-    const [etag, setEtag] = useState(false);
     const [version, setVersion] = useState("");
 
     const [open, setOpen] = useState(false);
@@ -143,7 +142,7 @@ const EditPassword = () => {
                 }
             })
                 .then(response => {
-                    setEtag(response.headers["etag"]);
+                    localStorage.setItem("etag",response.headers["etag"]);
                     setVersion(response.data.version)
                 });
         };
@@ -178,7 +177,7 @@ const EditPassword = () => {
             passwordDTO, {
                 headers: {
                     'Authorization': token,
-                    'If-Match': etag,
+                    'If-Match': localStorage.getItem("etag"),
                     'Content-Type': 'application/json'
                 },
             })

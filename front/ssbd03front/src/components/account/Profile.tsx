@@ -32,7 +32,6 @@ export default function Profile() {
     const {t} = useTranslation();
     const navigate = useNavigate();
     const token = "Bearer " + localStorage.getItem("token");
-    const [etag, setEtag] = useState(false);
     const [version, setVersion] = useState("");
     const [selectedRole, setSelectedRole] = useState("");
     const [license, setLicense] = useState("");
@@ -95,7 +94,7 @@ export default function Profile() {
                 addAccessLevelManagerDTO, {
                     headers: {
                         'Authorization': token,
-                        'If-Match': etag,
+                        'If-Match': localStorage.getItem("etag"),
                         'Content-Type': 'application/json'
                     },
                 })
@@ -119,7 +118,7 @@ export default function Profile() {
                 addAccessLevelOwnerDTO, {
                     headers: {
                         'Authorization': token,
-                        'If-Match': etag,
+                        'If-Match': localStorage.getItem("etag"),
                         'Content-Type': 'application/json'
                     },
                 })
@@ -142,7 +141,7 @@ export default function Profile() {
                 addAccessLevelAdminDTO, {
                     headers: {
                         'Authorization': token,
-                        'If-Match': etag,
+                        'If-Match': localStorage.getItem("etag"),
                         'Content-Type': 'application/json'
                     },
                 })
@@ -166,7 +165,7 @@ export default function Profile() {
                 removeAccessLevelDTO, {
                     headers: {
                         'Authorization': token,
-                        'If-Match': etag,
+                        'If-Match': localStorage.getItem("etag"),
                         'Content-Type': 'application/json'
                     },
                 })
@@ -280,7 +279,7 @@ export default function Profile() {
                 }
             })
                 .then(response => {
-                    setEtag(response.headers["etag"]);
+                    localStorage.setItem("etag",response.headers["etag"]);
                     setVersion(response.data.version)
                 });
         };
@@ -296,7 +295,7 @@ export default function Profile() {
                 }
             })
                 .then(response => {
-                    setEtag(response.headers["etag"]);
+                    localStorage.setItem("etag",response.headers["etag"]);
                     setVersion(response.data.version)
                 });
         };
@@ -312,7 +311,7 @@ export default function Profile() {
                 }
             })
                 .then(response => {
-                    setEtag(response.headers["etag"]);
+                    localStorage.setItem("etag",response.headers["etag"]);
                     setVersion(response.data.version)
                 });
         };
@@ -338,7 +337,7 @@ export default function Profile() {
                 }
             })
                 .then(response => {
-                    setEtag(response.headers["etag"]);
+                    localStorage.setItem("etag",response.headers["etag"]);
                     setVersion(response.data.version)
                 });
         };

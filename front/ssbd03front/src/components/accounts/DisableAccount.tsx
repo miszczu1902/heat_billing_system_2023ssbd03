@@ -13,18 +13,13 @@ import { useState } from 'react';
 const DisableAccount = () => {
     const {t, i18n} = useTranslation();
     const username = useParams().username;
-    const [cookies, setCookie] = useCookies(["token", "etag"]);
     const token = "Bearer " + localStorage.getItem("token");
-    const etag = cookies.etag;
     const [version, setVersion] = useState("");
     const [enable, setEnable] = useState(false);
-
     const [open, setOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
-
     const [successOpen, setSuccessOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
-
     const [blockedUserOpen, setBlockedUserOpen] = useState(false);
 
     const [authorizationErrorOpen, setAuthorizationErrorOpen] = useState(false);

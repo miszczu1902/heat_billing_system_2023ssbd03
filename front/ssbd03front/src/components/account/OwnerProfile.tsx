@@ -19,8 +19,6 @@ const OwnerProfile = () => {
     const {t} = useTranslation();
     const navigate = useNavigate();
     const token = "Bearer " + localStorage.getItem("token");
-    const [etag, setEtag] = useState(false);
-    const [version, setVersion] = useState("");
     const [role, setRole] = useState(localStorage.getItem("role"));
     const [owner, setOwner] = useState<Owner | null>(null);
 
