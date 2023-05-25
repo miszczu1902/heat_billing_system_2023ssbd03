@@ -70,7 +70,7 @@ public class BalanceEndpoint {
     }
 
     //MOW 7
-    @Path("/self/{PlaceId}/advance-value")
+    @Path("/self/{placeId}/water-advance-value")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @RolesAllowed({Roles.OWNER})
@@ -79,7 +79,7 @@ public class BalanceEndpoint {
     }
 
     //MOW 7
-    @Path("/self/{PlaceId}/advance")
+    @Path("/self/{placeId}/place-water-advance")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @RolesAllowed({Roles.OWNER})
@@ -88,7 +88,7 @@ public class BalanceEndpoint {
     }
 
     //MOW 7
-    @Path("/{PlaceId}/advance-value")
+    @Path("/{placeId}/water-advance-value")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @RolesAllowed({Roles.MANAGER})
@@ -97,7 +97,7 @@ public class BalanceEndpoint {
     }
 
     //MOW 7
-    @Path("/{PlaceId}/advance")
+    @Path("/{placeId}/advance")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @RolesAllowed({Roles.MANAGER})
@@ -106,7 +106,7 @@ public class BalanceEndpoint {
     }
 
     //MOW 7
-    @Path("/self/{PlaceId}/advance-value")
+    @Path("/self/{placeId}/heat-advance-value")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @RolesAllowed({Roles.OWNER})
@@ -115,7 +115,7 @@ public class BalanceEndpoint {
     }
 
     //MOW 7
-    @Path("/self/{PlaceId}/advance")
+    @Path("/self/{placeId}/advance")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @RolesAllowed({Roles.OWNER})
@@ -124,7 +124,7 @@ public class BalanceEndpoint {
     }
 
     //MOW 7
-    @Path("/{PlaceId}/advance-value")
+    @Path("/{placeId}/advance-value")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @RolesAllowed({Roles.MANAGER})
@@ -133,13 +133,11 @@ public class BalanceEndpoint {
     }
 
     //MOW 7
-    @Path("/{PlaceId}/advance")
+    @Path("/{placeId}/heat-advance")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @RolesAllowed({Roles.MANAGER})
     public Response getUserHeatingAdvance() {
         return Response.ok().entity(balanceService.getUserHeatingAdvance()).build();
     }
-
-
 }
