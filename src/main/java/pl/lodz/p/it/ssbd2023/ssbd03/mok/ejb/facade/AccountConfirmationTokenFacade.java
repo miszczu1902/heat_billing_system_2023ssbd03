@@ -50,10 +50,10 @@ public class AccountConfirmationTokenFacade extends AbstractFacade<AccountConfir
     }
 
     @RolesAllowed({Roles.GUEST, Roles.ADMIN})
-    public AccountConfirmationToken getActivationTokenByTokenValue(String tokenValue) {
+    public List<AccountConfirmationToken> getActivationTokenByTokenValue(String tokenValue) {
         TypedQuery<AccountConfirmationToken> query = em.createNamedQuery("AccountConfirmationToken.getActivationTokenByTokenValue", AccountConfirmationToken.class);
         query.setParameter("tokenValue", tokenValue);
-        return query.getSingleResult();
+        return Optional.of(query.getResultList()).orElse(Collections.emptyList());
     }
 
     @Override

@@ -28,11 +28,11 @@ const ConfirmEmail = () => {
                     'Content-Type': 'application/json'
                 },
             }).then(() => {
-            setMessage("Mail został potwierdzony!");
+            setMessage(t('email.confirmed'));
             setIsActivated(true)
         }).catch(error => {
-            setMessage(error.reason.message);
-            if (error.response.status == 403) navigate('/');
+            setMessage(error.response.data.message);
+            // if (error.response.status == 403) navigate('/');
         });
     }, []);
 
@@ -43,7 +43,7 @@ const ConfirmEmail = () => {
         <Container maxWidth="sm">
             <Grid container direction="column" alignItems="center" spacing={4}>
                 <Grid item>
-                    <Typography variant="h4" component="h1">{message}</Typography>
+                    <Typography variant="h4" component="h1">{t(message)}</Typography>
                 </Grid>
                 {isActivated &&
                 <Grid item>

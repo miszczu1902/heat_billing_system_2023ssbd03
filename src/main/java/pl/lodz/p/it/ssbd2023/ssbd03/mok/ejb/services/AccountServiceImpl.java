@@ -109,13 +109,16 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     @RolesAllowed(Roles.GUEST)
     public void confirmAccountFromActivationLink(String confirmationToken) {
-        AccountConfirmationToken accountConfirmationToken = accountConfirmationTokenFacade.getActivationTokenByTokenValue(confirmationToken);
+        List <AccountConfirmationToken> accountConfirmationToken = accountConfirmationTokenFacade.getActivationTokenByTokenValue(confirmationToken);
 
-        Account accountToActivate = accountConfirmationToken.getAccount();
+        if (accountConfirmationToken.isEmpty()) {
+            throw AppException.tokenNoResultException();
+        }
+        Account accountToActivate = accountConfirmationToken.get(0).getAccount();
         accountToActivate.setIsActive(true);
         accountFacade.edit(accountToActivate);
-        accountConfirmationTokenFacade.remove(accountConfirmationToken);
-        mailSender.sendInformationAccountActivated(accountToActivate.getEmail(), accountConfirmationToken.getAccount().getLanguage_());
+        accountConfirmationTokenFacade.remove(accountConfirmationToken.get(0));
+        mailSender.sendInformationAccountActivated(accountToActivate.getEmail(), accountConfirmationToken.get(0).getAccount().getLanguage_());
     }
 
     @Override
@@ -196,14 +199,20 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     @RolesAllowed(Roles.GUEST)
     public void changePasswordFromResetPasswordLink(String token, String newPassword, String newRepeatedPassword) {
+
         if (!newPassword.equals(newRepeatedPassword)) {
             throw AppException.createPasswordsNotSameException();
         }
-        final ResetPasswordToken resetPasswordToken = resetPasswordTokenFacade.getResetPasswordByTokenValue(token);
-        final Account accountToChangePassword = resetPasswordToken.getAccount();
+        final List<ResetPasswordToken> resetPasswordToken = resetPasswordTokenFacade.getResetPasswordByTokenValue(token);
+
+        if (resetPasswordToken.isEmpty()) {
+            throw AppException.tokenNoResultException();
+        }
+
+        final Account accountToChangePassword = resetPasswordToken.get(0).getAccount();
         changePassword(accountToChangePassword, newPassword);
 
-        resetPasswordTokenFacade.remove(resetPasswordToken);
+        resetPasswordTokenFacade.remove(resetPasswordToken.get(0));
     }
 
     @Override
@@ -627,12 +636,16 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     @RolesAllowed({Roles.GUEST, Roles.OWNER, Roles.ADMIN, Roles.MANAGER})
     public void confirmNewEmailAccountFromActivationLink(String confirmationToken) {
-        final EmailConfirmationToken emailConfirmationToken = emailConfirmationTokenFacade.getActivationTokenByTokenValue(confirmationToken);
-        Account account = emailConfirmationToken.getAccount();
-        final String newEmail = emailConfirmationToken.getEmail();
+        final List<EmailConfirmationToken> emailConfirmationToken = emailConfirmationTokenFacade.getActivationTokenByTokenValue(confirmationToken);
+
+        if (emailConfirmationToken.isEmpty()) {
+            throw AppException.tokenNoResultException();
+        }
+        Account account = emailConfirmationToken.get(0).getAccount();
+        final String newEmail = emailConfirmationToken.get(0).getEmail();
         account.setEmail(newEmail);
         accountFacade.edit(account);
-        emailConfirmationTokenFacade.remove(emailConfirmationToken);
+        emailConfirmationTokenFacade.remove(emailConfirmationToken.get(0));
     }
 
     @Override

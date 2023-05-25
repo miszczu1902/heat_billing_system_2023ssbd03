@@ -14,7 +14,9 @@ import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.ResetPasswordToken;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
@@ -34,10 +36,10 @@ public class ResetPasswordTokenFacade extends AbstractFacade<ResetPasswordToken>
     }
 
     @RolesAllowed({Roles.GUEST, Roles.ADMIN})
-    public ResetPasswordToken getResetPasswordByTokenValue(String tokenValue) {
+    public List<ResetPasswordToken> getResetPasswordByTokenValue(String tokenValue) {
         TypedQuery<ResetPasswordToken> query = em.createNamedQuery("ResetPasswordToken.getResetPasswordTokenByTokenValue", ResetPasswordToken.class);
         query.setParameter("tokenValue", tokenValue);
-        return query.getSingleResult();
+        return Optional.of(query.getResultList()).orElse(Collections.emptyList());
     }
 
     @RolesAllowed({Roles.GUEST, Roles.ADMIN})
