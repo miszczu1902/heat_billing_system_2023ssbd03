@@ -127,6 +127,29 @@ public class AccountEndpoint {
     public Response changeSelfPassword(@NotNull @Valid ChangeSelfPasswordDTO changeSelfPasswordDTO,
                                        @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
+
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+        accountService.changeSelfPassword(changeSelfPasswordDTO.getOldPassword(), changeSelfPasswordDTO.getNewPassword(),
+                changeSelfPasswordDTO.getRepeatedNewPassword(), etag, changeSelfPasswordDTO.getVersion());
+                rollbackTX = accountService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return Response.status(Response.Status.NO_CONTENT).build();
+            } catch (EJBTransactionRolledbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
         accountService.changeSelfPassword(changeSelfPasswordDTO.getOldPassword(), changeSelfPasswordDTO.getNewPassword(),
                 changeSelfPasswordDTO.getRepeatedNewPassword(), etag, changeSelfPasswordDTO.getVersion());
         return Response.noContent().build();
@@ -141,6 +164,29 @@ public class AccountEndpoint {
                                        @NotBlank @PathParam("username") String username,
                                        @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
+
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+        accountService.changeUserPassword(username, changeUserPasswordDTO.getNewPassword(),
+                changeUserPasswordDTO.getRepeatedNewPassword(), etag, changeUserPasswordDTO.getVersion());
+                rollbackTX = accountService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return Response.status(Response.Status.NO_CONTENT).build();
+            } catch (EJBTransactionRolledbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
         accountService.changeUserPassword(username, changeUserPasswordDTO.getNewPassword(),
                 changeUserPasswordDTO.getRepeatedNewPassword(), etag, changeUserPasswordDTO.getVersion());
         return Response.noContent().build();
