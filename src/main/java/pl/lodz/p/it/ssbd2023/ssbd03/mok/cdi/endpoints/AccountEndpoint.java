@@ -423,7 +423,6 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.ADMIN)
     public Response addAccessLevelAdmin(@NotNull @Valid AddAccessLevelAdminDTO addAccessLevelAdminDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        accountService.addAccessLevelAdmin(addAccessLevelAdminDTO.getUsername(), etag, addAccessLevelAdminDTO.getVersion());
         int retryTXCounter = txRetries; //limit prób ponowienia transakcji
         boolean rollbackTX = false;
 
@@ -460,7 +459,6 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.ADMIN)
     public Response revokeAccessLevel(@NotNull @Valid RevokeAccessLevelDTO revokeAccessLevelDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        accountService.revokeAccessLevel(revokeAccessLevelDTO.getUsername(), revokeAccessLevelDTO.getAccessLevel(), etag, revokeAccessLevelDTO.getVersion());
         int retryTXCounter = txRetries; //limit prób ponowienia transakcji
         boolean rollbackTX = false;
 
