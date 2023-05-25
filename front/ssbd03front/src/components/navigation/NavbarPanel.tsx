@@ -150,7 +150,7 @@ const NavbarPanel = () => {
         const language = localStorage.getItem("selectedLanguage");
         if (language) {
             i18n.changeLanguage(language.toLowerCase());
-            if (localStorage.getItem("token") !== undefined) {
+            if (localStorage.getItem("token") !== null) {
                 const languageDTO = {
                     version: parseInt(version),
                     language: language
