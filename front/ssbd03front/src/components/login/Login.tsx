@@ -97,7 +97,7 @@ const Login = () => {
                 })
                 .catch((error) => {
                     setPassword("");
-                    setLoginError(error.response.data.message);
+                    setLoginError(t("exception.account.invalid_credentials"));
                 });
         }
     };

@@ -179,7 +179,6 @@ const Registration = () => {
     };
 
     const validateUsername = () => {
-        console.log(username);
         if (!regexLogin.test(username)) {
             setValidationInfo(t('register.username_valid_info'));
             return false;
@@ -190,7 +189,6 @@ const Registration = () => {
     };
 
     const validateEmail = () => {
-        console.log(email);
         if (!regexEmail.test(email)) {
             setValidationInfo(t('register.email_error'));
             return false;
@@ -201,7 +199,6 @@ const Registration = () => {
     };
 
     const validateFirstName = () => {
-        console.log(firstName);
         if (firstName.length > 32 || firstName.length == 0) {
             setValidationInfo(t('register.first_name_error'));
             return false;
@@ -212,7 +209,6 @@ const Registration = () => {
     };
 
     const validateSurname = () => {
-        console.log(surname);
         if (surname.length > 32 || surname.length == 0) {
             setValidationInfo(t('register.surname_error'));
             return false;
@@ -223,7 +219,6 @@ const Registration = () => {
     };
 
     const validatePassword = () => {
-        console.log(password);
         if (!regexPassword.test(password)) {
             setValidationInfo(t('register.username_valid_info'));
             return false;
@@ -234,10 +229,9 @@ const Registration = () => {
     };
 
     const validateConfirmPassword = () => {
-        console.log(confirmPassword);
         if (regexPassword.test(confirmPassword)) {
             if (confirmPassword !== password) {
-                setValidationInfo(t('register.passworde_error'));
+                setValidationInfo(t('register.password_error'));
                 return false;
             } else {
                 setValidationInfo('');
@@ -250,7 +244,6 @@ const Registration = () => {
     };
 
     const validatePhoneNumber = () => {
-        console.log(phoneNumber);
         if (!phoneNumberRegex.test(phoneNumber)) {
             setValidationInfo(t('register.phone_number_error'));
             return false;
@@ -261,7 +254,6 @@ const Registration = () => {
     };
 
     const validateLanguage = () => {
-        console.log(language);
         if (!languageRegex.test(language)) {
             setValidationInfo(t('register.language_error'));
             return false;
