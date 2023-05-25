@@ -1,8 +1,10 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.facade;
 
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatDistributionCentrePayoff;
 
 public class HeatDistributionCentrePayoffFacade extends AbstractFacade<HeatDistributionCentrePayoff> {
@@ -19,11 +21,13 @@ public class HeatDistributionCentrePayoffFacade extends AbstractFacade<HeatDistr
     }
 
     @Override
+    @RolesAllowed({Roles.MANAGER})
     public void edit(HeatDistributionCentrePayoff entity) {
         super.edit(entity);
     }
 
     @Override
+    @RolesAllowed({Roles.MANAGER})
     public void create(HeatDistributionCentrePayoff entity) {
         super.create(entity);
     }

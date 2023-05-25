@@ -24,6 +24,7 @@ public class BalanceEndpoint {
 
     protected static final Logger LOGGER = Logger.getGlobal();
 
+    //MOW 1
     @Path("/unit-cost-report")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
@@ -32,6 +33,7 @@ public class BalanceEndpoint {
         return Response.ok().entity(balanceService.getUnitWarmCostReport()).build();
     }
 
+    //MOW 2
     @Path("/self/report/{placeId}")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
@@ -40,6 +42,7 @@ public class BalanceEndpoint {
         return Response.ok().entity(balanceService.getSelfReport(placeId)).build();
     }
 
+    //MOW 2
     @Path("/report/{placeId}")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
@@ -48,6 +51,7 @@ public class BalanceEndpoint {
         return Response.ok().entity(balanceService.getUserReport(placeId)).build();
     }
 
+    //MOW 3
     @Path("/all-reports")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
@@ -55,4 +59,87 @@ public class BalanceEndpoint {
     public Response getAllReports() {
         return Response.ok().entity(balanceService.getAllReports()).build();
     }
+
+    //MOW 9
+    @Path("/self/all-reports")
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    @RolesAllowed({Roles.OWNER})
+    public Response getSelfReports() {
+        return Response.ok().entity(balanceService.getSelfReports()).build();
+    }
+
+    //MOW 7
+    @Path("/self/{PlaceId}/advance-value")
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    @RolesAllowed({Roles.OWNER})
+    public Response getSelfWaterAdvanceValue() {
+        return Response.ok().entity(balanceService.getSelfWaterAdvanceValue()).build();
+    }
+
+    //MOW 7
+    @Path("/self/{PlaceId}/advance")
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    @RolesAllowed({Roles.OWNER})
+    public Response getSelfWaterAdvance() {
+        return Response.ok().entity(balanceService.getSelfWaterAdvance()).build();
+    }
+
+    //MOW 7
+    @Path("/{PlaceId}/advance-value")
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    @RolesAllowed({Roles.MANAGER})
+    public Response getUserWaterAdvanceValue() {
+        return Response.ok().entity(balanceService.getUserWaterAdvanceValue()).build();
+    }
+
+    //MOW 7
+    @Path("/{PlaceId}/advance")
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    @RolesAllowed({Roles.MANAGER})
+    public Response getUserWaterAdvance() {
+        return Response.ok().entity(balanceService.getUserWaterAdvance()).build();
+    }
+
+    //MOW 7
+    @Path("/self/{PlaceId}/advance-value")
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    @RolesAllowed({Roles.OWNER})
+    public Response getSelfHeatingAdvanceValue() {
+        return Response.ok().entity(balanceService.getSelfHeatingAdvanceValue()).build();
+    }
+
+    //MOW 7
+    @Path("/self/{PlaceId}/advance")
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    @RolesAllowed({Roles.OWNER})
+    public Response getSelfHeatingAdvance() {
+        return Response.ok().entity(balanceService.getSelfHeatingAdvance()).build();
+    }
+
+    //MOW 7
+    @Path("/{PlaceId}/advance-value")
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    @RolesAllowed({Roles.MANAGER})
+    public Response getUserHeatingAdvanceValue() {
+        return Response.ok().entity(balanceService.getUserHeatingAdvanceValue()).build();
+    }
+
+    //MOW 7
+    @Path("/{PlaceId}/advance")
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    @RolesAllowed({Roles.MANAGER})
+    public Response getUserHeatingAdvance() {
+        return Response.ok().entity(balanceService.getUserHeatingAdvance()).build();
+    }
+
+
 }

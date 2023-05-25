@@ -2,13 +2,13 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mow.cdi.endpoints;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PATCH;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ResetPasswordDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.HeatDistributionCentreService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 
@@ -27,6 +27,7 @@ public class HeatDistributionCentreEndpoint {
 
     protected static final Logger LOGGER = Logger.getGlobal();
 
+    //MOW 4
     @Path("/parameters")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
@@ -35,6 +36,7 @@ public class HeatDistributionCentreEndpoint {
         return Response.status(200).entity(heatDistributionCentreService.getHeatDistributionCentreParameters()).build();
     }
 
+    //MOW 12
     @Path("/parameters/heating-area-factor")
     @Produces(MediaType.APPLICATION_JSON)
     @PATCH
@@ -44,6 +46,7 @@ public class HeatDistributionCentreEndpoint {
         return Response.status(200).build();
     }
 
+    //MOW 13
     @Path("/parameters/consumption")
     @Produces(MediaType.APPLICATION_JSON)
     @PATCH
@@ -53,6 +56,7 @@ public class HeatDistributionCentreEndpoint {
         return Response.status(200).build();
     }
 
+    //MOW 14
     @Path("/parameters/consumption-cost")
     @Produces(MediaType.APPLICATION_JSON)
     @PATCH
@@ -60,6 +64,16 @@ public class HeatDistributionCentreEndpoint {
     public Response modifyConsumptionCost(BigDecimal consumptionCostValue) {
         heatDistributionCentreService.modifyConsumptionCost(consumptionCostValue);
         return Response.status(200).build();
+    }
+
+    //MOW 15
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/add-factor")
+    @RolesAllowed({Roles.MANAGER})
+    public Response addHeatingAreaFactor(BigDecimal heatingAreaFactor) {
+        heatDistributionCentreService.addHeatingAreaFactor(heatingAreaFactor);
+        return Response.noContent().build();
     }
 
 }

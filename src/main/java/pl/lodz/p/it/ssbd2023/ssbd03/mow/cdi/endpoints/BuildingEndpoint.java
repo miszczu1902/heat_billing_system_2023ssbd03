@@ -24,7 +24,7 @@ public class BuildingEndpoint {
 
     protected static final Logger LOGGER = Logger.getGlobal();
 
-
+    //MOW 5
     @GET
     @Path("/building/{buildingId}/places")
     @Produces(MediaType.APPLICATION_JSON)
@@ -33,6 +33,7 @@ public class BuildingEndpoint {
         return Response.status(200).entity(buildingService.getAllPlaces(buildingId)).build();
     }
 
+    //MOW ?????????????????????
     @GET
     @Path("/building/{buildingId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -41,6 +42,7 @@ public class BuildingEndpoint {
         return Response.status(200).entity(buildingService.getBuilding(buildingId)).build();
     }
 
+    //MOW ???????????????????
     @PATCH
     @Path("/building/{buildingId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -50,6 +52,7 @@ public class BuildingEndpoint {
         return Response.status(200).build();
     }
 
+    //MOW 19
     @POST
     @Path("/building")
     @Produces(MediaType.APPLICATION_JSON)
@@ -59,6 +62,7 @@ public class BuildingEndpoint {
         return Response.status(200).build();
     }
 
+    //MOW 18
     @PATCH
     @Path("/building/{buildingId}/place")
     @Produces(MediaType.APPLICATION_JSON)
@@ -68,6 +72,7 @@ public class BuildingEndpoint {
         return Response.status(200).build();
     }
 
+    //MOW 6
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})

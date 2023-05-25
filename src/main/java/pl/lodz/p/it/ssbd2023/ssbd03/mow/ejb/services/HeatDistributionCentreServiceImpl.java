@@ -53,4 +53,12 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     public void modifyConsumptionCost(BigDecimal consumptionCostValue) {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    @RolesAllowed({Roles.MANAGER})
+    public void addHeatingAreaFactor(BigDecimal heatingAreaFactor) {
+        throw new UnsupportedOperationException();
+    }
+
+
 }
