@@ -226,7 +226,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             throw AppException.createOptimisticLockAppException();
         }
 
-        if (!bcryptHashGenerator.generate(oldPassword.toCharArray()).equals(account.getPassword())) {
+        if (!bcryptHashGenerator.verify(oldPassword.toCharArray(), account.getPassword())) {
             throw AppException.createPasswordOldIncorrectException();
         }
         final String newPasswordHash = bcryptHashGenerator.generate(newPassword.toCharArray());
