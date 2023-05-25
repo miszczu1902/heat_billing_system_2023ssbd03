@@ -17,7 +17,7 @@ const AdminProfile = () => {
     const {t} = useTranslation();
     const navigate = useNavigate();
     const token = "Bearer " + localStorage.getItem("token");
-    const [role, setRole] = useState('');
+    const [role, setRole] = useState(localStorage.getItem("role"));
     const [admin, setAdmin] = useState<Admin | null>(null);
 
     const fetchData = async () => {

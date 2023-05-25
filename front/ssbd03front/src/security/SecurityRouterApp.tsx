@@ -33,19 +33,18 @@ interface PrivateRouteProps {
 }
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({component: Component, accessLevels, ...rest}) => {
-    const [cookies, setCookie] = useCookies(['token', 'role']);
-    const userAccessLevel = cookies.role;
+    const userAccessLevel = localStorage.getItem("role");
     const navigate = useNavigate();
     const token =localStorage.getItem("token");
 
     useEffect(() => {
-        if (token === "undefined" || token === undefined) {
-            setCookie("role", GUEST);
+        if (token === null) {
+            localStorage.setItem("role",GUEST);
         }
-        if (!accessLevels.includes(userAccessLevel)) {
+        if ( userAccessLevel !== null&&!accessLevels.includes(userAccessLevel)) {
             navigate('/');
         }
-    }, [cookies.role]);
+    }, [localStorage.getItem("role")]);
 
 
     return <Component {...rest} />;

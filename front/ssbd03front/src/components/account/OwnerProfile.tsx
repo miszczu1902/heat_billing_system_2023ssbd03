@@ -18,11 +18,10 @@ import UserIcon from "../icons/UserIcon";
 const OwnerProfile = () => {
     const {t} = useTranslation();
     const navigate = useNavigate();
-    const [cookies, setCookie, removeCookie] = useCookies(["token"]);
     const token = "Bearer " + localStorage.getItem("token");
     const [etag, setEtag] = useState(false);
     const [version, setVersion] = useState("");
-    const [role, setRole] = useState('');
+    const [role, setRole] = useState(localStorage.getItem("role"));
     const [owner, setOwner] = useState<Owner | null>(null);
 
     const fetchData = async () => {

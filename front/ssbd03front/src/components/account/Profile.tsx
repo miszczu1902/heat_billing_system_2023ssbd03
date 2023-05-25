@@ -31,14 +31,13 @@ import UserIcon from "../icons/UserIcon";
 export default function Profile() {
     const {t} = useTranslation();
     const navigate = useNavigate();
-    const [cookies, setCookie, removeCookie] = useCookies(["token", "role"]);
     const token = "Bearer " + localStorage.getItem("token");
     const [etag, setEtag] = useState(false);
     const [version, setVersion] = useState("");
     const [selectedRole, setSelectedRole] = useState("");
     const [license, setLicense] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
-    const [role, setRole] = useState(cookies.role);
+    const [role, setRole] = useState(localStorage.getItem("role"));
     const username = useParams().username;
     const [account, setAccount] = useState<Account | null>(null);
     const [phoneNumberError, setPhoneNumberError] = useState("");
@@ -459,7 +458,7 @@ export default function Profile() {
                                     />
                                 </div>
                                 <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                                    {role.includes(ADMIN) && (
+                                    {role?.includes(ADMIN) && (
                                         <>
                                             {!account.isUserOwner && (
                                                 <Button onClick={handleClickOpenOwner} variant="contained"

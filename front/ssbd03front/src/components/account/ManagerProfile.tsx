@@ -20,7 +20,7 @@ const OwnerProfile = () => {
     const token = "Bearer " + localStorage.getItem("token");
     const [etag, setEtag] = useState(false);
     const [version, setVersion] = useState("");
-    const [role, setRole] = useState('');
+    const [role, setRole] = useState(localStorage.getItem("role"));
     const [manager, setManager] = useState<Manager | null>(null);
 
     const fetchData = async () => {

@@ -33,19 +33,17 @@ const NavbarPanel = () => {
     const [open, setOpen] = useState(false);
     const [openRole, setOpenRole] = useState(false);
     const [navbarColor, setNavbarColor] = useState('#ffffff');
-    const [cookies, setCookie, removeCookie] = useCookies(["token", "etag", "language", "role"]);
+    const [cookies, setCookie, removeCookie] = useCookies(["etag", "language"]);
     const etag = cookies.etag;
     const [version, setVersion] = useState("");
     const [roles, setRoles] = useState([GUEST]);
-    const [currentRole, setCurrentRole] = useState(cookies.role);
+    const [currentRole, setCurrentRole] = useState(localStorage.getItem("role"));
     const [username, setUsername] = useState('');
     const [errorOpen, setErrorOpen] = useState(false);
     const [errorOpenMessage, setErrorOpenMessage] = useState("");
     const token = "Bearer " + localStorage.getItem("token");
 
     useEffect(() => {
-        console.log(localStorage.getItem("token"));
-        console.log(cookies.role)
         if (localStorage.getItem("token")!=null) {
             const dataToken = decode(token);
             const currentTimestamp = Math.floor(new Date().getTime() / 1000);
@@ -83,7 +81,7 @@ const NavbarPanel = () => {
             setRoles(roles);
             if (currentRole === GUEST) {
                 setCurrentRole(roles[0]);
-                setCookie("role", roles[0]);
+                localStorage.setItem("role",roles[0]);
             }
             setUsername(JSON.parse(JSON.stringify(data)).sub);
         } else {
@@ -174,7 +172,7 @@ const NavbarPanel = () => {
     };
 
     const fetchData = async () => {
-        if (localStorage.getItem("token") !== undefined) {
+        if (localStorage.getItem("token") !== null) {
             await axios.get(`${API_URL}/accounts/self`, {
                 headers: {
                     Authorization: token
@@ -201,7 +199,7 @@ const NavbarPanel = () => {
         }
         const selectedRole = localStorage.getItem("selectedRole");
         if (selectedRole) {
-            setCookie("role", selectedRole);
+            localStorage.setItem("role",selectedRole);
             window.location.reload();
         }
     };

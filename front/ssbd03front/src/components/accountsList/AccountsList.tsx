@@ -15,20 +15,17 @@ import {AccountFromList} from '../../types/accountFromList';
 import axios from 'axios';
 import {API_URL} from '../../consts';
 import {useNavigate} from "react-router-dom";
-import {useCookies} from "react-cookie";
 import {useTranslation} from "react-i18next";
 
 const AccountsList = () => {
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
-    const [cookies, setCookie] = useCookies(['token', 'role']);
     const token = 'Bearer ' + localStorage.getItem("token");
     const [accounts, setAccounts] = useState<AccountFromList[]>([]);
     const [pageNumber, setPageNumber] = useState(0);
     const [size, setSize] = useState(1);
     const [sortBy, setSortBy] = useState('username');
     const [total, setTotal] = useState<number>(0);
-    const [role, setRole] = useState(cookies.role);
 
     const fetchData = async () => {
         axios.get(`${API_URL}/accounts?sortBy=${sortBy}&pageNumber=${pageNumber}&pageSize=${size}`, {
