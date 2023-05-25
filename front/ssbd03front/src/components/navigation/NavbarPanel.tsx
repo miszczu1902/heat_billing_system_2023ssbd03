@@ -15,7 +15,6 @@ import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import {ButtonGroup, Icon} from '@mui/material';
 import {useCookies} from 'react-cookie';
-import jwt from "jwt-decode";
 import {useNavigate} from "react-router-dom";
 import Logo from "../../assets/logo.svg";
 import "../../i18n";
@@ -68,11 +67,7 @@ const NavbarPanel = () => {
             };
             axios.request(config)
                 .then((response) => {
-                    if (response.status == 200) {
                         localStorage.setItem("token", response.headers["bearer"]);
-                    } else {
-                        setWindowOpen(true);
-                    }
                 })
                 .catch((error) => {
                     setWindowOpen(true);

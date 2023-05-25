@@ -42,7 +42,7 @@ const Login = () => {
     const [loggedIn, setLoggedIn] = useState(false);
 
     React.useEffect(() => {
-        if (localStorage.getItem("token") != "null" && localStorage.getItem("token") != ""&&localStorage.getItem("token")!=null&&localStorage.getItem("token")!="null") {
+        if (localStorage.getItem("token")!=null) {
             setLoggedIn(true);
         }
         setLoading(false);
