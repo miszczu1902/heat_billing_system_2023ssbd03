@@ -30,9 +30,6 @@ const ConfirmEmail = () => {
             }).then(() => {
             setMessage(t('email.confirmed'));
             setIsActivated(true)
-        }).catch(error => {
-            setMessage(error.response.data.message);
-            // if (error.response.status == 403) navigate('/');
         });
     }, []);
 

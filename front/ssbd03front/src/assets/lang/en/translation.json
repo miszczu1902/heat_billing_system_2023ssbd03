@@ -108,7 +108,7 @@
     "first_name_error": "The maximum name length is 32 characters",
     "surname_error": "The maximum name length is 32 characters",
     "email_error": "Email invalid",
-    "username_valid_info": "The username can contain: uppercase, lowercase, number and _",
+    "username_valid_info": "The username can contain: uppercase, lowercase, number and _, length 6-16",
     "password_valid_info": "The password must contain: uppercase, lowercase, number, special character and be 8 characters long",
     "password_error": "The passwords don't match",
     "phone_number_error": "Phone number incorrect",

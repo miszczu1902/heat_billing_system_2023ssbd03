@@ -24,10 +24,7 @@ const ActivateFromEmail = () => {
             ).then(() => {
                 setMessage(t('activate_from_email.success'));
                 setIsActivated(true)
-            }).catch(error => {
-                setMessage(error.response.data.message);
-                if (error.response.status == 403) navigate('/');
-            });
+            })
         };
         fetchData();
     });

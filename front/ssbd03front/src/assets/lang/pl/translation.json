@@ -108,7 +108,7 @@
     "first_name_error": "Maksymalna długość imienia to 32 znaki",
     "surname_error": "Maksymalna długość nazwiska to 32 znaki",
     "email_error": "Email niepoprawny",
-    "username_valid_info": "Nazwa użytkownika może zaweriać: dużą, małą literę, cyfrę oraz znak _",
+    "username_valid_info": "Nazwa użytkownika może zaweriać: dużą, małą literę, cyfrę oraz znak _, oraz długość 6-16 znaków",
     "password_valid_info": "Hasło musi zawierać: dużą, małą literę, cyfrę, znak specjalny oraz mieć długość 8 znaków",
     "password_error": "Hasła się nie zgadzają",
     "phone_number_error": "Numer telefonu niepoprawny",

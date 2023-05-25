@@ -702,7 +702,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             throw AppException.createNotAllowedActionException();
         }
         if (flag) {
-            mailSender.sendInformationAccountEnabled(editableAccount.getEmail(), editableAccount.getEmail());
+            mailSender.sendInformationAccountEnabled(editableAccount.getEmail(), editableAccount.getLanguage_());
         } else {
             mailSender.sendInformationAccountDisabled(editableAccount.getEmail(), editableAccount.getLanguage_());
         }
