@@ -25,6 +25,7 @@ import axios from "axios";
 import UserInfoIcon from '../icons/UserInfoIcon';
 import GlobeIcon from '../icons/GlobeIcon';
 import SwitchUserIcon from "../icons/SwitchUserIcon";
+import decode from 'jwt-decode';
 
 const NavbarPanel = () => {
     const [windowOpen, setWindowOpen] = useState(false);
@@ -41,50 +42,55 @@ const NavbarPanel = () => {
     const [username, setUsername] = useState('');
     const [errorOpen, setErrorOpen] = useState(false);
     const [errorOpenMessage, setErrorOpenMessage] = useState("");
-    const token = "Bearer " + cookies.token;
+    const token = "Bearer " + localStorage.getItem("token");
 
     useEffect(() => {
-
-        if (cookies.token !== "undefined" && cookies.token !== undefined) {
-                let data = JSON.stringify({
-                    "token": cookies.token,
-                });
-                let config = {
-                    method: 'post',
-                    maxBodyLength: Infinity,
-                    url: API_URL + '/accounts/self/refresh-token',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': token
-                    },
-                    data: data
-                };
-                axios.request(config)
-                    .then((response) => {
-                        setCookie("token", response.headers["bearer"]);
-                    })
-                    .catch((error) => {
-                        setWindowOpen(true);
-                    });
+        console.log(localStorage.getItem("token"));
+        console.log(cookies.role)
+        if (localStorage.getItem("token")!=null) {
+            const dataToken = decode(token);
+            const currentTimestamp = Math.floor(new Date().getTime() / 1000);
+            if (JSON.parse(JSON.stringify(dataToken)).exp < currentTimestamp) {
+                setWindowOpen(true);
             }
+            let data = JSON.stringify({
+                "token": localStorage.getItem("token"),
+            });
+            let config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: API_URL + '/accounts/self/refresh-token',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token
+                },
+                data: data
+            };
+            axios.request(config)
+                .then((response) => {
+                    if (response.status == 200) {
+                        localStorage.setItem("token", response.headers["bearer"]);
+                    } else {
+                        setWindowOpen(true);
+                    }
+                })
+                .catch((error) => {
+                    setWindowOpen(true);
+                });
+        }
     });
 
     useEffect(() => {
-        if (cookies.token !== "undefined" && cookies.token !== undefined) {
-            const decodedToken = jwt(cookies.token) as string;
-            const decodedRole = JSON.parse(JSON.stringify(decodedToken)).role;
+        if (localStorage.getItem("token")!=null) {
+            const data = decode(token);
+            const decodedRole = JSON.parse(JSON.stringify(data)).role;
             const roles = decodedRole.split(',').sort();
-            const currentTimestamp = Math.floor(new Date().getTime() / 1000);
-            if (JSON.parse(JSON.stringify(decodedToken)).exp < currentTimestamp) {
-                removeCookie('token');
-                navigate('/');
-            }
             setRoles(roles);
             if (currentRole === GUEST) {
                 setCurrentRole(roles[0]);
                 setCookie("role", roles[0]);
             }
-            setUsername(decodedToken.sub);
+            setUsername(JSON.parse(JSON.stringify(data)).sub);
         } else {
             setRoles([GUEST]);
             setCurrentRole(GUEST);
@@ -104,7 +110,7 @@ const NavbarPanel = () => {
                 setNavbarColor('#1c8de4');
                 break;
         }
-    }, [cookies.token, currentRole]);
+    }, [localStorage.getItem("token"), currentRole]);
 
     const GlobeIcon = ({width = 24, height = 24}) => (
         <svg
@@ -151,7 +157,7 @@ const NavbarPanel = () => {
         const language = localStorage.getItem("selectedLanguage");
         if (language) {
             i18n.changeLanguage(language.toLowerCase());
-            if (cookies.token !== undefined) {
+            if (localStorage.getItem("token") !== undefined) {
                 const languageDTO = {
                     version: parseInt(version),
                     language: language
@@ -173,7 +179,7 @@ const NavbarPanel = () => {
     };
 
     const fetchData = async () => {
-        if (cookies.token !== undefined) {
+        if (localStorage.getItem("token") !== undefined) {
             await axios.get(`${API_URL}/accounts/self`, {
                 headers: {
                     Authorization: token
@@ -206,11 +212,13 @@ const NavbarPanel = () => {
     };
 
     const handleClickOpenLogout = () => {
+
         navigate("/logout");
     };
 
     const handleConfirm = () => {
-        navigate("/logout");
+        localStorage.removeItem("token");
+        navigate("/login");
     };
 
     const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
@@ -244,10 +252,10 @@ const NavbarPanel = () => {
                 <Typography variant="h6" sx={{
                     marginRight: '1vh',
                     marginLeft: 'auto'
-                }}>{cookies.token && t('navbar.logged_as') + username}</Typography>
+                }}>{localStorage.getItem("token") && t('navbar.logged_as') + username}</Typography>
                 <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{marginRight: '1vh'}}>
                     <Button onClick={handleClickOpen} style={{backgroundColor: navbarColor}}><GlobeIcon/></Button>
-                    {cookies.token && (
+                    {localStorage.getItem("token") && (
                         <>
                             {
                                 (currentRole === OWNER)

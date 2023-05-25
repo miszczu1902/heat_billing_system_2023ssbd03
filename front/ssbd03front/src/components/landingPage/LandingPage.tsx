@@ -18,7 +18,7 @@ const LandingPage = () => {
     }
 
     useEffect(() => {
-        if (cookies.token) setLoggedIn(true);
+        if (localStorage.getItem("token")) setLoggedIn(true);
         else setCookie('role', GUEST);
     });
 

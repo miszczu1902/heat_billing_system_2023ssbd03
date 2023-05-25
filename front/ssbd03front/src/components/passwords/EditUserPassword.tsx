@@ -18,7 +18,7 @@ import { useState } from 'react';
 const EditPassword = () => {
     const {t, i18n} = useTranslation();
     const [cookies] = useCookies(["token"]);
-    const token = "Bearer " + cookies.token;
+    const token = "Bearer " + localStorage.getItem("token");
     const username = useParams().username;
     const [etag, setEtag] = useState(false);
     const [version, setVersion] = useState("");

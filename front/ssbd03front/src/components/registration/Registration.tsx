@@ -76,7 +76,7 @@ const Registration = () => {
     });
 
     useEffect(() => {
-        if (cookies.token) {
+        if (localStorage.getItem("token")) {
             setLoggedIn(true);
         }
         setLoading(false);

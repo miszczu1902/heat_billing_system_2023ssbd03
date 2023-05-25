@@ -32,7 +32,7 @@ export default function Profile() {
     const {t} = useTranslation();
     const navigate = useNavigate();
     const [cookies, setCookie, removeCookie] = useCookies(["token", "role"]);
-    const token = "Bearer " + cookies.token;
+    const token = "Bearer " + localStorage.getItem("token");
     const [etag, setEtag] = useState(false);
     const [version, setVersion] = useState("");
     const [selectedRole, setSelectedRole] = useState("");

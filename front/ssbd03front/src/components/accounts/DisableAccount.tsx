@@ -13,8 +13,9 @@ import { useState } from 'react';
 const DisableAccount = () => {
     const {t, i18n} = useTranslation();
     const username = useParams().username;
-    const [cookies, setCookie] = useCookies(["token"]);
-    const token = "Bearer " + cookies.token;
+    const [cookies, setCookie] = useCookies(["token", "etag"]);
+    const token = "Bearer " + localStorage.getItem("token");
+    const etag = cookies.etag;
     const [version, setVersion] = useState("");
     const [enable, setEnable] = useState(false);
 

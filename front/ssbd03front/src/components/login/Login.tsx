@@ -42,11 +42,11 @@ const Login = () => {
     const [loggedIn, setLoggedIn] = useState(false);
 
     React.useEffect(() => {
-        if (cookies.token != "undefined" && cookies.token != undefined) {
+        if (localStorage.getItem("token") != "null" && localStorage.getItem("token") != ""&&localStorage.getItem("token")!=null&&localStorage.getItem("token")!="null") {
             setLoggedIn(true);
         }
         setLoading(false);
-    }, [cookies]);
+    }, [localStorage.getItem("token")]);
 
     if (loading) {
         return <p></p>;
@@ -91,6 +91,7 @@ const Login = () => {
             };
             axios.request(config)
                 .then((response) => {
+                    localStorage.setItem("token",response.headers["bearer"]);
                     setCookie("token", response.headers["bearer"]);
                     i18n.changeLanguage(response.headers["language"].toLowerCase());
                     navigate('/');

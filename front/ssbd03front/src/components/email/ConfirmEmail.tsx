@@ -14,7 +14,7 @@ const ConfirmEmail = () => {
     const navigate = useNavigate();
     const [cookies, setCookie, removeCookie] = useCookies(["token"]);
     const [role, setRole] = useState('');
-    const token = "Bearer " + cookies.token;
+    const token = "Bearer " + localStorage.getItem("token");
     const {activationToken} = useParams<{ activationToken: string }>();
     const [message, setMessage] = useState('');
     const [isActivated, setIsActivated] = useState(false);
@@ -41,8 +41,8 @@ const ConfirmEmail = () => {
     };
 
     useEffect(() => {
-        if (cookies.token !== "undefined" && cookies.token !== undefined) {
-            const decodedToken = jwt(cookies.token);
+        if (localStorage.getItem("token") !== "undefined" && localStorage.getItem("token") !== undefined) {
+            const decodedToken = localStorage.getItem("token");
             const decodedRole = JSON.parse(JSON.stringify(decodedToken)).role;
             setRole(decodedRole.split(','));
             const currentTimestamp = Math.floor(new Date().getTime() / 1000);
@@ -54,7 +54,7 @@ const ConfirmEmail = () => {
         } else {
             navigate('/');
         }
-    }, [cookies.token]);
+    }, [localStorage.getItem("token")]);
 
     return (<div className="landing-page-root">
         <Container>

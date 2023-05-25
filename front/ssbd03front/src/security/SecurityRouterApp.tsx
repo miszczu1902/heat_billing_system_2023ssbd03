@@ -25,6 +25,7 @@ import {ADMIN, GUEST, MANAGER, OWNER} from "../consts";
 import {useEffect} from "react";
 import NotFoundPage from "../components/notFound/NotFoundPage";
 import Logout from "../components/login/Logout";
+import decode from "jwt-decode";
 
 interface PrivateRouteProps {
     component: React.ComponentType<any>;
@@ -35,14 +36,14 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({component: Component, access
     const [cookies, setCookie] = useCookies(['token', 'role']);
     const userAccessLevel = cookies.role;
     const navigate = useNavigate();
+    const token =localStorage.getItem("token");
 
     useEffect(() => {
-        if (cookies.token === "undefined" || cookies.token === undefined) {
+        if (token === "undefined" || token === undefined) {
             setCookie("role", GUEST);
         }
         if (!accessLevels.includes(userAccessLevel)) {
             navigate('/');
-            window.location.reload();
         }
     }, [cookies.role]);
 

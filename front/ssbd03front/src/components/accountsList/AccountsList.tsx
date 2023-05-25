@@ -22,7 +22,7 @@ const AccountsList = () => {
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
     const [cookies, setCookie] = useCookies(['token', 'role']);
-    const token = 'Bearer ' + cookies.token;
+    const token = 'Bearer ' + localStorage.getItem("token");
     const [accounts, setAccounts] = useState<AccountFromList[]>([]);
     const [pageNumber, setPageNumber] = useState(0);
     const [size, setSize] = useState(1);

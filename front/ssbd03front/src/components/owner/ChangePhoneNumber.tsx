@@ -17,7 +17,7 @@ import {useTranslation} from "react-i18next";
 const ChangePhoneNumber = () => {
     const {t, i18n} = useTranslation();
     const [cookies] = useCookies(["token"]);
-    const token = "Bearer " + cookies.token;
+    const token = "Bearer " + localStorage.getItem("token");
     const [etag, setEtag] = useState(false);
     const [version, setVersion] = useState("");
     const [open, setOpen] = useState(false);

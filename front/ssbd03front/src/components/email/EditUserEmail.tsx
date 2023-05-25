@@ -18,7 +18,7 @@ import { useState } from 'react';
 const EditUserEmail = () => {
     const {t} = useTranslation();
     const [cookies] = useCookies(["token"]);
-    const token = "Bearer " + cookies.token;
+    const token = "Bearer " + localStorage.getItem("token");
     const [etag, setEtag] = useState(false);
     const [version, setVersion] = useState("");
     const [open, setOpen] = useState(false);

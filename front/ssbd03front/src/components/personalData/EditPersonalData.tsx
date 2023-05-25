@@ -18,7 +18,7 @@ import {useTranslation} from "react-i18next";
 const EditPersonalData = () => {
     const {t, i18n} = useTranslation();
     const [cookies, setCookie] = useCookies(["token", "etag", "version"]);
-    const token = "Bearer " + cookies.token;
+    const token = "Bearer " + localStorage.getItem("token");
     const etag = cookies.etag;
     const [version, setVersion] = useState("");
 
