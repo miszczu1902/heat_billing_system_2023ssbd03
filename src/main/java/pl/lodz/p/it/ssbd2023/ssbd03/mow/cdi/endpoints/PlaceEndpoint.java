@@ -73,7 +73,7 @@ public class PlaceEndpoint {
         return Response.status(200).build();
     }
 
-    //MOW ?????????
+    //MOW
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{ownerUsername}")

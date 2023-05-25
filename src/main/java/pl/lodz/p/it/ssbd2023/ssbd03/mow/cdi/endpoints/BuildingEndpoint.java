@@ -33,7 +33,7 @@ public class BuildingEndpoint {
         return Response.status(200).entity(buildingService.getAllPlaces(buildingId)).build();
     }
 
-    //MOW ?????????????????????
+    //MOW
     @GET
     @Path("/building/{buildingId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -42,7 +42,7 @@ public class BuildingEndpoint {
         return Response.status(200).entity(buildingService.getBuilding(buildingId)).build();
     }
 
-    //MOW ???????????????????
+    //MOW
     @PATCH
     @Path("/building/{buildingId}")
     @Produces(MediaType.APPLICATION_JSON)
