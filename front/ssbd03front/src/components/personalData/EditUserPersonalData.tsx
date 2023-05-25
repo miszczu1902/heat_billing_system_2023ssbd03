@@ -12,16 +12,13 @@ import ListItem from '@mui/material/ListItem';
 import axios from 'axios';
 import validator from "validator";
 import {API_URL} from '../../consts';
-import {useCookies} from 'react-cookie';
 import {useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 
 export default function EditUserPersonalData() {
     const {t, i18n} = useTranslation();
     const username = useParams().username;
-    const [cookies, setCookie] = useCookies(["token", "etag"]);
-    const token = "Bearer " + cookies.token;
-    const etag = cookies.etag;
+    const token = "Bearer " + localStorage.getItem("token");
     const [version, setVersion] = useState("");
 
     const [open, setOpen] = useState(false);
@@ -51,7 +48,7 @@ export default function EditUserPersonalData() {
             .then(response => {
                 setName(response.data.firstName.toString());
                 setSurname(response.data.surname.toString());
-                setCookie("etag", response.headers.etag);
+                localStorage.setItem("etag", response.headers["etag"]);
                 setVersion(response.data.version.toString());
                 setNameValid(true);
                 setSurnameValid(true);
@@ -127,7 +124,7 @@ export default function EditUserPersonalData() {
                     headers: {
                         'Authorization': token,
                         'Content-Type': 'application/json',
-                        'If-Match': etag
+                        'If-Match': localStorage.getItem("etag")
                     },
                 })
                 .then(response => {

@@ -3,7 +3,6 @@ import React, {useEffect, useState} from 'react';
 import {Grid} from '@mui/material';
 import {useNavigate} from "react-router-dom";
 import {API_URL} from "../../consts";
-import {useCookies} from "react-cookie";
 import axios from 'axios';
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -17,11 +16,8 @@ import UserIcon from "../icons/UserIcon";
 const AdminProfile = () => {
     const {t} = useTranslation();
     const navigate = useNavigate();
-    const [cookies, setCookie, removeCookie] = useCookies(["token"]);
-    const token = "Bearer " + cookies.token;
-    const [etag, setEtag] = useState(false);
-    const [version, setVersion] = useState("");
-    const [role, setRole] = useState('');
+    const token = "Bearer " + localStorage.getItem("token");
+    const [role, setRole] = useState(localStorage.getItem("role"));
     const [admin, setAdmin] = useState<Admin | null>(null);
 
     const fetchData = async () => {

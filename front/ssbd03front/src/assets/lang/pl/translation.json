@@ -97,7 +97,7 @@
   },
   "reset_password":
   {
-    "error_token": "Brak ważnego tokenu do resetu hasła, trwa przekierowanie...",
+    "error_token": "Brak ważnego żetonu do resetu hasła, trwa przekierowanie...",
     "password_change": "Zmiana hasła",
     "change_password": "Zmień hasło",
     "new_password": "Nowe hasło",
@@ -108,9 +108,9 @@
     "first_name_error": "Maksymalna długość imienia to 32 znaki",
     "surname_error": "Maksymalna długość nazwiska to 32 znaki",
     "email_error": "Email niepoprawny",
-    "username_valid_info": "Nazwa użytkownika może zaweriać: dużą, małą literę, cyfrę oraz znak _",
-    "passworde_valid_info": "Hasło musi zawierać: dużą, małą literę, cyfrę, znak specjalny oraz mieć długość 8 znaków",
-    "passworde_error": "Hasła się nie zgadzają",
+    "username_valid_info": "Nazwa użytkownika może zaweriać: dużą, małą literę, cyfrę oraz znak _, oraz długość 6-16 znaków",
+    "password_valid_info": "Hasło musi zawierać: dużą, małą literę, cyfrę, znak specjalny oraz mieć długość 8 znaków",
+    "password_error": "Hasła się nie zgadzają",
     "phone_number_error": "Numer telefonu niepoprawny",
     "language_error": "Język niepoprawny",
     "register_error_login": "Login musi składać się z 6-16 znaków i składać się z liter i cyfr",
@@ -128,7 +128,7 @@
     "success": "Konto zarejestrowane",
     "success_two": "Konto zarejestrowane. Na podany adres email została wysłana wiadomość z linkiem aktywacyjnym",
     "log_in": "Masz już konto? Zaloguj się",
-    "user_exists": "Użytkownik o podanym loginie lub emailu już istnieje",
+    "user_exists": "Użytkownik o podanym loginie, emailu lub numerze telefonu już istnieje",
     "mandatory" : "* - Wymagane pola"
   },
   "account_list":
@@ -206,7 +206,8 @@
     "confirm_changes": "Czy jesteś pewien, że chcesz zmienić email?",
     "success_title": "Link potwierdzający został wysłany na nowy adres email.",
     "failure_title": "Wystąpił błąd podczas zmiany adresu email.",
-    "confirmed": "Email został potwierdzony"
+    "confirmed": "Email został potwierdzony",
+    "wrong_code": "Bledny link"
   },
   "token":
   {
@@ -255,7 +256,11 @@
       "revoke_access_level_to_the_same_admin_account": "Nie możesz odebrać sobie uprawnień",
       "etag_verifier": "Nie można zweryfikować eTag",
       "etag_signer": "Nie można podpisać eTag",
-      "not_valid_token": "Nie można zweryfikować tokenu."
+      "not_valid_token": "Nie można zweryfikować żetonu."
+    },
+    "token":
+    {
+      "result_not_found" : "Błędny żeton"
     }
   }
 }

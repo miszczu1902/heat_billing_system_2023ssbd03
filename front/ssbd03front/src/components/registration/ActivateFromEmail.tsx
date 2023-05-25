@@ -24,10 +24,7 @@ const ActivateFromEmail = () => {
             ).then(() => {
                 setMessage(t('activate_from_email.success'));
                 setIsActivated(true)
-            }).catch(error => {
-                setMessage(error.reason.message);
-                if (error.response.status == 403) navigate('/');
-            });
+            })
         };
         fetchData();
     });
@@ -39,15 +36,15 @@ const ActivateFromEmail = () => {
         <Container maxWidth="sm">
             <Grid container direction="column" alignItems="center" spacing={4}>
                 <Grid item>
-                    <Typography variant="h4" component="h1">{message}</Typography>
+                    <Typography variant="h4" component="h1">{t(message)}</Typography>
                 </Grid>
                 {isActivated &&
-                    <Grid item>
-                        <Button className="landing-page-button" variant="contained" color="primary"
-                                onClick={() => handleButtonClick('/login')}>
-                            {t('navbar.login')}
-                        </Button>
-                    </Grid>
+                <Grid item>
+                    <Button className="landing-page-button" variant="contained" color="primary"
+                            onClick={() => handleButtonClick('/login')}>
+                        {t('navbar.login')}
+                    </Button>
+                </Grid>
                 }
             </Grid>
         </Container>

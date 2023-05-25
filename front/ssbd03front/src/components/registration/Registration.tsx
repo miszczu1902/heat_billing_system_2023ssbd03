@@ -6,7 +6,6 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
-import {useCookies} from "react-cookie";
 import {Box, Button, Grid, Icon} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -32,7 +31,6 @@ const Registration = () => {
 
     const {register, handleSubmit} = useForm<RegistrationForm>();
     const navigate = useNavigate();
-    const [cookies, setCookie] = useCookies(["token", "role"]);
     const [firstName, setFirstName] = useState('');
     const [surname, setSurname] = useState('');
     const [email, setEmail] = useState("");
@@ -76,11 +74,11 @@ const Registration = () => {
     });
 
     useEffect(() => {
-        if (cookies.token) {
+        if (localStorage.getItem("token")) {
             setLoggedIn(true);
         }
         setLoading(false);
-    }, [cookies]);
+    }, []);
 
     if (loading) {
         return <p></p>;
@@ -179,7 +177,6 @@ const Registration = () => {
     };
 
     const validateUsername = () => {
-        console.log(username);
         if (!regexLogin.test(username)) {
             setValidationInfo(t('register.username_valid_info'));
             return false;
@@ -190,7 +187,6 @@ const Registration = () => {
     };
 
     const validateEmail = () => {
-        console.log(email);
         if (!regexEmail.test(email)) {
             setValidationInfo(t('register.email_error'));
             return false;
@@ -201,7 +197,6 @@ const Registration = () => {
     };
 
     const validateFirstName = () => {
-        console.log(firstName);
         if (firstName.length > 32 || firstName.length == 0) {
             setValidationInfo(t('register.first_name_error'));
             return false;
@@ -212,7 +207,6 @@ const Registration = () => {
     };
 
     const validateSurname = () => {
-        console.log(surname);
         if (surname.length > 32 || surname.length == 0) {
             setValidationInfo(t('register.surname_error'));
             return false;
@@ -223,7 +217,6 @@ const Registration = () => {
     };
 
     const validatePassword = () => {
-        console.log(password);
         if (!regexPassword.test(password)) {
             setValidationInfo(t('register.username_valid_info'));
             return false;
@@ -234,10 +227,9 @@ const Registration = () => {
     };
 
     const validateConfirmPassword = () => {
-        console.log(confirmPassword);
         if (regexPassword.test(confirmPassword)) {
             if (confirmPassword !== password) {
-                setValidationInfo(t('register.passworde_error'));
+                setValidationInfo(t('register.password_error'));
                 return false;
             } else {
                 setValidationInfo('');
@@ -250,7 +242,6 @@ const Registration = () => {
     };
 
     const validatePhoneNumber = () => {
-        console.log(phoneNumber);
         if (!phoneNumberRegex.test(phoneNumber)) {
             setValidationInfo(t('register.phone_number_error'));
             return false;
@@ -261,7 +252,6 @@ const Registration = () => {
     };
 
     const validateLanguage = () => {
-        console.log(language);
         if (!languageRegex.test(language)) {
             setValidationInfo(t('register.language_error'));
             return false;
@@ -284,7 +274,8 @@ const Registration = () => {
                         margin: '2vh'
                     }}>
                         <Typography sx={{padding: '1vh'}} variant="h5">{t('navbar.register')}</Typography>
-                        <Icon onClick={() => navigate('/')} sx={{width: '10%', height: '10%', marginLeft: '1vh', cursor: 'pointer'}}>
+                        <Icon onClick={() => navigate('/')}
+                              sx={{width: '10%', height: '10%', marginLeft: '1vh', cursor: 'pointer'}}>
                             <img src={Logo}/>
                         </Icon>
                     </Box>

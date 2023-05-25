@@ -11,14 +11,11 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import axios from 'axios';
 import {API_URL} from '../../consts';
-import {useCookies} from 'react-cookie';
 import {useTranslation} from "react-i18next";
 
 const ChangePhoneNumber = () => {
     const {t, i18n} = useTranslation();
-    const [cookies] = useCookies(["token"]);
-    const token = "Bearer " + cookies.token;
-    const [etag, setEtag] = useState(false);
+    const token = "Bearer " + localStorage.getItem("token");
     const [version, setVersion] = useState("");
     const [open, setOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
@@ -58,7 +55,7 @@ const ChangePhoneNumber = () => {
                 }
             })
                 .then(response => {
-                    setEtag(response.headers["etag"]);
+                    localStorage.setItem("etag", response.headers["etag"]);
                     setVersion(response.data.version)
                 });
         };
@@ -86,12 +83,12 @@ const ChangePhoneNumber = () => {
             phoneNumber: phoneNumber.toString(),
             version: parseInt(version)
         }
-
         axios.patch(`${API_URL}/accounts/self/phone-number`,
             changePhoneNumberDTO, {
                 headers: {
+
                     'Authorization': token,
-                    'If-Match': etag,
+                    'If-Match': localStorage.getItem("etag"),
                     'Content-Type': 'application/json'
                 },
             })

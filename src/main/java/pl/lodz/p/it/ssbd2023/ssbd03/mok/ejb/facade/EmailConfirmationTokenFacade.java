@@ -12,7 +12,9 @@ import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.EmailConfirmationToken;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
@@ -32,10 +34,10 @@ public class EmailConfirmationTokenFacade extends AbstractFacade<EmailConfirmati
     }
 
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
-    public EmailConfirmationToken getActivationTokenByTokenValue(String tokenValue) {
+    public List<EmailConfirmationToken> getActivationTokenByTokenValue(String tokenValue) {
         TypedQuery<EmailConfirmationToken> query = em.createNamedQuery("EmailConfirmationToken.getActivationTokenByTokenValue", EmailConfirmationToken.class);
         query.setParameter("tokenValue", tokenValue);
-        return query.getSingleResult();
+        return Optional.of(query.getResultList()).orElse(Collections.emptyList());
     }
 
     public List<EmailConfirmationToken> getExpiredNewEmailTokensList() {

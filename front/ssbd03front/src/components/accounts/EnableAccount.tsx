@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useState} from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -6,15 +7,12 @@ import DialogTitle from '@mui/material/DialogTitle';
 import axios from 'axios';
 import {API_URL} from '../../consts';
 import {useParams} from "react-router-dom";
-import {useCookies} from 'react-cookie';
 import {useTranslation} from "react-i18next";
-import { useState } from 'react';
 
 const EnableAccount = () => {
     const {t, i18n} = useTranslation();
     const username = useParams().username;
-    const [cookies, setCookie] = useCookies(["token"]);
-    const token = "Bearer " + cookies.token;
+    const token = "Bearer " + localStorage.getItem("token");
     const [version, setVersion] = useState("");
     const [enableState, setEnable] = useState(false);
 

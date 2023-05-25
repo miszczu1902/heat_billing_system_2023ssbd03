@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useState} from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -10,16 +11,12 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import axios from 'axios';
 import {API_URL} from '../../consts';
-import {useCookies} from 'react-cookie';
 import {useTranslation} from "react-i18next";
 import {useParams} from "react-router-dom";
-import { useState } from 'react';
 
 const EditUserEmail = () => {
     const {t} = useTranslation();
-    const [cookies] = useCookies(["token"]);
-    const token = "Bearer " + cookies.token;
-    const [etag, setEtag] = useState(false);
+    const token = "Bearer " + localStorage.getItem("token");
     const [version, setVersion] = useState("");
     const [open, setOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
@@ -60,7 +57,7 @@ const EditUserEmail = () => {
                 }
             })
                 .then(response => {
-                    setEtag(response.headers["etag"]);
+                    localStorage.setItem("etag", response.headers["etag"]);
                     setVersion(response.data.version)
                 });
         };
@@ -93,7 +90,7 @@ const EditUserEmail = () => {
                 changeEmailDTO, {
                     headers: {
                         'Authorization': token,
-                        'If-Match': etag,
+                        'If-Match': localStorage.getItem("etag"),
                         'Content-Type': 'application/json'
                     },
                 })

@@ -15,7 +15,6 @@ import TextField from '@mui/material/TextField';
 import {Checkbox, FormControlLabel, Grid} from '@mui/material';
 import {useNavigate, useParams} from "react-router-dom";
 import {ADMIN, API_URL, MANAGER, OWNER} from "../../consts";
-import {useCookies} from "react-cookie";
 import axios from 'axios';
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -31,14 +30,12 @@ import UserIcon from "../icons/UserIcon";
 export default function Profile() {
     const {t} = useTranslation();
     const navigate = useNavigate();
-    const [cookies, setCookie, removeCookie] = useCookies(["token", "role"]);
-    const token = "Bearer " + cookies.token;
-    const [etag, setEtag] = useState(false);
+    const token = "Bearer " + localStorage.getItem("token");
     const [version, setVersion] = useState("");
     const [selectedRole, setSelectedRole] = useState("");
     const [license, setLicense] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
-    const [role, setRole] = useState(cookies.role);
+    const [role, setRole] = useState(localStorage.getItem("role"));
     const username = useParams().username;
     const [account, setAccount] = useState<Account | null>(null);
     const [phoneNumberError, setPhoneNumberError] = useState("");
@@ -96,7 +93,7 @@ export default function Profile() {
                 addAccessLevelManagerDTO, {
                     headers: {
                         'Authorization': token,
-                        'If-Match': etag,
+                        'If-Match': localStorage.getItem("etag"),
                         'Content-Type': 'application/json'
                     },
                 })
@@ -120,7 +117,7 @@ export default function Profile() {
                 addAccessLevelOwnerDTO, {
                     headers: {
                         'Authorization': token,
-                        'If-Match': etag,
+                        'If-Match': localStorage.getItem("etag"),
                         'Content-Type': 'application/json'
                     },
                 })
@@ -143,7 +140,7 @@ export default function Profile() {
                 addAccessLevelAdminDTO, {
                     headers: {
                         'Authorization': token,
-                        'If-Match': etag,
+                        'If-Match': localStorage.getItem("etag"),
                         'Content-Type': 'application/json'
                     },
                 })
@@ -167,7 +164,7 @@ export default function Profile() {
                 removeAccessLevelDTO, {
                     headers: {
                         'Authorization': token,
-                        'If-Match': etag,
+                        'If-Match': localStorage.getItem("etag"),
                         'Content-Type': 'application/json'
                     },
                 })
@@ -281,7 +278,7 @@ export default function Profile() {
                 }
             })
                 .then(response => {
-                    setEtag(response.headers["etag"]);
+                    localStorage.setItem("etag", response.headers["etag"]);
                     setVersion(response.data.version)
                 });
         };
@@ -297,7 +294,7 @@ export default function Profile() {
                 }
             })
                 .then(response => {
-                    setEtag(response.headers["etag"]);
+                    localStorage.setItem("etag", response.headers["etag"]);
                     setVersion(response.data.version)
                 });
         };
@@ -313,7 +310,7 @@ export default function Profile() {
                 }
             })
                 .then(response => {
-                    setEtag(response.headers["etag"]);
+                    localStorage.setItem("etag", response.headers["etag"]);
                     setVersion(response.data.version)
                 });
         };
@@ -339,7 +336,7 @@ export default function Profile() {
                 }
             })
                 .then(response => {
-                    setEtag(response.headers["etag"]);
+                    localStorage.setItem("etag", response.headers["etag"]);
                     setVersion(response.data.version)
                 });
         };
@@ -405,9 +402,9 @@ export default function Profile() {
                                         gap: '0.5vh'
                                     }}>
                                         {(!account.isEnable && ((!account.isUserAdmin && role === MANAGER) || role === ADMIN)) &&
-                                            <EnableAccount/>}
+                                        <EnableAccount/>}
                                         {account.isEnable && ((!account.isUserAdmin && role === MANAGER) || role === ADMIN) &&
-                                            <DisableAccount/>}
+                                        <DisableAccount/>}
                                     </div>
                                     <Typography sx={{padding: '1vh'}}
                                                 variant="h5"><b>{t('enable_account.enable')}:</b> {account.isEnable ? t('enable_account.enable') : t('disable_account.disable')}
@@ -459,7 +456,7 @@ export default function Profile() {
                                     />
                                 </div>
                                 <div style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-                                    {role.includes(ADMIN) && (
+                                    {role?.includes(ADMIN) && (
                                         <>
                                             {!account.isUserOwner && (
                                                 <Button onClick={handleClickOpenOwner} variant="contained"
@@ -585,8 +582,8 @@ export default function Profile() {
                                             <form onSubmit={handleAddSubmit}>
                                                 <FormControl fullWidth>
                                                     {!selectedRole &&
-                                                        <InputLabel
-                                                            id="access-level-label">{t('profile.select_access_level')}</InputLabel>}
+                                                    <InputLabel
+                                                        id="access-level-label">{t('profile.select_access_level')}</InputLabel>}
                                                     <Select
                                                         labelId="access-level-label"
                                                         value={selectedRole}

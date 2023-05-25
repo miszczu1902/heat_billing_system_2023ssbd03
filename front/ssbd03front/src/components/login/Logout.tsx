@@ -1,11 +1,16 @@
 import * as React from 'react';
-import {useCookies} from "react-cookie";
+import {useEffect} from 'react';
+import {useNavigate} from "react-router-dom";
 
 const Logout = () => {
-    const [cookies, setCookie, removeCookie] = useCookies(["token", "role"]);
-    removeCookie('role');
-    removeCookie("token", {path: '/'});
-    window.location.reload();
+
+    const navigate = useNavigate();
+    useEffect(() => {
+        localStorage.removeItem("role");
+        localStorage.removeItem("token");
+        navigate("/");
+    }, []);
     return (<p></p>)
+
 }
 export default Logout;

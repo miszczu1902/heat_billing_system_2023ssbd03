@@ -36,6 +36,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ACCOUNT_EXISTS_MESSAGE = "exception.account.account_exists";
     protected final static String ERROR_ACCOUNT_NOT_EXISTS_MESSAGE = "exception.account.account_not_exists";
     protected final static String ERROR_RESULT_NOT_FOUND = "exception.account.result_not_found";
+    protected final static String ERROR_TOKEN_NOT_FOUND = "exception.token.result_not_found";
     protected final static String ERROR_ACTION_NOT_ALLOWED = "exception.account.action_not_allowed";
     protected final static String ERROR_PERSONAL_DATA_VALIDATION = "exception.account.personal_data_validation";
     protected final static String ERROR_INVALID_CREDENTIALS = "exception.account.invalid_credentials";
@@ -93,6 +94,9 @@ public class AppException extends WebApplicationException {
 
     public static NoQueryResultException createNoResultException(Throwable cause) {
         return new NoQueryResultException(ERROR_RESULT_NOT_FOUND, Response.Status.NOT_FOUND, cause);
+    }
+    public static AppException tokenNoResultException () {
+        return new AppException(ERROR_TOKEN_NOT_FOUND, Response.Status.NOT_FOUND);
     }
 
     public static NotAllowedActionException createNotAllowedActionException() {
