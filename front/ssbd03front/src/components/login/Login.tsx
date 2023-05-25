@@ -140,13 +140,14 @@ const Login = () => {
                         'Content-Type': 'application/json'
                     },
                 })
-                .then(() => {
+                .then((response) => {
                     setSuccessOpen(true);
+
                 })
                 .catch(error => {
-                    setErrorOpenMessage(error.response.data.message)
-                    setErrorOpen(true);
-                });
+                        setErrorOpenMessage(t("exception.account.account_is_blocked"))
+                        setErrorOpen(true);
+                    });
             handleClose(event, reason);
         }
     }
