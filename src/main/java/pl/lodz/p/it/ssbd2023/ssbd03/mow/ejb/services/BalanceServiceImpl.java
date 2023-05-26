@@ -13,6 +13,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterAdvance;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.MonthPayoff;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BalanceFacade;
 
+import java.math.BigDecimal;
+
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class BalanceServiceImpl extends AbstractService implements BalanceService {
@@ -96,4 +98,17 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
     public HeatingPlaceAndCommunalAreaAdvance getUserHeatingAdvance() {
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    @RolesAllowed({Roles.MANAGER})
+    public BigDecimal getUserHeatingBalance() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    @RolesAllowed({Roles.OWNER})
+    public BigDecimal getSelfHeatingBalance() {
+        throw new UnsupportedOperationException();
+    }
+
 }

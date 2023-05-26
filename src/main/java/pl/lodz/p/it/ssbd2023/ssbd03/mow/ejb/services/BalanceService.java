@@ -14,6 +14,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatingPlaceAndCommunalAreaAdvance;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterAdvance;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.MonthPayoff;
 
+import java.math.BigDecimal;
+
 @Local
 public interface BalanceService extends CommonManagerLocalInterface {
 
@@ -42,5 +44,9 @@ public interface BalanceService extends CommonManagerLocalInterface {
     HeatingPlaceAndCommunalAreaAdvance getUserHeatingAdvanceValue();
 
     HeatingPlaceAndCommunalAreaAdvance getUserHeatingAdvance();
+
+    BigDecimal getUserHeatingBalance();
+
+    BigDecimal getSelfHeatingBalance();
 
 }

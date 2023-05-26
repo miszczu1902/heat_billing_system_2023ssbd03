@@ -8,19 +8,16 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
-
-import java.util.List;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterEntry;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
-public class BuildingFacade extends AbstractFacade<Building> {
+public class HotWaterEntryFacade extends AbstractFacade<HotWaterEntry> {
     @PersistenceContext(unitName = "ssbd03mowPU")
     private EntityManager em;
 
-    public BuildingFacade() {
-        super(Building.class);
+    public HotWaterEntryFacade() {
+        super(HotWaterEntry.class);
     }
 
     @Override
@@ -30,27 +27,18 @@ public class BuildingFacade extends AbstractFacade<Building> {
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public void edit(Building entity) {
+    public void edit(HotWaterEntry entity) {
         super.edit(entity);
     }
 
     @Override
-    @RolesAllowed({Roles.MANAGER})
-    public void create(Building entity) {
+    @RolesAllowed({Roles.MANAGER,Roles.OWNER})
+    public void create(HotWaterEntry entity) {
         super.create(entity);
     }
 
     @Override
-    public void remove(Building entity) {
+    public void remove(HotWaterEntry entity) {
         super.remove(entity);
     }
-
-
-    @RolesAllowed({Roles.MANAGER})
-    public Building findById(){throw new UnsupportedOperationException();}
-
-    @RolesAllowed({Roles.MANAGER})
-    public List<Building> getAllBuildings(){throw new UnsupportedOperationException();}
-    
-
 }
