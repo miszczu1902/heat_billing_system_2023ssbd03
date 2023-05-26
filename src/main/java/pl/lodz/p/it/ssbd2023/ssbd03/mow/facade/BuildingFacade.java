@@ -7,6 +7,9 @@ import jakarta.persistence.PersistenceContext;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
+
+import java.util.List;
 
 @Stateless
 public class BuildingFacade extends AbstractFacade<Building> {
@@ -38,4 +41,13 @@ public class BuildingFacade extends AbstractFacade<Building> {
     public void remove(Building entity) {
         super.remove(entity);
     }
+
+
+    @RolesAllowed({Roles.MANAGER})
+    public Building findById(){throw new UnsupportedOperationException();}
+
+    @RolesAllowed({Roles.MANAGER})
+    public List<Building> getAllBuildings(){throw new UnsupportedOperationException();}
+    
+
 }

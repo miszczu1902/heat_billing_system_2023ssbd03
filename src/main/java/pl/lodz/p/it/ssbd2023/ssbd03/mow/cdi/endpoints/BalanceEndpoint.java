@@ -140,4 +140,22 @@ public class BalanceEndpoint {
     public Response getUserHeatingAdvance() {
         return Response.ok().entity(balanceService.getUserHeatingAdvance()).build();
     }
+
+    //MOW8
+    @Path("self/cost-balance")
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    @RolesAllowed({Roles.OWNER})
+    public Response getSelfHeatingBalance() {
+        return Response.ok().entity(balanceService.getSelfHeatingBalance()).build();
+    }
+
+    //MOW 8
+    @Path("{user}/cost-balance")
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    @RolesAllowed({Roles.MANAGER})
+    public Response getUserHeatingBalance() {
+        return Response.ok().entity(balanceService.getUserHeatingBalance()).build();
+    }
 }

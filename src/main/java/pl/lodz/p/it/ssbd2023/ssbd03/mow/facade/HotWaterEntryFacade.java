@@ -1,18 +1,20 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.facade;
 
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatDistributionCentrePayoff;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterEntry;
 
-public class HeatDistributionCentrePayoffFacade extends AbstractFacade<HeatDistributionCentrePayoff> {
+@Stateless
+public class HotWaterEntryFacade extends AbstractFacade<HotWaterEntry> {
     @PersistenceContext(unitName = "ssbd03mowPU")
     private EntityManager em;
 
-    public HeatDistributionCentrePayoffFacade() {
-        super(HeatDistributionCentrePayoff.class);
+    public HotWaterEntryFacade() {
+        super(HotWaterEntry.class);
     }
 
     @Override
@@ -22,19 +24,18 @@ public class HeatDistributionCentrePayoffFacade extends AbstractFacade<HeatDistr
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public void edit(HeatDistributionCentrePayoff entity) {
+    public void edit(HotWaterEntry entity) {
         super.edit(entity);
     }
 
     @Override
-    @RolesAllowed({Roles.MANAGER})
-    public void create(HeatDistributionCentrePayoff entity) {
+    @RolesAllowed({Roles.MANAGER,Roles.OWNER})
+    public void create(HotWaterEntry entity) {
         super.create(entity);
     }
 
     @Override
-    @RolesAllowed(Roles.MANAGER)
-    public HeatDistributionCentrePayoff find(Object id) {
-        return super.find(id);
+    public void remove(HotWaterEntry entity) {
+        super.remove(entity);
     }
 }

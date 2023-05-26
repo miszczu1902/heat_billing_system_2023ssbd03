@@ -50,6 +50,7 @@ public class MowSystemScheduler {
     private void calculateAreaBalance() {
         throw new UnsupportedOperationException();
     }
+
     private void calculateCommunalAreaBalance() {
         throw new UnsupportedOperationException();
     }
