@@ -10,7 +10,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BalanceFacade;
 
 @Startup
 @Singleton
-@RunAs(Roles.ADMIN)
+@RunAs(Roles.MANAGER)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @Interceptors(TrackerInterceptor.class)
 public class MowSystemScheduler {

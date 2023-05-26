@@ -2,6 +2,8 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mow.facade;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
@@ -14,6 +16,7 @@ import java.time.Month;
 import java.util.List;
 
 @Stateless
+@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class BalanceFacade extends AbstractFacade<AnnualBalance> {
     @PersistenceContext(unitName = "ssbd03mowPU")
     private EntityManager em;
