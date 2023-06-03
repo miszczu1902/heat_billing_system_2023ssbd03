@@ -6,6 +6,7 @@
     "log_out": "Log out",
     "account_list": "Account list",
     "building_list": "Building list",
+    "manage": "Manage",
     "languages":
     {
       "title": "Change language",
@@ -287,5 +288,22 @@
       "building_number_error" : "Wrong building number format, use only letters and numbers (e.g. 1A)",
       "city_error" : "Wrong city format, use only letters, spaces (e.g. New York) and contains up to 32 characters",
       "postal_code_error" : "Wrong postal code format, use only numbers and dash (e.g. 00-000)"
-    }
+    },
+  "invoice":
+  {
+    "consumption": "Heat consumption value",
+    "consumptionCost": "Heat consumption cost value",
+    "heatingAreaFactor": "Heat consumption factor",
+    "save": "Save",
+    "close": "Close",
+    "fill_data": "Insert data from invoice",
+    "wrong_value_error": "Value must be between 0.00 - 1.00",
+    "already_added": "Invoice was already added this month",
+    "successfully_added": "Data from invoice was successfully added",
+    "enter_data": "Enter data from heat distribution centre",
+    "confirm": "Are you sure inserted data is correct? You can't redo this operation"
+
+
+
+  }
 }

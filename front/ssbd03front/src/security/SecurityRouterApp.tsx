@@ -27,6 +27,7 @@ import NotFoundPage from "../components/notFound/NotFoundPage";
 import Logout from "../components/login/Logout";
 import decode from "jwt-decode";
 import BuildingsList from '../components/building/BuildingsList';
+import AddInvoiceValues from '../components/heatDistributionCentrePayoff/AddInvoiceValues';
 
 interface PrivateRouteProps {
     component: React.ComponentType<any>;
@@ -163,6 +164,16 @@ const router = createBrowserRouter([
                     {
                         path: '/buildings',
                         element: <PrivateRoute component={BuildingsList} accessLevels={[ADMIN, MANAGER]}/>
+                    }
+                ]
+            },
+            {
+                path: '/manage',
+                element: (<><NavbarPanel/><Outlet/></>),
+                children: [
+                    {
+                        path: '/manage',
+                        element: <PrivateRoute component={AddInvoiceValues} accessLevels={[MANAGER]}/>
                     },
                 ]
             }
