@@ -226,7 +226,7 @@ const NavbarPanel = () => {
                 </DialogActions>
             </Dialog>
 
-
+        
 
             <AppBar position="static" style={{backgroundColor: navbarColor}}>
                 <Toolbar>
