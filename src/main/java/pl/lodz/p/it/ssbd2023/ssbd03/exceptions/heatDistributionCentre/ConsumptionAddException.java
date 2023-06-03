@@ -10,4 +10,3 @@ public class ConsumptionAddException extends AppException{
         super(message, status);
     }
 }
-
