@@ -3,13 +3,18 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mow.cdi.endpoints;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateBuildingDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.BuildingService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.BuildingMapper;
 
 import java.util.logging.Logger;
 
@@ -57,9 +62,9 @@ public class BuildingEndpoint {
     @Path("/building")
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({Roles.MANAGER})
-    public Response addBuilding() {
-        buildingService.addBuilding();
-        return Response.status(200).build();
+    public Response addBuilding(@NotNull @Valid CreateBuildingDTO createBuildingDTO) {
+        buildingService.addBuilding(BuildingMapper.createBuilding(createBuildingDTO));
+        return Response.status(Response.Status.CREATED).build();
     }
 
     //MOW 18
@@ -76,7 +81,13 @@ public class BuildingEndpoint {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    public Response getAllBuildings() {
-        return Response.status(200).entity(buildingService.getAllBuildings()).build();
+    public Response getAllBuildings(@DefaultValue("0") @QueryParam("pageNumber") int pageNumber,
+                                    @DefaultValue("10") @QueryParam("pageSize") int pageSize) {
+        return Response
+                .status(200)
+                .entity(
+                        buildingService.getAllBuildings(pageNumber, pageSize).stream()
+                                .map(BuildingMapper::createBuildingToBuildingDTO)
+                                .toList()).build();
     }
 }

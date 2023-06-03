@@ -22,7 +22,7 @@ public class Address extends AbstractEntity implements Serializable {
     private String street;
 
     @Column(name = "building_number", nullable = false)
-    private Short buildingNumber;
+    private String buildingNumber;
 
     @Column(name = "city", nullable = false, length = 32)
     private String city;
@@ -30,4 +30,11 @@ public class Address extends AbstractEntity implements Serializable {
     @Pattern(regexp = "^\\d{2}-\\d{3}$", message = "Invalid postal code format")
     @Column(name = "postal_code", nullable = false, length = 6)
     private String postalCode;
+
+    public Address(String street, String buildingNumber, String city, String postalCode) {
+        this.street = street;
+        this.buildingNumber = buildingNumber;
+        this.city = city;
+        this.postalCode = postalCode;
+    }
 }

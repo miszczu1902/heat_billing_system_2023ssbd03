@@ -6,11 +6,10 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
-
 import java.util.List;
 
 @Stateless
@@ -50,7 +49,15 @@ public class BuildingFacade extends AbstractFacade<Building> {
     public Building findById(){throw new UnsupportedOperationException();}
 
     @RolesAllowed({Roles.MANAGER})
-    public List<Building> getAllBuildings(){throw new UnsupportedOperationException();}
-    
+    public List<Building> getListOfBuildingsWithPaging(int pageNumber, int pageSize) {
+        TypedQuery<Building> tq = em.createNamedQuery("Building.findAll", Building.class);
+
+        if (pageNumber != 0) {
+            tq.setFirstResult((pageNumber - 1) * pageSize);
+            tq.setMaxResults(pageSize);
+        }
+
+        return tq.getResultList();
+    }
 
 }

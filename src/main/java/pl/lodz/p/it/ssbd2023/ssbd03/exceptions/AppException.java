@@ -6,6 +6,7 @@ import jakarta.ws.rs.core.Response;
 import lombok.Getter;
 import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.building.BuildingCommunalAreaBiggerOrEqualTotalAreaException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.SignerException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.VerifierException;
@@ -53,6 +54,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ETAG_VERIFIER = "exception.account.etag_verifier";
     protected final static String ERROR_ETAG_SIGNER = "exception.account.etag_signer";
     protected final static String TOKEN_IS_NOT_VALID = "exception.account.not_valid_token";
+    protected final static String COMMUNAL_AREA_EQUAL_OR_BIGGER_THAT_TOTAL_AREA = "exception.building.communal_area_equal_or_bigger_that_total_area";
 
     @Getter
     private Throwable cause;
@@ -218,5 +220,9 @@ public class AppException extends WebApplicationException {
 
     public static TransactionRollbackException createTransactionRollbackException() {
         return new TransactionRollbackException();
+    }
+
+    public static BuildingCommunalAreaBiggerOrEqualTotalAreaException createCommunalAreaBiggerOrEqualTotalAreaException(){
+        return new BuildingCommunalAreaBiggerOrEqualTotalAreaException(COMMUNAL_AREA_EQUAL_OR_BIGGER_THAT_TOTAL_AREA, Response.Status.FORBIDDEN);
     }
 }

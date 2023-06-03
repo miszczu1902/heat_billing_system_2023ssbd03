@@ -52,8 +52,8 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public void addBuilding() {
-        throw new UnsupportedOperationException();
+    public void addBuilding(Building building) {
+        buildingFacade.create(building);
     }
 
     @Override
@@ -64,8 +64,8 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
 
     @Override
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    public List<Building> getAllBuildings() {
-        throw new UnsupportedOperationException();
+    public List<Building> getAllBuildings(int pageNumber, int pageSize) {
+        return buildingFacade.getListOfBuildingsWithPaging(pageNumber, pageSize);
     }
 
 }

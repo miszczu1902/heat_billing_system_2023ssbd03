@@ -5,6 +5,7 @@
     "login": "Zaloguj się",
     "log_out": "Wyloguj się",
     "account_list": "Lista kont",
+    "building_list": "Lista budynków",
     "languages":
     {
       "title": "Zmień język",
@@ -262,5 +263,30 @@
     {
       "result_not_found" : "Błędny żeton"
     }
-  }
+  },
+  "buildingFromList" :
+    {
+      "id" : "Identyfikator budynku",
+      "created_by" : "Dodany przez",
+      "total_area" : "Powierzchnia całkowita [mkw]",
+      "communal_area_aggregate" : "Powierzchnia części wspólnej [mkw]",
+      "street" : "Ulica",
+      "building_number" : "Numer budynku",
+      "city" : "Miasto",
+      "postal_code" : "Kod pocztowy",
+      "building_add": "Dodaj nowy budynek",
+      "building_save" : "Zapisz nowy budynek",
+      "building_total_area" : "Wprowadź powierzchnię całkowitą budynku, wliczając w to wszelkie przestrzenie wspólne",
+      "building_communal_area_aggregate" : "Wprowadź sumaryczną wartość przestrzeni wspólnych",
+      "building_address" : "Wprowadź adres budynku",
+      "building_add_confirm" : "Czy jesteś pewien, że chcesz dodać nowy budynek?",
+      "building_add_success" : "Budynek został dodany",
+      "building_add_failure" : "Wystąpił błąd podczas dodawania budynku",
+      "total_area_error" : "Powierzchnia całkowita musi być większa od 0, wartość musi mieć format liczbowy odzielony kropką",
+      "communal_area_aggregate_error" : "Powierzchnia części wspólnej musi być większa od 0, wartość musi mieć format liczbowy odzielony kropką",
+      "street_error" : "Nazwa ulicy musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery, cyfry, spacje oraz znaki: - .",
+      "building_number_error" : "Numer budynku musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery i cyfry",
+      "city_error" : "Nazwa miasta musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery, cyfry, spacje oraz znaki: - .",
+      "postal_code_error" : "Kod pocztowy musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery, cyfry oraz znak -" 
+    }
 }

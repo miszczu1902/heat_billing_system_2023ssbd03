@@ -19,6 +19,9 @@ import java.util.List;
                 @Index(name = "building_address_id", columnList = "address_id"),
                 @Index(name = "building_heat_distribution_centre_id", columnList = "heat_distribution_centre_id")
         })
+@NamedQueries({
+        @NamedQuery(name = "Building.findAll", query = "SELECT k FROM Building k"),
+})
 public class Building extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,4 +46,12 @@ public class Building extends AbstractEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "heat_distribution_centre_id", updatable = false, referencedColumnName = "id")
     private HeatDistributionCentre heatDistributionCentre;
+
+    public Building(BigDecimal totalArea, BigDecimal communalAreaAggregate, Address address, List<Place> places, HeatDistributionCentre heatDistributionCentre) {
+        this.totalArea = totalArea;
+        this.communalAreaAggregate = communalAreaAggregate;
+        this.address = address;
+        this.places = places;
+        this.heatDistributionCentre = heatDistributionCentre;
+    }
 }
