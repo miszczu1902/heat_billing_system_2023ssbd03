@@ -287,6 +287,7 @@
       "street_error" : "Nazwa ulicy musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery, cyfry, spacje oraz znaki: - .",
       "building_number_error" : "Numer budynku musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery i cyfry",
       "city_error" : "Nazwa miasta musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery, cyfry, spacje oraz znaki: - .",
-      "postal_code_error" : "Kod pocztowy musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery, cyfry oraz znak -" 
+      "postal_code_error" : "Kod pocztowy musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery, cyfry oraz znak -" ,
+      "add_building_error" : "Nie można dodać budynku z powodu błędów w formularzu"
     }
 }

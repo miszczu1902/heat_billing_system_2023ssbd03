@@ -15,6 +15,8 @@ import axios from 'axios';
 import { API_URL } from '../../consts';
 import { BuildingFromList } from '../../types/buildingFromList';
 import validator from "validator";
+import { Snackbar, SnackbarContent } from '@mui/material';
+import { set } from 'react-hook-form';
 
 const BuildingsList = () => {
     const { t, i18n } = useTranslation();
@@ -27,6 +29,7 @@ const BuildingsList = () => {
     const [pageNumber, setPageNumber] = useState(0);
     const [size, setSize] = useState(1);
     const [total, setTotal] = useState<number>(0);
+    const [open, setOpen] = useState(true);
 
     const [totalArea, setTotalArea] = useState("");
     const [totalAreaValid, setTotalAreaValid] = useState(false);
@@ -180,6 +183,11 @@ const BuildingsList = () => {
         handleNewBuildingConfirmClose();
     };
 
+    const handleClose = () => {
+        setOpen(false);
+    };
+    setTimeout(handleClose, 10000);
+
     const handleSubmit = () => {
         const buildingDTO = {
             totalArea: totalArea,
@@ -190,6 +198,7 @@ const BuildingsList = () => {
             postalCode: postalCode
         };
 
+        if(totalAreaValid && communalAreaAggregateValid && streetValid && buildingNumberValid && cityValid && postalCodeValid) {
         axios.post(`${API_URL}/buildings/building`, buildingDTO, {
             headers: {
                 Authorization: token
@@ -204,6 +213,10 @@ const BuildingsList = () => {
             if (error.response.status == 403) navigate('/');
         }
         );
+    } else {
+        setNewBuildingConfirmOpen(false);
+        setOpen(true);
+    }
     };
 
     return (
@@ -273,15 +286,13 @@ const BuildingsList = () => {
                 </Table>
             </TableContainer>
 
-
             <Dialog
                 fullScreen
                 open={newBuildingAddOpen}
                 onClose={handleNewBuildingAddClose}
                 scroll="paper" 
                 maxWidth="sm" 
-                fullWidth
-            >
+                fullWidth>
                 <AppBar sx={{ position: 'relative' }}>
                     <Toolbar>
                         <IconButton
@@ -436,12 +447,9 @@ const BuildingsList = () => {
                 </Box>
             </Dialog>
 
-
-
             <Dialog
                 open={newBuildingConfirmOpen}
-                onClose={handleNewBuildingConfirmClose}
-            >
+                onClose={handleNewBuildingConfirmClose}>
                 <DialogTitle>
                     {t('buildingFromList.building_add_confirm')}
                 </DialogTitle>
@@ -450,6 +458,11 @@ const BuildingsList = () => {
                     <Button onClick={handleSubmit}>{t('confirm.yes')}</Button>
                 </DialogActions>
             </Dialog>
+
+            <Snackbar open={open} onClose={handleClose}>
+                <SnackbarContent 
+                message={t('buildingFromList.add_building_error')}/>
+            </Snackbar>
         </div>
     );
 }
