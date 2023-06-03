@@ -20,6 +20,9 @@ import java.util.List;
                 @Index(name = "building_address_id", columnList = "address_id"),
                 @Index(name = "building_heat_distribution_centre_id", columnList = "heat_distribution_centre_id")
         })
+@NamedQueries({
+        @NamedQuery(name = "Building.findAll", query = "SELECT k FROM Building k"),
+})
 public class Building extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
