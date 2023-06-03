@@ -298,12 +298,11 @@
     "close": "Close",
     "fill_data": "Insert data from invoice",
     "wrong_value_error": "Value must be between 0.00 - 1.00",
+    "wrong_consumption_value_error": "Value must be in format x.xx and not higher than 8 digits before pointer",
     "already_added": "Invoice was already added this month",
     "successfully_added": "Data from invoice was successfully added",
     "enter_data": "Enter data from heat distribution centre",
-    "confirm": "Are you sure inserted data is correct? You can't redo this operation"
-
-
-
+    "confirm": "Are you sure inserted data is correct? You can't redo this operation",
+    "error": "An error occured while inserting data"
   }
 }

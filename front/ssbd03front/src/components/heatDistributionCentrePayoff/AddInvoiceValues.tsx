@@ -11,6 +11,7 @@ import validator from "validator";
 
 const AddInvoiceValues = () => {
     const [windowOpen, setWindowOpen] = useState(false);
+    const [windowErrorOpen, setWindowErrorOpen] = useState(false);
     const [windowSuccessOpen, setWindowSuccessOpen] = useState(false);
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
@@ -35,7 +36,7 @@ const AddInvoiceValues = () => {
         setAddInvoiceConfirmOpen(true);
     };
 
-    const handleaddingInvoiceConfirmClose = () => {
+    const handleAddingInvoiceConfirmClose = () => {
         setAddInvoiceConfirmOpen(false);
     };
 
@@ -47,7 +48,7 @@ const AddInvoiceValues = () => {
             setConsumptionError("");
         } else {
             setConsumptionValid(false);
-            setConsumptionError(t("invoice.wrong_value_error"));
+            setConsumptionError(t("invoice.wrong_consumption_value_error"));
         }
     };
 
@@ -59,7 +60,7 @@ const AddInvoiceValues = () => {
             setConsumptionCostError("");
         } else {
             setConsumptionCostValid(false);
-            setConsumptionCostError(t("invoice.wrong_value_error"));
+            setConsumptionCostError(t("invoice.wrong_consumption_value_error"));
         }
     };
 
@@ -76,7 +77,7 @@ const AddInvoiceValues = () => {
     };
 
     const handleCancel = () => {
-        handleaddingInvoiceConfirmClose();
+        handleAddingInvoiceConfirmClose();
     };
 
     const handleSubmit = () => {
@@ -85,20 +86,21 @@ const AddInvoiceValues = () => {
             consumptionCost: consumptionCost,
             heatingAreaFactor: heatingAreaFactor,
         };
-        console.log(addConsumptionDTO);
-
         axios.post(`${API_URL}/heat-distribution-centre/parameters/consumption-cost`, addConsumptionDTO, {
             headers: {
                 Authorization: token
             }
         }).then(response => {
-                handleaddingInvoiceConfirmClose();
+                handleAddingInvoiceConfirmClose();
                 setWindowSuccessOpen(true);
             }
         ).catch(error => {
-                handleaddingInvoiceConfirmClose();
+                handleAddingInvoiceConfirmClose();
                 if (error.response.status == 403) {
                     setWindowOpen(true);
+                }
+                else {
+                    setWindowErrorOpen(true);
                 }
             }
         );
@@ -109,6 +111,9 @@ const AddInvoiceValues = () => {
     };
 
     const handleClickOpen = () => {
+        setConsumptionCostError("");
+        setConsumptionError("");
+        setHeatingAreaFactorError("");
         setOpen(true);
     };
     const handleCloseWindow = () => {
@@ -125,6 +130,13 @@ const AddInvoiceValues = () => {
         <div style={{height: '93.3vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0}}>
             <Dialog disableEscapeKeyDown open={windowOpen}>
                 <DialogTitle>{t('invoice.already_added')}</DialogTitle>
+                <DialogActions>
+                    <Button onClick={handleConfirm}>OK</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog disableEscapeKeyDown open={windowErrorOpen}>
+                <DialogTitle>{t('invoice.error')}</DialogTitle>
                 <DialogActions>
                     <Button onClick={handleConfirm}>OK</Button>
                 </DialogActions>
@@ -229,7 +241,7 @@ const AddInvoiceValues = () => {
 
             <Dialog
                 open={addInvoiceConfirmOpen}
-                onClose={handleaddingInvoiceConfirmClose}>
+                onClose={handleAddingInvoiceConfirmClose}>
                 <DialogTitle>
                     {t('invoice.confirm')}
                 </DialogTitle>
