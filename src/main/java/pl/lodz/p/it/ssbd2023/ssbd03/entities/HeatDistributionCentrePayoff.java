@@ -7,6 +7,7 @@ import lombok.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
@@ -18,6 +19,9 @@ import java.time.LocalDate;
                 @Index(name = "heat_distribution_centre_pay_off_heat_distribution_centre_id", columnList = "heat_distribution_centre_id"),
                 @Index(name = "heat_distribution_centre_pay_off_manager_id", columnList = "manager_id")
         })
+@NamedQueries({
+        @NamedQuery(name = "HeatDistributionCentrePayoff.getLastHeatDistributionCentrePayoff", query = "SELECT k FROM HeatDistributionCentrePayoff k WHERE k.id = (SELECT MAX(k2.id) FROM HeatDistributionCentrePayoff k2)")
+})
 public class HeatDistributionCentrePayoff extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,4 +50,13 @@ public class HeatDistributionCentrePayoff extends AbstractEntity implements Seri
     @ManyToOne
     @JoinColumn(name = "manager_id", updatable = false, referencedColumnName = "id")
     private Manager manager;
+
+    public HeatDistributionCentrePayoff(BigDecimal consumption, BigDecimal consumptionCost, LocalDate time, BigDecimal heatingAreaFactor,Manager manager,HeatDistributionCentre heatDistributionCentre) {
+        this.consumptionCost=consumption;
+        this.consumption=consumptionCost;
+        this.date=time;
+        this.heatingAreaFactor=heatingAreaFactor;
+        this.manager = manager;
+        this.heatDistributionCentre= heatDistributionCentre;
+    }
 }

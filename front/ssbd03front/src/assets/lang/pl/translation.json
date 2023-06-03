@@ -262,6 +262,10 @@
     "token":
     {
       "result_not_found" : "Błędny żeton"
+    },
+    "heat_distribution_centre":
+    {
+      "overwriting": "Nie można wprowadzić wartości dwa razy w jednym miesiącu"
     }
   },
   "buildingFromList" :

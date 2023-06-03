@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services;
 
 import jakarta.ejb.Local;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.CommonManagerLocalInterface;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 
 import java.math.BigDecimal;
 
@@ -14,7 +15,7 @@ public interface HeatDistributionCentreService extends CommonManagerLocalInterfa
 
     void modifyConsumption(BigDecimal consumptionValue);
 
-    void modifyConsumptionCost(BigDecimal consumptionCostValue);
+    void addConsumptionCost(BigDecimal consumption, BigDecimal consumptionCost, BigDecimal heatingAreaFactor, Manager manager);
 
     void addHeatingAreaFactor(BigDecimal heatingAreaFactor);
 

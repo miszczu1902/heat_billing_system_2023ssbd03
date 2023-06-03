@@ -214,25 +214,21 @@
   {
     "token_not_valid_message": "Your session expired, you need to authenticate again"
   },
-  "exception":
-  {
-    "error":
-    {
+  "exception": {
+    "error": {
       "unknown": "ERROR_UNKNOWN",
-      "general_persistence":"ERROR_GENERAL_PERSISTENCE",
+      "general_persistence": "ERROR_GENERAL_PERSISTENCE",
       "optimistic_lock": "ERROR_OPTIMISTIC_LOCK",
       "access_denied": "ERROR_ACCESS_DENIED",
       "transaction_rolledback": "ERROR_TRANSACTION_ROLLEDBACK",
       "account_not_registered": "ERROR_ACCOUNT_NOT_REGISTERED"
     },
-    "password":
-    {
+    "password": {
       "not_same_message": "Passwords are not the same",
       "old_and_new_same": "Old and new passwords are the same",
       "old_incorrect": "Old password is incorrect"
     },
-    "account":
-    {
+    "account": {
       "email_not_unique": "Email not unique",
       "username_not_unique": "Username not unique",
       "phone_number_not_unique": "Phone number not unique",
@@ -259,9 +255,12 @@
       "etag_signer": "Cannot sign with eTag",
       "not_valid_token": "Can not verify token."
     },
-    "token":
+    "token": {
+      "result_not_found": "token not found"
+    },
+    "heat_distribution_centre":
     {
-      "result_not_found" : "token not found"
+      "overwriting": "Values can't be added twice a month"
     }
   },
   "buildingFromList" :

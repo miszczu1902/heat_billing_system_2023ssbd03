@@ -1,14 +1,16 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.cdi.endpoints;
+
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ResetPasswordDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.AddConsumptionDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
+import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.HeatDistributionCentreService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 
@@ -21,6 +23,9 @@ public class HeatDistributionCentreEndpoint {
 
     @Inject
     private HeatDistributionCentreService heatDistributionCentreService;
+
+    @Inject
+    private AccountService accountService;
 
     @Inject
     MessageSigner messageSigner;
@@ -59,11 +64,12 @@ public class HeatDistributionCentreEndpoint {
     //MOW 14
     @Path("/parameters/consumption-cost")
     @Produces(MediaType.APPLICATION_JSON)
-    @PATCH
+    @POST
     @RolesAllowed({Roles.MANAGER})
-    public Response modifyConsumptionCost(BigDecimal consumptionCostValue) {
-        heatDistributionCentreService.modifyConsumptionCost(consumptionCostValue);
-        return Response.status(200).build();
+    public Response addConsumptionCost(@Valid AddConsumptionDTO addConsumptionDTO) {
+        final Manager manager = accountService.getManager();
+        heatDistributionCentreService.addConsumptionCost(addConsumptionDTO.getConsumption(), addConsumptionDTO.getConsumptionCost(), addConsumptionDTO.getHeatingAreaFactor(), manager);
+        return Response.noContent().build();
     }
 
     //MOW 15
