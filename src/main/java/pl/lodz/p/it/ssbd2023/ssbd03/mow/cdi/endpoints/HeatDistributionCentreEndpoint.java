@@ -1,20 +1,27 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.cdi.endpoints;
 
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.AddConsumptionDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.HeatDistributionCentreService;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 
 import java.math.BigDecimal;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Path("/heat-distribution-centre")
@@ -26,6 +33,8 @@ public class HeatDistributionCentreEndpoint {
 
     @Inject
     private AccountService accountService;
+
+    private int txRetries = Integer.parseInt(LoadConfig.loadPropertyFromConfig("tx.retries"));
 
     @Inject
     MessageSigner messageSigner;
@@ -61,25 +70,33 @@ public class HeatDistributionCentreEndpoint {
         return Response.status(200).build();
     }
 
-    //MOW 14
+    //MOW 14,15,16
     @Path("/parameters/consumption-cost")
     @Produces(MediaType.APPLICATION_JSON)
     @POST
     @RolesAllowed({Roles.MANAGER})
-    public Response addConsumptionCost(@Valid AddConsumptionDTO addConsumptionDTO) {
+    public Response addConsumptionFromInvoice(@NotNull @Valid AddConsumptionDTO addConsumptionDTO) {
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
         final Manager manager = accountService.getManager();
-        heatDistributionCentreService.addConsumptionCost(addConsumptionDTO.getConsumption(), addConsumptionDTO.getConsumptionCost(), addConsumptionDTO.getHeatingAreaFactor(), manager);
-        return Response.noContent().build();
-    }
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                heatDistributionCentreService.addConsumptionFromInvoice(addConsumptionDTO.getConsumption(), addConsumptionDTO.getConsumptionCost(), addConsumptionDTO.getHeatingAreaFactor(), manager);
 
-    //MOW 15
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/add-factor")
-    @RolesAllowed({Roles.MANAGER})
-    public Response addHeatingAreaFactor(BigDecimal heatingAreaFactor) {
-        heatDistributionCentreService.addHeatingAreaFactor(heatingAreaFactor);
-        return Response.noContent().build();
-    }
+                rollbackTX = heatDistributionCentreService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+            } catch (OptimisticLockAppException | EJBTransactionRolledbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
 
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
+        return Response.status(Response.Status.CREATED).build();
+    }
 }

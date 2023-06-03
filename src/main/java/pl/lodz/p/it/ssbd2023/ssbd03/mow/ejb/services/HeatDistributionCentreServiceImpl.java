@@ -64,9 +64,9 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public void addConsumptionCost(BigDecimal consumption, BigDecimal consumptionCost, BigDecimal heatingAreaFactor, Manager manager) {
-        HeatDistributionCentrePayoff heatDistributionCentrePayoff1 = heatDistributionCentrePayoffFacade.getLast();
-        if (heatDistributionCentrePayoff1.getDate().getMonth().equals(LocalDate.now().getMonth())) {
+    public void addConsumptionFromInvoice(BigDecimal consumption, BigDecimal consumptionCost, BigDecimal heatingAreaFactor, Manager manager) {
+        HeatDistributionCentrePayoff heatDistributionCentrePayoffLast = heatDistributionCentrePayoffFacade.getLast();
+        if (heatDistributionCentrePayoffLast.getDate().getMonth().equals(LocalDate.now().getMonth())) {
             throw AppException.consumptionAddException();
         }
         List<HeatDistributionCentre> heatDistributionCentre = heatDistributionCentreFacade.getListOfHeatDistributionCentre();
@@ -74,12 +74,4 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
         heatDistributionCentrePayoffFacade.create(heatDistributionCentrePayoff);
     }
-
-    @Override
-    @RolesAllowed({Roles.MANAGER})
-    public void addHeatingAreaFactor(BigDecimal heatingAreaFactor) {
-        throw new UnsupportedOperationException();
-    }
-
-
 }
