@@ -226,20 +226,30 @@ const NavbarPanel = () => {
                 </DialogActions>
             </Dialog>
 
+
+
             <AppBar position="static" style={{backgroundColor: navbarColor}}>
                 <Toolbar>
                     <Icon sx={{width: '3%', height: '3%', marginLeft: '1vh', marginRight: '1vh', cursor: 'pointer'}}>
                         <img src={Logo} alt="Logo" onClick={() => navigate('/')}/>
                     </Icon>
+                    <ButtonGroup variant="contained" aria-label="outlined primary button group">
                     {
                         (currentRole === ADMIN || currentRole === MANAGER) &&
-                        <Typography variant="h6" onClick={() => navigate('/accounts')}
+                        <Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/accounts')}
                                     sx={{marginLeft: '1vh', cursor: 'pointer'}}>
                             {t('navbar.account_list')}
-                        </Typography>
+                        </Button>
                     }
-
-                    <Typography variant="h6" sx={{
+                    {
+                        (currentRole === MANAGER) &&
+                        <Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/buildings')}
+                                    sx={{marginLeft: '1vh', cursor: 'pointer'}}>
+                            {t('navbar.building_list')}
+                        </Button>
+                    }
+                    </ButtonGroup>
+                    <Typography variant="subtitle1" sx={{
                         marginRight: '1vh',
                         marginLeft: 'auto'
                     }}>{localStorage.getItem("token") && t('navbar.logged_as') + username}</Typography>

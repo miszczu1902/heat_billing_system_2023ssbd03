@@ -5,6 +5,7 @@
     "login": "Login",
     "log_out": "Log out",
     "account_list": "Account list",
+    "building_list": "Building list",
     "languages":
     {
       "title": "Change language",
@@ -262,5 +263,30 @@
     {
       "result_not_found" : "token not found"
     }
-  }
+  },
+  "buildingFromList" :
+    {
+      "id" : "Building id",
+      "created_by" : "Created by",
+      "total_area" : "Building total area [sq m]",
+      "communal_area_aggregate" : "Building communal area [sq m]",
+      "street" : "Street",
+      "building_number" : "Number",
+      "city" : "City",
+      "postal_code" : "Postal code",
+      "building_add" : "Add new building",
+      "building_save" : "Save new building",
+      "building_total_area" : "Enter building total area, including communal area",
+      "building_communal_area_aggregate" : "Enter sum of building communal area",
+      "building_address" : "Enter building address",
+      "building_add_confirm" : "Are you sure you want to add new building?",
+      "building_add_success" : "Building added successfully",
+      "building_add_failure" : "An error occurred while adding building",
+      "total_area_error" : "Wrong total area format, use only numbers and dot (e.g. 100.00)",
+      "communal_area_aggregate_error" : "Wrong communal area format, use only numbers and dot (e.g. 100.00)",
+      "street_error" : "Wrong street format, use only letters, numbers (e.g. 1st Avenue) and contains up to 32 characters",
+      "building_number_error" : "Wrong building number format, use only letters and numbers (e.g. 1A)",
+      "city_error" : "Wrong city format, use only letters, spaces (e.g. New York) and contains up to 32 characters",
+      "postal_code_error" : "Wrong postal code format, use only numbers and dash (e.g. 00-000)"
+    }
 }

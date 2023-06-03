@@ -26,6 +26,7 @@ import {useEffect} from "react";
 import NotFoundPage from "../components/notFound/NotFoundPage";
 import Logout from "../components/login/Logout";
 import decode from "jwt-decode";
+import BuildingsList from '../components/building/BuildingsList';
 
 interface PrivateRouteProps {
     component: React.ComponentType<any>;
@@ -154,6 +155,16 @@ const router = createBrowserRouter([
             {
                 path: '/accounts/self/confirm-new-email/:activationToken',
                 element: <PrivateRoute component={ConfirmEmail} accessLevels={[ADMIN, MANAGER, OWNER, GUEST]}/>
+            },
+            {
+                path: '/buildings',
+                element: (<><NavbarPanel/><Outlet/></>),
+                children: [
+                    {
+                        path: '/buildings',
+                        element: <PrivateRoute component={BuildingsList} accessLevels={[ADMIN, MANAGER]}/>
+                    },
+                ]
             }
         ]
     }

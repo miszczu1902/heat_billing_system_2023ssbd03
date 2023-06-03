@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,4 +44,12 @@ public class Building extends AbstractEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "heat_distribution_centre_id", updatable = false, referencedColumnName = "id")
     private HeatDistributionCentre heatDistributionCentre;
+
+    public Building(BigDecimal totalArea, BigDecimal communalAreaAggregate, Address address, List<Place> places, HeatDistributionCentre heatDistributionCentre) {
+        this.totalArea = totalArea;
+        this.communalAreaAggregate = communalAreaAggregate;
+        this.address = address;
+        this.places = places;
+        this.heatDistributionCentre = heatDistributionCentre;
+    }
 }

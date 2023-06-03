@@ -21,7 +21,7 @@ drop table IF EXISTS heat_distribution_centre;
 create table address (
     id BIGINT PRIMARY KEY,
     street VARCHAR(32) NOT NULL,
-    building_number SMALLINT NOT NULL,
+    building_number VARCHAR(32) NOT NULL,
     city VARCHAR(32) NOT NULL,
     postal_code VARCHAR(6) NOT NULL CHECK (postal_code ~* '^\d{2}-\d{3}$'),
     version BIGINT NOT NULL

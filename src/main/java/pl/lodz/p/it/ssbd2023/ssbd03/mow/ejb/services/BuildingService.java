@@ -14,11 +14,11 @@ public interface BuildingService extends CommonManagerLocalInterface {
 
     Building getBuilding(String buildingId);
 
-    List<Building> getAllBuildings();
+    List<Building> getAllBuildings(int pageNumber, int pageSize);
 
     void modifyBuilding(String buildingId);
 
-    void addBuilding();
+    void addBuilding(Building building);
 
     void addPlaceToBuilding();
 }
