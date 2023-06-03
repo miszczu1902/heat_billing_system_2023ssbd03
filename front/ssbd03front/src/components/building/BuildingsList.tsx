@@ -206,7 +206,6 @@ const BuildingsList = () => {
         );
     };
 
-
     return (
         <div style={{ height: '93.3vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0 }}>
             <Grid container>
@@ -223,9 +222,6 @@ const BuildingsList = () => {
                 <Table aria-label='simple table'>
                     <TableHead>
                         <TableRow>
-                            <TableCell>
-                                {t('buildingFromList.id')}
-                            </TableCell>
                             <TableCell>
                                 {t('buildingFromList.created_by')}
                             </TableCell>
@@ -255,7 +251,6 @@ const BuildingsList = () => {
                     <TableBody>
                         {buildings.map((buildings) => (
                             <TableRow key={buildings.id}>
-                                <TableCell component='th' scope='row'>{buildings.id}</TableCell>
                                 <TableCell>{buildings.createdBy}</TableCell>
                                 <TableCell>{buildings.totalArea}</TableCell>
                                 <TableCell>{buildings.communalAreaAggregate}</TableCell>
