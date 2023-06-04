@@ -47,7 +47,7 @@ public class HeatDistributionCentrePayoffFacade extends AbstractFacade<HeatDistr
     }
 
     @RolesAllowed({Roles.MANAGER})
-    public boolean checkIfRecordForThisMonthExists() {
+    public boolean checkIfRecordForThisMonthNotExists() {
         TypedQuery<HeatDistributionCentrePayoff> tq = em.createNamedQuery("HeatDistributionCentrePayoff.getPayoffByDate", HeatDistributionCentrePayoff.class);
         tq.setParameter("year", LocalDate.now().getYear());
         tq.setParameter("month", LocalDate.now().getMonthValue());
