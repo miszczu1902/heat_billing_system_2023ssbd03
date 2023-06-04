@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.AbstractDTO;
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

@@ -70,13 +70,12 @@ public class BalanceFacade extends AbstractFacade<AnnualBalance> {
     }
 
     @RolesAllowed({Roles.MANAGER})
-    public List<AnnualBalance> getListOfAnnualBalances(int pageNumber, int pageSize, List<Place> placeList) {
-        List<Long> idList = new ArrayList<>();
+    public List<AnnualBalance> getListOfAnnualBalancesFromBuilding(int pageNumber, int pageSize, List<Place> placeList) {
+       final List<Long> idList = new ArrayList<>();
         for (Place place : placeList) {
-            Long id = place.getId();
-            idList.add(id);
+            idList.add(place.getId());
         }
-        TypedQuery<AnnualBalance> tq = em.createNamedQuery("AnnualBalance.findAllByPlace", AnnualBalance.class);
+        TypedQuery<AnnualBalance> tq = em.createNamedQuery("AnnualBalance.findAllBalancesByPlacesId", AnnualBalance.class);
         tq.setParameter("ids", idList);
         if (pageNumber != 0) {
             tq.setFirstResult((pageNumber - 1) * pageSize);

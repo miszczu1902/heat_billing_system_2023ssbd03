@@ -21,8 +21,6 @@ import java.util.List;
         })
 @NamedQueries({
         @NamedQuery(name = "Building.findAll", query = "SELECT k FROM Building k"),
-        @NamedQuery(name = "Building.findById", query = "SELECT k FROM Building k WHERE k.id = :id")
-
 })
 public class Building extends AbstractEntity implements Serializable {
     @Id

@@ -12,10 +12,6 @@ const AnnualBalances = () => {
     const buildingId = useParams().buildingId;
     const token = 'Bearer ' + localStorage.getItem("token");
     const [reports, setReports] = useState<BalancesFromList[]>([]);
-    const [pageNumber, setPageNumber] = useState(0);
-    const [size, setSize] = useState(1);
-    const [sortBy, setSortBy] = useState('username');
-    const [total, setTotal] = useState<number>(0);
 
     const fetchData = async () => {
         axios.get(`${API_URL}/balances/all-reports/${buildingId}`, {
@@ -24,7 +20,6 @@ const AnnualBalances = () => {
             }
         }).then(response => {
             setReports(response.data);
-            setTotal(response.data.length);
         }).catch(error => {
             if (error.response.status == 403) navigate('/');
         })
@@ -32,24 +27,7 @@ const AnnualBalances = () => {
 
     useEffect(() => {
         fetchData();
-    }, [sortBy, pageNumber, size]);
-
-    const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-        setPageNumber(newPage);
-    };
-
-    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        setSize(parseInt(event.target.value, size));
-        setPageNumber(pageNumber);
-    };
-
-    const handleSort = (column: string) => {
-        setSortBy(column);
-    };
-
-    const goToAccount = (username: string) => {
-        navigate('/accounts/' + username);
-    }
+    }, []);
 
     return (
         <TableContainer component={Paper}>
@@ -78,8 +56,6 @@ const AnnualBalances = () => {
                         <TableCell>
                             {t('balances.postal_code')}
                         </TableCell>
-
-
                     </TableRow>
                 </TableHead>
                 <TableBody>

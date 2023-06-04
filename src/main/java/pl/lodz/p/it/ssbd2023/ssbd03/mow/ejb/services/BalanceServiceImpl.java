@@ -52,7 +52,7 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
     @RolesAllowed({Roles.MANAGER})
     public List<AnnualBalance> getAllReports(int pageNumber, int pageSize, String buildingId) {
 
-        return balanceFacade.getListOfAnnualBalances(pageNumber, pageSize,placeFacade.findByBuildingId(Long.parseLong(buildingId)));
+        return balanceFacade.getListOfAnnualBalancesFromBuilding(pageNumber, pageSize, placeFacade.findPlacesByBuildingId(Long.parseLong(buildingId)));
     }
 
     @Override
