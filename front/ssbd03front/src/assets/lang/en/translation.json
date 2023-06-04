@@ -287,7 +287,8 @@
       "street_error" : "Wrong street format, use only letters, numbers (e.g. 1st Avenue) and contains up to 32 characters",
       "building_number_error" : "Wrong building number format, use only letters and numbers (e.g. 1A)",
       "city_error" : "Wrong city format, use only letters, spaces (e.g. New York) and contains up to 32 characters",
-      "postal_code_error" : "Wrong postal code format, use only numbers and dash (e.g. 00-000)"
+      "postal_code_error" : "Wrong postal code format, use only numbers and dash (e.g. 00-000)",
+      "add_building_error" : "Cannot add building due to input errors"
     },
   "invoice":
   {

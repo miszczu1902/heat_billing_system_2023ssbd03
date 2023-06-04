@@ -41,6 +41,7 @@ public class BuildingMapper {
                         createBuildingDTO.getCity(),
                         createBuildingDTO.getPostalCode()),
                 new ArrayList<>(),
+                //pozostaje dodac węzeł, ale nie wiedziałam jaki, bo chyba nie mamy finalnego obiektu węzła jeszcze
                 null
         );
     }
