@@ -6,7 +6,7 @@
     "log_out": "Wyloguj się",
     "account_list": "Lista kont",
     "building_list": "Lista budynków",
-    "manage": "zarządzaj",
+    "manage": "Zarządzaj",
     "languages":
     {
       "title": "Zmień język",
@@ -308,6 +308,7 @@
     "successfully_added": "Dane z faktury zostały wprowadzone",
     "enter_data": "Wprowadź dane z elektrociepłowni",
     "confirm": "Czy na pewno wprowadziłeś poprawne dane? Tej operacji nie można cofnąć",
-    "error": "Wystąpił błąd podczas wprowadzania danych"
+    "error": "Wystąpił błąd podczas wprowadzania danych",
+    "not_exists": "Wystąpił błąd z pobraniem informacji o węźle cieplnym"
   }
 }

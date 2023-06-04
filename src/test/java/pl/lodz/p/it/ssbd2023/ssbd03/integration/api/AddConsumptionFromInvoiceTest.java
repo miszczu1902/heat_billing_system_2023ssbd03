@@ -53,7 +53,7 @@ public class AddConsumptionFromInvoiceTest extends BasicIntegrationConfigTest {
         assertEquals(201, statusCode, "check if value was added");
 
         statusCode = addConsumption(addConsumptionDTO);
-        assertEquals(403, statusCode, "check if error appeared");
+        assertEquals(409, statusCode, "check if error appeared");
     }
 
     @Test

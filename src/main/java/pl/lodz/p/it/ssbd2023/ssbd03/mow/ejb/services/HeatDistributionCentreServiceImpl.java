@@ -65,11 +65,13 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @Override
     @RolesAllowed({Roles.MANAGER})
     public void addConsumptionFromInvoice(BigDecimal consumption, BigDecimal consumptionCost, BigDecimal heatingAreaFactor, Manager manager) {
-        HeatDistributionCentrePayoff heatDistributionCentrePayoffLast = heatDistributionCentrePayoffFacade.getLast();
-        if (heatDistributionCentrePayoffLast.getDate().getMonth().equals(LocalDate.now().getMonth())) {
+        if (heatDistributionCentrePayoffFacade.getLast().getDate().getMonth().equals(LocalDate.now().getMonth()) && heatDistributionCentrePayoffFacade.getLast().getDate().getYear() == LocalDate.now().getYear()) {
             throw AppException.consumptionAddException();
         }
-        List<HeatDistributionCentre> heatDistributionCentre = heatDistributionCentreFacade.getListOfHeatDistributionCentre();
+        final List<HeatDistributionCentre> heatDistributionCentre = heatDistributionCentreFacade.getListOfHeatDistributionCentre();
+        if (heatDistributionCentre.isEmpty()) {
+            throw AppException.noHeatDistributionCentreException();
+        }
         HeatDistributionCentrePayoff heatDistributionCentrePayoff = new HeatDistributionCentrePayoff(consumption, consumptionCost, LocalDate.now(), heatingAreaFactor, manager, heatDistributionCentre.get(0));
 
         heatDistributionCentrePayoffFacade.create(heatDistributionCentrePayoff);

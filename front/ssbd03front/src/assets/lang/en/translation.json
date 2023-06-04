@@ -303,6 +303,8 @@
     "successfully_added": "Data from invoice was successfully added",
     "enter_data": "Enter data from heat distribution centre",
     "confirm": "Are you sure inserted data is correct? You can't redo this operation",
-    "error": "An error occured while inserting data"
+    "error": "An error occured while inserting data",
+    "not_exists": "An error occured while tried to get information about heat distribution centre"
+
   }
 }
