@@ -6,6 +6,7 @@
     "log_out": "Wyloguj się",
     "account_list": "Lista kont",
     "building_list": "Lista budynków",
+    "manage": "Zarządzaj",
     "languages":
     {
       "title": "Zmień język",
@@ -262,6 +263,10 @@
     "token":
     {
       "result_not_found" : "Błędny żeton"
+    },
+    "heat_distribution_centre":
+    {
+      "overwriting": "Nie można wprowadzić wartości dwa razy w jednym miesiącu"
     }
   },
   "buildingFromList" :
@@ -289,5 +294,22 @@
       "city_error" : "Nazwa miasta musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery, cyfry, spacje oraz znaki: - .",
       "postal_code_error" : "Kod pocztowy musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery, cyfry oraz znak -" ,
       "add_building_error" : "Nie można dodać budynku z powodu błędów w formularzu"
-    }
+    },
+  "invoice":
+  {
+    "consumption": "Zużycie ciepła",
+    "consumptionCost": "Koszt zużytego ciepła",
+    "heatingAreaFactor": "Współczynnik zużycia ciepła",
+    "save": "Zapisz",
+    "close": "Zamknij",
+    "fill_data": "Wprowadź dane z faktury",
+    "wrong_value_error": "Wartość musi być z przedziału 0.00 - 1.00",
+    "wrong_consumption_value_error": "Wartość musi być w formacie x.xx oraz przed kropką może znajdować się maksymalnie 8 cyfr",
+    "already_added": "Faktura została już wprowadzona w tym miesiącu",
+    "successfully_added": "Dane z faktury zostały wprowadzone",
+    "enter_data": "Wprowadź dane z elektrociepłowni",
+    "confirm": "Czy na pewno wprowadziłeś poprawne dane? Tej operacji nie można cofnąć",
+    "error": "Wystąpił błąd podczas wprowadzania danych",
+    "not_exists": "Wystąpił błąd z pobraniem informacji o węźle cieplnym"
+  }
 }

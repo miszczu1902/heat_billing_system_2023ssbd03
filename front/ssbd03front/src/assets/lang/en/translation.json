@@ -6,6 +6,7 @@
     "log_out": "Log out",
     "account_list": "Account list",
     "building_list": "Building list",
+    "manage": "Manage",
     "languages":
     {
       "title": "Change language",
@@ -214,25 +215,21 @@
   {
     "token_not_valid_message": "Your session expired, you need to authenticate again"
   },
-  "exception":
-  {
-    "error":
-    {
+  "exception": {
+    "error": {
       "unknown": "ERROR_UNKNOWN",
-      "general_persistence":"ERROR_GENERAL_PERSISTENCE",
+      "general_persistence": "ERROR_GENERAL_PERSISTENCE",
       "optimistic_lock": "ERROR_OPTIMISTIC_LOCK",
       "access_denied": "ERROR_ACCESS_DENIED",
       "transaction_rolledback": "ERROR_TRANSACTION_ROLLEDBACK",
       "account_not_registered": "ERROR_ACCOUNT_NOT_REGISTERED"
     },
-    "password":
-    {
+    "password": {
       "not_same_message": "Passwords are not the same",
       "old_and_new_same": "Old and new passwords are the same",
       "old_incorrect": "Old password is incorrect"
     },
-    "account":
-    {
+    "account": {
       "email_not_unique": "Email not unique",
       "username_not_unique": "Username not unique",
       "phone_number_not_unique": "Phone number not unique",
@@ -259,9 +256,12 @@
       "etag_signer": "Cannot sign with eTag",
       "not_valid_token": "Can not verify token."
     },
-    "token":
+    "token": {
+      "result_not_found": "token not found"
+    },
+    "heat_distribution_centre":
     {
-      "result_not_found" : "token not found"
+      "overwriting": "Values can't be added twice a month"
     }
   },
   "buildingFromList" :
@@ -289,5 +289,23 @@
       "city_error" : "Wrong city format, use only letters, spaces (e.g. New York) and contains up to 32 characters",
       "postal_code_error" : "Wrong postal code format, use only numbers and dash (e.g. 00-000)",
       "add_building_error" : "Cannot add building due to input errors"
-    }
+    },
+  "invoice":
+  {
+    "consumption": "Heat consumption value",
+    "consumptionCost": "Heat consumption cost value",
+    "heatingAreaFactor": "Heat consumption factor",
+    "save": "Save",
+    "close": "Close",
+    "fill_data": "Insert data from invoice",
+    "wrong_value_error": "Value must be between 0.00 - 1.00",
+    "wrong_consumption_value_error": "Value must be in format x.xx and not higher than 8 digits before pointer",
+    "already_added": "Invoice was already added this month",
+    "successfully_added": "Data from invoice was successfully added",
+    "enter_data": "Enter data from heat distribution centre",
+    "confirm": "Are you sure inserted data is correct? You can't redo this operation",
+    "error": "An error occured while inserting data",
+    "not_exists": "An error occured while tried to get information about heat distribution centre"
+
+  }
 }

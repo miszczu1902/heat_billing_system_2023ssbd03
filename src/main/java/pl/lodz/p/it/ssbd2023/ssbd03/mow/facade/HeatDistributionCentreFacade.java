@@ -9,18 +9,18 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatDistributionCentrePayoff;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatDistributionCentre;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
-public class HeatDistributionCentrePayoffFacade extends AbstractFacade<HeatDistributionCentrePayoff> {
+public class HeatDistributionCentreFacade extends AbstractFacade<HeatDistributionCentre> {
     @PersistenceContext(unitName = "ssbd03mowPU")
     private EntityManager em;
 
-    public HeatDistributionCentrePayoffFacade() {
-        super(HeatDistributionCentrePayoff.class);
+    public HeatDistributionCentreFacade() {
+        super(HeatDistributionCentre.class);
     }
 
     @Override
@@ -30,28 +30,25 @@ public class HeatDistributionCentrePayoffFacade extends AbstractFacade<HeatDistr
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public void edit(HeatDistributionCentrePayoff entity) {
+    public void edit(HeatDistributionCentre entity) {
         super.edit(entity);
     }
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public void create(HeatDistributionCentrePayoff entity) {
+    public void create(HeatDistributionCentre entity) {
         super.create(entity);
     }
 
     @Override
     @RolesAllowed(Roles.MANAGER)
-    public HeatDistributionCentrePayoff find(Object id) {
+    public HeatDistributionCentre find(Object id) {
         return super.find(id);
     }
 
     @RolesAllowed({Roles.MANAGER})
-    public boolean checkIfRecordForThisMonthNotExists() {
-        TypedQuery<HeatDistributionCentrePayoff> tq = em.createNamedQuery("HeatDistributionCentrePayoff.getPayoffByDate", HeatDistributionCentrePayoff.class);
-        tq.setParameter("year", LocalDate.now().getYear());
-        tq.setParameter("month", LocalDate.now().getMonthValue());
-
-        return tq.getResultList().isEmpty();
+    public List<HeatDistributionCentre> getListOfHeatDistributionCentre() {
+        TypedQuery<HeatDistributionCentre> tq = em.createNamedQuery("HeatDistributionCentre.getListOfHeatDistributionCentre", HeatDistributionCentre.class);
+        return tq.getResultList();
     }
 }
