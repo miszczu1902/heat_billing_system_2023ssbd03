@@ -143,7 +143,7 @@ const BuildingsList = () => {
     };
 
     const handleBuildingNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const regex = /^[0-9]+[a-zA-Z]?$/;
+        const regex = /^\d+(\/\d+)?[A-Za-z]?$/;
         if (validator.matches(event.target.value, regex)) {
             setBuildingNumber(event.target.value);
             setBuildingNumberValid(true);
@@ -209,7 +209,8 @@ const BuildingsList = () => {
         }
         ).catch(error => {
             console.log(error);
-            if (error.response.status == 403) navigate('/');
+            setNewBuildingConfirmOpen(false);
+            setOpen(true);
         }
         );
     } else {

@@ -26,7 +26,7 @@ public class CreateBuildingDTO implements Serializable, Signable {
     @Size(max = 32, message = "Max length for street is 32")
     private String street;
 
-    @Pattern(regexp = "^\\d+[a-zA-Z]?$", message = "Invalid number format")
+    @Pattern(regexp = "^\\d+(\\/\\d+)?[A-Za-z]?$", message = "Invalid number format")
     private String buildingNumber;
 
     @Size(max = 32, message = "Max length for city is 32")
