@@ -6,13 +6,16 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.AnnualBalance;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.MonthPayoff;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 
 import java.time.Month;
+import java.util.ArrayList;
 import java.util.List;
 
 @Stateless
@@ -60,5 +63,22 @@ public class BalanceFacade extends AbstractFacade<AnnualBalance> {
     @RolesAllowed({Roles.MANAGER})
     public AnnualBalance find(Object id) {
         return super.find(id);
+    }
+
+    @RolesAllowed({Roles.MANAGER})
+    public List<AnnualBalance> getListOfAnnualBalances(int pageNumber, int pageSize, List<Place> placeList) {
+        List<Long> idList = new ArrayList<>();
+        for (Place place : placeList) {
+            Long id = place.getId();
+            idList.add(id);
+        }
+        TypedQuery<AnnualBalance> tq = em.createNamedQuery("AnnualBalance.findAllByPlace", AnnualBalance.class);
+        tq.setParameter("ids",idList);
+        if (pageNumber != 0) {
+            tq.setFirstResult((pageNumber - 1) * pageSize);
+            tq.setMaxResults(pageSize);
+        }
+
+        return tq.getResultList();
     }
 }

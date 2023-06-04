@@ -12,14 +12,23 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatingPlaceAndCommunalAreaAdvance;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterAdvance;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.MonthPayoff;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BalanceFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BuildingFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class BalanceServiceImpl extends AbstractService implements BalanceService {
     @Inject
     private BalanceFacade balanceFacade;
+
+    @Inject
+    private BuildingFacade buildingFacade;
+
+    @Inject
+    private PlaceFacade placeFacade;
 
     @Override
     @RolesAllowed({Roles.GUEST, Roles.MANAGER, Roles.OWNER})
@@ -41,8 +50,9 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public AnnualBalance getAllReports() {
-        throw new UnsupportedOperationException();
+    public List<AnnualBalance> getAllReports(int pageNumber, int pageSize, String buildingId) {
+
+        return balanceFacade.getListOfAnnualBalances(pageNumber, pageSize,placeFacade.findByBuildingId(Long.parseLong(buildingId)));
     }
 
     @Override

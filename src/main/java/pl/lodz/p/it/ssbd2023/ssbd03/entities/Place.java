@@ -23,6 +23,9 @@ import java.util.List;
                 @UniqueConstraint(
                         name = "place_number_building_id_unique_constraint", columnNames = {"place_number", "building_id"})
         })
+@NamedQueries({
+        @NamedQuery(name = "Place.findByBuildingId", query = "SELECT k FROM Place k WHERE k.building.id = :id"),
+})
 public class Place extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

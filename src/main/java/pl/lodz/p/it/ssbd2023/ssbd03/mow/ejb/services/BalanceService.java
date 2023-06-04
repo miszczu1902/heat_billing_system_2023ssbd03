@@ -15,6 +15,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterAdvance;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.MonthPayoff;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Local
 public interface BalanceService extends CommonManagerLocalInterface {
@@ -25,7 +26,7 @@ public interface BalanceService extends CommonManagerLocalInterface {
 
     AnnualBalance getUserReport(String placeId);
 
-    AnnualBalance getAllReports();
+    List<AnnualBalance> getAllReports(int pageNumber, int pageSize,String buildingId);
 
     AnnualBalance getSelfReports();
 
