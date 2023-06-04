@@ -20,14 +20,13 @@ import EditUserEmail from "../components/email/EditUserEmail";
 import OwnerProfile from "../components/account/OwnerProfile";
 import ManagerProfile from "../components/account/ManagerProfile";
 import AdminProfile from "../components/account/AdminProfile";
-import {useCookies} from "react-cookie";
 import {ADMIN, GUEST, MANAGER, OWNER} from "../consts";
 import {useEffect} from "react";
 import NotFoundPage from "../components/notFound/NotFoundPage";
 import Logout from "../components/login/Logout";
-import decode from "jwt-decode";
 import BuildingsList from '../components/building/BuildingsList';
 import AddInvoiceValues from '../components/heatDistributionCentrePayoff/AddInvoiceValues';
+import AnnualBalances from "../components/annualBalance/AnnualBalances";
 
 interface PrivateRouteProps {
     component: React.ComponentType<any>;
@@ -37,18 +36,16 @@ interface PrivateRouteProps {
 const PrivateRoute: React.FC<PrivateRouteProps> = ({component: Component, accessLevels, ...rest}) => {
     const userAccessLevel = localStorage.getItem("role");
     const navigate = useNavigate();
-    const token =localStorage.getItem("token");
+    const token = localStorage.getItem("token");
 
     useEffect(() => {
         if (token === null) {
-            localStorage.setItem("role",GUEST);
+            localStorage.setItem("role", GUEST);
         }
-        if ( userAccessLevel !== null&&!accessLevels.includes(userAccessLevel)) {
+        if (userAccessLevel !== null && !accessLevels.includes(userAccessLevel)) {
             navigate('/');
         }
     }, [localStorage.getItem("role")]);
-
-
     return <Component {...rest} />;
 };
 
@@ -164,6 +161,10 @@ const router = createBrowserRouter([
                     {
                         path: '/buildings',
                         element: <PrivateRoute component={BuildingsList} accessLevels={[ADMIN, MANAGER]}/>
+                    },
+                    {
+                        path: '/buildings/:buildingId',
+                        element: <PrivateRoute component={AnnualBalances} accessLevels={[ADMIN, MANAGER]}/>
                     }
                 ]
             },

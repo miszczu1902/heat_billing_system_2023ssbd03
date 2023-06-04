@@ -10,6 +10,7 @@ import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.BalanceService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.BalanceMapper;
 
 import java.util.logging.Logger;
 
@@ -52,12 +53,16 @@ public class BalanceEndpoint {
     }
 
     //MOW 3
-    @Path("/all-reports")
+    @Path("/all-reports/{buildingId}")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @RolesAllowed({Roles.MANAGER})
-    public Response getAllReports() {
-        return Response.ok().entity(balanceService.getAllReports()).build();
+    public Response getAllReports(@DefaultValue("0") @QueryParam("pageNumber") int pageNumber,
+                                  @DefaultValue("10") @QueryParam("pageSize") int pageSize,
+                                  @PathParam("buildingId") Long buildingId) {
+        return Response.ok().entity(balanceService.getAllReports(pageNumber, pageSize, buildingId).stream()
+                .map(BalanceMapper::balancesToAnnualBalancesForListDTO)
+                .toList()).build();
     }
 
     //MOW 9

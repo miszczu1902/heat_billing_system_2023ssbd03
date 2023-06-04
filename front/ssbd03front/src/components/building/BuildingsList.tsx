@@ -11,6 +11,7 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import IconViewList from "../icons/IconViewList";
+import AnnualBalancesIcon from "../icons/AnnualBalancesIcon";
 import axios from 'axios';
 import { API_URL } from '../../consts';
 import { BuildingFromList } from '../../types/buildingFromList';
@@ -182,6 +183,9 @@ const BuildingsList = () => {
     const handleCancel = () => {
         handleNewBuildingConfirmClose();
     };
+    const handleOpenAnnualBalanceList = (buildingNumber: number) => {
+        navigate('/buildings/'+buildingNumber);
+    };
 
     const handleClose = () => {
         setOpen(false);
@@ -258,6 +262,7 @@ const BuildingsList = () => {
                                 {t('buildingFromList.postal_code')}
                             </TableCell>
                             <TableCell></TableCell>
+                            <TableCell></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -277,6 +282,15 @@ const BuildingsList = () => {
                                         onClick={handleNewBuildingAddClose}
                                         aria-label="close">
                                         <IconViewList />
+                                    </IconButton>
+                                </TableCell>
+                                <TableCell>
+                                    <IconButton
+                                        edge="start"
+                                        color="inherit"
+                                        onClick={() => handleOpenAnnualBalanceList(buildings.id)}
+                                        aria-label="close">
+                                        <AnnualBalancesIcon />
                                     </IconButton>
                                 </TableCell>
                             </TableRow>

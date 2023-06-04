@@ -44,7 +44,6 @@ public class BuildingFacade extends AbstractFacade<Building> {
         super.remove(entity);
     }
 
-
     @RolesAllowed({Roles.MANAGER})
     public Building findById(){throw new UnsupportedOperationException();}
 
