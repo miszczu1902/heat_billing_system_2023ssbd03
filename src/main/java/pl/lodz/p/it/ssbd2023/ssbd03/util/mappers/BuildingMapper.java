@@ -4,6 +4,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateBuildingDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.BuildingDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -27,9 +28,14 @@ public class BuildingMapper {
     }
 
     public static Building createBuilding(CreateBuildingDTO createBuildingDTO) {
+        BigDecimal totalArea = new BigDecimal(createBuildingDTO.getTotalArea());
+        BigDecimal communalArea = new BigDecimal(createBuildingDTO.getCommunalAreaAggregate());
+        if (communalArea.compareTo(totalArea) >= 0 ) {
+            throw AppException.createCommunalAreaBiggerOrEqualTotalAreaException();
+        }
         return new Building(
-                new BigDecimal(createBuildingDTO.getTotalArea()),
-                new BigDecimal(createBuildingDTO.getCommunalAreaAggregate()),
+                totalArea,
+                communalArea,
                 new Address(createBuildingDTO.getStreet(),
                         createBuildingDTO.getBuildingNumber(),
                         createBuildingDTO.getCity(),

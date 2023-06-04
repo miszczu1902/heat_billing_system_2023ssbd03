@@ -268,8 +268,8 @@
     {
       "id" : "Building id",
       "created_by" : "Created by",
-      "total_area" : "Building total area [sq m]",
-      "communal_area_aggregate" : "Building communal area [sq m]",
+      "total_area" : "Building total area [sqm]",
+      "communal_area_aggregate" : "Building communal area [sqm]",
       "street" : "Street",
       "building_number" : "Number",
       "city" : "City",

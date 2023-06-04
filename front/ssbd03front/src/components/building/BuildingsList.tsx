@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, ButtonGroup, Grid, Paper, Table, TableCell, TableContainer, TableHead, TableRow, Button, Typography, Dialog, TextField, DialogContentText, DialogActions, DialogTitle, TableBody } from '@mui/material';
+import { Box, Grid, Paper, Table, TableCell, TableContainer, TableHead, TableRow, Button, Typography, Dialog, TextField, DialogContentText, DialogActions, DialogTitle, TableBody } from '@mui/material';
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import NewBuildingIcon from '../icons/NewBuildingIcon';
@@ -54,7 +54,6 @@ const BuildingsList = () => {
     const [postalCode, setPostalCode] = useState<string>("");
     const [postalCodeValid, setPostalCodeValid] = useState(false);
     const [postalCodeError, setPostalCodeError] = useState("");
-
 
     useEffect(() => {
         fetchData();
@@ -256,9 +255,7 @@ const BuildingsList = () => {
                             <TableCell>
                                 {t('buildingFromList.postal_code')}
                             </TableCell>
-                            <TableCell>
-
-                            </TableCell>
+                            <TableCell></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -299,8 +296,7 @@ const BuildingsList = () => {
                             edge="start"
                             color="inherit"
                             onClick={handleNewBuildingAddClose}
-                            aria-label="close"
-                        >
+                            aria-label="close">
                             <CloseIcon />
                         </IconButton>
                         <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
@@ -315,8 +311,7 @@ const BuildingsList = () => {
                     display="flex"
                     justifyContent="center"
                     alignItems="center"
-                    minHeight={200}
-                >
+                    minHeight={200}>
                     <div style={{ height: "100%", overflow: "auto" }}>
                     <form>
                         <List>
@@ -334,8 +329,7 @@ const BuildingsList = () => {
                                     type="text"
                                     sx={{ width: '50%' }}
                                     variant="standard"
-                                    onChange={handleTotalAreaChange}
-                                />
+                                    onChange={handleTotalAreaChange}/>
                             </ListItem>
                             <ListItem>
                                 <DialogContentText style={{ fontSize: "13px", color: "red" }}>{totalAreaError}</DialogContentText>
@@ -357,8 +351,7 @@ const BuildingsList = () => {
                                     type="text"
                                     sx={{ width: '50%' }}
                                     variant="standard"
-                                    onChange={handleCommunalAreaAggregateChange}
-                                />
+                                    onChange={handleCommunalAreaAggregateChange}/>
                             </ListItem>
                             <ListItem>
                                 <DialogContentText style={{ fontSize: "13px", color: "red" }}>{communalAreaAggregateError}</DialogContentText>
@@ -382,8 +375,7 @@ const BuildingsList = () => {
                                             type="text"
                                             sx={{ width: '50%' }}
                                             variant="standard"
-                                            onChange={handleStreetChange}
-                                        />
+                                            onChange={handleStreetChange}/>
                                     </ListItem>
                                 </ListItem>
                                 <ListItem>
@@ -399,8 +391,7 @@ const BuildingsList = () => {
                                             type="text"
                                             sx={{ width: '50%' }}
                                             variant="standard"
-                                            onChange={handleBuildingNumberChange}
-                                        />
+                                            onChange={handleBuildingNumberChange}/>
                                     </ListItem>
                                 </ListItem>
                                 <ListItem>
@@ -416,8 +407,7 @@ const BuildingsList = () => {
                                             type="text"
                                             sx={{ width: '50%' }}
                                             variant="standard"
-                                            onChange={handleCityChange}
-                                        />
+                                            onChange={handleCityChange}/>
                                     </ListItem>
                                 </ListItem>
                                 <ListItem>
@@ -433,8 +423,7 @@ const BuildingsList = () => {
                                             type="text"
                                             sx={{ width: '50%' }}
                                             variant="standard"
-                                            onChange={handlePostalCodeChange}
-                                        />
+                                            onChange={handlePostalCodeChange}/>
                                     </ListItem>
                                 </ListItem>
                                 <ListItem>
