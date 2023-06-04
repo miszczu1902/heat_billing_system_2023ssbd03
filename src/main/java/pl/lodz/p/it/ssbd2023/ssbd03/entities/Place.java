@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -23,7 +24,11 @@ import java.util.List;
                 @UniqueConstraint(
                         name = "place_number_building_id_unique_constraint", columnNames = {"place_number", "building_id"})
         })
-public class Place extends AbstractEntity implements Serializable {
+@NamedQueries({
+        @NamedQuery(name = "Place.findAll", query = "SELECT p FROM Place p"),
+        @NamedQuery(name = "Place.findById", query = "SELECT p FROM Place p WHERE p.id = :id")
+})
+public class Place extends AbstractEntity implements Serializable, Signable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -70,4 +75,9 @@ public class Place extends AbstractEntity implements Serializable {
 
     @OneToMany(mappedBy = "place")
     private List<AnnualBalance> annualBalances = new ArrayList<>();
+
+    @Override
+    public String messageToSign() {
+        return null;
+    }
 }

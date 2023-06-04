@@ -6,6 +6,7 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
@@ -53,5 +54,12 @@ public class PlaceFacade extends AbstractFacade<Place> {
 
     @RolesAllowed({Roles.OWNER})
     public List<Place> findByOwner(){throw new UnsupportedOperationException();}
+
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    public Place findPlaceById(String id) {
+        TypedQuery<Place> tq = em.createNamedQuery("Place.findById", Place.class);
+        tq.setParameter("id", Long.parseLong(id));
+        return tq.getSingleResult();
+    }
 
 }
