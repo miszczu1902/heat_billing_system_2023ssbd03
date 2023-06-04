@@ -9,8 +9,8 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
+
 import java.util.List;
 
 @Stateless
@@ -47,8 +47,7 @@ public class BuildingFacade extends AbstractFacade<Building> {
 
 
     @RolesAllowed({Roles.MANAGER})
-    public Building findById(Long id)
-    {
+    public Building findById(Long id) {
         TypedQuery<Building> tq = em.createNamedQuery("Building.findById", Building.class);
         tq.setParameter("id", id);
         return tq.getSingleResult();

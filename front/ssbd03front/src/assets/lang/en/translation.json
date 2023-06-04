@@ -1,14 +1,12 @@
 {
-  "navbar":
-  {
+  "navbar": {
     "register": "Register",
     "login": "Login",
     "log_out": "Log out",
     "account_list": "Account list",
     "building_list": "Building list",
     "manage": "Manage",
-    "languages":
-    {
+    "languages": {
       "title": "Change language",
       "default": "Language",
       "error": "An error occurred while changing language.",
@@ -20,15 +18,13 @@
     "roles": "Roles",
     "logged_as": "Logged as: "
   },
-  "confirm":
-  {
+  "confirm": {
     "yes": "Yes",
     "no": "No",
     "cancel": "Cancel",
     "ok": "Ok"
   },
-  "edit_password":
-  {
+  "edit_password": {
     "old_and_new_password_same_error": "The old and new passwords cannot be the same",
     "new_and_repeated_new_password_not_same_error": "The new and repeated new passwords must be the same",
     "old_password_error_one": "Password must contain at least 8 characters, one uppercase and one lowercase letter, ",
@@ -43,11 +39,10 @@
     "change_title": "Complete the password change form",
     "success_title": "Password has been changed",
     "confirm_title": "Are you sure you want to change your password?",
-    "form_title" : "Complete the password change form",
-    "button_title" : "Change password"
+    "form_title": "Complete the password change form",
+    "button_title": "Change password"
   },
-  "login":
-  {
+  "login": {
     "title": "Login",
     "username": "Username",
     "enter_username": "Enter username",
@@ -60,10 +55,9 @@
     "login_password_error_one": "The login can only contain letters, numbers, and the underscore ",
     "login_password_error_two": "must be between 8 and 16 characters long.",
     "success_title": "An email with a hyperlink to the password change form has been sent to the email address assigned to this account.",
-    "login" : "Login"
+    "login": "Login"
   },
-  "change_phone_number":
-  {
+  "change_phone_number": {
     "error": "The phone number must contain 9 digits.",
     "data_error": "The phone number must contain 9 digits.",
     "title": "Change phone number",
@@ -73,8 +67,7 @@
     "confirm_changes": "Are you sure you want to change your phone number?",
     "success": "The phone number has been changed"
   },
-  "personal_data":
-  {
+  "personal_data": {
     "name_error": "The name can only contain letters and must be up to 32 characters long",
     "surname_error": "Surname can only contain letters and must be up to 32 characters long",
     "data_error": "Please enter the correct details",
@@ -93,20 +86,17 @@
     "edit_error": "An error occurred while changing the user's personal information ",
     "authorization_error": "You are not authorized to edit this user's personal information"
   },
-  "activate_from_email":
-  {
+  "activate_from_email": {
     "success": "Account activated"
   },
-  "reset_password":
-  {
+  "reset_password": {
     "error_token": "No valid password reset token, redirecting...",
     "password_change": "Password change",
     "change_password": "Change password",
     "new_password": "A new password",
     "back_to_login": "Back to login"
   },
-  "register":
-  {
+  "register": {
     "first_name_error": "The maximum name length is 32 characters",
     "surname_error": "The maximum name length is 32 characters",
     "email_error": "Email invalid",
@@ -131,10 +121,9 @@
     "success_two": "Account registered. A message with an activation link has been sent to the e-mail address provided",
     "log_in": "Already have an account? Log in",
     "user_exists": "User already exists",
-    "mandatory" : "* - Mandatory fields"
+    "mandatory": "* - Mandatory fields"
   },
-  "account_list":
-  {
+  "account_list": {
     "active_status": "Active status",
     "confirmation_status": "Confirmation status",
     "active": "Active",
@@ -143,8 +132,7 @@
     "unconfirmed": "Unconfirmed",
     "label_rows_per_page": "Rows per page"
   },
-  "enable_account":
-  {
+  "enable_account": {
     "enable": "Enable",
     "enable_confirm": "Are you sure you want to unblock the user ",
     "success_one": "Username ",
@@ -153,8 +141,7 @@
     "unblocked_user_one": "User ",
     "unblocked_user_two": " is already unblocked"
   },
-  "disable_account":
-  {
+  "disable_account": {
     "disable": "Disable",
     "disable_confirm": "Are you sure you want to block the user ",
     "success_one": "Username ",
@@ -164,29 +151,27 @@
     "blocked_user_two": " is already blocked",
     "authorization_error": "You do not have permission to block this user"
   },
-  "landing_page":
-  {
+  "landing_page": {
     "title": "Project Team 3 SSBD 2023",
     "subtitle": "Heat accounting system for premises in many buildings."
   },
-  "profile":
-  {
+  "profile": {
     "title": "Account info",
-    "phone_number_error" : "The phone number must contain 9 digits.",
-    "set_phone_number" : "Enter phone number",
-    "license_error" : "The license must consist of 20 characters.",
-    "license" : "License",
-    "set_license" : "Enter the license",
-    "access_levels" : "Access levels",
-    "user_password" : "Password for user named ",
-    "add" : "Add",
-    "del" : "Delete",
-    "access_level" : "access level",
-    "select_access_level" : "Choose a level",
-    "owner" : "OWNER",
-    "manager" : "MANAGER",
-    "admin" : "ADMIN",
-    "access_level_form_title" : "Fill in the form of adding permissions",
+    "phone_number_error": "The phone number must contain 9 digits.",
+    "set_phone_number": "Enter phone number",
+    "license_error": "The license must consist of 20 characters.",
+    "license": "License",
+    "set_license": "Enter the license",
+    "access_levels": "Access levels",
+    "user_password": "Password for user named ",
+    "add": "Add",
+    "del": "Delete",
+    "access_level": "access level",
+    "select_access_level": "Choose a level",
+    "owner": "OWNER",
+    "manager": "MANAGER",
+    "admin": "ADMIN",
+    "access_level_form_title": "Fill in the form of adding permissions",
     "add_level": "Are you sure to grant access level?",
     "revoke_level": "Are you sure to revoke access level?",
     "added_level": "Access level granted",
@@ -195,12 +180,10 @@
     "owner_form": "Enter phone number in the form",
     "revoke": "Revoke access level"
   },
-  "page_not_found":
-  {
+  "page_not_found": {
     "title": "Page not found"
   },
-  "email":
-  {
+  "email": {
     "title": "Change email",
     "new_email_text": "Enter a new email",
     "form_title": "Fill out the email change form",
@@ -211,8 +194,7 @@
     "confirmed": "Email was confirmed",
     "wrong_code": "Wrong link"
   },
-  "token":
-  {
+  "token": {
     "token_not_valid_message": "Your session expired, you need to authenticate again"
   },
   "exception": {
@@ -259,39 +241,35 @@
     "token": {
       "result_not_found": "token not found"
     },
-    "heat_distribution_centre":
-    {
+    "heat_distribution_centre": {
       "overwriting": "Values can't be added twice a month"
     }
   },
-  "buildingFromList" :
-    {
-      "id" : "Building id",
-      "created_by" : "Created by",
-      "total_area" : "Building total area [sqm]",
-      "communal_area_aggregate" : "Building communal area [sqm]",
-      "street" : "Street",
-      "building_number" : "Number",
-      "city" : "City",
-      "postal_code" : "Postal code",
-      "building_add" : "Add new building",
-      "building_save" : "Save new building",
-      "building_total_area" : "Enter building total area, including communal area",
-      "building_communal_area_aggregate" : "Enter sum of building communal area",
-      "building_address" : "Enter building address",
-      "building_add_confirm" : "Are you sure you want to add new building?",
-      "building_add_success" : "Building added successfully",
-      "building_add_failure" : "An error occurred while adding building",
-      "total_area_error" : "Wrong total area format, use only numbers and dot (e.g. 100.00)",
-      "communal_area_aggregate_error" : "Wrong communal area format, use only numbers and dot (e.g. 100.00)",
-      "street_error" : "Wrong street format, use only letters, numbers (e.g. 1st Avenue) and contains up to 32 characters",
-      "building_number_error" : "Wrong building number format, use only letters and numbers (e.g. 1A)",
-      "city_error" : "Wrong city format, use only letters, spaces (e.g. New York) and contains up to 32 characters",
-      "postal_code_error" : "Wrong postal code format, use only numbers and dash (e.g. 00-000)",
-      "add_building_error" : "Cannot add building due to input errors"
-    },
-  "invoice":
-  {
+  "buildingFromList": {
+    "id": "Building id",
+    "created_by": "Created by",
+    "total_area": "Building total area [sqm]",
+    "communal_area_aggregate": "Building communal area [sqm]",
+    "street": "Street",
+    "building_number": "Number",
+    "city": "City",
+    "postal_code": "Postal code",
+    "building_add": "Add new building",
+    "building_save": "Save new building",
+    "building_total_area": "Enter building total area, including communal area",
+    "building_communal_area_aggregate": "Enter sum of building communal area",
+    "building_address": "Enter building address",
+    "building_add_confirm": "Are you sure you want to add new building?",
+    "building_add_success": "Building added successfully",
+    "building_add_failure": "An error occurred while adding building",
+    "total_area_error": "Wrong total area format, use only numbers and dot (e.g. 100.00)",
+    "communal_area_aggregate_error": "Wrong communal area format, use only numbers and dot (e.g. 100.00)",
+    "street_error": "Wrong street format, use only letters, numbers (e.g. 1st Avenue) and contains up to 32 characters",
+    "building_number_error": "Wrong building number format, use only letters and numbers (e.g. 1A)",
+    "city_error": "Wrong city format, use only letters, spaces (e.g. New York) and contains up to 32 characters",
+    "postal_code_error": "Wrong postal code format, use only numbers and dash (e.g. 00-000)",
+  "add_building_error" : "Cannot add building due to input errors"},
+  "invoice": {
     "consumption": "Heat consumption value",
     "consumptionCost": "Heat consumption cost value",
     "heatingAreaFactor": "Heat consumption factor",
@@ -306,6 +284,15 @@
     "confirm": "Are you sure inserted data is correct? You can't redo this operation",
     "error": "An error occured while inserting data",
     "not_exists": "An error occured while tried to get information about heat distribution centre"
-
+  },
+  "balances": {
+    "address": "Address",
+    "personal_data": "Owner",
+    "year": "Year",
+    "street": "Street",
+    "building_number": "Street Number",
+    "place_number": "Place Number",
+    "city": "City",
+    "postal_code": "Postal code"
   }
 }

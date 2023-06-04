@@ -14,6 +14,9 @@ public class BalanceMapper {
                 annualBalance.getPlace().getOwner().getAccount().getPersonalData().getFirstName(),
                 annualBalance.getPlace().getOwner().getAccount().getPersonalData().getSurname(),
                 annualBalance.getPlace().getBuilding().getAddress().getStreet(),
-                annualBalance.getPlace().getBuilding().getAddress().getBuildingNumber()
-        );}
+                annualBalance.getPlace().getBuilding().getAddress().getBuildingNumber(),
+                annualBalance.getPlace().getBuilding().getAddress().getCity(),
+                annualBalance.getPlace().getBuilding().getAddress().getPostalCode()
+        );
     }
+}
