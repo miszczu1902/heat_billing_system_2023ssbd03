@@ -57,6 +57,7 @@ const BuildingsList = () => {
 
     useEffect(() => {
         fetchData();
+        setOpen(false);
     }, [pageNumber, size]);
 
     const fetchData = async () => {
