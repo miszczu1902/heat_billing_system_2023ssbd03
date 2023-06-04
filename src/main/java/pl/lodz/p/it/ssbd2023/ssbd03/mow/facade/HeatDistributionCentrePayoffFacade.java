@@ -11,6 +11,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatDistributionCentrePayoff;
 
+import java.time.LocalDate;
+
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class HeatDistributionCentrePayoffFacade extends AbstractFacade<HeatDistributionCentrePayoff> {
@@ -45,8 +47,11 @@ public class HeatDistributionCentrePayoffFacade extends AbstractFacade<HeatDistr
     }
 
     @RolesAllowed({Roles.MANAGER})
-    public HeatDistributionCentrePayoff getLast() {
-        TypedQuery<HeatDistributionCentrePayoff> tq = em.createNamedQuery("HeatDistributionCentrePayoff.getLastHeatDistributionCentrePayoff", HeatDistributionCentrePayoff.class);
-        return tq.getSingleResult();
+    public boolean checkIfRecordForThisMonthExists() {
+        TypedQuery<HeatDistributionCentrePayoff> tq = em.createNamedQuery("HeatDistributionCentrePayoff.getPayoffByDate", HeatDistributionCentrePayoff.class);
+        tq.setParameter("year", LocalDate.now().getYear());
+        tq.setParameter("month", LocalDate.now().getMonthValue());
+
+        return tq.getResultList().isEmpty();
     }
 }

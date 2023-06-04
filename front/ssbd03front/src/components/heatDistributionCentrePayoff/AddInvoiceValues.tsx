@@ -41,7 +41,7 @@ const AddInvoiceValues = () => {
     };
 
     const handleConsumptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const regex = /^\d{0,8}(?:.\d{1,2})?$/;
+        const regex = "^\\d{0,8}(\\.\\d{0,2})?$";
         if (validator.matches(event.target.value, regex) && event.target.value.length > 0) {
             setConsumption(event.target.value);
             setConsumptionValid(true);
@@ -53,7 +53,7 @@ const AddInvoiceValues = () => {
     };
 
     const handleConsumptionCostChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const regex = /^\d{0,8}(?:.\d{1,2})?$/;
+        const regex = "^\\d{0,8}(\\.\\d{0,2})?$";
         if (validator.matches(event.target.value, regex) && event.target.value.length > 0) {
             setConsumptionCost(event.target.value);
             setConsumptionCostValid(true);
@@ -65,7 +65,7 @@ const AddInvoiceValues = () => {
     };
 
     const handleHeatingAreaFactorChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const regex = /^0(?:\.\d{1,2})?$|^1(?:\.00?)?$/u;
+        const regex = "^(?:0(?:\\.\\d{0,2})?|1(?:\\.0{0,2})?)$";
         if (validator.matches(event.target.value, regex) && event.target.value.length > 0) {
             setHeatingAreaFactor(event.target.value);
             setHeatingAreaFactorValid(true);
@@ -98,8 +98,7 @@ const AddInvoiceValues = () => {
                 handleAddingInvoiceConfirmClose();
                 if (error.response.status == 409) {
                     setWindowOpen(true);
-                }
-                else {
+                } else {
                     setWindowErrorOpen(true);
                 }
             }
@@ -166,8 +165,8 @@ const AddInvoiceValues = () => {
                         display="flex"
                         justifyContent="center"
                         alignItems="center"
-                        >
-                        <div style={{height: "100%",width:"30vh", overflow: "auto"}}>
+                    >
+                        <div style={{height: "100%", width: "30vh", overflow: "auto"}}>
                             <form>
                                 <List>
                                     <ListItem>
@@ -229,7 +228,9 @@ const AddInvoiceValues = () => {
                                     <Button autoFocus color="inherit" onClick={handleCloseWindow}>
                                         {t('invoice.close')}
                                     </Button>
-                                    <Button autoFocus color="inherit" disabled={!consumptionCostValid||!consumptionValid||!heatingAreaFactorValid} onClick={handleClickAddingInvoiceConfirmOpen}>
+                                    <Button autoFocus color="inherit"
+                                            disabled={!consumptionCostValid || !consumptionValid || !heatingAreaFactorValid}
+                                            onClick={handleClickAddingInvoiceConfirmOpen}>
                                         {t('invoice.save')}
                                     </Button>
                                 </Box>
