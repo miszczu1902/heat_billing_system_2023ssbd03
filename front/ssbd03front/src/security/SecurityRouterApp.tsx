@@ -46,8 +46,6 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({component: Component, access
             navigate('/');
         }
     }, [localStorage.getItem("role")]);
-
-
     return <Component {...rest} />;
 };
 

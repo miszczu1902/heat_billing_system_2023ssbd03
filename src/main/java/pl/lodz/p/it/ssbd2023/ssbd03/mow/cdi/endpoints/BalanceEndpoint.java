@@ -59,7 +59,7 @@ public class BalanceEndpoint {
     @RolesAllowed({Roles.MANAGER})
     public Response getAllReports(@DefaultValue("0") @QueryParam("pageNumber") int pageNumber,
                                   @DefaultValue("10") @QueryParam("pageSize") int pageSize,
-                                  @NotBlank @PathParam("buildingId") String buildingId) {
+                                  @PathParam("buildingId") Long buildingId) {
         return Response.ok().entity(balanceService.getAllReports(pageNumber, pageSize, buildingId).stream()
                 .map(BalanceMapper::balancesToAnnualBalancesForListDTO)
                 .toList()).build();

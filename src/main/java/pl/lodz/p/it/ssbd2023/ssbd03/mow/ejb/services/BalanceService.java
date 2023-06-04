@@ -19,7 +19,7 @@ public interface BalanceService extends CommonManagerLocalInterface {
 
     AnnualBalance getUserReport(String placeId);
 
-    List<AnnualBalance> getAllReports(int pageNumber, int pageSize, String buildingId);
+    List<AnnualBalance> getAllReports(int pageNumber, int pageSize, Long buildingId);
 
     AnnualBalance getSelfReports();
 
