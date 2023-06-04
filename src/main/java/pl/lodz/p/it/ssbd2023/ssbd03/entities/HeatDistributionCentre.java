@@ -16,6 +16,9 @@ import java.util.List;
 @EqualsAndHashCode
 @Entity
 @Table(name = "heat_distribution_centre")
+@NamedQueries({
+        @NamedQuery(name = "HeatDistributionCentre.getListOfHeatDistributionCentre", query = "SELECT k FROM HeatDistributionCentre k ")
+})
 public class HeatDistributionCentre extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

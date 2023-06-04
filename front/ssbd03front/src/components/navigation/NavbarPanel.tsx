@@ -248,6 +248,13 @@ const NavbarPanel = () => {
                             {t('navbar.building_list')}
                         </Button>
                     }
+                        {
+                            (currentRole===MANAGER)&&
+                            <Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/manage')}
+                                    sx={{marginLeft: '1vh', cursor: 'pointer'}}>
+                                {t('navbar.manage')}
+                            </Button>
+                        }
                     </ButtonGroup>
                     <Typography variant="subtitle1" sx={{
                         marginRight: '1vh',

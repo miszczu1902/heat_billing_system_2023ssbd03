@@ -18,6 +18,9 @@ import java.time.LocalDate;
                 @Index(name = "heat_distribution_centre_pay_off_heat_distribution_centre_id", columnList = "heat_distribution_centre_id"),
                 @Index(name = "heat_distribution_centre_pay_off_manager_id", columnList = "manager_id")
         })
+@NamedQueries({
+        @NamedQuery(name = "HeatDistributionCentrePayoff.getPayoffByDate", query = "SELECT k FROM HeatDistributionCentrePayoff k WHERE YEAR(k.date) = :year AND MONTH(k.date)= :month")
+})
 public class HeatDistributionCentrePayoff extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,4 +49,13 @@ public class HeatDistributionCentrePayoff extends AbstractEntity implements Seri
     @ManyToOne
     @JoinColumn(name = "manager_id", updatable = false, referencedColumnName = "id")
     private Manager manager;
+
+    public HeatDistributionCentrePayoff(BigDecimal consumption, BigDecimal consumptionCost, LocalDate time, BigDecimal heatingAreaFactor, Manager manager, HeatDistributionCentre heatDistributionCentre) {
+        this.consumptionCost = consumption;
+        this.consumption = consumptionCost;
+        this.date = time;
+        this.heatingAreaFactor = heatingAreaFactor;
+        this.manager = manager;
+        this.heatDistributionCentre = heatDistributionCentre;
+    }
 }
