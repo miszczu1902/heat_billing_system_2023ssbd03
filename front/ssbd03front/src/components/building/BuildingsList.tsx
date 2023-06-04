@@ -224,6 +224,10 @@ const BuildingsList = () => {
     }
     };
 
+    const goToBuilding = (buildingId: string) => {
+        navigate('/buildings/building/' + buildingId);
+    }
+
     return (
         <div style={{ height: '93.3vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0 }}>
             <Grid container>
@@ -279,8 +283,9 @@ const BuildingsList = () => {
                                     <IconButton
                                         edge="start"
                                         color="inherit"
-                                        onClick={handleNewBuildingAddClose}
-                                        aria-label="close">
+                                        onClick={() => goToBuilding(buildings.id.toString())}
+                                        aria-label="close"
+                                    >
                                         <IconViewList />
                                     </IconButton>
                                 </TableCell>

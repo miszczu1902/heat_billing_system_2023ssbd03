@@ -10,7 +10,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 @Local
 public interface BuildingService extends CommonManagerLocalInterface {
 
-    List<Place> getAllPlaces(String buildingId);
+    List<Place> getAllPlaces(String buildingId, int pageNumber, int pageSize);
 
     Building getBuilding(String buildingId);
 

@@ -293,5 +293,17 @@
     "place_number": "Numer mieszkania",
     "city": "Miasto",
     "postal_code": "Kod pocztowy"
+  },
+  "place" :
+  {
+    "id" : "Identyfikator lokalu",
+    "created_by" : "Dodany przez",
+    "placeNumber" : "Numer lokalu",
+    "area" : "Powierzchnia lokalu",
+    "hotWaterConnection" : "Podłączenie wody",
+    "centralHeatingConnection" : "Podłączenie ogrzewania",
+    "predictedHotWaterConsumption" : "Przewidywane zużycie wody",
+    "firstName" : "Imię właściciela",
+    "suername": "Nazwisko właściciela"
   }
 }

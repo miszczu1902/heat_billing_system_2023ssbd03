@@ -58,6 +58,18 @@ public class PlaceFacade extends AbstractFacade<Place> {
         return tq.getResultList();
     }
 
+    @RolesAllowed({Roles.MANAGER})
+    public List<Place> findByBuildingId(Long id, int pageNumber, int pageSize) {
+        TypedQuery<Place> tq = em.createNamedQuery("Place.findPlacesByBuildingId", Place.class);
+        tq.setParameter("id", id);
+
+        if (pageNumber != 0) {
+            tq.setFirstResult((pageNumber - 1) * pageSize);
+            tq.setMaxResults(pageSize);
+        }
+        return tq.getResultList();
+    }
+
     @RolesAllowed({Roles.OWNER})
     public List<Place> findByOwner() {
         throw new UnsupportedOperationException();

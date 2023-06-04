@@ -27,6 +27,7 @@ import Logout from "../components/login/Logout";
 import BuildingsList from '../components/building/BuildingsList';
 import AddInvoiceValues from '../components/heatDistributionCentrePayoff/AddInvoiceValues';
 import AnnualBalances from "../components/annualBalance/AnnualBalances";
+import Building from "../components/building/Building";
 
 interface PrivateRouteProps {
     component: React.ComponentType<any>;
@@ -165,6 +166,10 @@ const router = createBrowserRouter([
                     {
                         path: '/buildings/:buildingId',
                         element: <PrivateRoute component={AnnualBalances} accessLevels={[ADMIN, MANAGER]}/>
+                    },
+                    {
+                        path: '/buildings/building/:buildingId',
+                        element: <PrivateRoute component={Building} accessLevels={[ADMIN, MANAGER]}/>
                     }
                 ]
             },

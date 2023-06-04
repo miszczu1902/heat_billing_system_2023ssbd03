@@ -11,12 +11,16 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateBuildingDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.BuildingDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.BuildingService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.BuildingMapper;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.PlaceMapper;
 
 import java.util.logging.Logger;
+
+import static pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.BuildingMapper.createBuildingToBuildingDTO;
 
 @Path("/buildings")
 @RequestScoped
@@ -34,8 +38,15 @@ public class BuildingEndpoint {
     @Path("/building/{buildingId}/places")
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.MANAGER)
-    public Response getAllPlacesInBuilding(@NotBlank @PathParam("buildingId") String buildingId) {
-        return Response.status(200).entity(buildingService.getAllPlaces(buildingId)).build();
+    public Response getAllPlacesInBuilding(@NotBlank @PathParam("buildingId") String buildingId,
+                                           @DefaultValue("0") @QueryParam("pageNumber") int pageNumber,
+                                           @DefaultValue("10") @QueryParam("pageSize") int pageSize) {
+        return Response
+                .status(200)
+                .entity(
+                        buildingService.getAllPlaces(buildingId, pageNumber, pageSize).stream()
+                                .map(PlaceMapper::createPlaceToPlaceDTO)
+                                .toList()).build();
     }
 
     //MOW
@@ -44,7 +55,11 @@ public class BuildingEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public Response getBuilding(@NotBlank @PathParam("buildingId") String buildingId) {
-        return Response.status(200).entity(buildingService.getBuilding(buildingId)).build();
+        BuildingDTO buildingDTO = createBuildingToBuildingDTO(buildingService.getBuilding(buildingId));
+        return Response
+                .status(200)
+                .entity(buildingDTO)
+                .build();
     }
 
     //MOW
