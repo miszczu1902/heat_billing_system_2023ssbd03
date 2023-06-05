@@ -294,5 +294,17 @@
     "place_number": "Place Number",
     "city": "City",
     "postal_code": "Postal code"
+  },
+  "place" :
+  {
+    "id" : "Place id",
+    "created_by" : "Created by",
+    "placeNumber" : "Place number",
+    "area" : "Place area",
+    "hotWaterConnection" : "Water connection",
+    "centralHeatingConnection" : "Heating connection",
+    "predictedHotWaterConsumption" : "Water consumption prediction",
+    "firstName" : "Owner's name",
+    "surname": "Owner's surname"
   }
 }
