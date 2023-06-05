@@ -23,6 +23,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.PlaceMapper;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -92,6 +93,9 @@ public class PlaceEndpoint {
                                                       @NotNull @Valid EnterPredictedHotWaterConsumptionDTO enterPredictedHotWaterConsumptionDTO,
                                                       @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
+        String userRole = request.isUserInRole("OWNER")?
+                "OWNER":
+                "MANAGER";
 
         int retryTXCounter = txRetries; //limit prób ponowienia transakcji
         boolean rollbackTX = false;
@@ -100,7 +104,7 @@ public class PlaceEndpoint {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
                 placeService.enterPredictedHotWaterConsumption(placeId, enterPredictedHotWaterConsumptionDTO.getConsumption(),
-                        etag, enterPredictedHotWaterConsumptionDTO.getVersion());
+                        etag, enterPredictedHotWaterConsumptionDTO.getVersion(), userRole);
                 rollbackTX = placeService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
@@ -116,7 +120,7 @@ public class PlaceEndpoint {
             throw AppException.createTransactionRollbackException();
         }
         placeService.enterPredictedHotWaterConsumption(placeId, enterPredictedHotWaterConsumptionDTO.getConsumption(),
-                etag, enterPredictedHotWaterConsumptionDTO.getVersion());
+                etag, enterPredictedHotWaterConsumptionDTO.getVersion(), userRole);
         return Response.noContent().build();
     }
 

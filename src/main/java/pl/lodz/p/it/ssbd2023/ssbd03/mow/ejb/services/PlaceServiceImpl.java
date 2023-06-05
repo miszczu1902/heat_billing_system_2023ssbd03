@@ -22,6 +22,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.PlaceMapper;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -70,9 +71,7 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
 
     @Override
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    public void enterPredictedHotWaterConsumption(String placeId, String consumption, String etag, Long version) {
-        final String username = securityContext.getCallerPrincipal().getName();
-        final Account account = accountFacade.findByUsername(username);
+    public void enterPredictedHotWaterConsumption(String placeId, String consumption, String etag, Long version, String userRole) {
         final Long id = Long.valueOf(placeId);
         Place place = placeFacade.findPlaceById(id);
 
@@ -85,9 +84,7 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
         }
 
         if (place.getPredictedHotWaterConsumption().intValue() != 0.00
-                && account.getAccessLevels()
-                .stream()
-                .anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("OWNER"))) {
+                && userRole.equals("OWNER")) {
             throw AppException.createPredictedHotWaterConsumptionValueAlreadySetException();
         }
 
