@@ -74,9 +74,9 @@ public class PlaceFacade extends AbstractFacade<Place> {
     public List<Place> findByOwner(){throw new UnsupportedOperationException();}
 
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    public Place findPlaceById(String id) {
+    public Place findPlaceById(Long id) {
         TypedQuery<Place> tq = em.createNamedQuery("Place.findById", Place.class);
-        tq.setParameter("id", Long.parseLong(id));
+        tq.setParameter("id", id);
         return tq.getSingleResult();
     }
 

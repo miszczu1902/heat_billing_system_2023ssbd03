@@ -3,10 +3,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { ButtonGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { set } from "react-hook-form";
 import axios from "axios";
 import { API_URL } from '../../consts';
-import e from "express";
 
 const EnterPredictedHotWaterConsumption = () => {
     const token = 'Bearer ' + localStorage.getItem("token");

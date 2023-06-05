@@ -73,7 +73,8 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
     public void enterPredictedHotWaterConsumption(String placeId, String consumption, String etag, Long version) {
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
-        Place place = placeFacade.findPlaceById(placeId);
+        final Long id = Long.valueOf(placeId);
+        Place place = placeFacade.findPlaceById(id);
 
         if (!etag.equals(messageSigner.sign(place))) {
             throw AppException.createVerifierException();
@@ -83,7 +84,7 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
             throw AppException.createOptimisticLockAppException();
         }
 
-        if (place.getPredictedHotWaterConsumption().intValue() != 0
+        if (place.getPredictedHotWaterConsumption().intValue() != 0.00
                 && account.getAccessLevels()
                 .stream()
                 .anyMatch(accessLevelMapping -> accessLevelMapping.getAccessLevel().equals("OWNER"))) {
@@ -97,7 +98,8 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
     @Override
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public Place getPlace(String placeId) {
-        return placeFacade.findPlaceById(placeId);
+        final Long id = Long.valueOf(placeId);
+        return placeFacade.findPlaceById(id);
     }
 
     @Override
