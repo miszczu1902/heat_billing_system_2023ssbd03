@@ -25,8 +25,7 @@ import java.util.List;
                         name = "place_number_building_id_unique_constraint", columnNames = {"place_number", "building_id"})
         })
 @NamedQueries({
-        @NamedQuery(name = "Place.findAll", query = "SELECT p FROM Place p"),
-        @NamedQuery(name = "Place.findById", query = "SELECT p FROM Place p WHERE p.id = :id")
+        @NamedQuery(name = "Place.findPlacesByBuildingId", query = "SELECT k FROM Place k WHERE k.building.id = :id")
 })
 public class Place extends AbstractEntity implements Serializable, Signable {
     @Id

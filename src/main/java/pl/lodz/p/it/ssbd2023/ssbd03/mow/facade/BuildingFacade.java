@@ -10,6 +10,7 @@ import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
+
 import java.util.List;
 
 @Stateless
@@ -44,9 +45,12 @@ public class BuildingFacade extends AbstractFacade<Building> {
         super.remove(entity);
     }
 
-
-    @RolesAllowed({Roles.MANAGER})
-    public Building findById(){throw new UnsupportedOperationException();}
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    public Building findById(Long id) {
+        TypedQuery<Building> tq = em.createNamedQuery("Building.findById", Building.class);
+        tq.setParameter("id", id);
+        return tq.getSingleResult();
+    }
 
     @RolesAllowed({Roles.MANAGER})
     public List<Building> getListOfBuildingsWithPaging(int pageNumber, int pageSize) {

@@ -17,6 +17,9 @@ import java.math.BigDecimal;
         indexes = {
                 @Index(name = "annual_balance_place_id", columnList = "place_id")
         })
+@NamedQueries({
+        @NamedQuery(name = "AnnualBalance.findAllBalancesByPlacesId", query = "SELECT k FROM AnnualBalance k WHERE k.place.id IN :ids")
+})
 public class AnnualBalance extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

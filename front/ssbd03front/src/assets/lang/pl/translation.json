@@ -1,14 +1,12 @@
 {
-  "navbar":
-  {
+  "navbar": {
     "register": "Zarejestruj się",
     "login": "Zaloguj się",
     "log_out": "Wyloguj się",
     "account_list": "Lista kont",
     "building_list": "Lista budynków",
     "manage": "Zarządzaj",
-    "languages":
-    {
+    "languages": {
       "title": "Zmień język",
       "default": "Język",
       "error": "Wystąpił problem podczas zmiany języka.",
@@ -20,16 +18,14 @@
     "roles": "Poziomy dostępu",
     "logged_as": "Zalogowany jako: "
   },
-  "confirm":
-  {
+  "confirm": {
     "yes": "Tak",
     "no": "Nie",
     "cancel": "Anuluj",
     "ok": "Ok",
     "save": "Zapisz"
   },
-  "edit_password":
-  {
+  "edit_password": {
     "old_and_new_password_same_error": "Stare i nowe hasło nie mogą być takie same",
     "new_and_repeated_new_password_not_same_error": "Nowe i powtórzone nowe hasło muszą być takie same",
     "old_password_error_one": "Hasło musi zawierać conajmniej 8 znaków, jedną wielką i małą literę, ",
@@ -44,11 +40,10 @@
     "change_title": "Wypełnij formularz zmiany hasła",
     "success_title": "Hasło zostało zmienione",
     "confirm_title": "Czy na pewno chcesz zmienić swoje hasło?",
-    "form_title" : "Wypełnij formularz zmiany hasła",
-    "button_title" : "Zmień hasło"
+    "form_title": "Wypełnij formularz zmiany hasła",
+    "button_title": "Zmień hasło"
   },
-  "login":
-  {
+  "login": {
     "title": "Logowanie",
     "username": "Nazwa użytkownika",
     "enter_username": "Wprowadź nazwę użytkownika",
@@ -61,10 +56,9 @@
     "login_password_error_one": "Login może zawierać tylko litery, cyfry, znak podkreślenia oraz ",
     "login_password_error_two": "musi mieć długość od 8 do 16 znaków.",
     "success_title": "Na adres email przypisany do tego konta została wysłana wiadomość z hiperłączem do formularza zmiany hasła.",
-    "login" : "Zaloguj"
+    "login": "Zaloguj"
   },
-  "change_phone_number":
-  {
+  "change_phone_number": {
     "error": "Numer telefonu musi zawierać 9 cyfr.",
     "data_error": "Numer telefonu musi zawierać 9 cyfr.",
     "title": "Zmień numer telefonu",
@@ -74,8 +68,7 @@
     "confirm_changes": "Czy na pewno chcesz zmienić swój numer telefonu",
     "success": "Numer telefonu został zmieniony"
   },
-  "personal_data":
-  {
+  "personal_data": {
     "name_error": "Imię może zawierać tylko litery i musi mieć długość do 32 znaków",
     "surname_error": "Nazwisko może zawierać tylko litery i musi mieć długość do 32 znaków",
     "data_error": "Wprowadź poprawne dane",
@@ -94,20 +87,17 @@
     "edit_error": "Wystąpił błąd podczas zmiany danych osobowych użytkownika ",
     "authorization_error": "Nie masz uprawnień do zmiany danych osobowych użytkownika "
   },
-  "activate_from_email":
-  {
+  "activate_from_email": {
     "success": "Konto aktywowane"
   },
-  "reset_password":
-  {
+  "reset_password": {
     "error_token": "Brak ważnego żetonu do resetu hasła, trwa przekierowanie...",
     "password_change": "Zmiana hasła",
     "change_password": "Zmień hasło",
     "new_password": "Nowe hasło",
     "back_to_login": "Powrót do logowania"
   },
-  "register":
-  {
+  "register": {
     "first_name_error": "Maksymalna długość imienia to 32 znaki",
     "surname_error": "Maksymalna długość nazwiska to 32 znaki",
     "email_error": "Email niepoprawny",
@@ -132,10 +122,9 @@
     "success_two": "Konto zarejestrowane. Na podany adres email została wysłana wiadomość z linkiem aktywacyjnym",
     "log_in": "Masz już konto? Zaloguj się",
     "user_exists": "Użytkownik o podanym loginie, emailu lub numerze telefonu już istnieje",
-    "mandatory" : "* - Wymagane pola"
+    "mandatory": "* - Wymagane pola"
   },
-  "account_list":
-  {
+  "account_list": {
     "active_status": "Stan aktywny",
     "confirmation_status": "Stan potwierdzenia",
     "active": "Aktywny",
@@ -144,8 +133,7 @@
     "unconfirmed": "Zablokowany",
     "label_rows_per_page": "Wierszy na stronę"
   },
-  "enable_account":
-  {
+  "enable_account": {
     "enable": "Odblokuj",
     "enable_confirm": "Czy na pewno chcesz odblokować użytkownika ",
     "success_one": "Użytkownik ",
@@ -154,8 +142,7 @@
     "unblocked_user_one": "Użytkownik ",
     "unblocked_user_two": " jest już odblokowany"
   },
-  "disable_account":
-  {
+  "disable_account": {
     "disable": "Zablokuj",
     "disable_confirm": "Czy na pewno chcesz zablokować użytkownika ",
     "success_one": "Użytkownik ",
@@ -165,29 +152,27 @@
     "blocked_user_two": " jest już zablokowany",
     "authorization_error": "Nie masz uprawnień do zablokowania użytkownika "
   },
-  "landing_page":
-  {
+  "landing_page": {
     "title": "Projekt zespołu 3 SSBD 2023",
     "subtitle": "System rozliczania ciepła w lokalach w wielu budynkach."
   },
-  "profile":
-  {
+  "profile": {
     "title": "Informacje o koncie",
-    "phone_number_error" : "Numer telefonu musi zawierać 9 cyfr.",
-    "set_phone_number" : "Wprowadź numer telefonu",
-    "license_error" : "Licencja musi skladać się z 20 znaków.",
-    "license" : "Licencja",
-    "set_license" : "Wprowadź licencję",
-    "access_levels" : "Poziom dostępu",
-    "user_password" : "Hasło użytkownika ",
-    "add" : "Dodaj",
-    "del" : "Usuń",
-    "access_level" : "poziom dostępu",
-    "select_access_level" : "Wybierz poziom",
-    "owner" : "WŁAŚCICIEL",
-    "manager" : "ZARZĄDCA",
-    "admin" : "ADMINISTRATOR",
-    "access_level_form_title" : "Wypełnij formularz dodania uprawnień zarządcy",
+    "phone_number_error": "Numer telefonu musi zawierać 9 cyfr.",
+    "set_phone_number": "Wprowadź numer telefonu",
+    "license_error": "Licencja musi skladać się z 20 znaków.",
+    "license": "Licencja",
+    "set_license": "Wprowadź licencję",
+    "access_levels": "Poziom dostępu",
+    "user_password": "Hasło użytkownika ",
+    "add": "Dodaj",
+    "del": "Usuń",
+    "access_level": "poziom dostępu",
+    "select_access_level": "Wybierz poziom",
+    "owner": "WŁAŚCICIEL",
+    "manager": "ZARZĄDCA",
+    "admin": "ADMINISTRATOR",
+    "access_level_form_title": "Wypełnij formularz dodania uprawnień zarządcy",
     "add_level": "Czy na pewno chcesz dodać poziom dostępu?",
     "revoke_level": "Czy na pewno chcesz odebrać poziom dostępu?",
     "added_level": "Poziom dostępu został dodany",
@@ -196,12 +181,10 @@
     "owner_form": "Podaj numer telefonu do właściciela",
     "revoke": "Odbierz poziom dostępu"
   },
-  "page_not_found":
-  {
+  "page_not_found": {
     "title": "Strony nie znalezniono"
   },
-  "email":
-  {
+  "email": {
     "title": "Zmień email",
     "new_email_text": "Wprowadź nowy email",
     "form_title": "Wypełnij formularz zmiany emaila",
@@ -212,29 +195,24 @@
     "confirmed": "Email został potwierdzony",
     "wrong_code": "Bledny link"
   },
-  "token":
-  {
+  "token": {
     "token_not_valid_message": "Twoja sesja wygasła, musisz się ponownie uwierzytelnić"
   },
-  "exception":
-  {
-    "error":
-    {
+  "exception": {
+    "error": {
       "unknown": "BŁĄD_NIEZNANY",
-      "general_persistence":"BŁĄD_PERSISTENCJI",
+      "general_persistence": "BŁĄD_PERSISTENCJI",
       "optimistic_lock": "BŁĄD_OPTYMISTYCZNEGO_BLOKOWANIA",
       "access_denied": "BŁĄD_ODMOWY_DOSTĘPU",
       "transaction_rolledback": "BŁĄD_WYCOFANIA_TRANSAKCJI",
       "account_not_registered": "BŁĄD_KONTO_NIEZAREJESTROWANE"
     },
-    "password":
-    {
+    "password": {
       "not_same_message": "Hasła nie są identyczne",
       "old_and_new_same": "Stare i nowe hasła są identyczne",
       "old_incorrect": "Stare hasło jest nieprawidłowe"
     },
-    "account":
-    {
+    "account": {
       "email_not_unique": "Adres e-mail nie jest unikalny",
       "username_not_unique": "Nazwa użytkownika nie jest unikalna",
       "phone_number_not_unique": "Numer telefonu nie jest unikalny",
@@ -261,43 +239,39 @@
       "etag_signer": "Nie można podpisać eTag",
       "not_valid_token": "Nie można zweryfikować żetonu."
     },
-    "token":
-    {
-      "result_not_found" : "Błędny żeton"
+    "token": {
+      "result_not_found": "Błędny żeton"
     },
-    "heat_distribution_centre":
-    {
+    "heat_distribution_centre": {
       "overwriting": "Nie można wprowadzić wartości dwa razy w jednym miesiącu"
     }
   },
-  "buildingFromList" :
-    {
-      "id" : "Identyfikator budynku",
-      "created_by" : "Dodany przez",
-      "total_area" : "Powierzchnia całkowita [mkw]",
-      "communal_area_aggregate" : "Powierzchnia części wspólnej [mkw]",
-      "street" : "Ulica",
-      "building_number" : "Numer budynku",
-      "city" : "Miasto",
-      "postal_code" : "Kod pocztowy",
-      "building_add": "Dodaj nowy budynek",
-      "building_save" : "Zapisz nowy budynek",
-      "building_total_area" : "Wprowadź powierzchnię całkowitą budynku, wliczając w to wszelkie przestrzenie wspólne",
-      "building_communal_area_aggregate" : "Wprowadź sumaryczną wartość przestrzeni wspólnych",
-      "building_address" : "Wprowadź adres budynku",
-      "building_add_confirm" : "Czy jesteś pewien, że chcesz dodać nowy budynek?",
-      "building_add_success" : "Budynek został dodany",
-      "building_add_failure" : "Wystąpił błąd podczas dodawania budynku",
-      "total_area_error" : "Powierzchnia całkowita musi być większa od 0, wartość musi mieć format liczbowy odzielony kropką",
-      "communal_area_aggregate_error" : "Powierzchnia części wspólnej musi być większa od 0, wartość musi mieć format liczbowy odzielony kropką",
-      "street_error" : "Nazwa ulicy musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery, cyfry, spacje oraz znaki: - .",
-      "building_number_error" : "Numer budynku musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery i cyfry",
-      "city_error" : "Nazwa miasta musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery, cyfry, spacje oraz znaki: - .",
-      "postal_code_error" : "Kod pocztowy musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery, cyfry oraz znak -" ,
-      "add_building_error" : "Nie można dodać budynku z powodu błędów w formularzu"
-    },
-  "invoice":
-  {
+  "buildingFromList": {
+    "id": "Identyfikator budynku",
+    "created_by": "Dodany przez",
+    "total_area": "Powierzchnia całkowita [mkw]",
+    "communal_area_aggregate": "Powierzchnia części wspólnej [mkw]",
+    "street": "Ulica",
+    "building_number": "Numer budynku",
+    "city": "Miasto",
+    "postal_code": "Kod pocztowy",
+    "building_add": "Dodaj nowy budynek",
+    "building_save": "Zapisz nowy budynek",
+    "building_total_area": "Wprowadź powierzchnię całkowitą budynku, wliczając w to wszelkie przestrzenie wspólne",
+    "building_communal_area_aggregate": "Wprowadź sumaryczną wartość przestrzeni wspólnych",
+    "building_address": "Wprowadź adres budynku",
+    "building_add_confirm": "Czy jesteś pewien, że chcesz dodać nowy budynek?",
+    "building_add_success": "Budynek został dodany",
+    "building_add_failure": "Wystąpił błąd podczas dodawania budynku",
+    "total_area_error": "Powierzchnia całkowita musi być większa od 0, wartość musi mieć format liczbowy odzielony kropką",
+    "communal_area_aggregate_error": "Powierzchnia części wspólnej musi być większa od 0, wartość musi mieć format liczbowy odzielony kropką",
+    "street_error": "Nazwa ulicy musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery, cyfry, spacje oraz znaki: - .",
+    "building_number_error": "Numer budynku musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery i cyfry",
+    "city_error": "Nazwa miasta musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery, cyfry, spacje oraz znaki: - .",
+    "postal_code_error": "Kod pocztowy musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery, cyfry oraz znak -",
+    "add_building_error": "Nie można dodać budynku z powodu błędów w formularzu"
+  },
+  "invoice": {
     "consumption": "Zużycie ciepła",
     "consumptionCost": "Koszt zużytego ciepła",
     "heatingAreaFactor": "Współczynnik zużycia ciepła",
@@ -313,7 +287,28 @@
     "error": "Wystąpił błąd podczas wprowadzania danych",
     "not_exists": "Wystąpił błąd z pobraniem informacji o węźle cieplnym"
   },
-  "enterPredictedHotWaterConsumption" : 
+  "balances": {
+    "personal_data": "Właściciel",
+    "year": "Rok",
+    "street": "Ulica",
+    "building_number": "Numer budynku",
+    "place_number": "Numer mieszkania",
+    "city": "Miasto",
+    "postal_code": "Kod pocztowy"
+  },
+  "place" :
+  {
+    "id" : "Identyfikator lokalu",
+    "created_by" : "Dodany przez",
+    "placeNumber" : "Numer lokalu",
+    "area" : "Powierzchnia lokalu",
+    "hotWaterConnection" : "Podłączenie wody",
+    "centralHeatingConnection" : "Podłączenie ogrzewania",
+    "predictedHotWaterConsumption" : "Przewidywane zużycie wody",
+    "firstName" : "Imię właściciela",
+    "suername": "Nazwisko właściciela"
+  },
+  "enterPredictedHotWaterConsumption" :
   {
     "enter_predicted_hot_water_consumption_button" : "Wprowadź przewidywane zużycie ciepłej wody",
     "enter_predicted_hot_water_consumption_title" : "Przewidywane zużycie ciepłej wody",

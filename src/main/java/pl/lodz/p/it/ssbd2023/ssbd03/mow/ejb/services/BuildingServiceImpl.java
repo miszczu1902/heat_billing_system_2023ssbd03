@@ -12,6 +12,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BuildingFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Internationalization;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 
@@ -24,6 +25,9 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
     private BuildingFacade buildingFacade;
 
     @Inject
+    private PlaceFacade placeFacade;
+
+    @Inject
     private Internationalization internationalization;
 
     @Inject
@@ -34,16 +38,17 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
 
     @Override
     @RolesAllowed(Roles.MANAGER)
-    public List<Place> getAllPlaces(String buildingId) {
-        throw new UnsupportedOperationException();
+    public List<Place> getAllPlaces(String buildingId, int pageNumber, int pageSize) {
+        final Long id = Long.valueOf(buildingId);
+        buildingFacade.findById(id);
+        return placeFacade.findByBuildingId(id, pageNumber, pageSize);
     }
-
     @Override
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public Building getBuilding(String buildingId) {
-        throw new UnsupportedOperationException();
+        final Long id = Long.valueOf(buildingId);
+        return buildingFacade.findById(id);
     }
-
     @Override
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public void modifyBuilding(String buildingId) {

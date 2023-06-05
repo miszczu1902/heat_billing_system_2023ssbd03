@@ -11,6 +11,7 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import IconViewList from "../icons/IconViewList";
+import AnnualBalancesIcon from "../icons/AnnualBalancesIcon";
 import axios from 'axios';
 import { API_URL } from '../../consts';
 import { BuildingFromList } from '../../types/buildingFromList';
@@ -182,6 +183,9 @@ const BuildingsList = () => {
     const handleCancel = () => {
         handleNewBuildingConfirmClose();
     };
+    const handleOpenAnnualBalanceList = (buildingNumber: number) => {
+        navigate('/buildings/'+buildingNumber);
+    };
 
     const handleClose = () => {
         setOpen(false);
@@ -219,6 +223,10 @@ const BuildingsList = () => {
         setOpen(true);
     }
     };
+
+    const goToBuilding = (buildingId: string) => {
+        navigate('/buildings/building/' + buildingId);
+    }
 
     return (
         <div style={{ height: '93.3vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0 }}>
@@ -258,6 +266,7 @@ const BuildingsList = () => {
                                 {t('buildingFromList.postal_code')}
                             </TableCell>
                             <TableCell></TableCell>
+                            <TableCell></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -274,9 +283,19 @@ const BuildingsList = () => {
                                     <IconButton
                                         edge="start"
                                         color="inherit"
-                                        onClick={handleNewBuildingAddClose}
-                                        aria-label="close">
+                                        onClick={() => goToBuilding(buildings.id.toString())}
+                                        aria-label="close"
+                                    >
                                         <IconViewList />
+                                    </IconButton>
+                                </TableCell>
+                                <TableCell>
+                                    <IconButton
+                                        edge="start"
+                                        color="inherit"
+                                        onClick={() => handleOpenAnnualBalanceList(buildings.id)}
+                                        aria-label="close">
+                                        <AnnualBalancesIcon />
                                     </IconButton>
                                 </TableCell>
                             </TableRow>
