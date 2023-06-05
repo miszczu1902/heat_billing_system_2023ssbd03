@@ -293,7 +293,8 @@
     "enter_predicted_hot_water_consumption_description" : "Each new owner of the premises must enter the predicted hot water consumption. Enter the data in the fields below. After entering your data, they can only be modified by the manager.",
     "enter_predicted_hot_water_consumption_text_field_name" : "Predicted hot water consumption [m3]",
     "enter_predicted_hot_water_consumption_error": "Wrong predicted hot water consumption format, use only numbers and dot (e.g. 100.00)",
-    "enter_predicted_hot_water_consumption_confirm" : "Are you sure you want to add predicted hot water consumption?"
+    "enter_predicted_hot_water_consumption_confirm" : "Are you sure you want to add predicted hot water consumption?",
+    "enter_predicted_hot_water_consumption_failed" : "An error occurred while adding predicted hot water consumption"
   },
   "balances": {
     "address": "Address",
