@@ -19,6 +19,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Internationalization;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.PlaceMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -96,7 +97,7 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
     @Override
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public Place getPlace(String placeId) {
-        throw new UnsupportedOperationException();
+        return placeFacade.findPlaceById(placeId);
     }
 
     @Override
