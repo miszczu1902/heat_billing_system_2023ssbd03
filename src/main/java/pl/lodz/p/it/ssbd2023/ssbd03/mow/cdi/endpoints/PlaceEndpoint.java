@@ -12,13 +12,15 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import net.bytebuddy.asm.Advice;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.EnterPredictedHotWaterConsumptionDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.PlaceDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.PlaceService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.PlaceMapper;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -45,7 +47,12 @@ public class PlaceEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public Response getPlace(@NotBlank @PathParam("placeId") String placeId) {
-        return Response.status(200).entity(placeService.getPlace(placeId)).build();
+        final Place place = placeService.getPlace(placeId);
+        final PlaceDTO placeDTO = PlaceMapper.createPlaceToPlaceDTO(place);
+        return Response.status(200)
+                .header("ETag", messageSigner.sign(placeDTO))
+                .entity(placeDTO)
+                .build();
     }
 
     //MOW 20
