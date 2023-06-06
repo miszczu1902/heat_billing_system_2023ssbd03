@@ -11,6 +11,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.AddConsumptionDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyAdvanceChangeFactorDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
@@ -51,12 +52,12 @@ public class HeatDistributionCentreEndpoint {
 
     //MOW 12
     @Path("/parameters/heating-area-factor")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @PATCH
-    @RolesAllowed({Roles.MANAGER})
-    public Response modifyHeatingAreaFactor(BigDecimal heatingAreaFactorValue) {
-        heatDistributionCentreService.modifyHeatingAreaFactor(heatingAreaFactorValue);
-        return Response.status(200).build();
+    @RolesAllowed(Roles.MANAGER)
+    public Response modifyHeatingAreaFactor(ModifyAdvanceChangeFactorDTO modifyAdvanceChangeFactorDTO) {
+        heatDistributionCentreService.modifyHeatingAreaFactor(modifyAdvanceChangeFactorDTO.getAdvanceChangeFactor());
+        return Response.status(204).build();
     }
 
     //MOW 13

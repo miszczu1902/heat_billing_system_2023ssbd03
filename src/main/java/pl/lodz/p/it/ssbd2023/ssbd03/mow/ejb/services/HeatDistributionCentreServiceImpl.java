@@ -10,17 +10,17 @@ import jakarta.security.enterprise.SecurityContext;
 import jakarta.servlet.http.HttpServletRequest;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatDistributionCentre;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatDistributionCentrePayoff;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.HeatDistributionCentreFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.HeatDistributionCentrePayoffFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.HeatingPlaceAndCommunalAreaAdvanceFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Internationalization;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Stateful
@@ -44,6 +44,9 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @Inject
     private HeatDistributionCentreFacade heatDistributionCentreFacade;
 
+    @Inject
+    private HeatingPlaceAndCommunalAreaAdvanceFacade heatingPlaceAndCommunalAreaAdvanceFacade;
+
     @Override
     @RolesAllowed({Roles.MANAGER})
     public Void getHeatDistributionCentreParameters() {
@@ -53,7 +56,20 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @Override
     @RolesAllowed({Roles.MANAGER})
     public void modifyHeatingAreaFactor(BigDecimal heatingAreaFactorValue) {
-        throw new UnsupportedOperationException();
+        List<HeatingPlaceAndCommunalAreaAdvance> advances = heatingPlaceAndCommunalAreaAdvanceFacade.getAllAdvancesForPlaceAndCommunalArea()
+                .stream().filter(advance -> !advance.getDate().isBefore(LocalDate.now().minusMonths(3)))
+                .toList();
+
+        //TODO - tutaj przy liczeniu zaliczek przez system trzeba wywołać metody ze schedulera do liczenia zaliczek
+        if (!advances.isEmpty()) {
+            advances.forEach(advance -> {
+                advance.setAdvanceChangeFactor(heatingAreaFactorValue);
+                heatingPlaceAndCommunalAreaAdvanceFacade.edit(advance);
+            });
+        } else {
+            heatingPlaceAndCommunalAreaAdvanceFacade.create(
+                    new HeatingPlaceAndCommunalAreaAdvance(LocalDate.now(), new BigDecimal(0), new BigDecimal(0), heatingAreaFactorValue));
+        }
     }
 
     @Override
@@ -65,7 +81,6 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @Override
     @RolesAllowed({Roles.MANAGER})
     public void addConsumptionFromInvoice(BigDecimal consumption, BigDecimal consumptionCost, BigDecimal heatingAreaFactor, Manager manager) {
-
         if (!heatDistributionCentrePayoffFacade.checkIfRecordForThisMonthNotExists()) {
             throw AppException.consumptionAddException();
         }
