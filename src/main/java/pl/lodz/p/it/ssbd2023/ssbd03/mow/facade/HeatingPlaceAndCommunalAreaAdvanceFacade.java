@@ -47,11 +47,11 @@ public class HeatingPlaceAndCommunalAreaAdvanceFacade extends AbstractFacade<Hea
     }
 
     @RolesAllowed({Roles.MANAGER})
-    public boolean checkIfAdvanceChangeFactorNotModified(Long placeId, LocalDate date) {
+    public boolean checkIfAdvanceChangeFactorNotModified(Long buildingId, LocalDate date) {
         TypedQuery<HeatingPlaceAndCommunalAreaAdvance> tq = em.createNamedQuery(
                 "HeatingPlaceAndCommunalAreaAdvance.getAllHeatingPlaceAndCommunalAreaAdvances",
                 HeatingPlaceAndCommunalAreaAdvance.class);
-        tq.setParameter("placeId", placeId);
+        tq.setParameter("buildingId", buildingId);
         tq.setParameter("date", date);
         return tq.getResultList().isEmpty();
     }

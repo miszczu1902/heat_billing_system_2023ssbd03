@@ -16,5 +16,5 @@ public class ModifyAdvanceChangeFactorDTO {
     @DecimalMax(value = "9")
     private BigDecimal advanceChangeFactor;
 
-    private Long placeId;
+    private Long buildingId;
 }

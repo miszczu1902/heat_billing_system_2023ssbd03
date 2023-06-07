@@ -56,7 +56,8 @@ public class HeatDistributionCentreEndpoint {
     @PATCH
     @RolesAllowed(Roles.MANAGER)
     public Response modifyHeatingAreaFactor(ModifyAdvanceChangeFactorDTO modifyAdvanceChangeFactorDTO) {
-        heatDistributionCentreService.modifyHeatingAreaFactor(modifyAdvanceChangeFactorDTO.getAdvanceChangeFactor(), modifyAdvanceChangeFactorDTO.getPlaceId());
+        heatDistributionCentreService.modifyHeatingAreaFactor(
+                modifyAdvanceChangeFactorDTO.getAdvanceChangeFactor(), modifyAdvanceChangeFactorDTO.getBuildingId());
         return Response.status(204).build();
     }
 

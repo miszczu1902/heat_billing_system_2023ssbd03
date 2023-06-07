@@ -52,13 +52,6 @@ public class PlaceFacade extends AbstractFacade<Place> {
     }
 
     @RolesAllowed({Roles.MANAGER})
-    public Place findByPlaceId(Long placeId) {
-        TypedQuery<Place> tq = em.createNamedQuery("Place.findPlacesByPlaceId", Place.class);
-        tq.setParameter("placeId", placeId);
-        return tq.getSingleResult();
-    }
-
-    @RolesAllowed({Roles.MANAGER})
     public List<Place> findPlacesByBuildingId(Long id) {
         TypedQuery<Place> tq = em.createNamedQuery("Place.findPlacesByBuildingId", Place.class);
         tq.setParameter("id", id);

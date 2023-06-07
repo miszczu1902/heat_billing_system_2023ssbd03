@@ -58,18 +58,16 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public void modifyHeatingAreaFactor(BigDecimal heatingAreaFactorValue, Long placeId) {
+    public void modifyHeatingAreaFactor(BigDecimal heatingAreaFactorValue, Long buildingId) {
         LocalDate date = LocalDate.now();
         if (date.getDayOfMonth() != 1) throw AppException.advanceChangeFactorNotModifiedException();
         else date = date.minusMonths(3);
 
-        if (heatingPlaceAndCommunalAreaAdvanceFacade.checkIfAdvanceChangeFactorNotModified(placeId, date)) {
-            Place place = placeFacade.findByPlaceId(placeId);
-            heatingPlaceAndCommunalAreaAdvanceFacade.create(
+        if (heatingPlaceAndCommunalAreaAdvanceFacade.checkIfAdvanceChangeFactorNotModified(buildingId, date)) {
+            List<Place> places = placeFacade.findPlacesByBuildingId(buildingId);
+            places.forEach(place -> heatingPlaceAndCommunalAreaAdvanceFacade.create(
                     new HeatingPlaceAndCommunalAreaAdvance(LocalDate.now(), place,
-                            new BigDecimal(0), new BigDecimal(0), heatingAreaFactorValue));
-
-            //TODO - tutaj przy liczeniu zaliczek przez system trzeba wywołać metody ze schedulera do liczenia zaliczek
+                            new BigDecimal(0), new BigDecimal(0), heatingAreaFactorValue)));
         } else throw AppException.advanceChangeFactorWasInsertedException();
     }
 
