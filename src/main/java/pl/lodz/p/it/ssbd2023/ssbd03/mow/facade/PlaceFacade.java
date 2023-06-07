@@ -31,7 +31,7 @@ public class PlaceFacade extends AbstractFacade<Place> {
     }
 
     @Override
-    @RolesAllowed({Roles.MANAGER})
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public void edit(Place entity) {
         super.edit(entity);
     }
@@ -80,5 +80,12 @@ public class PlaceFacade extends AbstractFacade<Place> {
             tq.setMaxResults(pageSize);
         }
         return tq.getResultList();
+    }
+
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    public Place findPlaceById(Long id) {
+        TypedQuery<Place> tq = em.createNamedQuery("Place.findById", Place.class);
+        tq.setParameter("id", id);
+        return tq.getSingleResult();
     }
 }

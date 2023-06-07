@@ -19,9 +19,9 @@ public class PlaceDTO extends AbstractDTO implements Signable {
     private Boolean centralHeatingConnection;
     private BigDecimal predictedHotWaterConsumption;
     private String firstName;
-    private String suername;
+    private String surname;
 
-    public PlaceDTO(Long id, Long version, String createdBy, Short placeNumber, BigDecimal area, Boolean hotWaterConnection, Boolean centralHeatingConnection, BigDecimal predictedHotWaterConsumption, String firstName, String suername) {
+    public PlaceDTO(Long id, Long version, String createdBy, Short placeNumber, BigDecimal area, Boolean hotWaterConnection, Boolean centralHeatingConnection, BigDecimal predictedHotWaterConsumption, String firstName, String surname) {
         super(id, version);
         this.createdBy = createdBy;
         this.placeNumber = placeNumber;
@@ -30,7 +30,7 @@ public class PlaceDTO extends AbstractDTO implements Signable {
         this.centralHeatingConnection = centralHeatingConnection;
         this.predictedHotWaterConsumption = predictedHotWaterConsumption;
         this.firstName = firstName;
-        this.suername = suername;
+        this.surname = surname;
     }
 
     @Override
@@ -42,6 +42,6 @@ public class PlaceDTO extends AbstractDTO implements Signable {
                 .concat(getCentralHeatingConnection().toString())
                 .concat(getPredictedHotWaterConsumption().toString())
                 .concat(firstName)
-                .concat(suername);
+                .concat(surname);
     }
 }
