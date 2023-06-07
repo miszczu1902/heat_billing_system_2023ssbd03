@@ -41,7 +41,6 @@ public class PlaceEndpoint {
 
     private int txRetries = Integer.parseInt(LoadConfig.loadPropertyFromConfig("tx.retries"));
 
-
     //MOW 10
     @GET
     @Path("/place/{placeId}")
