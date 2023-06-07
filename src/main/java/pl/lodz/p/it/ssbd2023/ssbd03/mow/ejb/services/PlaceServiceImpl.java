@@ -6,10 +6,13 @@ import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.security.enterprise.SecurityContext;
 import jakarta.servlet.http.HttpServletRequest;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
+import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Internationalization;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
@@ -33,6 +36,12 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
 
     @Inject
     private MessageSigner messageSigner;
+
+    @Inject
+    private SecurityContext securityContext;
+
+    @Inject
+    private AccountFacade accountFacade;
 
     @Override
     @RolesAllowed(Roles.MANAGER)
@@ -71,8 +80,10 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
     }
 
     @Override
-    @RolesAllowed({Roles.MANAGER})
-    public List<Place> getSelfAllPlaces() {
-        throw new UnsupportedOperationException();
+    @RolesAllowed(Roles.OWNER)
+    public List<Place> getSelfAllPlaces(int pageNumber, int pageSize) {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Account account = accountFacade.findByUsername(username);
+        return placeFacade.findByOwner(account, pageNumber, pageSize);
     }
 }

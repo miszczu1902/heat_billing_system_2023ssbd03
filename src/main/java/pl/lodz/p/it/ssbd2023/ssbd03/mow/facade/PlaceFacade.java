@@ -9,6 +9,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 
@@ -70,8 +71,14 @@ public class PlaceFacade extends AbstractFacade<Place> {
         return tq.getResultList();
     }
 
-    @RolesAllowed({Roles.OWNER})
-    public List<Place> findByOwner() {
-        throw new UnsupportedOperationException();
+    @RolesAllowed(Roles.OWNER)
+    public List<Place> findByOwner(Account account, int pageNumber, int pageSize) {
+        TypedQuery<Place> tq = em.createNamedQuery("Place.findPlacesByOwner", Place.class);
+        tq.setParameter("id", account.getId());
+        if (pageNumber != 0) {
+            tq.setFirstResult((pageNumber - 1) * pageSize);
+            tq.setMaxResults(pageSize);
+        }
+        return tq.getResultList();
     }
 }
