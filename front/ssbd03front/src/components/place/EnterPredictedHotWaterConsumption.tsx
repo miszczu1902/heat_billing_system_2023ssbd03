@@ -70,7 +70,7 @@ const EnterPredictedHotWaterConsumption = () => {
             consumption: predictedHotWaterConsumption,
             version: version
         }
-        axios.post(`${API_URL}/places/place/${placeId}/predicted-hot-water-consumption`,
+        axios.patch(`${API_URL}/places/place/${placeId}/predicted-hot-water-consumption`,
         enterPredictedHotWaterConsumptionDTO, {
             headers: {
                 'Authorization': token,
