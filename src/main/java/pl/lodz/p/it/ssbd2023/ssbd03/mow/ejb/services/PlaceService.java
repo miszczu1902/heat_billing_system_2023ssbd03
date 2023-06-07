@@ -19,7 +19,8 @@ public interface PlaceService extends CommonManagerLocalInterface {
 
     void enterHotWaterConsumption(String placeId, LocalDate date, BigDecimal value);
 
-    void enterPredictedHotWaterConsumption(String placeId, String consumption, String etag, Long version, String userRole);
+    void enterPredictedHotWaterConsumption(String placeId, BigDecimal consumption, String etag, Long version,
+                                           String username, boolean isOwner);
 
     Place getPlace(String placeId);
 

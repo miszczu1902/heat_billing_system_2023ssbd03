@@ -8,18 +8,15 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.core.Context;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Internationalization;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.PlaceMapper;
 
 import java.math.BigDecimal;
 import java.security.Principal;
@@ -42,9 +39,6 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
 
     @Inject
     private MessageSigner messageSigner;
-
-    @Inject
-    private SecurityContext securityContext;
 
     @Inject
     private AccountFacade accountFacade;
@@ -71,9 +65,14 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
 
     @Override
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    public void enterPredictedHotWaterConsumption(String placeId, String consumption, String etag, Long version, String userRole) {
+    public void enterPredictedHotWaterConsumption(String placeId, BigDecimal consumption, String etag, Long version,
+                                                  String username, boolean isOwner) {
         final Long id = Long.valueOf(placeId);
         Place place = placeFacade.findPlaceById(id);
+
+        if (isOwner && !place.getOwner().getAccount().getUsername().equals(username)) {
+            throw AppException.createNotOwnerOfPlaceException();
+        }
 
         if (!etag.equals(messageSigner.sign(place))) {
             throw AppException.createVerifierException();
@@ -83,12 +82,11 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
             throw AppException.createOptimisticLockAppException();
         }
 
-        if (place.getPredictedHotWaterConsumption().intValue() != 0.00
-                && userRole.equals("OWNER")) {
+        if (place.getPredictedHotWaterConsumption().intValue() != 0.00 && isOwner) {
             throw AppException.createPredictedHotWaterConsumptionValueAlreadySetException();
         }
 
-        place.setPredictedHotWaterConsumption(new BigDecimal(consumption));
+        place.setPredictedHotWaterConsumption(consumption);
         placeFacade.edit(place);
     }
 

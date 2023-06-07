@@ -13,6 +13,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.VerifierException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.heatDistributionCentre.ConsumptionAddException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.heatDistributionCentre.NoHeatDistributionCentreException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.personalData.PersonalDataConstraintViolationException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.NotPlaceOfLocalException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.PredictedHotWaterConsumptionValueAlreadySetException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
@@ -61,6 +62,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ADDING_HEAT_VALUES = "exception.heat_distribution_centre.overwriting";
     protected final static String ERROR_NO_HEAT_DISTRIBUTION_CENTRE = "exception.heat_distribution_centre.not_exists";
     protected final static String ERROR_PREDICTED_HOT_WATER_CONSUMPTION_VALUE_ALREADY_SET = "exception.predicted_hot_water_consumption_value_already_set";
+    protected final static String ERROR_NOT_OWNER_OF_THIS_PLACE = "excpetion.not_owner_of_this_place";
 
     @Getter
     private Throwable cause;
@@ -241,5 +243,9 @@ public class AppException extends WebApplicationException {
 
     public static PredictedHotWaterConsumptionValueAlreadySetException createPredictedHotWaterConsumptionValueAlreadySetException() {
         return new PredictedHotWaterConsumptionValueAlreadySetException(ERROR_PREDICTED_HOT_WATER_CONSUMPTION_VALUE_ALREADY_SET, Response.Status.FORBIDDEN);
+    }
+
+    public static NotPlaceOfLocalException createNotOwnerOfPlaceException() {
+        return new NotPlaceOfLocalException(ERROR_NOT_OWNER_OF_THIS_PLACE, Response.Status.FORBIDDEN);
     }
 }

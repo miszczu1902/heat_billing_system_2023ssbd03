@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.VersionDTO;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
@@ -19,9 +20,9 @@ public class EnterPredictedHotWaterConsumptionDTO extends VersionDTO implements 
     @NotNull
     @DecimalMin(value = "0")
     @Digits(integer = 8, fraction = 2, message = "value can have 8 digits before the decimal point and max 2 digits after the decimal point")
-    String consumption;
+    BigDecimal consumption;
 
-    public EnterPredictedHotWaterConsumptionDTO(int version, String consumption) {
+    public EnterPredictedHotWaterConsumptionDTO(int version, BigDecimal consumption) {
         super(version);
         this.consumption = consumption;
     }

@@ -30,7 +30,7 @@ public class PlaceFacade extends AbstractFacade<Place> {
     }
 
     @Override
-    @RolesAllowed({Roles.MANAGER})
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public void edit(Place entity) {
         super.edit(entity);
     }

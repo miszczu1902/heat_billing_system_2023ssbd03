@@ -86,16 +86,16 @@ public class PlaceEndpoint {
     }
 
     //MOW M17
-    @POST
+    @PATCH
     @Path("/place/{placeId}/predicted-hot-water-consumption")
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public Response enterPredictedHotWaterConsumption(@NotBlank @PathParam("placeId") String placeId,
                                                       @NotNull @Valid EnterPredictedHotWaterConsumptionDTO enterPredictedHotWaterConsumptionDTO,
                                                       @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        String userRole = request.isUserInRole("OWNER")?
-                "OWNER":
-                "MANAGER";
+
+        final String user = request.getUserPrincipal().getName();
+        final boolean userRole = request.isUserInRole("OWNER");
 
         int retryTXCounter = txRetries; //limit prób ponowienia transakcji
         boolean rollbackTX = false;
@@ -104,7 +104,7 @@ public class PlaceEndpoint {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
                 placeService.enterPredictedHotWaterConsumption(placeId, enterPredictedHotWaterConsumptionDTO.getConsumption(),
-                        etag, enterPredictedHotWaterConsumptionDTO.getVersion(), userRole);
+                        etag, enterPredictedHotWaterConsumptionDTO.getVersion(), user, userRole);
                 rollbackTX = placeService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
@@ -120,7 +120,7 @@ public class PlaceEndpoint {
             throw AppException.createTransactionRollbackException();
         }
         placeService.enterPredictedHotWaterConsumption(placeId, enterPredictedHotWaterConsumptionDTO.getConsumption(),
-                etag, enterPredictedHotWaterConsumptionDTO.getVersion(), userRole);
+                etag, enterPredictedHotWaterConsumptionDTO.getVersion(), user, userRole);
         return Response.noContent().build();
     }
 
