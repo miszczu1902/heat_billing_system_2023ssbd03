@@ -16,9 +16,9 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.heatDistributionCentre.Consumptio
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.heatDistributionCentre.NoHeatDistributionCentreException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.personalData.PersonalDataConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.HotWaterEntryCouldNotBeInsertedException;
 
 @ApplicationException(rollback = true)
 public class AppException extends WebApplicationException {
@@ -64,6 +64,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_NO_HEAT_DISTRIBUTION_CENTRE = "exception.heat_distribution_centre.not_exists";
     protected final static String ERROR_ADVANCE_CHANGE_FACTOR_NOT_MODIFIED = "exception.advance_factor.cannot_modify_factor";
     protected final static String ERROR_ADVANCE_CHANGE_FACTOR_WAS_INSERTED = "exception.advance_factor.factor_was_inserted";
+    protected final static String ERROR_HOT_WATER_ENTRY_NOT_INSERTED = "exception.hot_water_entry.not_inserted";
 
     @Getter
     private Throwable cause;
@@ -235,18 +236,22 @@ public class AppException extends WebApplicationException {
         return new BuildingCommunalAreaBiggerOrEqualTotalAreaException(COMMUNAL_AREA_EQUAL_OR_BIGGER_THAT_TOTAL_AREA, Response.Status.FORBIDDEN);
     }
 
-    public static ConsumptionAddException consumptionAddException() {
+    public static ConsumptionAddException createConsumptionAddException() {
         return new ConsumptionAddException(ERROR_ADDING_HEAT_VALUES, Response.Status.CONFLICT);
     }
-    public static NoHeatDistributionCentreException noHeatDistributionCentreException() {
+    public static NoHeatDistributionCentreException createNoHeatDistributionCentreException() {
         return new NoHeatDistributionCentreException(ERROR_NO_HEAT_DISTRIBUTION_CENTRE, Response.Status.NOT_FOUND);
     }
 
-    public static AdvanceChangeFactorNotModified advanceChangeFactorNotModifiedException() {
+    public static AdvanceChangeFactorNotModified createAdvanceChangeFactorNotModifiedException() {
         return new AdvanceChangeFactorNotModified(ERROR_ADVANCE_CHANGE_FACTOR_NOT_MODIFIED, Response.Status.BAD_REQUEST);
     }
 
-    public static AdvanceChangeFactorWasInserted advanceChangeFactorWasInsertedException() {
+    public static AdvanceChangeFactorWasInserted createAdvanceChangeFactorWasInsertedException() {
         return new AdvanceChangeFactorWasInserted(ERROR_ADVANCE_CHANGE_FACTOR_WAS_INSERTED, Response.Status.CONFLICT);
+    }
+
+    public static HotWaterEntryCouldNotBeInsertedException createHotWaterEntryCouldNotBeInsertedException() {
+        return new HotWaterEntryCouldNotBeInsertedException(ERROR_HOT_WATER_ENTRY_NOT_INSERTED, Response.Status.BAD_REQUEST);
     }
 }

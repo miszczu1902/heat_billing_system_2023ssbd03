@@ -11,7 +11,9 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.AddConsumptionDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyAdvanceChangeFactorDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.InsertAdvanceChangeFactorDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.InsertHotWaterEntryDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyHotWaterEntryDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
@@ -20,7 +22,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.HeatDistributionCentreServi
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 
-import java.math.BigDecimal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -55,20 +56,30 @@ public class HeatDistributionCentreEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @PATCH
     @RolesAllowed(Roles.MANAGER)
-    public Response modifyHeatingAreaFactor(ModifyAdvanceChangeFactorDTO modifyAdvanceChangeFactorDTO) {
-        heatDistributionCentreService.modifyHeatingAreaFactor(
-                modifyAdvanceChangeFactorDTO.getAdvanceChangeFactor(), modifyAdvanceChangeFactorDTO.getBuildingId());
+    public Response insertHeatingAreaFactor(InsertAdvanceChangeFactorDTO insertAdvanceChangeFactorDTO) {
+        heatDistributionCentreService.insertHeatingAreaFactor(
+                insertAdvanceChangeFactorDTO.getAdvanceChangeFactor(), insertAdvanceChangeFactorDTO.getBuildingId());
         return Response.status(204).build();
     }
 
     //MOW 13
-    @Path("/parameters/consumption")
+    @Path("/parameters/insert-consumption")
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
+    public Response insertConsumption(InsertHotWaterEntryDTO hotWaterEntryDTO) {
+        heatDistributionCentreService.insertConsumption(hotWaterEntryDTO.getHotWaterConsumption(), hotWaterEntryDTO.getPlaceId());
+        return Response.status(204).build();
+    }
+
+    //MOW 13
+    @Path("/parameters/insert-consumption")
     @Produces(MediaType.APPLICATION_JSON)
     @PATCH
-    @RolesAllowed({Roles.MANAGER})
-    public Response modifyConsumption(BigDecimal consumptionValue) {
-        heatDistributionCentreService.modifyConsumption(consumptionValue);
-        return Response.status(200).build();
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
+    public Response modifyConsumption(ModifyHotWaterEntryDTO hotWaterEntryDTO) {
+        heatDistributionCentreService.modifyConsumption(hotWaterEntryDTO.getHotWaterConsumption(), hotWaterEntryDTO.getPlaceId());
+        return Response.status(204).build();
     }
 
     //MOW 14,15,16

@@ -12,10 +12,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
-import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.HeatDistributionCentreFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.HeatDistributionCentrePayoffFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.HeatingPlaceAndCommunalAreaAdvanceFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Internationalization;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 
@@ -50,6 +47,12 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @Inject
     private PlaceFacade placeFacade;
 
+    @Inject
+    private HotWaterEntryFacade hotWaterEntryFacade;
+
+    @Inject
+    private AccessLevelMappingFacade accessLevelMappingFacade;
+
     @Override
     @RolesAllowed({Roles.MANAGER})
     public Void getHeatDistributionCentreParameters() {
@@ -58,9 +61,9 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public void modifyHeatingAreaFactor(BigDecimal heatingAreaFactorValue, Long buildingId) {
+    public void insertHeatingAreaFactor(BigDecimal heatingAreaFactorValue, Long buildingId) {
         LocalDate date = LocalDate.now();
-        if (date.getDayOfMonth() != 1) throw AppException.advanceChangeFactorNotModifiedException();
+        if (date.getDayOfMonth() != 1) throw AppException.createAdvanceChangeFactorNotModifiedException();
         else date = date.minusMonths(3);
 
         if (heatingPlaceAndCommunalAreaAdvanceFacade.checkIfAdvanceChangeFactorNotModified(buildingId, date)) {
@@ -68,12 +71,32 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
             places.forEach(place -> heatingPlaceAndCommunalAreaAdvanceFacade.create(
                     new HeatingPlaceAndCommunalAreaAdvance(LocalDate.now(), place,
                             new BigDecimal(0), new BigDecimal(0), heatingAreaFactorValue)));
-        } else throw AppException.advanceChangeFactorWasInsertedException();
+        } else throw AppException.createAdvanceChangeFactorWasInsertedException();
     }
 
     @Override
-    @RolesAllowed({Roles.MANAGER})
-    public void modifyConsumption(BigDecimal consumptionValue) {
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
+    public void insertConsumption(BigDecimal consumptionValue, Long placeId) {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Place place = placeFacade.findPlaceByPlaceId(placeId);
+
+        if (!hotWaterEntryFacade.checkIfHotWaterEntryWasInserted(placeId) && place != null) {
+            HotWaterEntry hotWaterEntry;
+            if (securityContext.isCallerInRole(Roles.MANAGER)) {
+                hotWaterEntry = new HotWaterEntry(LocalDate.now(), consumptionValue, place, accessLevelMappingFacade.findManagerByUsername(username));
+            } else {
+                hotWaterEntry = new HotWaterEntry(LocalDate.now(), consumptionValue, place);
+            }
+
+            hotWaterEntryFacade.create(hotWaterEntry);
+        } else {
+            throw AppException.createHotWaterEntryCouldNotBeInsertedException();
+        }
+    }
+
+    @Override
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
+    public void modifyConsumption(BigDecimal consumptionValue, Long placeId) {
         throw new UnsupportedOperationException();
     }
 
@@ -81,11 +104,11 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @RolesAllowed({Roles.MANAGER})
     public void addConsumptionFromInvoice(BigDecimal consumption, BigDecimal consumptionCost, BigDecimal heatingAreaFactor, Manager manager) {
         if (!heatDistributionCentrePayoffFacade.checkIfRecordForThisMonthNotExists()) {
-            throw AppException.consumptionAddException();
+            throw AppException.createConsumptionAddException();
         }
         final List<HeatDistributionCentre> heatDistributionCentre = heatDistributionCentreFacade.getListOfHeatDistributionCentre();
         if (heatDistributionCentre.isEmpty()) {
-            throw AppException.noHeatDistributionCentreException();
+            throw AppException.createNoHeatDistributionCentreException();
         }
         HeatDistributionCentrePayoff heatDistributionCentrePayoff = new HeatDistributionCentrePayoff(consumption, consumptionCost, LocalDate.now(), heatingAreaFactor, manager, heatDistributionCentre.get(0));
 

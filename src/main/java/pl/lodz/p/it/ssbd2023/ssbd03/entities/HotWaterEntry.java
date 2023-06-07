@@ -18,6 +18,10 @@ import java.time.LocalDate;
                 @Index(name = "hot_water_entry_place_id", columnList = "place_id"),
                 @Index(name = "hot_water_entry_manager_id", columnList = "manager_id")
         })
+@NamedQueries({
+        @NamedQuery(name = "HotWaterEntry.checkIfHotWaterEntryWasInserted",
+                query = "SELECT e FROM HotWaterEntry e WHERE e.place.id = :placeId AND e.date >= :begin AND e.date <= :now")
+})
 public class HotWaterEntry extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,4 +43,17 @@ public class HotWaterEntry extends AbstractEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "manager_id", updatable = false, referencedColumnName = "id")
     private Manager manager;
+
+    public HotWaterEntry(LocalDate date, BigDecimal entryValue, Place place) {
+        this.date = date;
+        this.entryValue = entryValue;
+        this.place = place;
+    }
+
+    public HotWaterEntry(LocalDate date, BigDecimal entryValue, Place place, Manager manager) {
+        this.date = date;
+        this.entryValue = entryValue;
+        this.place = place;
+        this.manager = manager;
+    }
 }
