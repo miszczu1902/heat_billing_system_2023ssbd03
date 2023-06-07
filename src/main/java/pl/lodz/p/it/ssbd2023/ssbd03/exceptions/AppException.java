@@ -6,6 +6,8 @@ import jakarta.ws.rs.core.Response;
 import lombok.Getter;
 import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.advanceFactor.AdvanceChangeFactorNotModified;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.advanceFactor.AdvanceChangeFactorWasInserted;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.building.BuildingCommunalAreaBiggerOrEqualTotalAreaException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.SignerException;
@@ -60,6 +62,8 @@ public class AppException extends WebApplicationException {
     protected final static String COMMUNAL_AREA_EQUAL_OR_BIGGER_THAT_TOTAL_AREA = "exception.building.communal_area_equal_or_bigger_that_total_area";
     protected final static String ERROR_ADDING_HEAT_VALUES = "exception.heat_distribution_centre.overwriting";
     protected final static String ERROR_NO_HEAT_DISTRIBUTION_CENTRE = "exception.heat_distribution_centre.not_exists";
+    protected final static String ERROR_ADVANCE_CHANGE_FACTOR_NOT_MODIFIED = "exception.advance_factor.cannot_modify_factor";
+    protected final static String ERROR_ADVANCE_CHANGE_FACTOR_WAS_INSERTED = "exception.advance_factor.factor_was_inserted";
 
     @Getter
     private Throwable cause;
@@ -236,5 +240,13 @@ public class AppException extends WebApplicationException {
     }
     public static NoHeatDistributionCentreException noHeatDistributionCentreException() {
         return new NoHeatDistributionCentreException(ERROR_NO_HEAT_DISTRIBUTION_CENTRE, Response.Status.NOT_FOUND);
+    }
+
+    public static AdvanceChangeFactorNotModified advanceChangeFactorNotModifiedException() {
+        return new AdvanceChangeFactorNotModified(ERROR_ADVANCE_CHANGE_FACTOR_NOT_MODIFIED, Response.Status.BAD_REQUEST);
+    }
+
+    public static AdvanceChangeFactorWasInserted advanceChangeFactorWasInsertedException() {
+        return new AdvanceChangeFactorWasInserted(ERROR_ADVANCE_CHANGE_FACTOR_WAS_INSERTED, Response.Status.CONFLICT);
     }
 }

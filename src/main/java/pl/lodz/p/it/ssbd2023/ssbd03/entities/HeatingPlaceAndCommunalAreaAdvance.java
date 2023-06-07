@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @Table(name = "heating_place_and_communal_area_advance")
 @NamedQueries({
         @NamedQuery(name = "HeatingPlaceAndCommunalAreaAdvance.getAllHeatingPlaceAndCommunalAreaAdvances",
-                query = "SELECT a FROM HeatingPlaceAndCommunalAreaAdvance a")
+                query = "SELECT a FROM HeatingPlaceAndCommunalAreaAdvance a WHERE a.place.id = :placeId AND a.date >= :date ORDER BY a.date DESC")
 })
 public final class HeatingPlaceAndCommunalAreaAdvance extends Advance implements Serializable {
 
@@ -36,8 +36,8 @@ public final class HeatingPlaceAndCommunalAreaAdvance extends Advance implements
     @Column(name = "advance_change_factor", nullable = false)
     private BigDecimal advanceChangeFactor;
 
-    public HeatingPlaceAndCommunalAreaAdvance(LocalDate date, BigDecimal heatingPlaceAdvanceValue, BigDecimal heatingCommunalAreaAdvanceValue, BigDecimal advanceChangeFactor) {
-        super(date);
+    public HeatingPlaceAndCommunalAreaAdvance(LocalDate date, Place place, BigDecimal heatingPlaceAdvanceValue, BigDecimal heatingCommunalAreaAdvanceValue, BigDecimal advanceChangeFactor) {
+        super(date, place);
         this.heatingPlaceAdvanceValue = heatingPlaceAdvanceValue;
         this.heatingCommunalAreaAdvanceValue = heatingCommunalAreaAdvanceValue;
         this.advanceChangeFactor = advanceChangeFactor;

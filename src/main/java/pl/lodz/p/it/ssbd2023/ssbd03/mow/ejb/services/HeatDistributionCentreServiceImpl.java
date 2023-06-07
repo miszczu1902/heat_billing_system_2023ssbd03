@@ -15,12 +15,12 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.HeatDistributionCentreFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.HeatDistributionCentrePayoffFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.HeatingPlaceAndCommunalAreaAdvanceFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Internationalization;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Stateful
@@ -47,6 +47,9 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @Inject
     private HeatingPlaceAndCommunalAreaAdvanceFacade heatingPlaceAndCommunalAreaAdvanceFacade;
 
+    @Inject
+    private PlaceFacade placeFacade;
+
     @Override
     @RolesAllowed({Roles.MANAGER})
     public Void getHeatDistributionCentreParameters() {
@@ -55,21 +58,19 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public void modifyHeatingAreaFactor(BigDecimal heatingAreaFactorValue) {
-        List<HeatingPlaceAndCommunalAreaAdvance> advances = heatingPlaceAndCommunalAreaAdvanceFacade.getAllAdvancesForPlaceAndCommunalArea()
-                .stream().filter(advance -> !advance.getDate().isBefore(LocalDate.now().minusMonths(3)))
-                .toList();
+    public void modifyHeatingAreaFactor(BigDecimal heatingAreaFactorValue, Long placeId) {
+        LocalDate date = LocalDate.now();
+        if (date.getDayOfMonth() != 1) throw AppException.advanceChangeFactorNotModifiedException();
+        else date = date.minusMonths(3);
 
-        //TODO - tutaj przy liczeniu zaliczek przez system trzeba wywołać metody ze schedulera do liczenia zaliczek
-        if (!advances.isEmpty()) {
-            advances.forEach(advance -> {
-                advance.setAdvanceChangeFactor(heatingAreaFactorValue);
-                heatingPlaceAndCommunalAreaAdvanceFacade.edit(advance);
-            });
-        } else {
+        if (heatingPlaceAndCommunalAreaAdvanceFacade.checkIfAdvanceChangeFactorNotModified(placeId, date)) {
+            Place place = placeFacade.findByPlaceId(placeId);
             heatingPlaceAndCommunalAreaAdvanceFacade.create(
-                    new HeatingPlaceAndCommunalAreaAdvance(LocalDate.now(), new BigDecimal(0), new BigDecimal(0), heatingAreaFactorValue));
-        }
+                    new HeatingPlaceAndCommunalAreaAdvance(LocalDate.now(), place,
+                            new BigDecimal(0), new BigDecimal(0), heatingAreaFactorValue));
+
+            //TODO - tutaj przy liczeniu zaliczek przez system trzeba wywołać metody ze schedulera do liczenia zaliczek
+        } else throw AppException.advanceChangeFactorWasInsertedException();
     }
 
     @Override

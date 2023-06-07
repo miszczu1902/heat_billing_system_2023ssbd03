@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
+import {Button, Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
 import {AccountFromList} from '../../types/accountFromList';
 import axios from 'axios';
 import {API_URL} from '../../consts';
 import {useNavigate} from "react-router-dom";
 import {useTranslation} from "react-i18next";
+import RefreshIcon from "../icons/RefreshIcon";
 
 const AccountsList = () => {
     const {t, i18n} = useTranslation();
@@ -17,7 +18,7 @@ const AccountsList = () => {
     const [total, setTotal] = useState<number>(0);
 
     const fetchData = async () => {
-        axios.get(`${API_URL}/accounts?sortBy=${sortBy}&pageNumber=${pageNumber}&pageSize=${size}`, {
+        axios.get(`${API_URL}/accounts?sortBy=${sortBy}`, {
             headers: {
                 Authorization: token
             }
@@ -31,7 +32,7 @@ const AccountsList = () => {
 
     useEffect(() => {
         fetchData();
-    }, [sortBy, pageNumber, size]);
+    }, [sortBy]);
 
     const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
         setPageNumber(newPage);
@@ -40,6 +41,11 @@ const AccountsList = () => {
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setSize(parseInt(event.target.value, size));
         setPageNumber(pageNumber);
+    };
+
+    const handleClick = () => {
+        fetchData();
+        navigate('/accounts');
     };
 
     const handleSort = (column: string) => {
@@ -51,6 +57,7 @@ const AccountsList = () => {
     }
 
     return (
+
         <TableContainer component={Paper}>
             <Table aria-label='simple table'>
                 <TableHead>
@@ -83,6 +90,7 @@ const AccountsList = () => {
                                 <TableCell>{t('account_list.unconfirmed')}</TableCell>}
                         </TableRow>
                     ))}
+                    <TableRow><Button className="landing-page-button" onClick={handleClick}><RefreshIcon/></Button></TableRow>
                 </TableBody>
             </Table>
         </TableContainer>

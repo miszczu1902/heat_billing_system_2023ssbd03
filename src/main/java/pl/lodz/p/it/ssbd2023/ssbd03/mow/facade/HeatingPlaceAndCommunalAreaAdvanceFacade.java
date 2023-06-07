@@ -11,7 +11,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatingPlaceAndCommunalAreaAdvance;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -47,10 +47,12 @@ public class HeatingPlaceAndCommunalAreaAdvanceFacade extends AbstractFacade<Hea
     }
 
     @RolesAllowed({Roles.MANAGER})
-    public List<HeatingPlaceAndCommunalAreaAdvance> getAllAdvancesForPlaceAndCommunalArea() {
+    public boolean checkIfAdvanceChangeFactorNotModified(Long placeId, LocalDate date) {
         TypedQuery<HeatingPlaceAndCommunalAreaAdvance> tq = em.createNamedQuery(
                 "HeatingPlaceAndCommunalAreaAdvance.getAllHeatingPlaceAndCommunalAreaAdvances",
                 HeatingPlaceAndCommunalAreaAdvance.class);
-        return tq.getResultList();
+        tq.setParameter("placeId", placeId);
+        tq.setParameter("date", date);
+        return tq.getResultList().isEmpty();
     }
 }
