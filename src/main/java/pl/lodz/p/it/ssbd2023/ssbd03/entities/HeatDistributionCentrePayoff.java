@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.common.HeatEntityListener;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -21,6 +22,7 @@ import java.time.LocalDate;
 @NamedQueries({
         @NamedQuery(name = "HeatDistributionCentrePayoff.getPayoffByDate", query = "SELECT k FROM HeatDistributionCentrePayoff k WHERE YEAR(k.date) = :year AND MONTH(k.date)= :month")
 })
+@EntityListeners(value = HeatEntityListener.class)
 public class HeatDistributionCentrePayoff extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

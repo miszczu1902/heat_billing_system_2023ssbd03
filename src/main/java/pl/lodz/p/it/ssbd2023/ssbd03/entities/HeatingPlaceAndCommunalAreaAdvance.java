@@ -5,6 +5,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.common.HeatEntityListener;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
         @NamedQuery(name = "HeatingPlaceAndCommunalAreaAdvance.getAllHeatingPlaceAndCommunalAreaAdvances",
                 query = "SELECT a FROM HeatingPlaceAndCommunalAreaAdvance a WHERE a.place.building.id = :buildingId AND a.date >= :date ORDER BY a.date DESC")
 })
+@EntityListeners(value = HeatEntityListener.class)
 public final class HeatingPlaceAndCommunalAreaAdvance extends Advance implements Serializable {
 
     @DecimalMin(value = "0")

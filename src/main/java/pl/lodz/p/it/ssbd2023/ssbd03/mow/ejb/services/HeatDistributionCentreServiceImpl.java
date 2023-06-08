@@ -67,20 +67,24 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
         else date = date.minusMonths(3);
 
         if (heatingPlaceAndCommunalAreaAdvanceFacade.checkIfAdvanceChangeFactorNotModified(buildingId, date)) {
-            List<Place> places = placeFacade.findPlacesByBuildingId(buildingId);
+            final List<Place> places = placeFacade.findPlacesByBuildingId(buildingId);
             places.forEach(place -> heatingPlaceAndCommunalAreaAdvanceFacade.create(
                     new HeatingPlaceAndCommunalAreaAdvance(LocalDate.now(), place,
                             new BigDecimal(0), new BigDecimal(0), heatingAreaFactorValue)));
+
+            //TODO - tu trzeba dodac wywolanie metody liczaczej zaliczke z mowSchedulera
         } else throw AppException.createAdvanceChangeFactorWasInsertedException();
     }
 
     @Override
     @RolesAllowed({Roles.OWNER, Roles.MANAGER})
     public void insertConsumption(BigDecimal consumptionValue, Long placeId) {
-        final String username = securityContext.getCallerPrincipal().getName();
-        final Place place = placeFacade.findPlaceByPlaceId(placeId);
+        if (!hotWaterEntryFacade.checkIfHotWaterEntryWasInsertedOrCouldBeOverwritten(placeId)) {
+            final String username = securityContext.getCallerPrincipal().getName();
+            final Place place = placeFacade.findPlaceByPlaceIdAndUsername(placeId, username);
 
-        if (!hotWaterEntryFacade.checkIfHotWaterEntryWasInserted(placeId) && place != null) {
+            if (place == null) throw AppException.createHotWaterEntryCouldNotBeInsertedException();
+
             HotWaterEntry hotWaterEntry;
             if (securityContext.isCallerInRole(Roles.MANAGER)) {
                 hotWaterEntry = new HotWaterEntry(LocalDate.now(), consumptionValue, place, accessLevelMappingFacade.findManagerByUsername(username));
@@ -97,7 +101,18 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @Override
     @RolesAllowed({Roles.OWNER, Roles.MANAGER})
     public void modifyConsumption(BigDecimal consumptionValue, Long placeId) {
-        throw new UnsupportedOperationException();
+//        if (hotWaterEntryFacade.checkIfHotWaterEntryWasInsertedOrCouldBeOverwritten(placeId)) {
+//            final String username = securityContext.getCallerPrincipal().getName();
+//            placeId
+//            if (securityContext.isCallerInRole(Roles.MANAGER)) {
+//                hotWaterEntryFacade.findNewestHotWaterEntryForPlace(placeId);
+//                hotWaterEntryFacade.edit();
+//            } else {
+//
+//            }
+//        } else {
+//            throw AppException.createHotWaterEntryCouldNotBeModifiedException();
+//        }
     }
 
     @Override

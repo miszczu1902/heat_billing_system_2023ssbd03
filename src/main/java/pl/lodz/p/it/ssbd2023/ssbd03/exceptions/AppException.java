@@ -21,6 +21,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.HotWaterEntryCouldNotBeInsertedException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.HotWaterEntryCouldNotBeModifiedException;
 
 @ApplicationException(rollback = true)
 public class AppException extends WebApplicationException {
@@ -69,6 +70,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ADVANCE_CHANGE_FACTOR_NOT_MODIFIED = "exception.advance_factor.cannot_modify_factor";
     protected final static String ERROR_ADVANCE_CHANGE_FACTOR_WAS_INSERTED = "exception.advance_factor.factor_was_inserted";
     protected final static String ERROR_HOT_WATER_ENTRY_NOT_INSERTED = "exception.hot_water_entry.not_inserted";
+    protected final static String ERROR_HOT_WATER_ENTRY_NOT_MODIFIED = "exception.hot_water_entry.not_modified";
 
     @Getter
     private Throwable cause;
@@ -265,6 +267,10 @@ public class AppException extends WebApplicationException {
 
     public static HotWaterEntryCouldNotBeInsertedException createHotWaterEntryCouldNotBeInsertedException() {
         return new HotWaterEntryCouldNotBeInsertedException(ERROR_HOT_WATER_ENTRY_NOT_INSERTED, Response.Status.BAD_REQUEST);
+    }
+
+    public static HotWaterEntryCouldNotBeModifiedException createHotWaterEntryCouldNotBeModifiedException() {
+        return new HotWaterEntryCouldNotBeModifiedException(ERROR_HOT_WATER_ENTRY_NOT_MODIFIED, Response.Status.CONFLICT);
     }
 }
 

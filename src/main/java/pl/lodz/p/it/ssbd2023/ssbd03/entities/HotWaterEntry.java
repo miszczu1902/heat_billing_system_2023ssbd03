@@ -19,8 +19,8 @@ import java.time.LocalDate;
                 @Index(name = "hot_water_entry_manager_id", columnList = "manager_id")
         })
 @NamedQueries({
-        @NamedQuery(name = "HotWaterEntry.checkIfHotWaterEntryWasInserted",
-                query = "SELECT e FROM HotWaterEntry e WHERE e.place.id = :placeId AND e.date >= :begin AND e.date <= :now")
+        @NamedQuery(name = "HotWaterEntry.checkIfHotWaterEntryCouldBeInserted",
+                query = "SELECT e FROM HotWaterEntry e WHERE e.place.id = :placeId AND YEAR(e.date) = YEAR(:date) AND MONTH(e.date) = MONTH(:date) AND e.manager IS NULL")
 })
 public class HotWaterEntry extends AbstractEntity implements Serializable {
     @Id

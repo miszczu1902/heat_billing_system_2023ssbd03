@@ -5,5 +5,5 @@ import jakarta.ejb.Local;
 @Local
 public interface CommonManagerLocalInterface {
 
-    public boolean isLastTransactionRollback();
+    boolean isLastTransactionRollback();
 }

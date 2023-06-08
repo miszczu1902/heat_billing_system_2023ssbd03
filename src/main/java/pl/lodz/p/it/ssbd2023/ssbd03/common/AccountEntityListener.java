@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
-public class EntityListener {
+public class AccountEntityListener {
     @PrePersist
     public void initCreatedBy(AbstractEntity entity) {
         final Principal principal = CDI.current().select(SecurityContext.class).get().getCallerPrincipal();

@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.lodz.p.it.ssbd2023.ssbd03.common.AccountEntityListener;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ import java.time.LocalDateTime;
         @NamedQuery(name = "LoginData.findById", query = "SELECT d FROM LoginData d WHERE d.id = :id")
 })
 @Table(name = "login_data")
+@EntityListeners(value = AccountEntityListener.class)
 public class LoginData extends AbstractEntity implements Serializable {
     @Id
     @OneToOne

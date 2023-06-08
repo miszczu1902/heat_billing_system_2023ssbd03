@@ -90,7 +90,7 @@ public class PlaceFacade extends AbstractFacade<Place> {
     }
 
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    public Place findPlaceByUsername(Long placeId, String username) {
+    public Place findPlaceByPlaceIdAndUsername(Long placeId, String username) {
         TypedQuery<Place> tq = em.createNamedQuery("Place.findPlaceByUsernameAndCheckIfHeIsOwnerOfPlace", Place.class);
         tq.setParameter("placeId", placeId);
         tq.setParameter("username", username);

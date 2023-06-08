@@ -12,6 +12,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterEntry;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -46,13 +47,17 @@ public class HotWaterEntryFacade extends AbstractFacade<HotWaterEntry> {
     }
 
     @RolesAllowed({Roles.OWNER, Roles.MANAGER})
-    public boolean checkIfHotWaterEntryWasInserted(Long placeId) {
-        LocalDate now = LocalDate.now();
-        LocalDate begin = now.minusMonths(1);
-        TypedQuery<HotWaterEntry> tq = em.createNamedQuery("HotWaterEntry.checkIfHotWaterEntryWasInserted", HotWaterEntry.class);
-        tq.setParameter("begin", begin);
-        tq.setParameter("now", now);
+    public boolean checkIfHotWaterEntryWasInsertedOrCouldBeOverwritten(Long placeId) {
+        return findNewestHotWaterEntryForPlace(placeId) != null;
+    }
+
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
+    public HotWaterEntry findNewestHotWaterEntryForPlace(Long placeId) {
+        TypedQuery<HotWaterEntry> tq = em.createNamedQuery("HotWaterEntry.checkIfHotWaterEntryCouldBeInserted", HotWaterEntry.class);
+        tq.setParameter("date", LocalDate.now());
         tq.setParameter("placeId", placeId);
-        return !tq.getResultList().isEmpty();
+
+        List<HotWaterEntry> resultList = tq.getResultList();
+        return !resultList.isEmpty() ? resultList.get(0) : null;
     }
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import pl.lodz.p.it.ssbd2023.ssbd03.common.AccountEntityListener;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
                 query = "SELECT token FROM ResetPasswordToken token WHERE token.expirationDate < :currentTime"
         )
 })
+@EntityListeners(value = AccountEntityListener.class)
 public class ResetPasswordToken extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

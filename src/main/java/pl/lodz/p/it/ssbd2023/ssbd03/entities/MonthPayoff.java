@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.common.HeatEntityListener;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
                 @Index(name = "month_pay_off_place_id", columnList = "place_id"),
                 @Index(name = "month_pay_off_owner_id", columnList = "owner_id")
         })
+@EntityListeners(value = HeatEntityListener.class)
 public class MonthPayoff extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

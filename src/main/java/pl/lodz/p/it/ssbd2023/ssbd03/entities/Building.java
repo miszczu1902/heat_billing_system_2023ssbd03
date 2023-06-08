@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.common.HeatEntityListener;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -23,6 +24,7 @@ import java.util.List;
         @NamedQuery(name = "Building.findAll", query = "SELECT k FROM Building k"),
         @NamedQuery(name = "Building.findById", query = "SELECT k FROM Building k WHERE k.id = :id")
 })
+@EntityListeners(value = HeatEntityListener.class)
 public class Building extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

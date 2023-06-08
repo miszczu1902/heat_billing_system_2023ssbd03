@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.common.AccountEntityListener;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
 
 import java.time.LocalDateTime;
@@ -32,6 +33,7 @@ import java.util.Objects;
         @NamedQuery(name = "Account.findByEmail", query = "SELECT d FROM Account d WHERE d.email = :email"),
         @NamedQuery(name = "Account.getListOfAccountsByEmailAndEnableStatus", query = "SELECT d FROM Account d WHERE d.isEnable = :isEnable ORDER BY d.email")
 })
+@EntityListeners(value = AccountEntityListener.class)
 public class Account extends AbstractEntity implements Signable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

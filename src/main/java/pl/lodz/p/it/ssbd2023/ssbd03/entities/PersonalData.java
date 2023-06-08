@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.lodz.p.it.ssbd2023.ssbd03.common.AccountEntityListener;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
 
 import java.io.Serializable;
@@ -19,6 +20,7 @@ import java.util.Objects;
 @NamedQueries({
         @NamedQuery(name = "PersonalData.findByUsername", query = "SELECT k FROM PersonalData k WHERE k.id.username = :username")
 })
+@EntityListeners(value = AccountEntityListener.class)
 public class PersonalData extends AbstractEntity implements Serializable, Signable {
     @Id
     @OneToOne

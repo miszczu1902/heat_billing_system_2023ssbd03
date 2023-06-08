@@ -2,7 +2,6 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.common.EntityListener;
 
 import java.time.LocalDateTime;
 
@@ -10,7 +9,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @MappedSuperclass
-@EntityListeners(value = EntityListener.class)
 public abstract class AbstractEntity {
     @Version
     private Long version;

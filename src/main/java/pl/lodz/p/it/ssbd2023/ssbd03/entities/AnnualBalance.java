@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.common.HeatEntityListener;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -20,6 +21,7 @@ import java.math.BigDecimal;
 @NamedQueries({
         @NamedQuery(name = "AnnualBalance.findAllBalancesByPlacesId", query = "SELECT k FROM AnnualBalance k WHERE k.place.id IN :ids")
 })
+@EntityListeners(value = HeatEntityListener.class)
 public class AnnualBalance extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
