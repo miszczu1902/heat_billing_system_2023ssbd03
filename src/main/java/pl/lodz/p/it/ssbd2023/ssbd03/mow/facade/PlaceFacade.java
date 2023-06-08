@@ -9,6 +9,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 
@@ -30,7 +31,7 @@ public class PlaceFacade extends AbstractFacade<Place> {
     }
 
     @Override
-    @RolesAllowed({Roles.MANAGER})
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public void edit(Place entity) {
         super.edit(entity);
     }
@@ -70,6 +71,24 @@ public class PlaceFacade extends AbstractFacade<Place> {
         return tq.getResultList();
     }
 
+    @RolesAllowed(Roles.OWNER)
+    public List<Place> findByOwner(Account account, int pageNumber, int pageSize) {
+        TypedQuery<Place> tq = em.createNamedQuery("Place.findPlacesByOwner", Place.class);
+        tq.setParameter("id", account.getId());
+        if (pageNumber != 0) {
+            tq.setFirstResult((pageNumber - 1) * pageSize);
+            tq.setMaxResults(pageSize);
+        }
+        return tq.getResultList();
+    }
+
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    public Place findPlaceById(Long id) {
+        TypedQuery<Place> tq = em.createNamedQuery("Place.findById", Place.class);
+        tq.setParameter("id", id);
+        return tq.getSingleResult();
+    }
+
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public Place findPlaceByUsername(Long placeId, String username) {
         TypedQuery<Place> tq = em.createNamedQuery("Place.findPlaceByUsernameAndCheckIfHeIsOwnerOfPlace", Place.class);
@@ -86,8 +105,6 @@ public class PlaceFacade extends AbstractFacade<Place> {
         tq.setParameter("id", placeId);
         return tq.getSingleResult();
     }
-
-
 
     @RolesAllowed({Roles.OWNER})
     public List<Place> findByOwner() {

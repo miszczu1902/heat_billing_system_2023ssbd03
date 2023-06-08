@@ -26,8 +26,10 @@ import NotFoundPage from "../components/notFound/NotFoundPage";
 import Logout from "../components/login/Logout";
 import BuildingsList from '../components/building/BuildingsList';
 import AddInvoiceValues from '../components/heatDistributionCentrePayoff/AddInvoiceValues';
+import EnterPredictedHotWaterConsumption from '../components/place/EnterPredictedHotWaterConsumption';
 import AnnualBalances from "../components/annualBalance/AnnualBalances";
 import Building from "../components/building/Building";
+import PlacesList from "../components/places/PlacesList";
 
 interface PrivateRouteProps {
     component: React.ComponentType<any>;
@@ -170,6 +172,20 @@ const router = createBrowserRouter([
                     {
                         path: '/buildings/building/:buildingId',
                         element: <PrivateRoute component={Building} accessLevels={[ADMIN, MANAGER]}/>
+                    }
+                ]
+            },
+            {
+                path: '/places',
+                element: (<><NavbarPanel/><Outlet/></>),
+                children: [
+                    {
+                        path: '/places/place/enterPredictedHotWaterConsumption',
+                        element: <PrivateRoute component={EnterPredictedHotWaterConsumption} accessLevels={[OWNER, MANAGER]}/>
+                    },
+                    {
+                        path: '/places/self',
+                        element: <PrivateRoute component={PlacesList} accessLevels={[OWNER]}/>
                     }
                 ]
             },

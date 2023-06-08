@@ -15,6 +15,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.VerifierException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.heatDistributionCentre.ConsumptionAddException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.heatDistributionCentre.NoHeatDistributionCentreException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.personalData.PersonalDataConstraintViolationException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.NotOwnerOfPlaceException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.PredictedHotWaterConsumptionValueAlreadySetException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
@@ -62,6 +64,8 @@ public class AppException extends WebApplicationException {
     protected final static String COMMUNAL_AREA_EQUAL_OR_BIGGER_THAT_TOTAL_AREA = "exception.building.communal_area_equal_or_bigger_that_total_area";
     protected final static String ERROR_ADDING_HEAT_VALUES = "exception.heat_distribution_centre.overwriting";
     protected final static String ERROR_NO_HEAT_DISTRIBUTION_CENTRE = "exception.heat_distribution_centre.not_exists";
+    protected final static String ERROR_PREDICTED_HOT_WATER_CONSUMPTION_VALUE_ALREADY_SET = "exception.predicted_hot_water_consumption_value_already_set";
+    protected final static String ERROR_NOT_OWNER_OF_THIS_PLACE = "excpetion.not_owner_of_this_place";
     protected final static String ERROR_ADVANCE_CHANGE_FACTOR_NOT_MODIFIED = "exception.advance_factor.cannot_modify_factor";
     protected final static String ERROR_ADVANCE_CHANGE_FACTOR_WAS_INSERTED = "exception.advance_factor.factor_was_inserted";
     protected final static String ERROR_HOT_WATER_ENTRY_NOT_INSERTED = "exception.hot_water_entry.not_inserted";
@@ -243,6 +247,14 @@ public class AppException extends WebApplicationException {
         return new NoHeatDistributionCentreException(ERROR_NO_HEAT_DISTRIBUTION_CENTRE, Response.Status.NOT_FOUND);
     }
 
+    public static PredictedHotWaterConsumptionValueAlreadySetException createPredictedHotWaterConsumptionValueAlreadySetException() {
+        return new PredictedHotWaterConsumptionValueAlreadySetException(ERROR_PREDICTED_HOT_WATER_CONSUMPTION_VALUE_ALREADY_SET, Response.Status.FORBIDDEN);
+    }
+
+    public static NotOwnerOfPlaceException createNotOwnerOfPlaceException() {
+        return new NotOwnerOfPlaceException(ERROR_NOT_OWNER_OF_THIS_PLACE, Response.Status.FORBIDDEN);
+    }
+
     public static AdvanceChangeFactorNotModified createAdvanceChangeFactorNotModifiedException() {
         return new AdvanceChangeFactorNotModified(ERROR_ADVANCE_CHANGE_FACTOR_NOT_MODIFIED, Response.Status.BAD_REQUEST);
     }
@@ -255,3 +267,4 @@ public class AppException extends WebApplicationException {
         return new HotWaterEntryCouldNotBeInsertedException(ERROR_HOT_WATER_ENTRY_NOT_INSERTED, Response.Status.BAD_REQUEST);
     }
 }
+

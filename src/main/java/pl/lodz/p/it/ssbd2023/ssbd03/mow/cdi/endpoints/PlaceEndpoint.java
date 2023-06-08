@@ -1,18 +1,31 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.cdi.endpoints;
 
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.EnterPredictedHotWaterConsumptionDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.PlaceDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.PlaceService;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.PlaceMapper;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.time.LocalDate;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Path("/places")
@@ -26,13 +39,20 @@ public class PlaceEndpoint {
 
     protected static final Logger LOGGER = Logger.getGlobal();
 
+    private int txRetries = Integer.parseInt(LoadConfig.loadPropertyFromConfig("tx.retries"));
+
     //MOW 10
     @GET
     @Path("/place/{placeId}")
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public Response getPlace(@NotBlank @PathParam("placeId") String placeId) {
-        return Response.status(200).entity(placeService.getPlace(placeId)).build();
+        final Place place = placeService.getPlace(placeId);
+        final PlaceDTO placeDTO = PlaceMapper.createPlaceToPlaceDTO(place);
+        return Response.status(200)
+                .header("ETag", messageSigner.sign(placeDTO))
+                .entity(placeDTO)
+                .build();
     }
 
     //MOW 20
@@ -65,12 +85,42 @@ public class PlaceEndpoint {
     }
 
     //MOW M17
-    @POST
+    @PATCH
     @Path("/place/{placeId}/predicted-hot-water-consumption")
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    public Response enterPredictedHotWaterConsumption(@NotBlank @PathParam("placeId") String placeId, BigDecimal consumption) {
-        placeService.enterPredictedHotWaterConsumption(placeId, consumption);
-        return Response.status(200).build();
+    public Response enterPredictedHotWaterConsumption(@NotBlank @PathParam("placeId") String placeId,
+                                                      @NotNull @Valid EnterPredictedHotWaterConsumptionDTO enterPredictedHotWaterConsumptionDTO,
+                                                      @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
+
+        final String user = request.getUserPrincipal().getName();
+        final boolean userRole = request.isUserInRole("OWNER");
+
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                placeService.enterPredictedHotWaterConsumption(placeId, enterPredictedHotWaterConsumptionDTO.getConsumption(),
+                        etag, enterPredictedHotWaterConsumptionDTO.getVersion(), user, userRole);
+                rollbackTX = placeService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return Response.status(Response.Status.NO_CONTENT).build();
+            } catch (EJBTransactionRolledbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
+        placeService.enterPredictedHotWaterConsumption(placeId, enterPredictedHotWaterConsumptionDTO.getConsumption(),
+                etag, enterPredictedHotWaterConsumptionDTO.getVersion(), user, userRole);
+        return Response.noContent().build();
     }
 
     //MOW
@@ -86,8 +136,14 @@ public class PlaceEndpoint {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/self")
-    @RolesAllowed({Roles.MANAGER})
-    public Response getSelfAllPlaces() {
-        return Response.status(200).entity(placeService.getSelfAllPlaces()).build();
+    @RolesAllowed({Roles.OWNER})
+    public Response getSelfAllPlaces(@DefaultValue("0") @QueryParam("pageNumber") int pageNumber,
+                                     @DefaultValue("10") @QueryParam("pageSize") int pageSize) {
+        return Response
+                .status(200)
+                .entity(
+                        placeService.getSelfAllPlaces(pageNumber, pageSize).stream()
+                                .map(PlaceMapper::createPlaceToPlacesListDTO)
+                                .toList()).build();
     }
 }

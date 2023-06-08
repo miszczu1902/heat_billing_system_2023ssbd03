@@ -251,6 +251,13 @@ const NavbarPanel = () => {
                         </Button>
                     }
                         {
+                            (currentRole === OWNER) &&
+                            <Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/places/self')}
+                                    sx={{marginLeft: '1vh', cursor: 'pointer'}}>
+                                {t('navbar.places_list')}
+                            </Button>
+                        }
+                        {
                             (currentRole===MANAGER)&&
                             <Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/manage')}
                                     sx={{marginLeft: '1vh', cursor: 'pointer'}}>

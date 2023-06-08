@@ -5,6 +5,7 @@
     "log_out": "Wyloguj się",
     "account_list": "Lista kont",
     "building_list": "Lista budynków",
+    "places_list": "Lista lokali",
     "manage": "Zarządzaj",
     "languages": {
       "title": "Zmień język",
@@ -22,7 +23,8 @@
     "yes": "Tak",
     "no": "Nie",
     "cancel": "Anuluj",
-    "ok": "Ok"
+    "ok": "Ok",
+    "save": "Zapisz"
   },
   "edit_password": {
     "old_and_new_password_same_error": "Stare i nowe hasło nie mogą być takie same",
@@ -268,7 +270,8 @@
     "building_number_error": "Numer budynku musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery i cyfry",
     "city_error": "Nazwa miasta musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery, cyfry, spacje oraz znaki: - .",
     "postal_code_error": "Kod pocztowy musi mieć od 1 do 32 znaków oraz zawierać wyłącznie litery, cyfry oraz znak -",
-  "add_building_error" : "Nie można dodać budynku z powodu błędów w formularzu"},
+    "add_building_error": "Nie można dodać budynku z powodu błędów w formularzu"
+  },
   "invoice": {
     "consumption": "Zużycie ciepła",
     "consumptionCost": "Koszt zużytego ciepła",
@@ -304,6 +307,18 @@
     "centralHeatingConnection" : "Podłączenie ogrzewania",
     "predictedHotWaterConsumption" : "Przewidywane zużycie wody",
     "firstName" : "Imię właściciela",
-    "suername": "Nazwisko właściciela"
+    "suername": "Nazwisko właściciela",
+    "connected": "Podłączony",
+    "disconnected": "Nie podłączony"
+  },
+  "enterPredictedHotWaterConsumption" :
+  {
+    "enter_predicted_hot_water_consumption_button" : "Wprowadź przewidywane zużycie ciepłej wody",
+    "enter_predicted_hot_water_consumption_title" : "Przewidywane zużycie ciepłej wody",
+    "enter_predicted_hot_water_consumption_description" : "Każdy nowy właściciel lokalu musi wprowadzić przewidywane zużycie ciepłej wody. Wprowadź dane w poniższe pola. Po dokonaniu wpisu twoje dane mogą zostać zmodyfikowane jedynie przez managera.",
+    "enter_predicted_hot_water_consumption_text_field_name" : "Przewidywane zużycie ciepłej wody [m3]",
+    "enter_predicted_hot_water_consumption_error" : "Wartość musi być w formacie X.XX oraz przed kropką może znajdować się maksymalnie 8 cyfr",
+    "enter_predicted_hot_water_consumption_confirm" : "Czy na pewno wprowadziłeś poprawne dane? Tej operacji nie można cofnąć",
+    "enter_predicted_hot_water_consumption_failed" : "Wystąpił błąd podczas wprowadzania danych przedwidywanego zużycia ciepłej wody"
   }
 }

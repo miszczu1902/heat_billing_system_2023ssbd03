@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.AbstractDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
 
 import java.math.BigDecimal;
@@ -11,26 +12,28 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PlaceDTO extends AbstractDTO implements Signable {
-    private String createdBy;
+public class PlacesListDTO extends AbstractDTO implements Signable {
     private Short placeNumber;
     private BigDecimal area;
     private Boolean hotWaterConnection;
     private Boolean centralHeatingConnection;
     private BigDecimal predictedHotWaterConsumption;
-    private String firstName;
-    private String surname;
+    private String street;
+    private String buildingNumber;
+    private String city;
+    private String postalCode;
 
-    public PlaceDTO(Long id, Long version, String createdBy, Short placeNumber, BigDecimal area, Boolean hotWaterConnection, Boolean centralHeatingConnection, BigDecimal predictedHotWaterConsumption, String firstName, String surname) {
+    public PlacesListDTO(Long id, Long version, Short placeNumber, BigDecimal area, Boolean hotWaterConnection, Boolean centralHeatingConnection, BigDecimal predictedHotWaterConsumption, String street, String buildingNumber, String city, String postalCode) {
         super(id, version);
-        this.createdBy = createdBy;
         this.placeNumber = placeNumber;
         this.area = area;
         this.hotWaterConnection = hotWaterConnection;
         this.centralHeatingConnection = centralHeatingConnection;
         this.predictedHotWaterConsumption = predictedHotWaterConsumption;
-        this.firstName = firstName;
-        this.surname = surname;
+        this.street = street;
+        this.buildingNumber = buildingNumber;
+        this.city = city;
+        this.postalCode = postalCode;
     }
 
     @Override
@@ -41,7 +44,9 @@ public class PlaceDTO extends AbstractDTO implements Signable {
                 .concat(getHotWaterConnection().toString())
                 .concat(getCentralHeatingConnection().toString())
                 .concat(getPredictedHotWaterConsumption().toString())
-                .concat(firstName)
-                .concat(surname);
+                .concat(getStreet())
+                .concat(getBuildingNumber().toString())
+                .concat(getCity())
+                .concat(getPostalCode());
     }
 }

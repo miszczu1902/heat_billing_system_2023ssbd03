@@ -114,4 +114,10 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
         heatDistributionCentrePayoffFacade.create(heatDistributionCentrePayoff);
     }
+
+    @Override
+    @RolesAllowed({Roles.MANAGER})
+    public HeatDistributionCentre getHeatDistributionCentre(Long id) {
+        return heatDistributionCentreFacade.getHeatDistributionCentre(id);
+    }
 }

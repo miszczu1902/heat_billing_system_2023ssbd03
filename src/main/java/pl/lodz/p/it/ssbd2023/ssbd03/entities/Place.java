@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -25,11 +26,14 @@ import java.util.List;
         })
 @NamedQueries({
         @NamedQuery(name = "Place.findPlacesByBuildingId", query = "SELECT k FROM Place k WHERE k.building.id = :id"),
+        @NamedQuery(name = "Place.findById", query = "SELECT k FROM Place k WHERE k.id = :id"),
+        @NamedQuery(name = "Place.findPlacesByOwner", query = "SELECT k FROM Place k WHERE k.owner.id = :id"),
+        @NamedQuery(name = "Place.findPlacesByBuildingId", query = "SELECT k FROM Place k WHERE k.building.id = :id"),
         @NamedQuery(name = "Place.findPlacesByPlaceId", query = "SELECT k FROM Place k WHERE k.id = :id"),
         @NamedQuery(name = "Place.findPlaceByUsernameAndCheckIfHeIsOwnerOfPlace",
                 query = "SELECT k FROM Place k WHERE k.id = :placeId AND k.owner.account.username = :username")
 })
-public class Place extends AbstractEntity implements Serializable {
+public class Place extends AbstractEntity implements Signable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -76,4 +80,16 @@ public class Place extends AbstractEntity implements Serializable {
 
     @OneToMany(mappedBy = "place")
     private List<AnnualBalance> annualBalances = new ArrayList<>();
+
+    @Override
+    public String messageToSign() {
+        return getVersion().toString()
+                .concat(getPlaceNumber().toString())
+                .concat(getArea().toString())
+                .concat(getHotWaterConnection().toString())
+                .concat(getCentralHeatingConnection().toString())
+                .concat(getPredictedHotWaterConsumption().toString())
+                .concat(owner.getAccount().getPersonalData().getFirstName())
+                .concat(owner.getAccount().getPersonalData().getSurname());
+    }
 }
