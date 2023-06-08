@@ -52,7 +52,7 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
 
     @Override
     @RolesAllowed(Roles.MANAGER)
-    public void modifyPlaceOwner(Long placeId, String username) {
+    public void modifyPlaceOwner(Long placeId, String username, String etag, Long version) {
         final Owner owner = ownerFacade.findOwnerByUsername(username);
         final String ManagerUsername = securityContext.getCallerPrincipal().getName();
 
@@ -60,8 +60,15 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
             throw AppException.createAccountIsNotActivatedException();
         }
 
-        final Place place = placeFacade.findPlaceById(placeId);
+        Place place = placeFacade.findPlaceById(placeId);
 
+        if (!etag.equals(messageSigner.sign(place))) {
+            throw AppException.createVerifierException();
+        }
+
+        if (!Objects.equals(version, place.getVersion())) {
+            throw AppException.createOptimisticLockAppException();
+        }
         if (place.getOwner().getAccount().getUsername().equals(username)) {
             throw AppException.userIsAlreadyOwnerOfThisPlaceException();
         }
