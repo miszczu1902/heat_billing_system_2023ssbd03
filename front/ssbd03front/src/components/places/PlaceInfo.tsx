@@ -108,7 +108,7 @@ const PlaceInfo = () => {
                                 </Paper>
                                 <Paper elevation={3} style={{ marginTop: '0.5vh', position: 'relative', overflow: 'auto' }}>
                                     <Typography sx={{ marginLeft: '2vw', marginRight: '2vw', padding: '1vh', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} variant="h5">
-                                        <b>{t('place.predictedHotWaterConsumption')}:</b> {place.predictedHotWaterConsumption}
+                                        <b>{t('place.predictedHotWaterConsumption')}:</b> {place.predictedHotWaterConsumption} m³
                                         <EnterPredictedHotWaterConsumption />
                                     </Typography>
                                 </Paper>
