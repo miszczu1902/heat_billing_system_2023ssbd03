@@ -299,6 +299,7 @@
   },
   "place" :
   {
+    "title": "Informacje o lokalu",
     "id" : "Identyfikator lokalu",
     "created_by" : "Dodany przez",
     "placeNumber" : "Numer lokalu",
@@ -307,7 +308,7 @@
     "centralHeatingConnection" : "Podłączenie ogrzewania",
     "predictedHotWaterConsumption" : "Przewidywane zużycie wody",
     "firstName" : "Imię właściciela",
-    "suername": "Nazwisko właściciela",
+    "surname": "Nazwisko właściciela",
     "connected": "Podłączony",
     "disconnected": "Nie podłączony"
   },

@@ -9,4 +9,8 @@ export interface Place {
     predictedHotWaterConsumption: number;
     firstName: string;
     surname: string;
+    street: string;
+    buildingNumber: string;
+    city: string;
+    postalCode: string;
 }

@@ -24,7 +24,5 @@ public interface PlaceService extends CommonManagerLocalInterface {
 
     Place getPlace(String placeId);
 
-    List<Place> getOwnerAllPlaces(String ownerUsername);
-
     List<Place> getSelfAllPlaces(int pageNumber, int pageSize);
 }

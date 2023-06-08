@@ -42,8 +42,8 @@ const Building = () => {
         fetchData();
     }, [buildingId]);
 
-    const goToBuilding = (buildingId: string) => {
-        navigate('/buildings/building/' + buildingId);
+    const goToPlace = (placeId: string) => {
+        navigate('/places/place/' + placeId);
     }
 
     return (
@@ -51,14 +51,6 @@ const Building = () => {
             <Box sx={{width: '50%', maxWidth: '600px', margin: '2vh'}}>
                 {building !== null && (
                     <Paper elevation={3} style={{padding: '2vh'}}>
-                        <IconButton
-                            edge="start"
-                            color="inherit"
-                            onClick={() => goToBuilding("1")}
-                            aria-label="close"
-                        >
-                            <IconViewList/>
-                        </IconButton>
                         <Typography variant="h5">
                             <b>{t('buildingFromList.created_by')}:</b> {building.createdBy}
                         </Typography>
@@ -110,7 +102,7 @@ const Building = () => {
                                 {t('place.firstName')}
                             </TableCell>
                             <TableCell>
-                                {t('place.suername')}
+                                {t('place.surname')}
                             </TableCell>
                             <TableCell></TableCell>
                         </TableRow>
@@ -125,7 +117,17 @@ const Building = () => {
                                 <TableCell>{places.centralHeatingConnection}</TableCell>
                                 <TableCell>{places.predictedHotWaterConsumption}</TableCell>
                                 <TableCell>{places.firstName}</TableCell>
-                                <TableCell>{places.suername}</TableCell>
+                                <TableCell>{places.surname}</TableCell>
+                                <TableCell>
+                                    <IconButton
+                                        edge="start"
+                                        color="inherit"
+                                        onClick={() => goToPlace(places.id.toString())}
+                                        aria-label="close"
+                                    >
+                                        <IconViewList/>
+                                    </IconButton>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
