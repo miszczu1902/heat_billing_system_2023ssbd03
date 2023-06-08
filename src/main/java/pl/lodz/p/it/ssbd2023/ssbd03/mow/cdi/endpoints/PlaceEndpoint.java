@@ -14,6 +14,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.EnterPredictedHotWaterConsumptionDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyPlaceDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.PlaceDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
@@ -70,9 +71,36 @@ public class PlaceEndpoint {
     @Path("/place/{placeId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.MANAGER)
-    public Response modifyPlace(@NotBlank @PathParam("placeId") String placeId) {
-        placeService.modifyPlace();
-        return Response.status(200).build();
+    public Response modifyPlace(@NotBlank @PathParam("placeId") String placeId,
+                                @NotNull @Valid ModifyPlaceDTO modifyPlaceDTO,
+                                @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
+
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                placeService.modifyPlace(placeId, modifyPlaceDTO.getArea(), modifyPlaceDTO.getCentralHeatingConnection(),
+                        modifyPlaceDTO.getHotWaterConnection(), etag, modifyPlaceDTO.getVersion());
+                rollbackTX = placeService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return Response.status(Response.Status.NO_CONTENT).build();
+            } catch (EJBTransactionRolledbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
+        placeService.modifyPlace(placeId ,modifyPlaceDTO.getArea(), modifyPlaceDTO.getCentralHeatingConnection(),
+                modifyPlaceDTO.getHotWaterConnection(), etag, modifyPlaceDTO.getVersion());
+        return Response.noContent().build();
     }
 
     //MOW 16
