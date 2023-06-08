@@ -299,5 +299,11 @@ public class AppException extends WebApplicationException {
     public static HotWaterEntryCouldNotBeModifiedException createHotWaterEntryCouldNotBeModifiedException() {
         return new HotWaterEntryCouldNotBeModifiedException(ERROR_HOT_WATER_ENTRY_NOT_MODIFIED, Response.Status.CONFLICT);
     }
+    public static CanNotMakeYourselfOwnerOfThePlaceException canNotMakeYourselfOwnerOfThePlaceException() {
+        return new CanNotMakeYourselfOwnerOfThePlaceException(ERROR_CAN_NOT_MAKE_YOURSELF_OWNER, Response.Status.FORBIDDEN);
+    }
+    public static NoResultException noResultException() {
+        return new NoResultException(ERROR_NO_RESULT, Response.Status.NOT_FOUND);
+    }
 }
 
