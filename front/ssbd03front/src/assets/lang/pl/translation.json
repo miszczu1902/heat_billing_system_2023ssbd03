@@ -245,7 +245,16 @@
     },
     "heat_distribution_centre": {
       "overwriting": "Nie można wprowadzić wartości dwa razy w jednym miesiącu"
-    }
+    },
+    "place": {
+      "can_not_make_yourself_owner": "Nie możesz sam przypisać sobie mieszkania",
+      "user_is_already_owner_of_this_place": "Ten użytkownik jest właścicielem tego mieszkania"
+
+    },
+  "database": {
+    "no_result": "Błędny numer bloku lub mieszkania"
+  }
+
   },
   "buildingFromList": {
     "id": "Identyfikator budynku",

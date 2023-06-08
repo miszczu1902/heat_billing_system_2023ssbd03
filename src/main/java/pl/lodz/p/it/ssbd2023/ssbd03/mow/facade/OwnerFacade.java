@@ -10,6 +10,7 @@ import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 
 import java.util.Collections;
 import java.util.List;
@@ -30,16 +31,28 @@ public class OwnerFacade extends AbstractFacade<Owner> {
         return this.em;
     }
 
-    @RolesAllowed({Roles.MANAGER})
-    public Owner findById(Long id) {
-        TypedQuery<Owner> tq = em.createNamedQuery("Owner.findById", Owner.class);
-        tq.setParameter("id", id);
-        return tq.getSingleResult();
+    @RolesAllowed(Roles.MANAGER)
+    public Owner findOwnerByUsername(String username) {
+        {
+            TypedQuery<Owner> tq = em.createNamedQuery("Owner.findByUsername", Owner.class);
+            tq.setParameter("username", username);
+            if (tq.getResultList().isEmpty()) {
+                throw AppException.createAccountIsNotOwnerException();
+            }
+            return tq.getSingleResult();
+        }
     }
+        @RolesAllowed({Roles.MANAGER})
+        public Owner findById (Long id){
+            TypedQuery<Owner> tq = em.createNamedQuery("Owner.findById", Owner.class);
+            tq.setParameter("id", id);
+            return tq.getSingleResult();
+        }
 
-    @RolesAllowed({Roles.MANAGER})
-    public List<Owner> getListOfOwners() {
-        TypedQuery<Owner> query = em.createNamedQuery("Owner.findAllOwners", Owner.class);
-        return Optional.of(query.getResultList()).orElse(Collections.emptyList());
-    }
+        @RolesAllowed({Roles.MANAGER})
+        public List<Owner> getListOfOwners () {
+            TypedQuery<Owner> query = em.createNamedQuery("Owner.findAllOwners", Owner.class);
+            return Optional.of(query.getResultList()).orElse(Collections.emptyList());
+        }
+
 }

@@ -245,6 +245,13 @@
     },
     "heat_distribution_centre": {
       "overwriting": "Values can't be added twice a month"
+    },
+    "place": {
+      "can_not_make_yourself_owner": "You cannot assign an apartment to yourself",
+      "user_is_already_owner_of_this_place": "This user is owner of this place"
+    },
+    "database": {
+      "no_result": "Wrong building or place number"
     }
   },
   "buildingFromList": {
