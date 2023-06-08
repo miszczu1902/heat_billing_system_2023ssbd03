@@ -30,7 +30,7 @@ const PlacesList = () => {
     }, [token]);
 
     const goToPlace = (placeId: string) => {
-        navigate('/places/' + placeId);
+        navigate('/places/place/' + placeId);
     }
 
     return (

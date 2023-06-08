@@ -100,12 +100,6 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
     }
 
     @Override
-    @RolesAllowed({Roles.MANAGER})
-    public List<Place> getOwnerAllPlaces(String ownerUsername) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     @RolesAllowed(Roles.OWNER)
     public List<Place> getSelfAllPlaces(int pageNumber, int pageSize) {
         final String username = securityContext.getCallerPrincipal().getName();
