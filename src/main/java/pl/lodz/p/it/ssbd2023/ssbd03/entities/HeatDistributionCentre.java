@@ -17,7 +17,8 @@ import java.util.List;
 @Entity
 @Table(name = "heat_distribution_centre")
 @NamedQueries({
-        @NamedQuery(name = "HeatDistributionCentre.getListOfHeatDistributionCentre", query = "SELECT k FROM HeatDistributionCentre k ")
+        @NamedQuery(name = "HeatDistributionCentre.getListOfHeatDistributionCentre", query = "SELECT k FROM HeatDistributionCentre k "),
+        @NamedQuery(name = "HeatDistributionCentre.findById", query = "SELECT k from HeatDistributionCentre k where k.id = :id")
 })
 public class HeatDistributionCentre extends AbstractEntity implements Serializable {
     @Id

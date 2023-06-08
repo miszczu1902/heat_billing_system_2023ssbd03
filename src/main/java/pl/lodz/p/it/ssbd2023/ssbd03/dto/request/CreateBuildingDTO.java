@@ -19,10 +19,6 @@ public class CreateBuildingDTO implements Serializable, Signable {
     @Digits(integer = 8, fraction = 2, message = "value can have 8 digits before the decimal point and max 2 digits after the decimal point")
     private String totalArea;
 
-    @DecimalMin(value = "0")
-    @Digits(integer = 8, fraction = 2, message = "value can have 8 digits before the decimal point and max 2 digits after the decimal point")
-    private String communalAreaAggregate;
-
     @Size(max = 32, message = "Max length for street is 32")
     private String street;
 
@@ -38,7 +34,6 @@ public class CreateBuildingDTO implements Serializable, Signable {
     @Override
     public String messageToSign() {
         return getTotalArea().toString()
-                .concat(getCommunalAreaAggregate().toString())
                 .concat(getStreet())
                 .concat(getBuildingNumber().toString())
                 .concat(getCity())

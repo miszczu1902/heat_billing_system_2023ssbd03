@@ -13,7 +13,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.VerifierException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.heatDistributionCentre.ConsumptionAddException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.heatDistributionCentre.NoHeatDistributionCentreException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.personalData.PersonalDataConstraintViolationException;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.NotPlaceOfLocalException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.NotOwnerOfPlaceException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.PredictedHotWaterConsumptionValueAlreadySetException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
@@ -245,7 +245,8 @@ public class AppException extends WebApplicationException {
         return new PredictedHotWaterConsumptionValueAlreadySetException(ERROR_PREDICTED_HOT_WATER_CONSUMPTION_VALUE_ALREADY_SET, Response.Status.FORBIDDEN);
     }
 
-    public static NotPlaceOfLocalException createNotOwnerOfPlaceException() {
-        return new NotPlaceOfLocalException(ERROR_NOT_OWNER_OF_THIS_PLACE, Response.Status.FORBIDDEN);
+    public static NotOwnerOfPlaceException createNotOwnerOfPlaceException() {
+        return new NotOwnerOfPlaceException(ERROR_NOT_OWNER_OF_THIS_PLACE, Response.Status.FORBIDDEN);
     }
 }
+
