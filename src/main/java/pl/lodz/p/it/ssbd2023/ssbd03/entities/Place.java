@@ -68,7 +68,8 @@ public class Place extends AbstractEntity implements Serializable, Signable {
     private Building building;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id", updatable = false, referencedColumnName = "id")
+    @Setter
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private Owner owner;
 
     @OneToMany(mappedBy = "place")

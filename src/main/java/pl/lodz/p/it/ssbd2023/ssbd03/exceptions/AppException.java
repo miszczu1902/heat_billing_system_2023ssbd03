@@ -19,7 +19,10 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.heatDistributionCentre.NoHeatDist
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.personalData.PersonalDataConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.NotOwnerOfPlaceException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.PredictedHotWaterConsumptionValueAlreadySetException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.UserIsAlreadyOwnerOfThisPlaceException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoResultException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.CanNotMakeYourselfOwnerOfThePlaceException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.HotWaterEntryCouldNotBeInsertedException;
@@ -75,6 +78,9 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ADVANCE_CHANGE_FACTOR_WAS_INSERTED = "exception.advance_factor.factor_was_inserted";
     protected final static String ERROR_HOT_WATER_ENTRY_NOT_INSERTED = "exception.hot_water_entry.not_inserted";
     protected final static String ERROR_HOT_WATER_ENTRY_NOT_MODIFIED = "exception.hot_water_entry.not_modified";
+    protected final static String ERROR_CAN_NOT_MAKE_YOURSELF_OWNER = "exception.place.can_not_make_yourself_owner";
+    protected final static String ERROR_NO_RESULT = "exception.database.no_result";
+    protected final static String USER_IS_ALREADY_OWNER_OF_THIS_PLACE = "exception.place.user_is_already_owner_of_this_place";
 
     @Getter
     private Throwable cause;
@@ -262,6 +268,12 @@ public class AppException extends WebApplicationException {
 
     public static NotOwnerOfPlaceException createNotOwnerOfPlaceException() {
         return new NotOwnerOfPlaceException(ERROR_NOT_OWNER_OF_THIS_PLACE, Response.Status.FORBIDDEN);
+    }
+    public static CanNotMakeYourselfOwnerOfThePlaceException canNotMakeYourselfOwnerOfThePlaceException() {
+        return new CanNotMakeYourselfOwnerOfThePlaceException(ERROR_CAN_NOT_MAKE_YOURSELF_OWNER, Response.Status.FORBIDDEN);
+    }
+    public static NoResultException noResultException() {
+        return new NoResultException(ERROR_NO_RESULT, Response.Status.NOT_FOUND);
     }
 
     public static LackOfSpaceInTheBuildingException lackOfSpaceInTheBuildingException() {
