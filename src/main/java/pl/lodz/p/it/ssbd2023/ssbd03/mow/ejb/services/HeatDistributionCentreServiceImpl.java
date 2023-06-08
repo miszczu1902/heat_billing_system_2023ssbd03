@@ -10,16 +10,14 @@ import jakarta.security.enterprise.SecurityContext;
 import jakarta.servlet.http.HttpServletRequest;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatDistributionCentre;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatDistributionCentrePayoff;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
-import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.HeatDistributionCentreFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.HeatDistributionCentrePayoffFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Internationalization;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -31,6 +29,15 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
     @Inject
     private SecurityContext securityContext;
+
+    @Inject
+    private HotWaterEntryFacade hotWaterEntryFacade;
+
+    @Inject
+    private PlaceFacade placeFacade;
+
+    @Inject
+    private MonthPayoffFacade monthPayoffFacade;
 
     @Inject
     private Internationalization internationalization;
@@ -76,6 +83,18 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
         HeatDistributionCentrePayoff heatDistributionCentrePayoff = new HeatDistributionCentrePayoff(consumption, consumptionCost, LocalDate.now(), heatingAreaFactor, manager, heatDistributionCentre.get(0));
 
         heatDistributionCentrePayoffFacade.create(heatDistributionCentrePayoff);
+
+        final List<Place> places = placeFacade.findAllPlaces();
+
+        for (Place place : places) {
+
+            List<HotWaterEntry> hotWaterEntries = hotWaterEntryFacade.getListOfHotWaterEntriesForPlace(place.getId());
+            final BigDecimal hotWaterConsumption = hotWaterEntries.get(0).getEntryValue().subtract(hotWaterEntries.get(1).getEntryValue());
+            final BigDecimal waterHeatingUnitCost = heatDistributionCentrePayoff.getConsumptionCost().multiply(new BigDecimal(1).subtract(heatDistributionCentrePayoff.getHeatingAreaFactor())).divide(heatDistributionCentrePayoff.getConsumption(),2, RoundingMode.CEILING);
+            final BigDecimal centralHeatingUnitCost = heatDistributionCentrePayoff.getConsumptionCost().multiply(heatDistributionCentrePayoff.getHeatingAreaFactor()).divide(heatDistributionCentrePayoff.getConsumption(),2,RoundingMode.CEILING);
+            MonthPayoff monthPayoff = new MonthPayoff(LocalDate.now(), waterHeatingUnitCost, centralHeatingUnitCost, hotWaterConsumption, place, place.getOwner());
+            monthPayoffFacade.create(monthPayoff);
+        }
     }
 
     @Override

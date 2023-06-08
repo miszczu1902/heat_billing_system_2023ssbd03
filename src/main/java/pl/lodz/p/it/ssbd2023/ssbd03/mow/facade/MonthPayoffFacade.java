@@ -6,21 +6,18 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterEntry;
-
-import java.util.List;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.MonthPayoff;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
-public class HotWaterEntryFacade extends AbstractFacade<HotWaterEntry> {
+public class MonthPayoffFacade extends AbstractFacade<MonthPayoff> {
     @PersistenceContext(unitName = "ssbd03mowPU")
     private EntityManager em;
 
-    public HotWaterEntryFacade() {
-        super(HotWaterEntry.class);
+    public MonthPayoffFacade() {
+        super(MonthPayoff.class);
     }
 
     @Override
@@ -30,25 +27,18 @@ public class HotWaterEntryFacade extends AbstractFacade<HotWaterEntry> {
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public void edit(HotWaterEntry entity) {
+    public void edit(MonthPayoff entity) {
         super.edit(entity);
     }
 
     @Override
-    @RolesAllowed({Roles.MANAGER,Roles.OWNER})
-    public void create(HotWaterEntry entity) {
+    @RolesAllowed({Roles.MANAGER})
+    public void create(MonthPayoff entity) {
         super.create(entity);
     }
 
     @Override
-    public void remove(HotWaterEntry entity) {
+    public void remove(MonthPayoff entity) {
         super.remove(entity);
-    }
-
-    @RolesAllowed({Roles.MANAGER})
-    public List<HotWaterEntry> getListOfHotWaterEntriesForPlace(Long id) {
-        TypedQuery<HotWaterEntry> tq = em.createNamedQuery("HotWaterEntry.getListOfHotWaterEntriesForPlace", HotWaterEntry.class);
-        tq.setParameter("id", id);
-        return tq.getResultList();
     }
 }

@@ -51,8 +51,8 @@ public class HeatDistributionCentrePayoff extends AbstractEntity implements Seri
     private Manager manager;
 
     public HeatDistributionCentrePayoff(BigDecimal consumption, BigDecimal consumptionCost, LocalDate time, BigDecimal heatingAreaFactor, Manager manager, HeatDistributionCentre heatDistributionCentre) {
-        this.consumptionCost = consumption;
-        this.consumption = consumptionCost;
+        this.consumption= consumption;
+        this.consumptionCost = consumptionCost;
         this.date = time;
         this.heatingAreaFactor = heatingAreaFactor;
         this.manager = manager;
