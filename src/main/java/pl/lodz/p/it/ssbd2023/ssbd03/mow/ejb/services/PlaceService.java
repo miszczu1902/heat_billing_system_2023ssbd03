@@ -11,7 +11,7 @@ import java.util.List;
 @Local
 public interface PlaceService extends CommonManagerLocalInterface {
 
-    void modifyPlaceOwner(Long placeId, String username,String etag, Long version);
+    void modifyPlaceOwner(Long placeId, String username, String etag, Long version);
 
     void modifyPlace();
 
