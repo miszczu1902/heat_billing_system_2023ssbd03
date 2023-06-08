@@ -320,5 +320,16 @@
     "enter_predicted_hot_water_consumption_error" : "Wartość musi być w formacie X.XX oraz przed kropką może znajdować się maksymalnie 8 cyfr",
     "enter_predicted_hot_water_consumption_confirm" : "Czy na pewno wprowadziłeś poprawne dane? Tej operacji nie można cofnąć",
     "enter_predicted_hot_water_consumption_failed" : "Wystąpił błąd podczas wprowadzania danych przedwidywanego zużycia ciepłej wody"
+  },
+  "editPlace" : {
+    "edit_place_button" : "Edytuj lokal",
+    "edit_place_title" : "Edytuj lokal",
+    "edit_place_description" : "Edytuj dane lokalu.",
+    "edit_place_text_field_area" : "Powierzchnia lokalu [m2]",
+    "edit_place_text_field_hot_water_connection" : "Podłączenie wody",
+    "edit_place_text_field_central_heating_connection" : "Podłączenie ogrzewania",
+    "edit_place_error" : "Wartość musi być w formacie X.XX oraz przed kropką może znajdować się maksymalnie 8 cyfr",
+    "edit_place_confirm" : "Czy na pewno wprowadziłeś poprawne dane? Tej operacji nie można cofnąć",
+    "edit_place_failed" : "Wystąpił błąd podczas edytowania danych lokalu"
   }
 }
