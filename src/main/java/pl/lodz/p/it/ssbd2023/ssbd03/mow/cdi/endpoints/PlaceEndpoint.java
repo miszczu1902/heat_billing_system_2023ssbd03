@@ -136,8 +136,14 @@ public class PlaceEndpoint {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/self")
-    @RolesAllowed({Roles.MANAGER})
-    public Response getSelfAllPlaces() {
-        return Response.status(200).entity(placeService.getSelfAllPlaces()).build();
+    @RolesAllowed({Roles.OWNER})
+    public Response getSelfAllPlaces(@DefaultValue("0") @QueryParam("pageNumber") int pageNumber,
+                                     @DefaultValue("10") @QueryParam("pageSize") int pageSize) {
+        return Response
+                .status(200)
+                .entity(
+                        placeService.getSelfAllPlaces(pageNumber, pageSize).stream()
+                                .map(PlaceMapper::createPlaceToPlacesListDTO)
+                                .toList()).build();
     }
 }

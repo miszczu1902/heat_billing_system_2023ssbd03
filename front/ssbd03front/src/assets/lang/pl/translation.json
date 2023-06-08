@@ -5,6 +5,7 @@
     "log_out": "Wyloguj się",
     "account_list": "Lista kont",
     "building_list": "Lista budynków",
+    "places_list": "Lista lokali",
     "manage": "Zarządzaj",
     "languages": {
       "title": "Zmień język",
@@ -306,7 +307,9 @@
     "centralHeatingConnection" : "Podłączenie ogrzewania",
     "predictedHotWaterConsumption" : "Przewidywane zużycie wody",
     "firstName" : "Imię właściciela",
-    "suername": "Nazwisko właściciela"
+    "suername": "Nazwisko właściciela",
+    "connected": "Podłączony",
+    "disconnected": "Nie podłączony"
   },
   "enterPredictedHotWaterConsumption" :
   {

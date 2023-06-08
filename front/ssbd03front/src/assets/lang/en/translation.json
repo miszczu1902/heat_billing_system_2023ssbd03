@@ -5,6 +5,7 @@
     "log_out": "Log out",
     "account_list": "Account list",
     "building_list": "Building list",
+    "places_list": "Places list",
     "manage": "Manage",
     "languages": {
       "title": "Change language",
@@ -316,6 +317,8 @@
     "centralHeatingConnection" : "Heating connection",
     "predictedHotWaterConsumption" : "Water consumption prediction",
     "firstName" : "Owner's name",
-    "surname": "Owner's surname"
+    "surname": "Owner's surname",
+    "connected": "Connected",
+    "disconnected": "Disconnected"
   }
 }
