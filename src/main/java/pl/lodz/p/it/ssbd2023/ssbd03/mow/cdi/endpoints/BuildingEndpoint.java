@@ -29,6 +29,9 @@ public class BuildingEndpoint {
     private BuildingService buildingService;
 
     @Inject
+    private BuildingMapper buildingMapper;
+
+    @Inject
     MessageSigner messageSigner;
 
     protected static final Logger LOGGER = Logger.getGlobal();
@@ -78,7 +81,7 @@ public class BuildingEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({Roles.MANAGER})
     public Response addBuilding(@NotNull @Valid CreateBuildingDTO createBuildingDTO) {
-        buildingService.addBuilding(BuildingMapper.createBuilding(createBuildingDTO));
+        buildingService.addBuilding(buildingMapper.createBuilding(createBuildingDTO));
         return Response.status(Response.Status.CREATED).build();
     }
 

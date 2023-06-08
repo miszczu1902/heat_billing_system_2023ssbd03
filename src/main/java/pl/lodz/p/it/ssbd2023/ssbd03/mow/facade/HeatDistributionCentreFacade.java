@@ -51,4 +51,11 @@ public class HeatDistributionCentreFacade extends AbstractFacade<HeatDistributio
         TypedQuery<HeatDistributionCentre> tq = em.createNamedQuery("HeatDistributionCentre.getListOfHeatDistributionCentre", HeatDistributionCentre.class);
         return tq.getResultList();
     }
+
+    @RolesAllowed({Roles.MANAGER})
+    public HeatDistributionCentre getHeatDistributionCentre(Long id) {
+        TypedQuery<HeatDistributionCentre> tq = em.createNamedQuery("HeatDistributionCentre.findById", HeatDistributionCentre.class);
+        tq.setParameter("id", id);
+        return tq.getSingleResult();
+    }
 }

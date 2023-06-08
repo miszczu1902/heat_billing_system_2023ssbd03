@@ -1,15 +1,19 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.util.mappers;
 
+import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateBuildingDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.BuildingDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Address;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.HeatDistributionCentreService;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class BuildingMapper {
+
+    @Inject
+    HeatDistributionCentreService service;
 
     public static BuildingDTO createBuildingToBuildingDTO(Building building) {
         return new BuildingDTO(
@@ -27,22 +31,16 @@ public class BuildingMapper {
         );
     }
 
-    public static Building createBuilding(CreateBuildingDTO createBuildingDTO) {
+    public Building createBuilding(CreateBuildingDTO createBuildingDTO) {
         BigDecimal totalArea = new BigDecimal(createBuildingDTO.getTotalArea());
-        BigDecimal communalArea = new BigDecimal(createBuildingDTO.getCommunalAreaAggregate());
-        if (communalArea.compareTo(totalArea) >= 0 ) {
-            throw AppException.createCommunalAreaBiggerOrEqualTotalAreaException();
-        }
         return new Building(
                 totalArea,
-                communalArea,
+                totalArea,
                 new Address(createBuildingDTO.getStreet(),
                         createBuildingDTO.getBuildingNumber(),
                         createBuildingDTO.getCity(),
                         createBuildingDTO.getPostalCode()),
                 new ArrayList<>(),
-                //pozostaje dodac węzeł, ale nie wiedziałam jaki, bo chyba nie mamy finalnego obiektu węzła jeszcze
-                null
-        );
+                service.getHeatDistributionCentre(Long.valueOf("0")));
     }
 }
