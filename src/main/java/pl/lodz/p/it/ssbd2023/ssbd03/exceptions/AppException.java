@@ -276,5 +276,11 @@ public class AppException extends WebApplicationException {
     public static AddingPlaceToTheSameAccountException addingPlaceToTheSameAccountException() {
         return new AddingPlaceToTheSameAccountException(AppException.ERROR_ADDING_PLACE_TO_THE_SAME_ADMIN_MANAGER, Response.Status.FORBIDDEN);
     }
+    public static CanNotMakeYourselfOwnerOfThePlaceException canNotMakeYourselfOwnerOfThePlaceException() {
+        return new CanNotMakeYourselfOwnerOfThePlaceException(ERROR_CAN_NOT_MAKE_YOURSELF_OWNER, Response.Status.FORBIDDEN);
+    }
+    public static NoResultException noResultException() {
+        return new NoResultException(ERROR_NO_RESULT, Response.Status.NOT_FOUND);
+    }
 }
 
