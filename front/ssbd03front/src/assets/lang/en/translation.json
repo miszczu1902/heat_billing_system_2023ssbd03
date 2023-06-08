@@ -309,6 +309,7 @@
   },
   "place" :
   {
+    "title": "Place info",
     "id" : "Place id",
     "created_by" : "Created by",
     "placeNumber" : "Place number",
