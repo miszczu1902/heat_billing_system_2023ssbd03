@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.facade;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
@@ -91,7 +92,7 @@ public class PlaceFacade extends AbstractFacade<Place> {
         return tq.getSingleResult();
     }
 
-    @RolesAllowed(Roles.MANAGER)
+    @PermitAll
     public List<Place> findAllPlaces() {
         TypedQuery<Place> tq = em.createNamedQuery("Place.findAllPlaces", Place.class);
 

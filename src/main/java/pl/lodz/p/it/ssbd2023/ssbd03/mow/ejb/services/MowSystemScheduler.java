@@ -15,6 +15,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
+
 @Startup
 @Singleton
 @RunAs(Roles.MANAGER)
@@ -32,17 +34,17 @@ public class MowSystemScheduler {
         throw new UnsupportedOperationException();
     }
 
-    @Schedule(month = "1", dayOfMonth = "1`", persistent = false) //pierwszy stycznia o północy
+    @Schedule(month = "1", dayOfMonth = "1", timezone = "Europe/Warsaw", persistent = false) //pierwszy stycznia o północy
     private void createYearReport() {
         final List<Place> places = placeFacade.findAllPlaces();
-        final Short year = (short) LocalDateTime.now().getYear();
+        final Short year = (short) LocalDateTime.now(TIME_ZONE).getYear();
         final BigDecimal bigDecimal = new BigDecimal(0);
         for (Place place : places) {
             final AnnualBalance annualBalance = new AnnualBalance(year, bigDecimal, bigDecimal, bigDecimal, bigDecimal,
                     bigDecimal, bigDecimal, place);
             balanceFacade.create(annualBalance);
         }
-    }
+      }
 
     @Schedule(hour = "*", minute = "*/1", persistent = false)
     private void calculateMainPayoff() {
