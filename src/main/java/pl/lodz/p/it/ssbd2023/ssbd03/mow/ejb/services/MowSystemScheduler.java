@@ -5,8 +5,15 @@ import jakarta.ejb.*;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.AnnualBalance;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BalanceFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Startup
 @Singleton
@@ -17,9 +24,24 @@ public class MowSystemScheduler {
     @Inject
     private BalanceFacade balanceFacade;
 
+    @Inject
+    private PlaceFacade placeFacade;
+
     @Schedule(hour = "*", minute = "*/1", persistent = false)
     private void updateYearReport() {
         throw new UnsupportedOperationException();
+    }
+
+    @Schedule(month = "1", dayOfMonth = "1`", persistent = false) //pierwszy stycznia o północy
+    private void createYearReport() {
+        final List<Place> places = placeFacade.findAllPlaces();
+        final Short year = (short) LocalDateTime.now().getYear();
+        final BigDecimal bigDecimal = new BigDecimal(0);
+        for (Place place : places) {
+            final AnnualBalance annualBalance = new AnnualBalance(year, bigDecimal, bigDecimal, bigDecimal, bigDecimal,
+                    bigDecimal, bigDecimal, place);
+            balanceFacade.create(annualBalance);
+        }
     }
 
     @Schedule(hour = "*", minute = "*/1", persistent = false)
