@@ -42,6 +42,18 @@ public class OwnerFacade extends AbstractFacade<Owner> {
             return tq.getSingleResult();
         }
     }
+    @RolesAllowed(Roles.MANAGER)
+    public Owner findOwnerByPersonalData(String firstName,String surname) {
+        {
+            TypedQuery<Owner> tq = em.createNamedQuery("Owner.findOwnerByPersonalData", Owner.class);
+            tq.setParameter("firstName", firstName);
+            tq.setParameter("surname", surname);
+            if (tq.getResultList().isEmpty()) {
+                throw AppException.createAccountIsNotOwnerException();
+            }
+            return tq.getSingleResult();
+        }
+    }
         @RolesAllowed({Roles.MANAGER})
         public Owner findById (Long id){
             TypedQuery<Owner> tq = em.createNamedQuery("Owner.findById", Owner.class);
