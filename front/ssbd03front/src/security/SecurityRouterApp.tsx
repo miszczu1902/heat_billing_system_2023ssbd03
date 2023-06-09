@@ -172,7 +172,7 @@ const router = createBrowserRouter([
                     },
                     {
                         path: '/buildings/building/:buildingId',
-                        element: <PrivateRoute component={Building} accessLevels={[ADMIN, MANAGER]}/>
+                        element: <PrivateRoute component={Building} accessLevels={[MANAGER]}/>
                     }
                 ]
             },

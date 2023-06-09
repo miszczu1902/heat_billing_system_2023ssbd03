@@ -310,7 +310,19 @@
     "firstName" : "Imię właściciela",
     "surname": "Nazwisko właściciela",
     "connected": "Podłączony",
-    "disconnected": "Nie podłączony"
+    "disconnected": "Nie podłączony",
+    "dialogText": "Formularz dodawania lokalu",
+    "ownerId": "Właściciel",
+    "areaInfo": "Wprowadź powierzchnię lokalu",
+    "predictedHotWaterConsumptionInfo": "Wprowadź przewidywane zużycie ciepłej wody",
+    "ownerIdInfo": "Dodaj właściciela",
+    "areaError": "Zła wartość powierzchni",
+    "predictedHotWaterConsumptionError": "Zła wartość przewidywanego zużycia ciepłej wody",
+    "add_place": "Czy na pewno chcesz dodać lokal?",
+    "added_place": "Lokal został dodany",
+    "error": "Wystąpił błąd podczas dodania nowego lokalu",
+    "yes": "Tak",
+    "no": "Nie"
   },
   "enterPredictedHotWaterConsumption" :
   {

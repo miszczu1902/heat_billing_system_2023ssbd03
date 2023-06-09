@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
@@ -646,6 +647,16 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
         account.setEmail(newEmail);
         accountFacade.edit(account);
         emailConfirmationTokenFacade.remove(emailConfirmationToken.get(0));
+    }
+
+    @Override
+    @RolesAllowed(Roles.MANAGER)
+    public List<Account> getListOfOwners() {
+        List<Owner> owners = ownerFacade.getListOfOwners();
+        List<Account> accounts = owners.stream()
+                .map(Owner::getAccount)
+                .collect(Collectors.toList());
+        return accounts;
     }
 
     @Override

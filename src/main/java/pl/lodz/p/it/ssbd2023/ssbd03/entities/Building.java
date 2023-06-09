@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -23,7 +24,7 @@ import java.util.List;
         @NamedQuery(name = "Building.findAll", query = "SELECT k FROM Building k"),
         @NamedQuery(name = "Building.findById", query = "SELECT k FROM Building k WHERE k.id = :id")
 })
-public class Building extends AbstractEntity implements Serializable {
+public class Building extends AbstractEntity implements Serializable, Signable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -33,6 +34,7 @@ public class Building extends AbstractEntity implements Serializable {
     @Column(name = "total_area", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalArea;
 
+    @Setter
     @DecimalMin(value = "0")
     @Column(name = "communal_area_aggregate", nullable = false, precision = 10, scale = 2)
     private BigDecimal communalAreaAggregate;
@@ -54,5 +56,15 @@ public class Building extends AbstractEntity implements Serializable {
         this.address = address;
         this.places = places;
         this.heatDistributionCentre = heatDistributionCentre;
+    }
+
+    @Override
+    public String messageToSign() {
+        return getTotalArea().toString()
+                .concat(getCommunalAreaAggregate().toString())
+                .concat(getAddress().getStreet())
+                .concat(getAddress().getBuildingNumber())
+                .concat(getAddress().getCity())
+                .concat(getAddress().getPostalCode());
     }
 }

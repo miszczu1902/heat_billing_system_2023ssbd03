@@ -77,6 +77,17 @@ public class Place extends AbstractEntity implements Signable {
     @OneToMany(mappedBy = "place")
     private List<AnnualBalance> annualBalances = new ArrayList<>();
 
+    public Place(Short placeNumber, BigDecimal area, Boolean hotWaterConnection,
+                 Boolean centralHeatingConnection, BigDecimal predictedHotWaterConsumption, Building building, Owner owner) {
+        this.placeNumber = placeNumber;
+        this.area = area;
+        this.hotWaterConnection = hotWaterConnection;
+        this.centralHeatingConnection = centralHeatingConnection;
+        this.predictedHotWaterConsumption = predictedHotWaterConsumption;
+        this.building = building;
+        this.owner = owner;
+    }
+
     @Override
     public String messageToSign() {
         return getVersion().toString()

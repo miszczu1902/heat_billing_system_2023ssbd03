@@ -705,6 +705,18 @@ public class AccountEndpoint {
         return Response.noContent().build();
     }
 
+    @GET
+    @Path("/owners")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({Roles.MANAGER})
+    public Response getListOfOwners() {
+        final List<AccountInfoDTO> listOfOwners = accountService.getListOfOwners()
+                .stream()
+                .map(AccountMapper::createAccountInfoDTOEntity)
+                .toList();
+        return Response.ok().entity(listOfOwners).build();
+    }
+
     @PATCH
     @Path("/self/confirm-new-email")
     @Consumes(MediaType.APPLICATION_JSON)

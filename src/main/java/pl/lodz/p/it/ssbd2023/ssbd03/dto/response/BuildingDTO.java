@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.AbstractDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class BuildingDTO extends AbstractDTO implements Signable {
     private String createdBy;
     private BigDecimal totalArea;
@@ -34,11 +36,10 @@ public class BuildingDTO extends AbstractDTO implements Signable {
 
     @Override
     public String messageToSign() {
-        return getVersion().toString()
-                .concat(getTotalArea().toString())
+        return getTotalArea().toString()
                 .concat(getCommunalAreaAggregate().toString())
                 .concat(getStreet())
-                .concat(getBuildingNumber().toString())
+                .concat(getBuildingNumber())
                 .concat(getCity())
                 .concat(getPostalCode());
     }
