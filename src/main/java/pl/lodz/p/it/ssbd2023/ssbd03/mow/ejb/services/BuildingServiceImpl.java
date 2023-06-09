@@ -92,12 +92,12 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
 
         final Building building = buildingFacade.findById(buildingId);
 
-//        if (!etag.equals(messageSigner.sign(building))) {
-//            throw AppException.createVerifierException();
-//        }
-//        if (!Objects.equals(version, building.getVersion())) {
-//            throw AppException.createOptimisticLockAppException();
-//        }
+        if (!etag.equals(messageSigner.sign(building))) {
+            throw AppException.createVerifierException();
+        }
+        if (!Objects.equals(version, building.getVersion())) {
+            throw AppException.createOptimisticLockAppException();
+        }
 
         final BigDecimal sum = building.getPlaces().stream()
                 .map(Place::getArea)
