@@ -84,7 +84,6 @@ const PlaceInfo = () => {
                                     </Typography>
                                     <Typography sx={{ marginLeft: '4vw', marginRight: '2vw', padding: '1vh', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} variant="h5">
                                         <b>{t('place.surname')}:</b> {place.surname}
-
                                     </Typography>
                                 <Typography sx={{
                                     marginLeft: '4vw',
