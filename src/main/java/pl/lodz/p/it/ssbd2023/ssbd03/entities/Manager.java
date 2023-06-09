@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.lodz.p.it.ssbd2023.ssbd03.common.AccountEntityListener;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
 
 import java.io.Serializable;
@@ -24,7 +23,6 @@ import java.io.Serializable;
         @NamedQuery(name = "Manager.findByLicenseAndWithoutUsername",
                 query = "SELECT d FROM Manager d WHERE d.license = :license AND d.account.username != :username")
 })
-@EntityListeners(value = AccountEntityListener.class)
 public class Manager extends AccessLevelMapping implements Serializable, Signable {
     @Column(name = "license", nullable = false, length = 20)
     private String license;

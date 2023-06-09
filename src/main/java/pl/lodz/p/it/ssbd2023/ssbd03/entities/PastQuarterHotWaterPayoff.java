@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.common.HeatEntityListener;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -15,7 +14,6 @@ import java.math.BigDecimal;
 @EqualsAndHashCode
 @Entity
 @Table(name = "past_quarter_hot_water_pay_off")
-@EntityListeners(value = HeatEntityListener.class)
 public class PastQuarterHotWaterPayoff extends AbstractEntity implements Serializable {
     @Id
     @OneToOne(cascade = CascadeType.ALL)

@@ -12,6 +12,7 @@ import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.core.Context;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.TokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;

@@ -20,7 +20,9 @@ import java.time.LocalDate;
         })
 @NamedQueries({
         @NamedQuery(name = "HotWaterEntry.checkIfHotWaterEntryCouldBeInserted",
-                query = "SELECT e FROM HotWaterEntry e WHERE e.place.id = :placeId AND YEAR(e.date) = YEAR(:date) AND MONTH(e.date) = MONTH(:date) AND e.manager IS NULL")
+                query = "SELECT e FROM HotWaterEntry e WHERE e.place.id = :placeId AND YEAR(e.date) = :year AND MONTH(e.date) = :month"),
+        @NamedQuery(name = "HotWaterEntry.checkIfHotWaterEntryCouldBeOverwritten",
+                query = "SELECT e FROM HotWaterEntry e WHERE e.place.id = :placeId AND YEAR(e.date) = :year AND MONTH(e.date) = :month AND e.manager IS NULL")
 })
 public class HotWaterEntry extends AbstractEntity implements Serializable {
     @Id
@@ -29,6 +31,7 @@ public class HotWaterEntry extends AbstractEntity implements Serializable {
     private Long id;
 
     @Column(name = "date_", nullable = false)
+    @Setter
     private LocalDate date;
 
     @Setter
@@ -41,19 +44,13 @@ public class HotWaterEntry extends AbstractEntity implements Serializable {
     private Place place;
 
     @ManyToOne
-    @JoinColumn(name = "manager_id", updatable = false, referencedColumnName = "id")
+    @Setter
+    @JoinColumn(name = "manager_id", referencedColumnName = "id")
     private Manager manager;
 
     public HotWaterEntry(LocalDate date, BigDecimal entryValue, Place place) {
         this.date = date;
         this.entryValue = entryValue;
         this.place = place;
-    }
-
-    public HotWaterEntry(LocalDate date, BigDecimal entryValue, Place place, Manager manager) {
-        this.date = date;
-        this.entryValue = entryValue;
-        this.place = place;
-        this.manager = manager;
     }
 }

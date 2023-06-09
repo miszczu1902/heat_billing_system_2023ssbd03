@@ -78,7 +78,7 @@ public class HeatDistributionCentreEndpoint {
     @PATCH
     @RolesAllowed({Roles.OWNER, Roles.MANAGER})
     public Response modifyConsumption(ModifyHotWaterEntryDTO hotWaterEntryDTO) {
-        heatDistributionCentreService.modifyConsumption(hotWaterEntryDTO.getHotWaterConsumption(), hotWaterEntryDTO.getPlaceId());
+        heatDistributionCentreService.modifyConsumption(hotWaterEntryDTO.getHotWaterConsumption(), hotWaterEntryDTO.getPlaceId(), hotWaterEntryDTO.getVersion());
         return Response.status(204).build();
     }
 

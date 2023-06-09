@@ -2,7 +2,6 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.common.HeatEntityListener;
 
 import java.time.LocalDate;
 
@@ -16,7 +15,6 @@ import java.time.LocalDate;
         indexes = {
                 @Index(name = "advance_place_id", columnList = "place_id")
         })
-@EntityListeners(value = HeatEntityListener.class)
 public abstract class Advance extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

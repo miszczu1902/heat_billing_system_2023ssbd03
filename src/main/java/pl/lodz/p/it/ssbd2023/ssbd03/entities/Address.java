@@ -3,7 +3,6 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.common.HeatEntityListener;
 
 import java.io.Serializable;
 
@@ -13,7 +12,6 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @Entity
 @Table(name = "address")
-@EntityListeners(value = HeatEntityListener.class)
 public class Address extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

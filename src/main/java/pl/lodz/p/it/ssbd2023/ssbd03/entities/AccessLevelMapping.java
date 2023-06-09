@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.lodz.p.it.ssbd2023.ssbd03.common.AccountEntityListener;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -30,7 +29,6 @@ import java.util.Objects;
                 query = "SELECT k.account FROM AccessLevelMapping k WHERE k.account.username = :username AND k.accessLevel = :accessLevel"),
 
 })
-@EntityListeners(value = AccountEntityListener.class)
 public abstract class AccessLevelMapping extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

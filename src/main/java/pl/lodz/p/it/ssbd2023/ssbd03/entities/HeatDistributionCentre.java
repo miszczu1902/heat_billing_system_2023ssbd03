@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import pl.lodz.p.it.ssbd2023.ssbd03.common.HeatEntityListener;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ import java.util.List;
         @NamedQuery(name = "HeatDistributionCentre.getListOfHeatDistributionCentre", query = "SELECT k FROM HeatDistributionCentre k "),
         @NamedQuery(name = "HeatDistributionCentre.findById", query = "SELECT k from HeatDistributionCentre k where k.id = :id")
 })
-@EntityListeners(value = HeatEntityListener.class)
 public class HeatDistributionCentre extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

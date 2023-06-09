@@ -12,7 +12,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 
 @Stateless
-@TransactionAttribute(TransactionAttributeType.MANDATORY)
+@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class AccessLevelMappingFacade extends AbstractFacade<AccessLevelMapping> {
     @PersistenceContext(unitName = "ssbd03mokPU")
     private EntityManager em;
@@ -27,7 +27,6 @@ public class AccessLevelMappingFacade extends AbstractFacade<AccessLevelMapping>
     }
 
     @PermitAll
-    @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public Account findByUsernameForEntityListener(String username) {
         TypedQuery<Account> tq = em.createNamedQuery("AccessLevelMapping.findByUsername", Account.class);
         tq.setParameter("username", username);

@@ -89,23 +89,6 @@ public class PlaceFacade extends AbstractFacade<Place> {
         return tq.getSingleResult();
     }
 
-    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    public Place findPlaceByPlaceIdAndUsername(Long placeId, String username) {
-        TypedQuery<Place> tq = em.createNamedQuery("Place.findPlaceByUsernameAndCheckIfHeIsOwnerOfPlace", Place.class);
-        tq.setParameter("placeId", placeId);
-        tq.setParameter("username", username);
-
-        List<Place> resultList = tq.getResultList();
-        return !resultList.isEmpty() ? resultList.get(0) : null;
-    }
-
-    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    public Place findPlaceByPlaceId(Long placeId) {
-        TypedQuery<Place> tq = em.createNamedQuery("Place.findPlacesByPlaceId", Place.class);
-        tq.setParameter("id", placeId);
-        return tq.getSingleResult();
-    }
-
     @RolesAllowed({Roles.OWNER})
     public List<Place> findByOwner() {
         throw new UnsupportedOperationException();

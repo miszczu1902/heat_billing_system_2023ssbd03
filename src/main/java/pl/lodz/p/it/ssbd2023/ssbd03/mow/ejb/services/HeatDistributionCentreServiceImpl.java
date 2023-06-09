@@ -8,6 +8,7 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.core.Context;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
@@ -79,19 +80,18 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @Override
     @RolesAllowed({Roles.OWNER, Roles.MANAGER})
     public void insertConsumption(BigDecimal consumptionValue, Long placeId) {
-        if (!hotWaterEntryFacade.checkIfHotWaterEntryWasInsertedOrCouldBeOverwritten(placeId)) {
+        if (hotWaterEntryFacade.checkIfHotWaterEntryCouldBeInsertedOrOverwritten(placeId, false) == null) {
             final String username = securityContext.getCallerPrincipal().getName();
-            final Place place = placeFacade.findPlaceByPlaceIdAndUsername(placeId, username);
+            final Place place = placeFacade.findPlaceById(placeId);
 
-            if (place == null) throw AppException.createHotWaterEntryCouldNotBeInsertedException();
-
-            HotWaterEntry hotWaterEntry;
-            if (securityContext.isCallerInRole(Roles.MANAGER)) {
-                hotWaterEntry = new HotWaterEntry(LocalDate.now(), consumptionValue, place, accessLevelMappingFacade.findManagerByUsername(username));
-            } else {
-                hotWaterEntry = new HotWaterEntry(LocalDate.now(), consumptionValue, place);
+            if (place == null) {
+                throw AppException.createHotWaterEntryCouldNotBeInsertedException();
             }
 
+            HotWaterEntry hotWaterEntry = new HotWaterEntry(LocalDate.now(), consumptionValue, place);
+            if (securityContext.isCallerInRole(Roles.MANAGER)) {
+                hotWaterEntry.setManager(accessLevelMappingFacade.findManagerByUsername(username));
+            }
             hotWaterEntryFacade.create(hotWaterEntry);
         } else {
             throw AppException.createHotWaterEntryCouldNotBeInsertedException();
@@ -100,19 +100,22 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
     @Override
     @RolesAllowed({Roles.OWNER, Roles.MANAGER})
-    public void modifyConsumption(BigDecimal consumptionValue, Long placeId) {
-//        if (hotWaterEntryFacade.checkIfHotWaterEntryWasInsertedOrCouldBeOverwritten(placeId)) {
-//            final String username = securityContext.getCallerPrincipal().getName();
-//            placeId
-//            if (securityContext.isCallerInRole(Roles.MANAGER)) {
-//                hotWaterEntryFacade.findNewestHotWaterEntryForPlace(placeId);
-//                hotWaterEntryFacade.edit();
-//            } else {
-//
-//            }
-//        } else {
-//            throw AppException.createHotWaterEntryCouldNotBeModifiedException();
-//        }
+    public void modifyConsumption(BigDecimal consumptionValue, Long placeId, Long version) {
+        HotWaterEntry hotWaterEntry = hotWaterEntryFacade.checkIfHotWaterEntryCouldBeInsertedOrOverwritten(placeId, true);
+        if (hotWaterEntry != null) {
+            if (!hotWaterEntry.getVersion().equals(version)) {
+                throw AppException.createOptimisticLockAppException();
+            }
+            if (securityContext.isCallerInRole(Roles.MANAGER)) {
+                final String username = securityContext.getCallerPrincipal().getName();
+                hotWaterEntry.setManager(accessLevelMappingFacade.findManagerByUsername(username));
+            }
+            hotWaterEntry.setEntryValue(consumptionValue);
+            hotWaterEntry.setDate(LocalDate.now());
+            hotWaterEntryFacade.edit(hotWaterEntry);
+        } else {
+            throw AppException.createHotWaterEntryCouldNotBeModifiedException();
+        }
     }
 
     @Override
@@ -125,7 +128,8 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
         if (heatDistributionCentre.isEmpty()) {
             throw AppException.createNoHeatDistributionCentreException();
         }
-        HeatDistributionCentrePayoff heatDistributionCentrePayoff = new HeatDistributionCentrePayoff(consumption, consumptionCost, LocalDate.now(), heatingAreaFactor, manager, heatDistributionCentre.get(0));
+        HeatDistributionCentrePayoff heatDistributionCentrePayoff = new HeatDistributionCentrePayoff(consumption, consumptionCost, LocalDate.now(),
+                heatingAreaFactor, manager, heatDistributionCentre.get(0));
 
         heatDistributionCentrePayoffFacade.create(heatDistributionCentrePayoff);
     }

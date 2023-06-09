@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import pl.lodz.p.it.ssbd2023.ssbd03.common.AccountEntityListener;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -24,7 +23,6 @@ import java.util.Objects;
         @NamedQuery(name = "AccountConfirmationToken.findAllAccountsToSendReminder",
                 query = "SELECT t FROM AccountConfirmationToken t WHERE t.isReminderSent IS FALSE AND t.account.isActive IS FALSE AND t.account.registerDate <= :date")
 })
-@EntityListeners(value = AccountEntityListener.class)
 public class AccountConfirmationToken extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
