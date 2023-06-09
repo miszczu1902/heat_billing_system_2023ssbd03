@@ -79,7 +79,6 @@ const PlaceInfo = () => {
                                     </Typography>
                                     <Typography sx={{ marginLeft: '4vw', marginRight: '2vw', padding: '1vh', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} variant="h5">
                                         <b>{t('place.surname')}:</b> {place.surname}
-
                                     </Typography>
                                 </Paper>
                                 <Paper elevation={3} style={{ marginTop: '0.5vh', position: 'relative', overflow: 'auto' }}>
