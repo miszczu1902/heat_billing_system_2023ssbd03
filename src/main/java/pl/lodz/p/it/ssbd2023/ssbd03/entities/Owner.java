@@ -21,7 +21,9 @@ import java.util.Objects;
 )
 @NamedQueries({
         @NamedQuery(name = "Owner.findByPhoneNumberAndWithoutUsername", query = "SELECT d FROM Owner d WHERE d.phoneNumber = :phoneNumber AND d.account.username != :username"),
-        @NamedQuery(name = "Owner.findByPhoneNumber", query = "SELECT d FROM Owner d WHERE d.phoneNumber = :phoneNumber")
+        @NamedQuery(name = "Owner.findByPhoneNumber", query = "SELECT d FROM Owner d WHERE d.phoneNumber = :phoneNumber"),
+        @NamedQuery(name = "Owner.findById", query = "SELECT k FROM Owner k WHERE k.id = :id"),
+        @NamedQuery(name = "Owner.findAllOwners", query = "SELECT k FROM Owner k")
 })
 public class Owner extends AccessLevelMapping implements Serializable, Signable {
     @Column(name = "phone_number", nullable = false, length = 9)

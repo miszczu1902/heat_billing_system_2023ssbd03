@@ -39,7 +39,7 @@ public class AccountFacade extends AbstractFacade<Account> {
         super.edit(entity);
     }
 
-    @RolesAllowed({Roles.GUEST, Roles.OWNER, Roles.ADMIN, Roles.MANAGER})
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
     public Account findByUsername(String username) {
         TypedQuery<Account> tq = em.createNamedQuery("Account.findByUsername", Account.class);
         tq.setParameter("username", username);

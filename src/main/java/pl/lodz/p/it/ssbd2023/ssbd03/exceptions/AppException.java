@@ -6,9 +6,11 @@ import jakarta.ws.rs.core.Response;
 import lombok.Getter;
 import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.building.AddingPlaceToTheSameAccountException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.advanceFactor.AdvanceChangeFactorNotModified;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.advanceFactor.AdvanceChangeFactorWasInserted;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.building.BuildingCommunalAreaBiggerOrEqualTotalAreaException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.building.LackOfSpaceInTheBuildingException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.SignerException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.VerifierException;
@@ -67,6 +69,8 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_NO_HEAT_DISTRIBUTION_CENTRE = "exception.heat_distribution_centre.not_exists";
     protected final static String ERROR_PREDICTED_HOT_WATER_CONSUMPTION_VALUE_ALREADY_SET = "exception.predicted_hot_water_consumption_value_already_set";
     protected final static String ERROR_NOT_OWNER_OF_THIS_PLACE = "excpetion.not_owner_of_this_place";
+    private static final String LACK_OF_SPACE = "exception.building.lack.of.space";
+    private static final String ERROR_ADDING_PLACE_TO_THE_SAME_ADMIN_MANAGER = "exception.building.adding_place_to_the_same_manager_account";
     protected final static String ERROR_ADVANCE_CHANGE_FACTOR_NOT_MODIFIED = "exception.advance_factor.cannot_modify_factor";
     protected final static String ERROR_ADVANCE_CHANGE_FACTOR_WAS_INSERTED = "exception.advance_factor.factor_was_inserted";
     protected final static String ERROR_HOT_WATER_ENTRY_NOT_INSERTED = "exception.hot_water_entry.not_inserted";
@@ -255,6 +259,14 @@ public class AppException extends WebApplicationException {
 
     public static NotOwnerOfPlaceException createNotOwnerOfPlaceException() {
         return new NotOwnerOfPlaceException(ERROR_NOT_OWNER_OF_THIS_PLACE, Response.Status.FORBIDDEN);
+    }
+
+    public static LackOfSpaceInTheBuildingException lackOfSpaceInTheBuildingException() {
+        return new LackOfSpaceInTheBuildingException(LACK_OF_SPACE, Response.Status.BAD_REQUEST);
+    }
+
+    public static AddingPlaceToTheSameAccountException addingPlaceToTheSameAccountException() {
+        return new AddingPlaceToTheSameAccountException(AppException.ERROR_ADDING_PLACE_TO_THE_SAME_ADMIN_MANAGER, Response.Status.FORBIDDEN);
     }
 
     public static AdvanceChangeFactorNotModified createAdvanceChangeFactorNotModifiedException() {

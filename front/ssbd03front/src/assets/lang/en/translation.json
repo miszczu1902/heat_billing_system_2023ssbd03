@@ -320,6 +320,18 @@
     "firstName" : "Owner's name",
     "surname": "Owner's surname",
     "connected": "Connected",
-    "disconnected": "Disconnected"
+    "disconnected": "Disconnected",
+    "dialogText": "Add Place Form",
+    "ownerId": "Owner ID",
+    "areaInfo": "Enter the area of the place",
+    "predictedHotWaterConsumptionInfo": "Enter the predicted hot water consumption",
+    "ownerIdInfo": "Add the owner",
+    "areaError": "Invalid area value",
+    "predictedHotWaterConsumptionError": "Invalid predicted hot water consumption value",
+    "add_place": "Are you sure you want to add the place?",
+    "added_place": "The place has been added",
+    "error": "An error occurred while adding a new place",
+    "yes": "Yes",
+    "no": "No"
   }
 }
