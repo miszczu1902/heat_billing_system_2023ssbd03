@@ -342,5 +342,15 @@
     "enter_predicted_hot_water_consumption_error" : "Wartość musi być w formacie X.XX oraz przed kropką może znajdować się maksymalnie 8 cyfr",
     "enter_predicted_hot_water_consumption_confirm" : "Czy na pewno wprowadziłeś poprawne dane? Tej operacji nie można cofnąć",
     "enter_predicted_hot_water_consumption_failed" : "Wystąpił błąd podczas wprowadzania danych przedwidywanego zużycia ciepłej wody"
+  },
+  "modifyPlaceOwner": {
+    "enter_first_name": "Nazwa użytkownika ",
+    "enter_surname": "Wprowadź nazwisko: ",
+    "modify_place_owner_title": "Zmiana właściciela lokalu",
+    "modify_place_owner_button": "Zmień właściciela",
+    "modify_place_owner_message": "Wprowadź dane nowego właściciela pamiętając, że nie możesz wpisać własnych danych.",
+    "modify_place_owner_failed": "Wystąpił błąd podczas modyfikacji właściciela lokalu.",
+    "modify_place_owner_confirm": "Czy na pewno wprowadziłeś poprawne dane? Tej operacji nie można cofnąć",
+    "enter_username_error": "Nazwa użytkownika może zaweriać: dużą, małą literę, cyfrę oraz znak _, oraz długość 6-16 znaków"
   }
 }

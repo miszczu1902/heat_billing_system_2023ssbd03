@@ -27,6 +27,7 @@ import Logout from "../components/login/Logout";
 import BuildingsList from '../components/building/BuildingsList';
 import AddInvoiceValues from '../components/heatDistributionCentrePayoff/AddInvoiceValues';
 import EnterPredictedHotWaterConsumption from '../components/place/EnterPredictedHotWaterConsumption';
+import ChangePlaceOwner from '../components/place/ChangePlaceOwner';
 import AnnualBalances from "../components/annualBalance/AnnualBalances";
 import Building from "../components/building/Building";
 import PlacesList from "../components/places/PlacesList";
@@ -183,6 +184,10 @@ const router = createBrowserRouter([
                     {
                         path: '/places/place/enterPredictedHotWaterConsumption',
                         element: <PrivateRoute component={EnterPredictedHotWaterConsumption} accessLevels={[OWNER, MANAGER]}/>
+                    },
+                    {
+                        path: '/places/place/ChangePlaceOwner',
+                        element: <PrivateRoute component={ChangePlaceOwner} accessLevels={[MANAGER]}/>
                     },
                     {
                         path: '/places/self',
