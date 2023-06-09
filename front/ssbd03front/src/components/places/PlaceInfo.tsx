@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import React, {useEffect, useState} from 'react';
 import {Button, Dialog, DialogTitle, Grid} from '@mui/material';
-import {API_URL} from "../../consts";
+import {ADMIN, API_URL, MANAGER} from "../../consts";
 import axios from 'axios';
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -11,9 +11,11 @@ import {useParams} from "react-router-dom";
 import EnterPredictedHotWaterConsumption from "../place/EnterPredictedHotWaterConsumption";
 import DoorIcon from "../icons/DoorIcon";
 import {Account} from "../../types/account";
+import ChangePlaceOwner from "../place/ChangePlaceOwner";
 
 const PlaceInfo = () => {
     const {t} = useTranslation();
+    const [currentRole, setCurrentRole] = useState(localStorage.getItem("role"));
     const token = "Bearer " + localStorage.getItem("token");
     const [place, setPlace] = useState<Place | null>(null);
     const [version, setVersion] = useState("");
@@ -62,44 +64,28 @@ const PlaceInfo = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: '2vh'
-                }}>
-                    <Typography sx={{padding: '1vh'}} variant="h4">
-                        {t('place.title')}
-                    </Typography>
-                    <DoorIcon/>
-                </Box>
-                <Box sx={{my: 30, display: 'flex', flexDirection: 'column', alignItems: 'left', margin: '2vh'}}>
-                    {place !== null && (
-                        <>
-                            <Paper elevation={3} style={{position: 'relative', overflow: 'auto'}}>
-                                <Typography sx={{
-                                    padding: '1vh',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'space-between'
-                                }} variant="h4">
-                                    <b>{t('balances.personal_data')}:</b>
-                                </Typography>
-                                <Typography sx={{
-                                    marginLeft: '4vw',
-                                    marginRight: '2vw',
-                                    padding: '1vh',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'space-between'
-                                }} variant="h5">
-                                    <b>{t('place.firstName')}:</b> {place.firstName}
-                                </Typography>
-                                <Typography sx={{
-                                    marginLeft: '4vw',
-                                    marginRight: '2vw',
-                                    padding: '1vh',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'space-between'
-                                }} variant="h5">
-                                    <b>{t('place.surname')}:</b> {place.surname}
-                                </Typography>
+                }}>        <Typography sx={{ padding: '1vh' }} variant="h4">
+                            {t('place.title')}
+                        </Typography>
+                        <DoorIcon />
+                    </Box>
+                    <Box sx={{ my: 30, display: 'flex', flexDirection: 'column', alignItems: 'left', margin: '2vh' }}>
+                        {place !== null && (
+                            <>
+                                <Paper elevation={3} style={{ position: 'relative', overflow: 'auto' }}>
+                                    <Typography sx={{ padding: '1vh', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} variant="h4">
+                                        <b>{t('balances.personal_data')}:</b>
+                                    </Typography>
+                                    <Typography sx={{ marginLeft: '4vw', marginRight: '2vw', padding: '1vh', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} variant="h5">
+                                        <b>{t('place.firstName')}:</b> {place.firstName}
+                                        {
+                                            (currentRole === MANAGER) && <ChangePlaceOwner/>
+                                        }
+                                    </Typography>
+                                    <Typography sx={{ marginLeft: '4vw', marginRight: '2vw', padding: '1vh', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} variant="h5">
+                                        <b>{t('place.surname')}:</b> {place.surname}
+
+                                    </Typography>
                                 <Typography sx={{
                                     marginLeft: '4vw',
                                     marginRight: '2vw',
