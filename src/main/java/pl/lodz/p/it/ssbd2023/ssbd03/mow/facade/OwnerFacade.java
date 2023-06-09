@@ -11,6 +11,10 @@ import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class OwnerFacade extends AbstractFacade<Owner> {
@@ -31,5 +35,11 @@ public class OwnerFacade extends AbstractFacade<Owner> {
         TypedQuery<Owner> tq = em.createNamedQuery("Owner.findById", Owner.class);
         tq.setParameter("id", id);
         return tq.getSingleResult();
+    }
+
+    @RolesAllowed({Roles.MANAGER})
+    public List<Owner> getListOfOwners() {
+        TypedQuery<Owner> query = em.createNamedQuery("Owner.findAllOwners", Owner.class);
+        return Optional.of(query.getResultList()).orElse(Collections.emptyList());
     }
 }

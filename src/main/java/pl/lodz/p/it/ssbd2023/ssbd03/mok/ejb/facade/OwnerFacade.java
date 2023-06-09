@@ -56,12 +56,6 @@ public class OwnerFacade extends AbstractFacade<Owner> {
         }
     }
 
-    @RolesAllowed({Roles.MANAGER})
-    public List<Owner> getListOfOwners() {
-        TypedQuery<Owner> query = em.createNamedQuery("Owner.findAllOwners", Owner.class);
-        return Optional.of(query.getResultList()).orElse(Collections.emptyList());
-    }
-
     @Override
     @RolesAllowed(Roles.OWNER)
     public void edit(Owner entity) {

@@ -73,7 +73,7 @@ const Building = () => {
         }).then(response => {
             setBuilding(response.data);
         }).catch(error => {
-            if (error.response.status == 500) navigate('/');
+            if (error.response.status === 500) navigate('/');
         })
 
         axios.get(`${API_URL}/buildings/building/${buildingId}/places`, {
@@ -83,7 +83,7 @@ const Building = () => {
         }).then(response => {
             setPlaces(response.data);
         }).catch(error => {
-            if (error.response.status == 500) navigate('/');
+            if (error.response.status === 500) navigate('/');
         })
     };
 
@@ -107,7 +107,7 @@ const Building = () => {
                     setVersion(response.data.version)
                 });
 
-            axios.get(`${API_URL}/accounts/owners`, {
+            axios.get(`${API_URL}/buildings/owners`, {
                 headers: {
                     Authorization: token
                 }
@@ -118,7 +118,6 @@ const Building = () => {
         fetchData();
         setAddPlace(true);
     };
-
 
     const handleClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
         if (reason !== 'backdropClick') {

@@ -650,16 +650,6 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @Override
-    @RolesAllowed(Roles.MANAGER)
-    public List<Account> getListOfOwners() {
-        List<Owner> owners = ownerFacade.getListOfOwners();
-        List<Account> accounts = owners.stream()
-                .map(Owner::getAccount)
-                .collect(Collectors.toList());
-        return accounts;
-    }
-
-    @Override
     @RolesAllowed(Roles.OWNER)
     public void changePhoneNumber(String newPhoneNumber, String etag, Long version) {
         final String username = securityContext.getCallerPrincipal().getName();

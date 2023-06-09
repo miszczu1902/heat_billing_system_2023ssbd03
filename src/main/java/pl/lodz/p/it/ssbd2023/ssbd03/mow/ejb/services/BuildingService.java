@@ -5,6 +5,7 @@ import java.util.List;
 
 import jakarta.ejb.Local;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.CommonManagerLocalInterface;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 
@@ -23,4 +24,6 @@ public interface BuildingService extends CommonManagerLocalInterface {
 
     void addPlaceToBuilding(BigDecimal area, Boolean hotWaterConnection, Boolean centralHeatingConnection,
                             BigDecimal predictedHotWaterConsumption, Long buildingId, Long ownerId, String etag, Long version);
+
+    List<Account> getListOfOwners();
 }

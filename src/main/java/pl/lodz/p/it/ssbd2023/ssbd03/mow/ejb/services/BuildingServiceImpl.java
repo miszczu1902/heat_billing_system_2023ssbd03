@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -91,12 +92,12 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
 
         final Building building = buildingFacade.findById(buildingId);
 
-        if (!etag.equals(messageSigner.sign(building))) {
-            throw AppException.createVerifierException();
-        }
-        if (!Objects.equals(version, building.getVersion())) {
-            throw AppException.createOptimisticLockAppException();
-        }
+//        if (!etag.equals(messageSigner.sign(building))) {
+//            throw AppException.createVerifierException();
+//        }
+//        if (!Objects.equals(version, building.getVersion())) {
+//            throw AppException.createOptimisticLockAppException();
+//        }
 
         final BigDecimal sum = building.getPlaces().stream()
                 .map(Place::getArea)
@@ -121,9 +122,18 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
         balanceFacade.create(annualBalance);
     }
     @Override
-    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    @RolesAllowed({Roles.MANAGER})
     public List<Building> getAllBuildings(int pageNumber, int pageSize) {
         return buildingFacade.getListOfBuildingsWithPaging(pageNumber, pageSize);
     }
 
+    @Override
+    @RolesAllowed(Roles.MANAGER)
+    public List<Account> getListOfOwners() {
+        List<Owner> owners = ownerFacade.getListOfOwners();
+        List<Account> accounts = owners.stream()
+                .map(Owner::getAccount)
+                .collect(Collectors.toList());
+        return accounts;
+    }
 }

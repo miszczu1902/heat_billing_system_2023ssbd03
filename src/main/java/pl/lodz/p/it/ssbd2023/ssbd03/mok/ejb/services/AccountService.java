@@ -73,6 +73,4 @@ public interface AccountService extends CommonManagerLocalInterface {
     void revokeAccessLevel(String username, String accessLevel, String etag, Long version);
 
     List<Account> getListOfAccounts(String sortBy, int pageNumber, int pageSize, Boolean isEnable);
-
-    List<Account> getListOfOwners();
 }

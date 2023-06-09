@@ -164,7 +164,7 @@ const router = createBrowserRouter([
                 children: [
                     {
                         path: '/buildings',
-                        element: <PrivateRoute component={BuildingsList} accessLevels={[ADMIN, MANAGER]}/>
+                        element: <PrivateRoute component={BuildingsList} accessLevels={[MANAGER]}/>
                     },
                     {
                         path: '/buildings/:buildingId',
