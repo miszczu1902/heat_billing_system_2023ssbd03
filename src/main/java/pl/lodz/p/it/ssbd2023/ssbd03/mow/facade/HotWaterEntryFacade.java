@@ -49,6 +49,7 @@ public class HotWaterEntryFacade extends AbstractFacade<HotWaterEntry> {
     public List<HotWaterEntry> getListOfHotWaterEntriesForPlace(Long id) {
         TypedQuery<HotWaterEntry> tq = em.createNamedQuery("HotWaterEntry.getListOfHotWaterEntriesForPlace", HotWaterEntry.class);
         tq.setParameter("id", id);
+        tq.setMaxResults(2);
         return tq.getResultList();
     }
 }
