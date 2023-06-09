@@ -27,18 +27,8 @@ public class MonthPayoffFacade extends AbstractFacade<MonthPayoff> {
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public void edit(MonthPayoff entity) {
-        super.edit(entity);
-    }
-
-    @Override
-    @RolesAllowed({Roles.MANAGER})
     public void create(MonthPayoff entity) {
         super.create(entity);
     }
 
-    @Override
-    public void remove(MonthPayoff entity) {
-        super.remove(entity);
-    }
 }
