@@ -27,7 +27,7 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(name = "Place.findPlacesByBuildingId", query = "SELECT k FROM Place k WHERE k.building.id = :id"),
         @NamedQuery(name = "Place.findById", query = "SELECT k FROM Place k WHERE k.id = :id"),
-        @NamedQuery(name = "Place.findAllPlaces", query = "SELECT k FROM Place k WHERE 1=1"),
+        @NamedQuery(name = "Place.findAllPlaces", query = "SELECT k FROM Place k"),
         @NamedQuery(name = "Place.findPlacesByOwner", query = "SELECT k FROM Place k WHERE k.owner.id = :id")
 })
 public class Place extends AbstractEntity implements Signable {
