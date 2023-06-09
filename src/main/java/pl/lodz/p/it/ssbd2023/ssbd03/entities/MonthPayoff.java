@@ -46,4 +46,13 @@ public class MonthPayoff extends AbstractEntity implements Serializable {
     @ManyToOne
     @JoinColumn(name = "owner_id", updatable = false, referencedColumnName = "id")
     private Owner owner;
+
+    public MonthPayoff(LocalDate payoffDate, BigDecimal waterHeatingUnitCost, BigDecimal centralHeatingUnitCost, BigDecimal hotWaterConsumption, Place place, Owner owner) {
+        this.payoffDate = payoffDate;
+        this.waterHeatingUnitCost = waterHeatingUnitCost;
+        this.centralHeatingUnitCost = centralHeatingUnitCost;
+        this.hotWaterConsumption = hotWaterConsumption;
+        this.place = place;
+        this.owner = owner;
+    }
 }
