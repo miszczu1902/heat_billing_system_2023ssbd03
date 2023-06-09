@@ -49,6 +49,9 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @Inject
     private AccessLevelFacade accessLevelFacade;
 
+    @Inject
+    private ManagerFacade managerFacade;
+
     @Override
     @RolesAllowed({Roles.MANAGER})
     public Void getHeatDistributionCentreParameters() {
@@ -125,6 +128,9 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
     @Override
     @RolesAllowed({Roles.MANAGER})
+    public void addConsumptionFromInvoice(BigDecimal consumption, BigDecimal consumptionCost, BigDecimal heatingAreaFactor) {
+        final Manager manager = managerFacade.findManagerByUsername(securityContext.getCallerPrincipal().getName());
+
     public void addConsumptionFromInvoice(BigDecimal consumption, BigDecimal consumptionCost, BigDecimal heatingAreaFactor, Manager manager) {
         if (!heatDistributionCentrePayoffFacade.checkIfRecordForThisMonthNotExists()) {
             throw AppException.createConsumptionAddException();
