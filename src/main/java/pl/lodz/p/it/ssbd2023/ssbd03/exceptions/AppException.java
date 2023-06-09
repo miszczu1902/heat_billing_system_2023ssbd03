@@ -70,7 +70,6 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_NOT_OWNER_OF_THIS_PLACE = "excpetion.not_owner_of_this_place";
     private static final String LACK_OF_SPACE = "exception.building.lack.of.space";
     private static final String ERROR_ADDING_PLACE_TO_THE_SAME_ADMIN_MANAGER = "exception.building.adding_place_to_the_same_manager_account";
-    protected final static String ERROR_NOT_OWNER_OF_THIS_PLACE = "exception.not_owner_of_this_place";
     protected final static String ERROR_CAN_NOT_MAKE_YOURSELF_OWNER = "exception.place.can_not_make_yourself_owner";
     protected final static String ERROR_NO_RESULT = "exception.database.no_result";
     protected final static String USER_IS_ALREADY_OWNER_OF_THIS_PLACE = "exception.place.user_is_already_owner_of_this_place";
@@ -261,12 +260,6 @@ public class AppException extends WebApplicationException {
 
     public static NotOwnerOfPlaceException createNotOwnerOfPlaceException() {
         return new NotOwnerOfPlaceException(ERROR_NOT_OWNER_OF_THIS_PLACE, Response.Status.FORBIDDEN);
-    }
-    public static CanNotMakeYourselfOwnerOfThePlaceException canNotMakeYourselfOwnerOfThePlaceException() {
-        return new CanNotMakeYourselfOwnerOfThePlaceException(ERROR_CAN_NOT_MAKE_YOURSELF_OWNER, Response.Status.FORBIDDEN);
-    }
-    public static NoResultException noResultException() {
-        return new NoResultException(ERROR_NO_RESULT, Response.Status.NOT_FOUND);
     }
 
     public static LackOfSpaceInTheBuildingException lackOfSpaceInTheBuildingException() {
