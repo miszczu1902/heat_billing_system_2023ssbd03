@@ -29,7 +29,8 @@ import java.util.List;
         @NamedQuery(name = "Place.findById", query = "SELECT k FROM Place k WHERE k.id = :id"),
         @NamedQuery(name = "Place.findPlacesByOwner", query = "SELECT k FROM Place k WHERE k.owner.id = :id"),
         @NamedQuery(name = "Place.findPlaceByUsernameAndCheckIfHeIsOwnerOfPlace",
-                query = "SELECT k FROM Place k WHERE k.id = :placeId AND k.owner.account.username = :username")
+                query = "SELECT k FROM Place k WHERE k.id = :placeId AND k.owner.account.username = :username"),
+        @NamedQuery(name = "Place.findAllPlaces", query = "SELECT k FROM Place k")
 })
 public class Place extends AbstractEntity implements Serializable, Signable {
     @Id

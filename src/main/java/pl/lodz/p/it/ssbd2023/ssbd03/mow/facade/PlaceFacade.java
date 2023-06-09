@@ -13,7 +13,9 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -92,5 +94,13 @@ public class PlaceFacade extends AbstractFacade<Place> {
     @RolesAllowed({Roles.OWNER})
     public List<Place> findByOwner() {
         throw new UnsupportedOperationException();
+    }
+
+    @RolesAllowed(Roles.MANAGER)
+    public List<Place> findAllPlaces() {
+        TypedQuery<Place> tq = em.createNamedQuery("Place.findAllPlaces", Place.class);
+
+        return Optional.of(tq.getResultList()).orElse(Collections.emptyList());
+
     }
 }

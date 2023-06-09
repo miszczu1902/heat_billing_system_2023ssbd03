@@ -11,8 +11,9 @@ import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterEntry;
 
-import java.time.LocalDate;
 import java.util.List;
+
+import java.time.LocalDate;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -44,6 +45,14 @@ public class HotWaterEntryFacade extends AbstractFacade<HotWaterEntry> {
     @Override
     public void remove(HotWaterEntry entity) {
         super.remove(entity);
+    }
+
+    @RolesAllowed({Roles.MANAGER})
+    public List<HotWaterEntry> getListOfHotWaterEntriesForPlace(Long id) {
+        TypedQuery<HotWaterEntry> tq = em.createNamedQuery("HotWaterEntry.getListOfHotWaterEntriesForPlace", HotWaterEntry.class);
+        tq.setParameter("id", id);
+        tq.setMaxResults(2);
+        return tq.getResultList();
     }
 
     @RolesAllowed({Roles.OWNER, Roles.MANAGER})
