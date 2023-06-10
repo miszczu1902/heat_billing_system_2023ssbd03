@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.integration.api.mow;
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomUtils;
@@ -13,6 +14,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTes
 import pl.lodz.p.it.ssbd2023.ssbd03.integration.factory.IntegrationTestObjectsFactory;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,12 +25,22 @@ public class ModifyHeatingAreaFactorTest extends BasicIntegrationConfigTest {
     public void beforeTest() {
         auth(manager);
     }
+
     @Test
     public void modifyHeatingAreaFactorTest() {
+        boolean condition = LocalDate.now().getDayOfMonth() == 1 && LocalDate.now().minusMonths(3).isBefore(LocalDate.now());
+        Assume.assumeTrue("That test could be passed when is the first day of year quarter is present", condition);
         Response response = sendRequestAndGetResponse(Method.PATCH,
                 "/heat-distribution-centre/parameters/advance-change-factor/" + 0,
                 new InsertAdvanceChangeFactorDTO(new BigDecimal(RandomUtils.nextInt(1, 9))), ContentType.JSON);
         assertEquals(204, response.getStatusCode());
+    }
 
+    @Test
+    public void modifyHeatingAreaFactorWithIncorrectValueTest() {
+        Response response = sendRequestAndGetResponse(Method.PATCH,
+                "/heat-distribution-centre/parameters/advance-change-factor/" + 0,
+                new InsertAdvanceChangeFactorDTO(new BigDecimal(10)), ContentType.JSON);
+        assertEquals(400, response.getStatusCode());
     }
 }
