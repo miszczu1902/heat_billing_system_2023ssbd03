@@ -25,12 +25,16 @@ public class MowSystemScheduler {
     @Inject
     private BalanceService balanceService;
 
-    @Schedule(dayOfMonth = "2", timezone = "Europe/Warsaw", persistent = false) //drugi dzien kazdego miesiaca o połnocy
+    @Schedule(dayOfMonth = "2", timezone = "Europe/Warsaw", persistent = false) //drugi dzien kazdego miesiaca o polnocy
     private void updateYearReport() {
         final short year = (short) LocalDate.now(TIME_ZONE).getYear();
         final Month month = LocalDate.now(TIME_ZONE).getMonth();
-
-        final List<AnnualBalance> annualBalanceList = balanceFacade.getListOfAnnualBalancesForYear(year);
+        List<AnnualBalance> annualBalanceList;
+        if (Month.JANUARY.equals(month)) { //jezeli mamy styczen to aktualizujemy jeszcze raport z poprzedniego roku
+            annualBalanceList = balanceFacade.getListOfAnnualBalancesForYear((short) (year - 1));
+        } else {
+            annualBalanceList = balanceFacade.getListOfAnnualBalancesForYear(year);
+        }
         annualBalanceList.forEach(annualBalance -> {
             final Place place = annualBalance.getPlace();
             final Optional<MonthPayoff> monthPayoffForThisYearOptional = place.getMonthPayoffs().stream()
