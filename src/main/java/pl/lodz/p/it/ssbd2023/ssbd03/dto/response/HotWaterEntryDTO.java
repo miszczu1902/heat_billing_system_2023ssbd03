@@ -40,9 +40,12 @@ public class HotWaterEntryDTO extends VersionDTO implements Signable {
 
     @Override
     public String messageToSign() {
-        return getVersion().toString()
+        String message = getVersion().toString()
                 .concat(getDate().toString())
-                .concat(getEntryValue().toString())
-                .concat(getManager());
+                .concat(getEntryValue().toString());
+        if (getManager() != null) {
+            message = message.concat(getManager());
+        }
+        return message;
     }
 }

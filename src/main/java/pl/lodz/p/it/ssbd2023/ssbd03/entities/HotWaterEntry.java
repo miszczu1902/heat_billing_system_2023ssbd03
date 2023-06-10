@@ -58,9 +58,12 @@ public class HotWaterEntry extends AbstractEntity implements Serializable, Signa
 
     @Override
     public String messageToSign() {
-        return getVersion().toString()
+        String message = getVersion().toString()
                 .concat(getDate().toString())
-                .concat(getEntryValue().toString())
-                .concat(getManager().getAccount().getUsername());
+                .concat(getEntryValue().toString());
+        if (getManager() != null) {
+            message = message.concat(getManager().getAccount().getUsername());
+        }
+        return message;
     }
 }

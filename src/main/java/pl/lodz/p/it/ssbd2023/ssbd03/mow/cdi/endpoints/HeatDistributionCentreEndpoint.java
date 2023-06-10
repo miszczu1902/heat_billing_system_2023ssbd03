@@ -97,7 +97,7 @@ public class HeatDistributionCentreEndpoint {
                 rollbackTX = heatDistributionCentreService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
-            } catch (EJBTransactionRolledbackException ex) {
+            } catch (EJBTransactionRolledbackException | OptimisticLockAppException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
