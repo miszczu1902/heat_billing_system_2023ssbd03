@@ -33,7 +33,7 @@ public class BalanceFacade extends AbstractFacade<AnnualBalance> {
     }
 
     @Override
-    @RolesAllowed(Roles.MANAGER)
+    @PermitAll
     public void edit(AnnualBalance entity) {
         super.edit(entity);
     }

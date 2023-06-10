@@ -52,7 +52,6 @@ public class MowSystemScheduler {
                 balanceFacade.edit(annualBalance);
             });
         });
-
     }
 
     @Schedule(month = "1", dayOfMonth = "1", timezone = "Europe/Warsaw", persistent = false) //pierwszy stycznia o północy
