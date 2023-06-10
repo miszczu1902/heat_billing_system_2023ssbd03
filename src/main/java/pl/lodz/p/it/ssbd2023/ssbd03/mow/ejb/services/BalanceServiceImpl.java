@@ -143,7 +143,7 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
         final Month month = LocalDate.now(TIME_ZONE).getMonth();
 
         List<AnnualBalance> annualBalanceList;
-        if (Month.JANUARY.equals(month)) { //jezeli mamy styczen to aktualizujemy jeszcze raport z poprzedniego roku
+        if (Month.JANUARY == month) { //jezeli mamy styczen to aktualizujemy jeszcze raport z poprzedniego roku
             annualBalanceList = balanceFacade.getListOfAnnualBalancesForYear((short) (year - 1));
         } else {
             annualBalanceList = balanceFacade.getListOfAnnualBalancesForYear(year);
