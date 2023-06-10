@@ -142,7 +142,7 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
         final short year = (short) LocalDate.now(TIME_ZONE).getYear();
         final Month month = LocalDate.now(TIME_ZONE).getMonth();
 
-        List<AnnualBalance> annualBalanceList;
+        final List<AnnualBalance> annualBalanceList;
         if (Month.JANUARY == month) { //jezeli mamy styczen to aktualizujemy jeszcze raport z poprzedniego roku
             annualBalanceList = balanceFacade.getListOfAnnualBalancesForYear((short) (year - 1));
         } else {
@@ -158,15 +158,15 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
             monthPayoffForThisYearOptional.ifPresent(monthPayoffForThisYear -> {
                 final BigDecimal hotWaterCost = monthPayoffForThisYear.getHotWaterConsumption()
                         .multiply(monthPayoffForThisYear.getWaterHeatingUnitCost());
-                final BigDecimal placeCost = monthPayoffForThisYear.getCentralHeatingUnitCost()
+                final BigDecimal heatingPlaceCost = monthPayoffForThisYear.getCentralHeatingUnitCost()
                         .multiply(place.getArea());
-                final BigDecimal communalAreaCost = monthPayoffForThisYear.getCentralHeatingUnitCost()
+                final BigDecimal heatingCommunalAreaCost = monthPayoffForThisYear.getCentralHeatingUnitCost()
                         .multiply(place.getBuilding().getCommunalAreaAggregate());
 
-                annualBalance.setTotalHotWaterCost(annualBalance.getTotalHotWaterAdvance().add(hotWaterCost));
-                annualBalance.setTotalHeatingPlaceCost(annualBalance.getTotalHeatingPlaceCost().add(placeCost));
+                annualBalance.setTotalHotWaterCost(annualBalance.getTotalHotWaterCost().add(hotWaterCost));
+                annualBalance.setTotalHeatingPlaceCost(annualBalance.getTotalHeatingPlaceCost().add(heatingPlaceCost));
                 annualBalance.setTotalHeatingCommunalAreaCost(annualBalance.getTotalHeatingCommunalAreaCost()
-                        .add(communalAreaCost));
+                        .add(heatingCommunalAreaCost));
 
                 balanceFacade.edit(annualBalance);
             });
