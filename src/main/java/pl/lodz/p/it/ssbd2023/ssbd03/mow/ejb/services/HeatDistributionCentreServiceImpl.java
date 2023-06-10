@@ -47,7 +47,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     private HeatingPlaceAndCommunalAreaAdvanceFacade heatingPlaceAndCommunalAreaAdvanceFacade;
 
     @Inject
-    private AccessLevelMappingFacade accessLevelMappingFacade;
+    private AccessLevelFacade accessLevelFacade;
 
     @Override
     @RolesAllowed({Roles.MANAGER})
@@ -59,8 +59,10 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @RolesAllowed({Roles.MANAGER})
     public void insertAdvanceChangeFactor(BigDecimal heatingAreaFactorValue, Long buildingId) {
         LocalDate date = LocalDate.now();
-        if (date.getDayOfMonth() != 1) throw AppException.createAdvanceChangeFactorNotModifiedException();
-        else date = date.minusMonths(3);
+        if (date.getDayOfMonth() != 1) { // sprawdzamy czy mam pierszy dzień w danym miesiącu na nowy kwartał
+            throw AppException.createAdvanceChangeFactorNotModifiedException();
+        }
+        else date = date.minusMonths(3); //sprawdzamy czy w kwartale zmodyfikowano wspolczynnik
 
         if (heatingPlaceAndCommunalAreaAdvanceFacade.checkIfAdvanceChangeFactorNotModified(buildingId, date)) {
             final List<Place> places = placeFacade.findPlacesByBuildingId(buildingId);
@@ -69,13 +71,15 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
                             new BigDecimal(0), new BigDecimal(0), heatingAreaFactorValue)));
 
             //TODO - tu trzeba dodac wywolanie metody liczaczej zaliczke z mowSchedulera
-        } else throw AppException.createAdvanceChangeFactorWasInsertedException();
+        } else {
+            throw AppException.createAdvanceChangeFactorWasInsertedException();
+        }
     }
 
     @Override
     @RolesAllowed({Roles.OWNER, Roles.MANAGER})
     public void insertConsumption(BigDecimal consumptionValue, Long placeId) {
-        if (hotWaterEntryFacade.checkIfHotWaterEntryCouldBeInsertedOrOverwritten(placeId, false) == null) {
+        if (hotWaterEntryFacade.getEntryWithCheckingIfHotWaterEntryCouldBeInsertedOrOverwritten(placeId, false) == null) {
             final String username = securityContext.getCallerPrincipal().getName();
             final Place place = placeFacade.findPlaceById(placeId);
 
@@ -85,7 +89,8 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
             HotWaterEntry hotWaterEntry = new HotWaterEntry(LocalDate.now(), consumptionValue, place);
             if (securityContext.isCallerInRole(Roles.MANAGER)) {
-                hotWaterEntry.setManager(accessLevelMappingFacade.findManagerByUsername(username));
+                final Manager manager = accessLevelFacade.findManagerByUsername(username);
+                hotWaterEntry.setManager(manager);
             }
             hotWaterEntryFacade.create(hotWaterEntry);
         } else {
@@ -96,7 +101,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @Override
     @RolesAllowed({Roles.OWNER, Roles.MANAGER})
     public void modifyConsumption(BigDecimal consumptionValue, Long placeId, Long version, String etag) {
-        HotWaterEntry hotWaterEntry = hotWaterEntryFacade.checkIfHotWaterEntryCouldBeInsertedOrOverwritten(placeId, true);
+        HotWaterEntry hotWaterEntry = hotWaterEntryFacade.getEntryWithCheckingIfHotWaterEntryCouldBeInsertedOrOverwritten(placeId, true);
         if (hotWaterEntry != null) {
             if (!etag.equals(messageSigner.sign(hotWaterEntry))) {
                 throw AppException.createVerifierException();
@@ -106,7 +111,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
             }
             if (securityContext.isCallerInRole(Roles.MANAGER)) {
                 final String username = securityContext.getCallerPrincipal().getName();
-                hotWaterEntry.setManager(accessLevelMappingFacade.findManagerByUsername(username));
+                hotWaterEntry.setManager(accessLevelFacade.findManagerByUsername(username));
             }
             hotWaterEntry.setEntryValue(consumptionValue);
             hotWaterEntry.setDate(LocalDate.now());

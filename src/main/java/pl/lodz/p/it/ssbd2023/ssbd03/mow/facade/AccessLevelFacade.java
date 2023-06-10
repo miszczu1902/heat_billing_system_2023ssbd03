@@ -15,11 +15,11 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
-public class AccessLevelMappingFacade extends AbstractFacade<AccessLevelMapping> {
+public class AccessLevelFacade extends AbstractFacade<AccessLevelMapping> {
     @PersistenceContext(unitName = "ssbd03mowPU")
     private EntityManager em;
 
-    public AccessLevelMappingFacade() {
+    public AccessLevelFacade() {
         super(AccessLevelMapping.class);
     }
 

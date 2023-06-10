@@ -56,7 +56,7 @@ public class HotWaterEntryFacade extends AbstractFacade<HotWaterEntry> {
     }
 
     @RolesAllowed({Roles.OWNER, Roles.MANAGER})
-    public HotWaterEntry checkIfHotWaterEntryCouldBeInsertedOrOverwritten(Long placeId, boolean checkIfCouldBeOverwritten) {
+    public HotWaterEntry getEntryWithCheckingIfHotWaterEntryCouldBeInsertedOrOverwritten(Long placeId, boolean checkIfCouldBeOverwritten) {
         final LocalDate now = LocalDate.now();
         TypedQuery<HotWaterEntry> tq;
 
