@@ -141,12 +141,14 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
     public void updateTotalCostYearReport() {
         final short year = (short) LocalDate.now(TIME_ZONE).getYear();
         final Month month = LocalDate.now(TIME_ZONE).getMonth();
+
         List<AnnualBalance> annualBalanceList;
         if (Month.JANUARY.equals(month)) { //jezeli mamy styczen to aktualizujemy jeszcze raport z poprzedniego roku
             annualBalanceList = balanceFacade.getListOfAnnualBalancesForYear((short) (year - 1));
         } else {
             annualBalanceList = balanceFacade.getListOfAnnualBalancesForYear(year);
         }
+
         annualBalanceList.forEach(annualBalance -> {
             final Place place = annualBalance.getPlace();
             final Optional<MonthPayoff> monthPayoffForThisYearOptional = place.getMonthPayoffs().stream()
