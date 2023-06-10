@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
@@ -7,16 +8,18 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.AnnualBalance;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatingPlaceAndCommunalAreaAdvance;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterAdvance;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.MonthPayoff;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BalanceFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BuildingFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
+import java.util.Optional;
+
+import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -120,4 +123,52 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    @PermitAll
+    public void createYearReports() {
+        final List<Place> places = placeFacade.findAllPlaces();
+        final Short year = (short) LocalDate.now(TIME_ZONE).getYear();
+        final BigDecimal bigDecimal = new BigDecimal(0);
+        for (Place place : places) {
+            final AnnualBalance annualBalance = new AnnualBalance(year, bigDecimal, bigDecimal, bigDecimal, bigDecimal,
+                    bigDecimal, bigDecimal, place);
+            balanceFacade.create(annualBalance);
+        }
+    }
+
+    @PermitAll
+    public void updateTotalCostYearReports() {
+        final short year = (short) LocalDate.now(TIME_ZONE).getYear();
+        final Month month = LocalDate.now(TIME_ZONE).getMonth();
+
+        final List<AnnualBalance> annualBalanceList;
+        if (Month.JANUARY == month) { //jezeli mamy styczen to aktualizujemy jeszcze raport z poprzedniego roku
+            annualBalanceList = balanceFacade.getListOfAnnualBalancesForYear((short) (year - 1));
+        } else {
+            annualBalanceList = balanceFacade.getListOfAnnualBalancesForYear(year);
+        }
+
+        annualBalanceList.forEach(annualBalance -> {
+            final Place place = annualBalance.getPlace();
+            final Optional<MonthPayoff> monthPayoffForThisYearOptional = place.getMonthPayoffs().stream()
+                    .filter(monthPayoff -> monthPayoff.getPayoffDate().getYear() == year
+                            && monthPayoff.getPayoffDate().getMonth() == month).findFirst();
+
+            monthPayoffForThisYearOptional.ifPresent(monthPayoffForThisYear -> {
+                final BigDecimal hotWaterCost = monthPayoffForThisYear.getHotWaterConsumption()
+                        .multiply(monthPayoffForThisYear.getWaterHeatingUnitCost());
+                final BigDecimal heatingPlaceCost = monthPayoffForThisYear.getCentralHeatingUnitCost()
+                        .multiply(place.getArea());
+                final BigDecimal heatingCommunalAreaCost = monthPayoffForThisYear.getCentralHeatingUnitCost()
+                        .multiply(place.getBuilding().getCommunalAreaAggregate());
+
+                annualBalance.setTotalHotWaterCost(annualBalance.getTotalHotWaterCost().add(hotWaterCost));
+                annualBalance.setTotalHeatingPlaceCost(annualBalance.getTotalHeatingPlaceCost().add(heatingPlaceCost));
+                annualBalance.setTotalHeatingCommunalAreaCost(annualBalance.getTotalHeatingCommunalAreaCost()
+                        .add(heatingCommunalAreaCost));
+
+                balanceFacade.edit(annualBalance);
+            });
+        });
+    }
 }
