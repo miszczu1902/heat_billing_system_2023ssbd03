@@ -43,4 +43,5 @@ public interface BalanceService extends CommonManagerLocalInterface {
 
     BigDecimal getSelfHeatingBalance();
 
+    void createYearReports();
 }
