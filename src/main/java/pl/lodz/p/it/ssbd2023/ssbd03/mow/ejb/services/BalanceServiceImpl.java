@@ -14,8 +14,11 @@ import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BuildingFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.Month;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
@@ -125,12 +128,46 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
     @PermitAll
     public void createYearReports() {
         final List<Place> places = placeFacade.findAllPlaces();
-        final Short year = (short) LocalDateTime.now(TIME_ZONE).getYear();
+        final Short year = (short) LocalDate.now(TIME_ZONE).getYear();
         final BigDecimal bigDecimal = new BigDecimal(0);
         for (Place place : places) {
             final AnnualBalance annualBalance = new AnnualBalance(year, bigDecimal, bigDecimal, bigDecimal, bigDecimal,
                     bigDecimal, bigDecimal, place);
             balanceFacade.create(annualBalance);
         }
+    }
+
+    @PermitAll
+    public void updateTotalCostYearReport() {
+        final short year = (short) LocalDate.now(TIME_ZONE).getYear();
+        final Month month = LocalDate.now(TIME_ZONE).getMonth();
+        List<AnnualBalance> annualBalanceList;
+        if (Month.JANUARY.equals(month)) { //jezeli mamy styczen to aktualizujemy jeszcze raport z poprzedniego roku
+            annualBalanceList = balanceFacade.getListOfAnnualBalancesForYear((short) (year - 1));
+        } else {
+            annualBalanceList = balanceFacade.getListOfAnnualBalancesForYear(year);
+        }
+        annualBalanceList.forEach(annualBalance -> {
+            final Place place = annualBalance.getPlace();
+            final Optional<MonthPayoff> monthPayoffForThisYearOptional = place.getMonthPayoffs().stream()
+                    .filter(monthPayoff -> monthPayoff.getPayoffDate().getYear() == year
+                            && monthPayoff.getPayoffDate().getMonth() == month).findFirst();
+
+            monthPayoffForThisYearOptional.ifPresent(monthPayoffForThisYear -> {
+                final BigDecimal hotWaterCost = monthPayoffForThisYear.getHotWaterConsumption()
+                        .multiply(monthPayoffForThisYear.getWaterHeatingUnitCost());
+                final BigDecimal placeCost = monthPayoffForThisYear.getCentralHeatingUnitCost()
+                        .multiply(place.getArea());
+                final BigDecimal communalAreaCost = monthPayoffForThisYear.getCentralHeatingUnitCost()
+                        .multiply(place.getBuilding().getCommunalAreaAggregate());
+
+                annualBalance.setTotalHotWaterCost(annualBalance.getTotalHotWaterAdvance().add(hotWaterCost));
+                annualBalance.setTotalHeatingPlaceCost(annualBalance.getTotalHeatingPlaceCost().add(placeCost));
+                annualBalance.setTotalHeatingCommunalAreaCost(annualBalance.getTotalHeatingCommunalAreaCost()
+                        .add(communalAreaCost));
+
+                balanceFacade.edit(annualBalance);
+            });
+        });
     }
 }

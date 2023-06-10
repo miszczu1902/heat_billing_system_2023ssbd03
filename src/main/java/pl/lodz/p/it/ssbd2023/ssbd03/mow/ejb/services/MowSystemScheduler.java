@@ -20,43 +20,35 @@ import java.util.logging.Logger;
 public class MowSystemScheduler {
     protected static final Logger LOGGER = Logger.getGlobal();
 
-    private int txRetries = Integer.parseInt(LoadConfig.loadPropertyFromConfig("tx.retries"));
+    private final int txRetries = Integer.parseInt(LoadConfig.loadPropertyFromConfig("tx.retries"));
 
     @Inject
     private BalanceService balanceService;
 
     @Schedule(dayOfMonth = "2", timezone = "Europe/Warsaw", persistent = false) //drugi dzien kazdego miesiaca o polnocy
     private void updateYearReport() {
-        final short year = (short) LocalDate.now(TIME_ZONE).getYear();
-        final Month month = LocalDate.now(TIME_ZONE).getMonth();
-        List<AnnualBalance> annualBalanceList;
-        if (Month.JANUARY.equals(month)) { //jezeli mamy styczen to aktualizujemy jeszcze raport z poprzedniego roku
-            annualBalanceList = balanceFacade.getListOfAnnualBalancesForYear((short) (year - 1));
-        } else {
-            annualBalanceList = balanceFacade.getListOfAnnualBalancesForYear(year);
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                balanceService.updateTotalCostYearReport();
+                rollbackTX = balanceService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return;
+            } catch (EJBTransactionRolledbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
         }
-        annualBalanceList.forEach(annualBalance -> {
-            final Place place = annualBalance.getPlace();
-            final Optional<MonthPayoff> monthPayoffForThisYearOptional = place.getMonthPayoffs().stream()
-                    .filter(monthPayoff -> monthPayoff.getPayoffDate().getYear() == year
-                            && monthPayoff.getPayoffDate().getMonth() == month).findFirst();
-
-            monthPayoffForThisYearOptional.ifPresent(monthPayoffForThisYear -> {
-                final BigDecimal hotWaterCost = monthPayoffForThisYear.getHotWaterConsumption()
-                        .multiply(monthPayoffForThisYear.getWaterHeatingUnitCost());
-                final BigDecimal placeCost = monthPayoffForThisYear.getCentralHeatingUnitCost()
-                        .multiply(place.getArea());
-                final BigDecimal communalAreaCost = monthPayoffForThisYear.getCentralHeatingUnitCost()
-                        .multiply(place.getBuilding().getCommunalAreaAggregate());
-
-                annualBalance.setTotalHotWaterCost(annualBalance.getTotalHotWaterAdvance().add(hotWaterCost));
-                annualBalance.setTotalHeatingPlaceCost(annualBalance.getTotalHeatingPlaceCost().add(placeCost));
-                annualBalance.setTotalHeatingCommunalAreaCost(annualBalance.getTotalHeatingCommunalAreaCost()
-                        .add(communalAreaCost));
-
-                balanceFacade.edit(annualBalance);
-            });
-        });
+        balanceService.updateTotalCostYearReport();
     }
 
     @Schedule(month = "1", dayOfMonth = "1", timezone = "Europe/Warsaw", persistent = false) //pierwszy stycznia o północy
