@@ -6,6 +6,7 @@ import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 
@@ -20,14 +21,35 @@ import java.util.logging.Logger;
 public class MowSystemScheduler {
     protected static final Logger LOGGER = Logger.getGlobal();
 
-    private int txRetries = Integer.parseInt(LoadConfig.loadPropertyFromConfig("tx.retries"));
+    private final int txRetries = Integer.parseInt(LoadConfig.loadPropertyFromConfig("tx.retries"));
 
     @Inject
     private BalanceService balanceService;
 
-    @Schedule(hour = "*", minute = "*/1", persistent = false)
-    private void updateYearReport() {
-        throw new UnsupportedOperationException();
+    @Schedule(dayOfMonth = "2", timezone = "Europe/Warsaw", persistent = false) //drugi dzien kazdego miesiaca o polnocy
+    private void updateYearReports() {
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                balanceService.updateTotalCostYearReports();
+                rollbackTX = balanceService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return;
+            } catch (OptimisticLockAppException | EJBTransactionRolledbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
+        balanceService.updateTotalCostYearReports();
     }
 
     @Schedule(month = "1", dayOfMonth = "1", timezone = "Europe/Warsaw", persistent = false) //pierwszy stycznia o północy

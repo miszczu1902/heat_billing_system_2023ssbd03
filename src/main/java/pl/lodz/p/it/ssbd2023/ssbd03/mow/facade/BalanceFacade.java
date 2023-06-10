@@ -33,7 +33,7 @@ public class BalanceFacade extends AbstractFacade<AnnualBalance> {
     }
 
     @Override
-    @RolesAllowed(Roles.MANAGER)
+    @PermitAll
     public void edit(AnnualBalance entity) {
         super.edit(entity);
     }
@@ -83,6 +83,13 @@ public class BalanceFacade extends AbstractFacade<AnnualBalance> {
             tq.setMaxResults(pageSize);
         }
 
+        return tq.getResultList();
+    }
+
+    @PermitAll
+    public List<AnnualBalance> getListOfAnnualBalancesForYear(Short year) {
+        TypedQuery<AnnualBalance> tq = em.createNamedQuery("AnnualBalance.findAllBalancesByYear", AnnualBalance.class);
+        tq.setParameter("year", year);
         return tq.getResultList();
     }
 }
