@@ -2,7 +2,6 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services;
 
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
