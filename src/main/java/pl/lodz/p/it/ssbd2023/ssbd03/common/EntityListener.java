@@ -1,6 +1,5 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.common;
 
-import jakarta.ejb.Stateless;
 import jakarta.enterprise.inject.spi.CDI;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -14,7 +13,6 @@ import java.time.LocalDateTime;
 
 import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
-@Stateless
 public class EntityListener {
     @PrePersist
     public void initCreatedBy(AbstractEntity entity) {

@@ -7,14 +7,11 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.SecurityContext;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.core.Context;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.Internationalization;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 
 import java.math.BigDecimal;
@@ -41,12 +38,6 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     private MonthPayoffFacade monthPayoffFacade;
 
     @Inject
-    private Internationalization internationalization;
-
-    @Inject
-    private HttpServletRequest httpServletRequest;
-
-    @Inject
     private MessageSigner messageSigner;
 
     @Inject
@@ -54,12 +45,6 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
     @Inject
     private HeatingPlaceAndCommunalAreaAdvanceFacade heatingPlaceAndCommunalAreaAdvanceFacade;
-
-    @Inject
-    private PlaceFacade placeFacade;
-
-    @Inject
-    private HotWaterEntryFacade hotWaterEntryFacade;
 
     @Inject
     private AccessLevelMappingFacade accessLevelMappingFacade;
@@ -72,7 +57,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public void insertHeatingAreaFactor(BigDecimal heatingAreaFactorValue, Long buildingId) {
+    public void insertAdvanceChangeFactor(BigDecimal heatingAreaFactorValue, Long buildingId) {
         LocalDate date = LocalDate.now();
         if (date.getDayOfMonth() != 1) throw AppException.createAdvanceChangeFactorNotModifiedException();
         else date = date.minusMonths(3);
@@ -110,9 +95,12 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
     @Override
     @RolesAllowed({Roles.OWNER, Roles.MANAGER})
-    public void modifyConsumption(BigDecimal consumptionValue, Long placeId, Long version) {
+    public void modifyConsumption(BigDecimal consumptionValue, Long placeId, Long version, String etag) {
         HotWaterEntry hotWaterEntry = hotWaterEntryFacade.checkIfHotWaterEntryCouldBeInsertedOrOverwritten(placeId, true);
         if (hotWaterEntry != null) {
+            if (!etag.equals(messageSigner.sign(hotWaterEntry))) {
+                throw AppException.createVerifierException();
+            }
             if (!hotWaterEntry.getVersion().equals(version)) {
                 throw AppException.createOptimisticLockAppException();
             }
@@ -131,13 +119,12 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @Override
     @RolesAllowed({Roles.MANAGER})
     public void addConsumptionFromInvoice(BigDecimal consumption, BigDecimal consumptionCost, BigDecimal heatingAreaFactor, Manager manager) {
-
         if (!heatDistributionCentrePayoffFacade.checkIfRecordForThisMonthNotExists()) {
-            throw AppException.consumptionAddException();
+            throw AppException.createConsumptionAddException();
         }
         final List<HeatDistributionCentre> heatDistributionCentre = heatDistributionCentreFacade.getListOfHeatDistributionCentre();
         if (heatDistributionCentre.isEmpty()) {
-            throw AppException.noHeatDistributionCentreException();
+            throw AppException.createNoHeatDistributionCentreException();
         }
         final HeatDistributionCentrePayoff heatDistributionCentrePayoff = new HeatDistributionCentrePayoff(consumption, consumptionCost, LocalDate.now(), heatingAreaFactor, manager, heatDistributionCentre.get(0));
         heatDistributionCentrePayoffFacade.create(heatDistributionCentrePayoff);
@@ -149,7 +136,6 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
                 .divide(heatDistributionCentrePayoff.getConsumption(), 2, RoundingMode.CEILING);
 
         for (Place place : places) {
-
             final List<HotWaterEntry> hotWaterEntries = hotWaterEntryFacade.getListOfHotWaterEntriesForPlace(place.getId());
             final MonthPayoff monthPayoff;
 
@@ -171,5 +157,10 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @RolesAllowed({Roles.MANAGER})
     public HeatDistributionCentre getHeatDistributionCentre(Long id) {
         return heatDistributionCentreFacade.getHeatDistributionCentre(id);
+    }
+
+    @Override
+    public HotWaterEntry getHotWaterEntry(Long hotWaterEntryId) {
+        return hotWaterEntryFacade.find(hotWaterEntryId);
     }
 }

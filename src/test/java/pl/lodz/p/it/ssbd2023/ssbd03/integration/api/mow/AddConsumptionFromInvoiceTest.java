@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.integration.api;
+package pl.lodz.p.it.ssbd2023.ssbd03.integration.api.mow;
 
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;

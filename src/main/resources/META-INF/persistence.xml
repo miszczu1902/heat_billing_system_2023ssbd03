@@ -65,6 +65,7 @@
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.LoginData</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>

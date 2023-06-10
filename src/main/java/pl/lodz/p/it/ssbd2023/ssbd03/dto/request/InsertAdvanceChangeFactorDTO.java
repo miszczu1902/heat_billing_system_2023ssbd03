@@ -17,7 +17,4 @@ public class InsertAdvanceChangeFactorDTO {
     @DecimalMin(value = "0")
     @DecimalMax(value = "9")
     private BigDecimal advanceChangeFactor;
-
-    @NotNull
-    private Long buildingId;
 }

@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.integration.factory;
 
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 
 public class IntegrationTestObjectsFactory {
     public static CreateOwnerDTO createAccountToRegister() {
@@ -15,5 +16,9 @@ public class IntegrationTestObjectsFactory {
                 "PL",
                 RandomStringUtils.randomNumeric(9)
         );
+    }
+
+    public static LoginDTO credentialsToAuth(String username, String password) {
+        return new LoginDTO(username, password);
     }
 }

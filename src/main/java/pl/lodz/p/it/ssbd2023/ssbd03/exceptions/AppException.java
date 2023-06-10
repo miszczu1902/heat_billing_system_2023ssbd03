@@ -117,7 +117,8 @@ public class AppException extends WebApplicationException {
     public static NoQueryResultException createNoResultException(Throwable cause) {
         return new NoQueryResultException(ERROR_RESULT_NOT_FOUND, Response.Status.NOT_FOUND, cause);
     }
-    public static AppException tokenNoResultException () {
+
+    public static AppException tokenNoResultException() {
         return new AppException(ERROR_TOKEN_NOT_FOUND, Response.Status.NOT_FOUND);
     }
 
@@ -234,6 +235,7 @@ public class AppException extends WebApplicationException {
     public static SignerException createSignerException() {
         return new SignerException(ERROR_ETAG_SIGNER, Response.Status.BAD_REQUEST);
     }
+
     public static InvalidTokenException tokenIsNotValidException() {
         return new InvalidTokenException(TOKEN_IS_NOT_VALID, Response.Status.BAD_REQUEST);
     }
@@ -242,13 +244,14 @@ public class AppException extends WebApplicationException {
         return new TransactionRollbackException();
     }
 
-    public static BuildingCommunalAreaBiggerOrEqualTotalAreaException createCommunalAreaBiggerOrEqualTotalAreaException(){
+    public static BuildingCommunalAreaBiggerOrEqualTotalAreaException createCommunalAreaBiggerOrEqualTotalAreaException() {
         return new BuildingCommunalAreaBiggerOrEqualTotalAreaException(COMMUNAL_AREA_EQUAL_OR_BIGGER_THAT_TOTAL_AREA, Response.Status.FORBIDDEN);
     }
 
     public static ConsumptionAddException createConsumptionAddException() {
         return new ConsumptionAddException(ERROR_ADDING_HEAT_VALUES, Response.Status.CONFLICT);
     }
+
     public static NoHeatDistributionCentreException createNoHeatDistributionCentreException() {
         return new NoHeatDistributionCentreException(ERROR_NO_HEAT_DISTRIBUTION_CENTRE, Response.Status.NOT_FOUND);
     }
