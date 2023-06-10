@@ -45,9 +45,10 @@ public class MowSystemScheduler {
                 final BigDecimal communalAreaCost = monthPayoffForThisYear.getCentralHeatingUnitCost()
                         .multiply(place.getBuilding().getCommunalAreaAggregate());
 
-                annualBalance.setTotalHotWaterCost(hotWaterCost);
-                annualBalance.setTotalHeatingPlaceCost(placeCost);
-                annualBalance.setTotalHeatingCommunalAreaCost(communalAreaCost);
+                annualBalance.setTotalHotWaterCost(annualBalance.getTotalHotWaterAdvance().add(hotWaterCost));
+                annualBalance.setTotalHeatingPlaceCost(annualBalance.getTotalHeatingPlaceCost().add(placeCost));
+                annualBalance.setTotalHeatingCommunalAreaCost(annualBalance.getTotalHeatingCommunalAreaCost()
+                        .add(communalAreaCost));
 
                 balanceFacade.edit(annualBalance);
             });
