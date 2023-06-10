@@ -86,7 +86,7 @@ public class BalanceFacade extends AbstractFacade<AnnualBalance> {
         return tq.getResultList();
     }
 
-    @RolesAllowed({Roles.MANAGER})
+    @RolesAllowed({Roles.OWNER})
     public List<AnnualBalance> getListOfAnnualBalancesForOwner(int pageNumber, int pageSize, String username) {
         TypedQuery<AnnualBalance> tq = em.createNamedQuery("AnnualBalance.findAllBalancesByOwnerUsername", AnnualBalance.class);
         tq.setParameter("username", username);
