@@ -5,17 +5,12 @@ import jakarta.ejb.*;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.AnnualBalance;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
-import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BalanceFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Startup
 @Singleton
@@ -23,11 +18,12 @@ import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @Interceptors(TrackerInterceptor.class)
 public class MowSystemScheduler {
-    @Inject
-    private BalanceFacade balanceFacade;
+    protected static final Logger LOGGER = Logger.getGlobal();
+
+    private int txRetries = Integer.parseInt(LoadConfig.loadPropertyFromConfig("tx.retries"));
 
     @Inject
-    private PlaceFacade placeFacade;
+    private BalanceService balanceService;
 
     @Schedule(hour = "*", minute = "*/1", persistent = false)
     private void updateYearReport() {
@@ -35,16 +31,30 @@ public class MowSystemScheduler {
     }
 
     @Schedule(month = "1", dayOfMonth = "1", timezone = "Europe/Warsaw", persistent = false) //pierwszy stycznia o północy
-    private void createYearReport() {
-        final List<Place> places = placeFacade.findAllPlaces();
-        final Short year = (short) LocalDateTime.now(TIME_ZONE).getYear();
-        final BigDecimal bigDecimal = new BigDecimal(0);
-        for (Place place : places) {
-            final AnnualBalance annualBalance = new AnnualBalance(year, bigDecimal, bigDecimal, bigDecimal, bigDecimal,
-                    bigDecimal, bigDecimal, place);
-            balanceFacade.create(annualBalance);
+    private void createYearReports() {
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                balanceService.createYearReports();
+                rollbackTX = balanceService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return;
+            } catch (Exception ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
         }
-      }
+        balanceService.createYearReports();
+    }
 
     @Schedule(hour = "*", minute = "*/1", persistent = false)
     private void calculateMainPayoff() {
