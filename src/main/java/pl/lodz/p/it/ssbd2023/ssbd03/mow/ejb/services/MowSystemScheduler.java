@@ -25,9 +25,34 @@ public class MowSystemScheduler {
     @Inject
     private BalanceService balanceService;
 
-    @Schedule(hour = "*", minute = "*/1", persistent = false)
+    @Schedule(dayOfMonth = "2", timezone = "Europe/Warsaw", persistent = false) //drugi dzien kazdego miesiaca o połnocy
     private void updateYearReport() {
-        throw new UnsupportedOperationException();
+        final short year = (short) LocalDate.now(TIME_ZONE).getYear();
+        final Month month = LocalDate.now(TIME_ZONE).getMonth();
+
+        final List<AnnualBalance> annualBalanceList = balanceFacade.getListOfAnnualBalancesForYear(year);
+        annualBalanceList.forEach(annualBalance -> {
+            final Place place = annualBalance.getPlace();
+            final Optional<MonthPayoff> monthPayoffForThisYearOptional = place.getMonthPayoffs().stream()
+                    .filter(monthPayoff -> monthPayoff.getPayoffDate().getYear() == year
+                            && monthPayoff.getPayoffDate().getMonth() == month).findFirst();
+
+            monthPayoffForThisYearOptional.ifPresent(monthPayoffForThisYear -> {
+                final BigDecimal hotWaterCost = monthPayoffForThisYear.getHotWaterConsumption()
+                        .multiply(monthPayoffForThisYear.getWaterHeatingUnitCost());
+                final BigDecimal placeCost = monthPayoffForThisYear.getCentralHeatingUnitCost()
+                        .multiply(place.getArea());
+                final BigDecimal communalAreaCost = monthPayoffForThisYear.getCentralHeatingUnitCost()
+                        .multiply(place.getBuilding().getCommunalAreaAggregate());
+
+                annualBalance.setTotalHotWaterCost(hotWaterCost);
+                annualBalance.setTotalHeatingPlaceCost(placeCost);
+                annualBalance.setTotalHeatingCommunalAreaCost(communalAreaCost);
+
+                balanceFacade.edit(annualBalance);
+            });
+        });
+
     }
 
     @Schedule(month = "1", dayOfMonth = "1", timezone = "Europe/Warsaw", persistent = false) //pierwszy stycznia o północy

@@ -85,4 +85,10 @@ public class BalanceFacade extends AbstractFacade<AnnualBalance> {
 
         return tq.getResultList();
     }
+
+    public List<AnnualBalance> getListOfAnnualBalancesForYear(Short year) {
+        TypedQuery<AnnualBalance> tq = em.createNamedQuery("AnnualBalance.findAllBalancesByYear", AnnualBalance.class);
+        tq.setParameter("year", year);
+        return tq.getResultList();
+    }
 }
