@@ -138,7 +138,7 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
     }
 
     @PermitAll
-    public void updateTotalCostYearReport() {
+    public void updateTotalCostYearReports() {
         final short year = (short) LocalDate.now(TIME_ZONE).getYear();
         final Month month = LocalDate.now(TIME_ZONE).getMonth();
 

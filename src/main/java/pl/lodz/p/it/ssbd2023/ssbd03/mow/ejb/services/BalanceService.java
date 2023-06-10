@@ -45,5 +45,5 @@ public interface BalanceService extends CommonManagerLocalInterface {
 
     void createYearReports();
 
-    void updateTotalCostYearReport();
+    void updateTotalCostYearReports();
 }

@@ -6,6 +6,7 @@ import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 
@@ -26,18 +27,18 @@ public class MowSystemScheduler {
     private BalanceService balanceService;
 
     @Schedule(dayOfMonth = "2", timezone = "Europe/Warsaw", persistent = false) //drugi dzien kazdego miesiaca o polnocy
-    private void updateYearReport() {
+    private void updateYearReports() {
         int retryTXCounter = txRetries; //limit prób ponowienia transakcji
         boolean rollbackTX = false;
 
         do {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
-                balanceService.updateTotalCostYearReport();
+                balanceService.updateTotalCostYearReports();
                 rollbackTX = balanceService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return;
-            } catch (EJBTransactionRolledbackException ex) {
+            } catch (OptimisticLockAppException | EJBTransactionRolledbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -48,7 +49,7 @@ public class MowSystemScheduler {
         if (rollbackTX && retryTXCounter == 0) {
             throw AppException.createTransactionRollbackException();
         }
-        balanceService.updateTotalCostYearReport();
+        balanceService.updateTotalCostYearReports();
     }
 
     @Schedule(month = "1", dayOfMonth = "1", timezone = "Europe/Warsaw", persistent = false) //pierwszy stycznia o północy
