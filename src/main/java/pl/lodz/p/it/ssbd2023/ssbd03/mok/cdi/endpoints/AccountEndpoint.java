@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.cdi.endpoints;
 
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +17,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.EtagValidator;
@@ -104,7 +104,7 @@ public class AccountEndpoint {
                 rollbackTX = accountService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
-            } catch (EJBTransactionRolledbackException ex) {
+            } catch (TransactionRollbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -139,7 +139,7 @@ public class AccountEndpoint {
                 rollbackTX = accountService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
-            } catch (EJBTransactionRolledbackException ex) {
+            } catch (TransactionRollbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -176,7 +176,7 @@ public class AccountEndpoint {
                 rollbackTX = accountService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
-            } catch (EJBTransactionRolledbackException ex) {
+            } catch (TransactionRollbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -232,7 +232,7 @@ public class AccountEndpoint {
                 rollbackTX = accountService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
-            } catch (EJBTransactionRolledbackException ex) {
+            } catch (TransactionRollbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -266,7 +266,7 @@ public class AccountEndpoint {
                 rollbackTX = accountService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
-            } catch (EJBTransactionRolledbackException ex) {
+            } catch (TransactionRollbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -331,7 +331,7 @@ public class AccountEndpoint {
                 rollbackTX = accountService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
-            } catch (EJBTransactionRolledbackException ex) {
+            } catch (TransactionRollbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -363,7 +363,7 @@ public class AccountEndpoint {
                 accountService.disableUserAccount(username);
                 rollbackTX = accountService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
-            } catch (OptimisticLockAppException | EJBTransactionRolledbackException ex) {
+            } catch (OptimisticLockAppException | TransactionRollbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -391,7 +391,7 @@ public class AccountEndpoint {
                 accountService.enableUserAccount(username);
                 rollbackTX = accountService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
-            } catch (OptimisticLockAppException | EJBTransactionRolledbackException ex) {
+            } catch (OptimisticLockAppException | TransactionRollbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -426,7 +426,7 @@ public class AccountEndpoint {
                 rollbackTX = accountService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
-            } catch (EJBTransactionRolledbackException ex) {
+            } catch (TransactionRollbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -465,7 +465,7 @@ public class AccountEndpoint {
                 rollbackTX = accountService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
-            } catch (EJBTransactionRolledbackException ex) {
+            } catch (TransactionRollbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -502,7 +502,7 @@ public class AccountEndpoint {
                 rollbackTX = accountService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
-            } catch (EJBTransactionRolledbackException ex) {
+            } catch (TransactionRollbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -538,7 +538,7 @@ public class AccountEndpoint {
                 rollbackTX = accountService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
-            } catch (EJBTransactionRolledbackException ex) {
+            } catch (TransactionRollbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -615,7 +615,7 @@ public class AccountEndpoint {
                 rollbackTX = accountService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
-            } catch (EJBTransactionRolledbackException ex) {
+            } catch (TransactionRollbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -690,7 +690,7 @@ public class AccountEndpoint {
                 rollbackTX = accountService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
-            } catch (EJBTransactionRolledbackException ex) {
+            } catch (TransactionRollbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
