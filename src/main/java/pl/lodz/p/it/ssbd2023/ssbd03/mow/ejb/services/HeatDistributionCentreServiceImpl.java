@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -65,7 +66,9 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
         else date = date.minusMonths(3); //sprawdzamy czy w kwartale zmodyfikowano wspolczynnik
 
         if (heatingPlaceAndCommunalAreaAdvanceFacade.checkIfAdvanceChangeFactorNotModified(buildingId, date)) {
-            final List<Place> places = placeFacade.findPlacesByBuildingId(buildingId);
+            final List<Place> places = placeFacade.findPlacesByBuildingId(buildingId).stream()
+                    .filter(Place::getCentralHeatingConnection)
+                    .toList();
             places.forEach(place -> heatingPlaceAndCommunalAreaAdvanceFacade.create(
                     new HeatingPlaceAndCommunalAreaAdvance(LocalDate.now(), place,
                             new BigDecimal(0), new BigDecimal(0), heatingAreaFactorValue)));
@@ -83,7 +86,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
             final String username = securityContext.getCallerPrincipal().getName();
             final Place place = placeFacade.findPlaceById(placeId);
 
-            if (place == null) {
+            if (place == null || !place.getHotWaterConnection()) {
                 throw AppException.createHotWaterEntryCouldNotBeInsertedException();
             }
 
