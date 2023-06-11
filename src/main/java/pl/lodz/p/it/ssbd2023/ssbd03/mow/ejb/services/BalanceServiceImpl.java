@@ -71,7 +71,7 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
 
     @Override
     @RolesAllowed({Roles.OWNER})
-    public List<HotWaterAdvance> getSelfWaterAdvanceValue(Long placeId, Integer year) {
+    public List<HotWaterAdvance> getSelfWaterAdvanceValue(Long placeId) {
         final String username = securityContext.getCallerPrincipal().getName();
         final Place place = placeFacade.findPlaceById(placeId);
 
@@ -79,7 +79,7 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
             throw AppException.createNotOwnerOfPlaceException();
         }
 
-        return balanceFacade.findAllHotWaterAdvancesForPlace(placeId, year);
+        return balanceFacade.findAllHotWaterAdvancesForPlaceOwner(placeId);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
 
     @Override
     @RolesAllowed({Roles.OWNER})
-    public List<HeatingPlaceAndCommunalAreaAdvance> getSelfHeatingAdvanceValue(Long placeId, Integer year) {
+    public List<HeatingPlaceAndCommunalAreaAdvance> getSelfHeatingAdvanceValue(Long placeId) {
         final String username = securityContext.getCallerPrincipal().getName();
         final Place place = placeFacade.findPlaceById(placeId);
 
@@ -98,7 +98,7 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
             throw AppException.createNotOwnerOfPlaceException();
         }
 
-        return balanceFacade.findAllHeatingPlaceAndCommunalAreaAdvancesForPlace(placeId, year);
+        return balanceFacade.findAllHeatingPlaceAndCommunalAreaAdvancesForPlaceOwner(placeId);
     }
 
     @Override

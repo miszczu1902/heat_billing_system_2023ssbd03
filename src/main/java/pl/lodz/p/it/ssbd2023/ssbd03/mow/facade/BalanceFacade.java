@@ -106,4 +106,18 @@ public class BalanceFacade extends AbstractFacade<AnnualBalance> {
         tq.setParameter("year", year);
         return tq.getResultList();
     }
+
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    public List<HotWaterAdvance> findAllHotWaterAdvancesForPlaceOwner(Long placeId) {
+        TypedQuery<HotWaterAdvance> tq = em.createNamedQuery("Advance.findAllHotWaterAdvancesForPlaceOwner", HotWaterAdvance.class);
+        tq.setParameter("placeId", placeId);
+        return tq.getResultList();
+    }
+
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    public List<HeatingPlaceAndCommunalAreaAdvance> findAllHeatingPlaceAndCommunalAreaAdvancesForPlaceOwner(Long placeId) {
+        TypedQuery<HeatingPlaceAndCommunalAreaAdvance> tq = em.createNamedQuery("Advance.findAllHeatingPlaceAndCommunalAreaAdvancesForPlaceOwner", HeatingPlaceAndCommunalAreaAdvance.class);
+        tq.setParameter("placeId", placeId);
+        return tq.getResultList();
+    }
 }

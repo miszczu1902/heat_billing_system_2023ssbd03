@@ -18,6 +18,8 @@ import java.time.LocalDate;
 @NamedQueries({
         @NamedQuery(name = "Advance.findAllHotWaterAdvancesForPlace", query = "SELECT a FROM HotWaterAdvance a WHERE a.place.id = :placeId AND YEAR(a.date) = :year ORDER BY a.date DESC"),
         @NamedQuery(name = "Advance.findAllHeatingPlaceAndCommunalAreaAdvancesForPlace", query = "SELECT a FROM HeatingPlaceAndCommunalAreaAdvance a WHERE a.place.id = :placeId AND YEAR(a.date) = :year ORDER BY a.date DESC"),
+        @NamedQuery(name = "Advance.findAllHotWaterAdvancesForPlaceOwner", query = "SELECT a FROM HotWaterAdvance a WHERE a.place.id = :placeId ORDER BY a.date DESC"),
+        @NamedQuery(name = "Advance.findAllHeatingPlaceAndCommunalAreaAdvancesForPlaceOwner", query = "SELECT a FROM HeatingPlaceAndCommunalAreaAdvance a WHERE a.place.id = :placeId ORDER BY a.date DESC")
 })
 public abstract class Advance extends AbstractEntity {
     @Id

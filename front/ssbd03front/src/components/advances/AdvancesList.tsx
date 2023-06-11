@@ -17,9 +17,9 @@ const AdvancesList = () => {
     const placeId = params.placeId;
     const year = params.year;
     const buildingId = params.year;
+    const URL = role === MANAGER ? `${API_URL}/balances/${placeId}/advances-values/${year}` : `${API_URL}/balances/self/${placeId}/advances-values`
 
     const fetchData = async () => {
-        const URL = role === MANAGER ? `${API_URL}/balances/${placeId}/advances-values/${year}` : `${API_URL}/balances/self/${placeId}/advances-values/${year}`
             axios.get(URL, {
             headers: {
                 Authorization: token
@@ -37,7 +37,7 @@ const AdvancesList = () => {
 
     const handleClick = () => {
         fetchData();
-        navigate(`/buildings/${buildingId}/annual-balance/${placeId}/${year}`);
+        navigate(URL);
     };
 
     return (

@@ -20,11 +20,11 @@ public interface BalanceService extends CommonManagerLocalInterface {
 
     AnnualBalance getSelfReports();
 
-    List<HotWaterAdvance>  getSelfWaterAdvanceValue(Long placeId, Integer year);
+    List<HotWaterAdvance>  getSelfWaterAdvanceValue(Long placeId);
 
     List<HotWaterAdvance>  getUserWaterAdvanceValue(Long placeId, Integer year);
 
-    List<HeatingPlaceAndCommunalAreaAdvance>  getSelfHeatingAdvanceValue(Long placeId, Integer year);
+    List<HeatingPlaceAndCommunalAreaAdvance>  getSelfHeatingAdvanceValue(Long placeId);
 
     List<HeatingPlaceAndCommunalAreaAdvance>  getUserHeatingAdvanceValue(Long placeId, Integer year);
 
