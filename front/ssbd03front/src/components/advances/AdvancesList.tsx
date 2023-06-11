@@ -18,7 +18,7 @@ const AdvancesList = () => {
     const placeId = params.placeId;
     const year = params.year;
     const buildingId = params.year;
-    const URL = role === MANAGER ? `${API_URL}/balances/${placeId}/advances-values/${year}` : `${API_URL}/balances/self/${placeId}/advances-values`
+    const URL = role === MANAGER ? `${API_URL}/balances/${placeId}/advances-values/${year}` : `${API_URL}/balances/self/${placeId}/advances-values/{$year}`
 
     const fetchData = async () => {
         axios.get(URL, {
@@ -38,11 +38,7 @@ const AdvancesList = () => {
 
     const handleClick = () => {
         fetchData();
-        if (location.pathname.includes('places')) {
-            navigate(`/places/place/${placeId}`);
-        } else {
-            navigate(`/buildings/${buildingId}/annual-balance/${placeId}/${year}`);
-        }
+        navigate(`/buildings/${buildingId}/annual-balance/${placeId}/${year}`);
     };
 
     return (
