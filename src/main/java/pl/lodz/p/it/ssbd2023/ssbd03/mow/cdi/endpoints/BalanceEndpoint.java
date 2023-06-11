@@ -70,8 +70,11 @@ public class BalanceEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @RolesAllowed({Roles.OWNER})
-    public Response getSelfReports() {
-        return Response.ok().entity(balanceService.getSelfReports()).build();
+    public Response getSelfReports(@DefaultValue("0") @QueryParam("pageNumber") int pageNumber,
+                                   @DefaultValue("10") @QueryParam("pageSize") int pageSize) {
+        return Response.ok().entity(balanceService.getSelfReports(pageNumber, pageSize).stream()
+                .map(BalanceMapper::balancesToAnnualBalancesForListDTO)
+                .toList()).build();
     }
 
     //MOW 7

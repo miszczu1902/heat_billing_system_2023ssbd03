@@ -6,6 +6,7 @@ import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.security.enterprise.SecurityContext;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
@@ -33,6 +34,9 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
     @Inject
     private PlaceFacade placeFacade;
 
+    @Inject
+    private SecurityContext securityContext;
+
     @Override
     @RolesAllowed({Roles.GUEST, Roles.MANAGER, Roles.OWNER})
     public MonthPayoff getUnitWarmCostReport() {
@@ -59,8 +63,9 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
 
     @Override
     @RolesAllowed({Roles.OWNER})
-    public AnnualBalance getSelfReports() {
-        throw new UnsupportedOperationException();
+    public List<AnnualBalance> getSelfReports(int pageNumber, int pageSize) {
+        final String username = securityContext.getCallerPrincipal().getName();
+        return balanceFacade.getListOfAnnualBalancesForOwner(pageNumber, pageSize, username);
     }
 
     @Override
