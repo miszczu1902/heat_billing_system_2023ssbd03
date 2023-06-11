@@ -71,7 +71,7 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
 
     @Override
     @RolesAllowed({Roles.OWNER})
-    public List<HotWaterAdvance> getSelfWaterAdvanceValue(Long placeId) {
+    public List<HotWaterAdvance> getSelfWaterAdvanceValue(Long placeId, Integer year) {
         final String username = securityContext.getCallerPrincipal().getName();
         final Place place = placeFacade.findPlaceById(placeId);
 
@@ -79,18 +79,18 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
             throw AppException.createNotOwnerOfPlaceException();
         }
 
-        return balanceFacade.findAllHotWaterAdvancesForPlace(placeId);
+        return balanceFacade.findAllHotWaterAdvancesForPlace(placeId, year);
     }
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public List<HotWaterAdvance> getUserWaterAdvanceValue(Long placeId) {
-        return balanceFacade.findAllHotWaterAdvancesForPlace(placeId);
+    public List<HotWaterAdvance> getUserWaterAdvanceValue(Long placeId, Integer year) {
+        return balanceFacade.findAllHotWaterAdvancesForPlace(placeId, year);
     }
 
     @Override
     @RolesAllowed({Roles.OWNER})
-    public List<HeatingPlaceAndCommunalAreaAdvance> getSelfHeatingAdvanceValue(Long placeId) {
+    public List<HeatingPlaceAndCommunalAreaAdvance> getSelfHeatingAdvanceValue(Long placeId, Integer year) {
         final String username = securityContext.getCallerPrincipal().getName();
         final Place place = placeFacade.findPlaceById(placeId);
 
@@ -98,13 +98,13 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
             throw AppException.createNotOwnerOfPlaceException();
         }
 
-        return balanceFacade.findAllHeatingPlaceAndCommunalAreaAdvancesForPlace(placeId);
+        return balanceFacade.findAllHeatingPlaceAndCommunalAreaAdvancesForPlace(placeId, year);
     }
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public List<HeatingPlaceAndCommunalAreaAdvance> getUserHeatingAdvanceValue(Long placeId) {
-        return balanceFacade.findAllHeatingPlaceAndCommunalAreaAdvancesForPlace(placeId);
+    public List<HeatingPlaceAndCommunalAreaAdvance> getUserHeatingAdvanceValue(Long placeId, Integer year) {
+        return balanceFacade.findAllHeatingPlaceAndCommunalAreaAdvancesForPlace(placeId, year);
     }
 
     @Override

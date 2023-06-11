@@ -22,4 +22,10 @@ public class AdvanceForMonthDTO {
         this.month = month;
         this.year = year;
     }
+
+    public AdvanceForMonthDTO(BigDecimal hotWaterAdvanceValue, Integer month, Integer year) {
+        this.hotWaterAdvanceValue = hotWaterAdvanceValue;
+        this.month = month;
+        this.year = year;
+    }
 }
