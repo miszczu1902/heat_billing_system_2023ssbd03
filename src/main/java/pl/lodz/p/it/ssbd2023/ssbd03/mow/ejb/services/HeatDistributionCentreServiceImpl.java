@@ -18,7 +18,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -66,6 +65,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
         if (!actualAdvanceChangeFactor.getVersion().equals(version)) {
             throw AppException.createOptimisticLockAppException();
         }
+
         LocalDate date = LocalDate.now();
         if (date.getDayOfMonth() != 1) { // sprawdzamy czy mam pierszy dzień w danym miesiącu na nowy kwartał
             throw AppException.createAdvanceChangeFactorNotModifiedException();

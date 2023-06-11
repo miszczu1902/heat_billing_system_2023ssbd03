@@ -16,7 +16,6 @@ const AdvancesList = () => {
     const role = localStorage.getItem("role");
     const placeId = params.placeId;
     const year = params.year;
-    const buildingId = params.year;
     const URL = role === MANAGER ? `${API_URL}/balances/${placeId}/advances-values/${year}` : `${API_URL}/balances/self/${placeId}/advances-values`
 
     const fetchData = async () => {
