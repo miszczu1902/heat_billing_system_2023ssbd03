@@ -41,6 +41,7 @@ public class PlaceMapper {
                         place.getPredictedHotWaterConsumption(),
                 place.getOwner().getAccount().getPersonalData().getFirstName(),
                 place.getOwner().getAccount().getPersonalData().getSurname(),
+                place.getOwner().getAccount().getUsername(),
                 place.getBuilding().getAddress().getStreet(),
                 place.getBuilding().getAddress().getBuildingNumber(),
                 place.getBuilding().getAddress().getCity(),
