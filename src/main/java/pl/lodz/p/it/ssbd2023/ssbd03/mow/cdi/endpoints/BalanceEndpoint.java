@@ -8,11 +8,15 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AdvanceForMonthDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.BalanceService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AdvanceMapper;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.BalanceMapper;
 
+import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Path("/balances")
 @RequestScoped
@@ -75,75 +79,25 @@ public class BalanceEndpoint {
     }
 
     //MOW 7
-    @Path("/self/{placeId}/water-advance-value")
+    @Path("/self/{placeId}/advances-values")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @RolesAllowed({Roles.OWNER})
-    public Response getSelfWaterAdvanceValue() {
-        return Response.ok().entity(balanceService.getSelfWaterAdvanceValue()).build();
+    public Response getSelfAdvancesValues(@PathParam("placeId") Long placeId) {
+        List<AdvanceForMonthDTO> collect = balanceService.getSelfHeatingAdvanceValue(placeId).stream()
+                .map(AdvanceMapper::createAdvanceForMonthDTOFromAdvance).toList();
+        return Response.ok().entity(collect).build();
     }
 
     //MOW 7
-    @Path("/self/{placeId}/place-water-advance")
-    @Produces(MediaType.APPLICATION_JSON)
-    @GET
-    @RolesAllowed({Roles.OWNER})
-    public Response getSelfWaterAdvance() {
-        return Response.ok().entity(balanceService.getSelfWaterAdvance()).build();
-    }
-
-    //MOW 7
-    @Path("/{placeId}/water-advance-value")
+    @Path("/{placeId}/advances-values")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @RolesAllowed({Roles.MANAGER})
-    public Response getUserWaterAdvanceValue() {
-        return Response.ok().entity(balanceService.getUserWaterAdvanceValue()).build();
-    }
-
-    //MOW 7
-    @Path("/{placeId}/advance")
-    @Produces(MediaType.APPLICATION_JSON)
-    @GET
-    @RolesAllowed({Roles.MANAGER})
-    public Response getUserWaterAdvance() {
-        return Response.ok().entity(balanceService.getUserWaterAdvance()).build();
-    }
-
-    //MOW 7
-    @Path("/self/{placeId}/heat-advance-value")
-    @Produces(MediaType.APPLICATION_JSON)
-    @GET
-    @RolesAllowed({Roles.OWNER})
-    public Response getSelfHeatingAdvanceValue() {
-        return Response.ok().entity(balanceService.getSelfHeatingAdvanceValue()).build();
-    }
-
-    //MOW 7
-    @Path("/self/{placeId}/advance")
-    @Produces(MediaType.APPLICATION_JSON)
-    @GET
-    @RolesAllowed({Roles.OWNER})
-    public Response getSelfHeatingAdvance() {
-        return Response.ok().entity(balanceService.getSelfHeatingAdvance()).build();
-    }
-
-    //MOW 7
-    @Path("/{placeId}/advance-value")
-    @Produces(MediaType.APPLICATION_JSON)
-    @GET
-    @RolesAllowed({Roles.MANAGER})
-    public Response getUserHeatingAdvanceValue() {
-        return Response.ok().entity(balanceService.getUserHeatingAdvanceValue()).build();
-    }
-
-    //MOW 7
-    @Path("/{placeId}/heat-advance")
-    @Produces(MediaType.APPLICATION_JSON)
-    @GET
-    @RolesAllowed({Roles.MANAGER})
-    public Response getUserHeatingAdvance() {
-        return Response.ok().entity(balanceService.getUserHeatingAdvance()).build();
+    public Response getAdvancesValuesForPlace(@PathParam("placeId") Long placeId) {
+        List<AdvanceForMonthDTO> collect = balanceService.getUserHeatingAdvanceValue(placeId).stream()
+                .map(AdvanceMapper::createAdvanceForMonthDTOFromAdvance).toList();
+        return Response.ok().entity(collect).build();
     }
 
     //MOW8

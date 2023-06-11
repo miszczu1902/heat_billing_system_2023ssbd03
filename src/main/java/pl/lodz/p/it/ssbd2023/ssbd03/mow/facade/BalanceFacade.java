@@ -10,6 +10,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Advance;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.AnnualBalance;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.MonthPayoff;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
@@ -90,6 +91,13 @@ public class BalanceFacade extends AbstractFacade<AnnualBalance> {
     public List<AnnualBalance> getListOfAnnualBalancesForYear(Short year) {
         TypedQuery<AnnualBalance> tq = em.createNamedQuery("AnnualBalance.findAllBalancesByYear", AnnualBalance.class);
         tq.setParameter("year", year);
+        return tq.getResultList();
+    }
+
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    public List<Advance> findAllAdvancesForPlace(Long placeId) {
+        TypedQuery<Advance> tq = em.createNamedQuery("Advance.findAllAdvancesForPlace", Advance.class);
+        tq.setParameter("placeId", placeId);
         return tq.getResultList();
     }
 }
