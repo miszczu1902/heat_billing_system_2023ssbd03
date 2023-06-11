@@ -30,7 +30,7 @@ import EnterPredictedHotWaterConsumption from '../components/place/EnterPredicte
 import AnnualBalances from "../components/annualBalance/AnnualBalances";
 import Building from "../components/building/Building";
 import PlacesList from "../components/places/PlacesList";
-import EditPlace from '../components/place/EditPlace';
+import PlaceInfo from "../components/places/PlaceInfo";
 
 interface PrivateRouteProps {
     component: React.ComponentType<any>;
@@ -164,7 +164,7 @@ const router = createBrowserRouter([
                 children: [
                     {
                         path: '/buildings',
-                        element: <PrivateRoute component={BuildingsList} accessLevels={[ADMIN, MANAGER]}/>
+                        element: <PrivateRoute component={BuildingsList} accessLevels={[MANAGER]}/>
                     },
                     {
                         path: '/buildings/:buildingId',
@@ -172,7 +172,7 @@ const router = createBrowserRouter([
                     },
                     {
                         path: '/buildings/building/:buildingId',
-                        element: <PrivateRoute component={Building} accessLevels={[ADMIN, MANAGER]}/>
+                        element: <PrivateRoute component={Building} accessLevels={[MANAGER]}/>
                     }
                 ]
             },
@@ -185,12 +185,12 @@ const router = createBrowserRouter([
                         element: <PrivateRoute component={EnterPredictedHotWaterConsumption} accessLevels={[OWNER, MANAGER]}/>
                     },
                     {
-                        path: '/places/place/:placeId/edit',
-                        element: <PrivateRoute component={EditPlace} accessLevels={[ MANAGER]}/>
-                    },
-                    {
                         path: '/places/self',
                         element: <PrivateRoute component={PlacesList} accessLevels={[OWNER]}/>
+                    },
+                    {
+                        path: '/places/place/:placeId',
+                        element: <PrivateRoute component={PlaceInfo} accessLevels={[OWNER, MANAGER]}/>
                     }
                 ]
             },

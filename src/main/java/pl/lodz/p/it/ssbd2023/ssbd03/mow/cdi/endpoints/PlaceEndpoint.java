@@ -16,6 +16,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.EnterPredictedHotWaterConsumptionDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyPlaceDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.PlaceDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.PlaceInfoDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.PlaceService;
@@ -49,10 +50,10 @@ public class PlaceEndpoint {
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public Response getPlace(@NotBlank @PathParam("placeId") String placeId) {
         final Place place = placeService.getPlace(placeId);
-        final PlaceDTO placeDTO = PlaceMapper.createPlaceToPlaceDTO(place);
+        final PlaceInfoDTO placeInfoDTO = PlaceMapper.createPlaceToPlaceInfoDTO(place);
         return Response.status(200)
-                .header("ETag", messageSigner.sign(placeDTO))
-                .entity(placeDTO)
+                .header("ETag", messageSigner.sign(placeInfoDTO))
+                .entity(placeInfoDTO)
                 .build();
     }
 
@@ -149,15 +150,6 @@ public class PlaceEndpoint {
         placeService.enterPredictedHotWaterConsumption(placeId, enterPredictedHotWaterConsumptionDTO.getConsumption(),
                 etag, enterPredictedHotWaterConsumptionDTO.getVersion(), user, userRole);
         return Response.noContent().build();
-    }
-
-    //MOW
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/{ownerUsername}")
-    @RolesAllowed({Roles.MANAGER})
-    public Response getOwnerAllPlaces(@NotBlank @PathParam("ownerUsername") String ownerUsername) {
-        return Response.status(200).entity(placeService.getOwnerAllPlaces(ownerUsername)).build();
     }
 
     //MOW 11

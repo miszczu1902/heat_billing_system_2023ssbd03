@@ -18,6 +18,9 @@ import java.time.LocalDate;
                 @Index(name = "hot_water_entry_place_id", columnList = "place_id"),
                 @Index(name = "hot_water_entry_manager_id", columnList = "manager_id")
         })
+@NamedQueries({
+        @NamedQuery(name = "HotWaterEntry.getListOfHotWaterEntriesForPlace", query = "SELECT k FROM HotWaterEntry k WHERE k.place.id = :id  ORDER BY k.date desc ")
+})
 public class HotWaterEntry extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

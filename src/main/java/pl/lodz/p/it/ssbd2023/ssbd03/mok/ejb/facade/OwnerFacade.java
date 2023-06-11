@@ -12,6 +12,10 @@ import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class OwnerFacade extends AbstractFacade<Owner> {

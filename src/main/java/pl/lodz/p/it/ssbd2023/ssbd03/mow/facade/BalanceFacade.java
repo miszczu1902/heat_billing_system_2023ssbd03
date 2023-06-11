@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.facade;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
@@ -32,13 +33,13 @@ public class BalanceFacade extends AbstractFacade<AnnualBalance> {
     }
 
     @Override
-    @RolesAllowed(Roles.MANAGER)
+    @PermitAll
     public void edit(AnnualBalance entity) {
         super.edit(entity);
     }
 
     @Override
-    @RolesAllowed({Roles.MANAGER})
+    @PermitAll
     public void create(AnnualBalance entity) {
         super.create(entity);
     }
@@ -82,6 +83,13 @@ public class BalanceFacade extends AbstractFacade<AnnualBalance> {
             tq.setMaxResults(pageSize);
         }
 
+        return tq.getResultList();
+    }
+
+    @PermitAll
+    public List<AnnualBalance> getListOfAnnualBalancesForYear(Short year) {
+        TypedQuery<AnnualBalance> tq = em.createNamedQuery("AnnualBalance.findAllBalancesByYear", AnnualBalance.class);
+        tq.setParameter("year", year);
         return tq.getResultList();
     }
 }
