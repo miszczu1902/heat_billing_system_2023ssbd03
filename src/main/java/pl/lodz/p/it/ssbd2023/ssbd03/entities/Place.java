@@ -99,10 +99,6 @@ public class Place extends AbstractEntity implements Serializable, Signable {
                 .concat(getHotWaterConnection().toString())
                 .concat(getCentralHeatingConnection().toString())
                 .concat(getPredictedHotWaterConsumption().toString())
-                .concat(owner.getAccount().getUsername())
-                .concat(getBuilding().getAddress().getStreet())
-                .concat(getBuilding().getAddress().getBuildingNumber())
-                .concat(getBuilding().getAddress().getCity())
-                .concat(getBuilding().getAddress().getPostalCode());
+                .concat(owner.getAccount().getUsername());
     }
 }

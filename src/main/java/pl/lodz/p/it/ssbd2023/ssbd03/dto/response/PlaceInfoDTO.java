@@ -51,10 +51,6 @@ public class PlaceInfoDTO extends AbstractDTO implements Signable {
                 .concat(getHotWaterConnection().toString())
                 .concat(getCentralHeatingConnection().toString())
                 .concat(getPredictedHotWaterConsumption().toString())
-                .concat(getUsername())
-                .concat(getStreet())
-                .concat(getBuildingNumber())
-                .concat(getCity())
-                .concat(getPostalCode());
+                .concat(getUsername());
     }
 }
