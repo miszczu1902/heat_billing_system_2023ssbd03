@@ -73,7 +73,7 @@ public class HeatDistributionCentreEndpoint {
     }
 
     //MOW 13
-    @Path("/parameters/insert-consumption")
+    @Path("/parameters/consumption")
     @Produces(MediaType.APPLICATION_JSON)
     @PATCH
     @RolesAllowed({Roles.OWNER, Roles.MANAGER})
