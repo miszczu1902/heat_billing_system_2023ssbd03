@@ -81,7 +81,7 @@ INSERT INTO hot_water_advance (id, hot_water_advance_value) VALUES (0, 1000.00),
 
 INSERT INTO hot_water_entry (id, date_, entry_value, place_id, manager_id, version, creation_date_time, last_modification_date_time) VALUES (-1, '2022-01-01', 150.00, 0, -1, 1, NOW(), NOW()),(0, '2023-01-01', 15000.00, 0, -1, 1, NOW(), NOW());
 
-INSERT INTO annual_balance (id, year_, total_hot_water_advance, total_heating_place_advance, total_heating_communal_area_advance, total_hot_water_cost, total_heating_place_cost, total_heating_communal_area_cost, place_id, version, creation_date_time, last_modification_date_time) VALUES (0, 2023, 3000.00, 2500.00, 1500.00, 2800.00, 1800.00, 1100.00, 0, 1, NOW(), NOW());
+INSERT INTO annual_balance (id, year_, total_hot_water_advance, total_heating_place_advance, total_heating_communal_area_advance, total_hot_water_cost, total_heating_place_cost, total_heating_communal_area_cost, place_id, version, creation_date_time, last_modification_date_time) VALUES (0, 2023, 3000.00, 2500.00, 1500.00, 2800.00, 1800.00, 1100.00, 0, 1, NOW(), NOW()), (-1, 2022, 15000.00, 4300.00, 15000.00, 10000.00, 18000.00, 11000.00, 0, 1, NOW(), NOW());
 
 INSERT INTO month_pay_off (id, payoff_date, water_heating_unit_cost, central_heating_unit_cost, hot_water_consumption, owner_id, place_id, version, creation_date_time, last_modification_date_time)VALUES (0, '2022-03-01', 10.50, 30.00, 12.30, -2, 0, 1, NOW(), NOW()),(-1, '2021-03-01', 12.20, 28.50, 18.20, -2, 0, 1, NOW(), NOW()),(-2, '2023-03-01', 9.80, 31.20, 15.60, -2, 0, 1, NOW(), NOW());
 

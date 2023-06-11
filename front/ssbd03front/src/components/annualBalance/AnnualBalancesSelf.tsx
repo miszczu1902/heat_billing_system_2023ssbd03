@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
+import {Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
 import axios from 'axios';
 import {API_URL} from '../../consts';
 import {useNavigate, useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {BalancesFromList} from "../../types/BalancesFromList";
+import RefreshIcon from "../icons/RefreshIcon";
 
 const AnnualBalances = () => {
     const {t, i18n} = useTranslation();
@@ -27,6 +28,11 @@ const AnnualBalances = () => {
     useEffect(() => {
         fetchData();
     }, []);
+
+    const handleClick = () => {
+        fetchData();
+        navigate('/annual-reports/self');
+    };
 
     return (
         <TableContainer component={Paper}>
@@ -70,6 +76,7 @@ const AnnualBalances = () => {
                             <TableCell>{reports.postalCode}</TableCell>
                         </TableRow>
                     ))}
+                    <TableRow><Button className="landing-page-button" onClick={handleClick}><RefreshIcon/></Button></TableRow>
                 </TableBody>
             </Table>
         </TableContainer>
