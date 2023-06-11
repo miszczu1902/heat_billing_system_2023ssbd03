@@ -28,6 +28,7 @@ import BuildingsList from '../components/building/BuildingsList';
 import AddInvoiceValues from '../components/heatDistributionCentrePayoff/AddInvoiceValues';
 import EnterPredictedHotWaterConsumption from '../components/place/EnterPredictedHotWaterConsumption';
 import AnnualBalances from "../components/annualBalance/AnnualBalances";
+import AnnualBalancesSelf from "../components/annualBalance/AnnualBalancesSelf";
 import Building from "../components/building/Building";
 import PlacesList from "../components/places/PlacesList";
 import PlaceInfo from "../components/places/PlaceInfo";
@@ -206,6 +207,16 @@ const router = createBrowserRouter([
                     {
                         path: '/manage',
                         element: <PrivateRoute component={AddInvoiceValues} accessLevels={[MANAGER]}/>
+                    },
+                ]
+            },
+            {
+                path: '/annual-reports/self',
+                element: (<><NavbarPanel/><Outlet/></>),
+                children: [
+                    {
+                        path: '/annual-reports/self',
+                        element: <PrivateRoute component={AnnualBalancesSelf} accessLevels={[OWNER]}/>
                     },
                 ]
             }

@@ -65,8 +65,9 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
 
     @Override
     @RolesAllowed({Roles.OWNER})
-    public AnnualBalance getSelfReports() {
-        throw new UnsupportedOperationException();
+    public List<AnnualBalance> getSelfReports(int pageNumber, int pageSize) {
+        final String username = securityContext.getCallerPrincipal().getName();
+        return balanceFacade.getListOfAnnualBalancesForOwner(pageNumber, pageSize, username);
     }
 
     @Override
