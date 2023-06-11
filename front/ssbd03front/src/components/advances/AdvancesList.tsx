@@ -33,11 +33,11 @@ const AdvancesList = () => {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [URL]);
 
     const handleClick = () => {
         fetchData();
-        navigate(URL);
+        navigate(`/buildings/${buildingId}/annual-balance/${placeId}/${year}`);
     };
 
     return (
