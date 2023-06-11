@@ -319,7 +319,7 @@
     "predictedHotWaterConsumption" : "Water consumption prediction",
     "firstName" : "Owner's first name",
     "surname": "Owner's surname",
-    "username": "Owner's name",
+    "username": "Username",
     "connected": "Connected",
     "disconnected": "Disconnected",
     "dialogText": "Add Place Form",
