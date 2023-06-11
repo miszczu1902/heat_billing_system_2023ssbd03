@@ -4,13 +4,19 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.AddConsumptionDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.InsertAdvanceChangeFactorDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.InsertHotWaterEntryDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyHotWaterEntryDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.HotWaterEntryDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
@@ -18,8 +24,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.HeatDistributionCentreService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.HotWaterEntryMapper;
 
-import java.math.BigDecimal;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,23 +56,80 @@ public class HeatDistributionCentreEndpoint {
     }
 
     //MOW 12
-    @Path("/parameters/heating-area-factor")
-    @Produces(MediaType.APPLICATION_JSON)
     @PATCH
-    @RolesAllowed({Roles.MANAGER})
-    public Response modifyHeatingAreaFactor(BigDecimal heatingAreaFactorValue) {
-        heatDistributionCentreService.modifyHeatingAreaFactor(heatingAreaFactorValue);
-        return Response.status(200).build();
+    @Path("/parameters/advance-change-factor/{buildingId}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed(Roles.MANAGER)
+    public Response insertAdvanceChangeFactor(@PathParam("buildingId") Long buildingId,  InsertAdvanceChangeFactorDTO insertAdvanceChangeFactorDTO) {
+        heatDistributionCentreService.insertAdvanceChangeFactor(
+                insertAdvanceChangeFactorDTO.getAdvanceChangeFactor(), buildingId);
+        return Response.status(204).build();
     }
 
     //MOW 13
-    @Path("/parameters/consumption")
+    @Path("/parameters/insert-consumption")
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
+    public Response insertConsumption(InsertHotWaterEntryDTO hotWaterEntryDTO) {
+        heatDistributionCentreService.insertConsumption(hotWaterEntryDTO.getHotWaterConsumption(), hotWaterEntryDTO.getPlaceId());
+        return Response.status(204).build();
+    }
+
+    //MOW 13
+    @Path("/parameters/insert-consumption")
     @Produces(MediaType.APPLICATION_JSON)
     @PATCH
-    @RolesAllowed({Roles.MANAGER})
-    public Response modifyConsumption(BigDecimal consumptionValue) {
-        heatDistributionCentreService.modifyConsumption(consumptionValue);
-        return Response.status(200).build();
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
+    public Response modifyConsumption(@NotNull @Valid ModifyHotWaterEntryDTO hotWaterEntryDTO, @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                heatDistributionCentreService.modifyConsumption(
+                        hotWaterEntryDTO.getHotWaterConsumption(),
+                        hotWaterEntryDTO.getPlaceId(),
+                        hotWaterEntryDTO.getVersion(),
+                        etag);
+                rollbackTX = heatDistributionCentreService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return Response.status(Response.Status.NO_CONTENT).build();
+            } catch (EJBTransactionRolledbackException | OptimisticLockAppException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
+        heatDistributionCentreService.modifyConsumption(
+                hotWaterEntryDTO.getHotWaterConsumption(),
+                hotWaterEntryDTO.getPlaceId(),
+                hotWaterEntryDTO.getVersion(),
+                etag);
+
+        return Response.status(204).build();
+    }
+
+
+    //MOW 13
+    @GET
+    @Path("/hot-water-consumption/{hotWaterEntryId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
+    public Response getHotWaterEntry(@PathParam("hotWaterEntryId") Long hotWaterEntryId) {
+        HotWaterEntryDTO hotWaterEntry = HotWaterEntryMapper.createHotWaterEntryToHotWaterEntryDTO(
+                heatDistributionCentreService.getHotWaterEntry(hotWaterEntryId));
+        return Response.status(200)
+                .header("ETag", messageSigner.sign(hotWaterEntry))
+                .entity(hotWaterEntry)
+                .build();
     }
 
     //MOW 14,15,16

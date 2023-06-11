@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services;
 import jakarta.ejb.Local;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.CommonManagerLocalInterface;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatDistributionCentre;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterEntry;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 
 import java.math.BigDecimal;
@@ -12,11 +13,15 @@ public interface HeatDistributionCentreService extends CommonManagerLocalInterfa
 
     Void getHeatDistributionCentreParameters();
 
-    void modifyHeatingAreaFactor(BigDecimal heatingAreaFactorValue);
+    void insertAdvanceChangeFactor(BigDecimal heatingAreaFactorValue, Long buildingId);
 
-    void modifyConsumption(BigDecimal consumptionValue);
+    void insertConsumption(BigDecimal consumptionValue, Long placeId);
+
+    void modifyConsumption(BigDecimal consumptionValue, Long placeId, Long version, String etag);
 
     void addConsumptionFromInvoice(BigDecimal consumption, BigDecimal consumptionCost, BigDecimal heatingAreaFactor, Manager manager);
 
     HeatDistributionCentre getHeatDistributionCentre(Long id);
+
+    HotWaterEntry getHotWaterEntry(Long hotWaterEntryId);
 }

@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.integration.api;
+package pl.lodz.p.it.ssbd2023.ssbd03.integration.api.mok;
 
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
@@ -13,64 +13,65 @@ import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTes
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ChangeSelfEmailTest extends BasicIntegrationConfigTest {
+public class ChangeUserEmailTest extends BasicIntegrationConfigTest {
 
     @Test
-    public void ChangeSelfEmailTest() {
+    public void ChangeUserEmailTest() {
         initialize();
         String email = RandomStringUtils.randomAlphanumeric(10) + "@fakemailik.com";
-        Response response = sendRequestAndGetResponse(Method.GET, "/accounts/self", null, ContentType.JSON);
-        assertEquals(200, response.getStatusCode());
+        Response response = sendRequestAndGetResponse(Method.GET, "/accounts/" + Account.OWNER, null, ContentType.JSON);
         AccountInfoDTO accountInfoDTO = response.body().jsonPath().getObject("", AccountInfoDTO.class);
         ChangeEmailDTO changeEmailDTO = new ChangeEmailDTO(email);
         changeEmailDTO.setVersion(accountInfoDTO.getVersion());
 
-        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/email", changeEmailDTO, ContentType.JSON);
+        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/" + Account.OWNER + "/email", changeEmailDTO, ContentType.JSON);
         int statusCode = response.getStatusCode();
         assertEquals(204, statusCode, "Check if modification passed.");
     }
 
     @Test
-    public void ChangeSelfEmailNotUniqueTest() {
+    public void ChangeUserEmailNotUniqueTest() {
         initialize();
-        Response response = sendRequestAndGetResponse(Method.GET, "/accounts/self", null, ContentType.JSON);
-        assertEquals(200, response.getStatusCode());
+        Response response = sendRequestAndGetResponse(Method.GET, "/accounts/" + Account.OWNER, null, ContentType.JSON);
         AccountInfoDTO accountInfoDTO = response.body().jsonPath().getObject("", AccountInfoDTO.class);
         ChangeEmailDTO changeEmailDTO = new ChangeEmailDTO("janekowalski@example.com");
         changeEmailDTO.setVersion(accountInfoDTO.getVersion());
 
-        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/email", changeEmailDTO, ContentType.JSON);
+        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/" + Account.OWNER + "/email", changeEmailDTO, ContentType.JSON);
         int statusCode = response.getStatusCode();
         assertEquals(409, statusCode, "Conflict.");
     }
 
     @Test
-    public void ChangeSelfEmailNoEtagTest() {
+    public void ChangeUserEmailWrongEtagTest() {
         initialize();
         String email = RandomStringUtils.randomAlphanumeric(10) + "@fakemailik.com";
+        Response response = sendRequestAndGetResponse(Method.GET, "/accounts/" + Account.MANAGER, null, ContentType.JSON);
+        AccountInfoDTO accountInfoDTO = response.body().jsonPath().getObject("", AccountInfoDTO.class);
         ChangeEmailDTO changeEmailDTO = new ChangeEmailDTO(email);
+        changeEmailDTO.setVersion(accountInfoDTO.getVersion());
 
-        Response response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/email", changeEmailDTO, ContentType.JSON);
+
+        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/" + Account.OWNER + "/email", changeEmailDTO, ContentType.JSON);
         int statusCode = response.getStatusCode();
-        assertEquals(500, statusCode, " no etag.");
+        assertEquals(400, statusCode, " etag error.");
     }
 
     @Test
-    public void ChangeSelfEmailWrongVersionTest() {
+    public void ChangeUserEmailWrongVersionTest() {
         initialize();
         String email = RandomStringUtils.randomAlphanumeric(10) + "@fakemailik.com";
-        Response response = sendRequestAndGetResponse(Method.GET, "/accounts/self", null, ContentType.JSON);
-        assertEquals(200, response.getStatusCode());
+        Response response = sendRequestAndGetResponse(Method.GET, "/accounts/" + Account.OWNER, null, ContentType.JSON);
         AccountInfoDTO accountInfoDTO = response.body().jsonPath().getObject("", AccountInfoDTO.class);
         ChangeEmailDTO changeEmailDTO = new ChangeEmailDTO(email);
         changeEmailDTO.setVersion(accountInfoDTO.getVersion() + 1);
 
-        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/email", changeEmailDTO, ContentType.JSON);
+        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/" + Account.OWNER + "/email", changeEmailDTO, ContentType.JSON);
         int statusCode = response.getStatusCode();
         assertEquals(409, statusCode, "Check if request responses conflict.");
     }
 
     private void initialize() {
-        auth(new LoginDTO(Account.OWNER, Account.PASSWORD));
+        auth(new LoginDTO(Account.ADMIN, Account.PASSWORD));
     }
 }

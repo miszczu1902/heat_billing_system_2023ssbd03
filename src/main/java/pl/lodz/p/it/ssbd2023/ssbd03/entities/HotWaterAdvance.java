@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.*;

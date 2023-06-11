@@ -13,8 +13,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import {ButtonGroup, Icon} from '@mui/material';
-import {useNavigate} from "react-router-dom";
+import {Breadcrumbs, ButtonGroup, Container, Icon, Link} from '@mui/material';
+import {useLocation, useNavigate} from "react-router-dom";
 import Logo from "../../assets/logo.svg";
 import "../../i18n";
 import {useTranslation} from "react-i18next";
@@ -24,8 +24,11 @@ import UserInfoIcon from '../icons/UserInfoIcon';
 import GlobeIcon from '../icons/GlobeIcon';
 import SwitchUserIcon from "../icons/SwitchUserIcon";
 import decode from 'jwt-decode';
+import path from "path/posix";
 
 const NavbarPanel = () => {
+    const location2 = useLocation();
+    const getLocation = location2.pathname;
     const [windowOpen, setWindowOpen] = useState(false);
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
@@ -226,8 +229,6 @@ const NavbarPanel = () => {
                 </DialogActions>
             </Dialog>
 
-        
-
             <AppBar position="static" style={{backgroundColor: navbarColor}}>
                 <Toolbar>
                     <Icon sx={{width: '3%', height: '3%', marginLeft: '1vh', marginRight: '1vh', cursor: 'pointer'}}>
@@ -295,6 +296,29 @@ const NavbarPanel = () => {
                         )}
                     </ButtonGroup>
                 </Toolbar>
+                <Typography variant="h6" sx={{
+                    marginRight: '1vh',
+                    marginLeft: 'auto'
+                }}><Breadcrumbs aria-label="breadcrumb">
+                    <Link underline="hover" color="#ffffff" href="/">
+                        *
+                    </Link>
+                    {location2.pathname.includes("accounts") && <Link
+                        underline="hover"
+                        color="#ffffff"
+                        href="/accounts/"
+                    >Accounts</Link>}
+                    {(location2.pathname.includes("accounts/") && !location2.pathname.includes("accounts/self")) && <Link
+                        underline="hover"
+                        color="#ffffff"
+                        href={"/accounts/" + username}
+                    >Account</Link>}
+                    {location2.pathname.includes("accounts/self") && <Link
+                        underline="hover"
+                        color="#ffffff"
+                        href={"/accounts/self/" + currentRole?.toLowerCase()}
+                    >Self</Link>}
+                </Breadcrumbs></Typography>
                 <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
                     <DialogTitle>{t('navbar.languages.title')}</DialogTitle>
                     <DialogContent>

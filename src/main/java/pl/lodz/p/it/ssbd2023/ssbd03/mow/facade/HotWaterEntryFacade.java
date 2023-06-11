@@ -13,6 +13,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterEntry;
 
 import java.util.List;
 
+import java.time.LocalDate;
+
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class HotWaterEntryFacade extends AbstractFacade<HotWaterEntry> {
@@ -29,13 +31,13 @@ public class HotWaterEntryFacade extends AbstractFacade<HotWaterEntry> {
     }
 
     @Override
-    @RolesAllowed({Roles.MANAGER})
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
     public void edit(HotWaterEntry entity) {
         super.edit(entity);
     }
 
     @Override
-    @RolesAllowed({Roles.MANAGER,Roles.OWNER})
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
     public void create(HotWaterEntry entity) {
         super.create(entity);
     }
@@ -51,5 +53,23 @@ public class HotWaterEntryFacade extends AbstractFacade<HotWaterEntry> {
         tq.setParameter("id", id);
         tq.setMaxResults(2);
         return tq.getResultList();
+    }
+
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
+    public HotWaterEntry getEntryWithCheckingIfHotWaterEntryCouldBeInsertedOrOverwritten(Long placeId, boolean checkIfCouldBeOverwritten) {
+        final LocalDate now = LocalDate.now();
+        TypedQuery<HotWaterEntry> tq;
+
+        if (checkIfCouldBeOverwritten) {
+            tq = em.createNamedQuery("HotWaterEntry.checkIfHotWaterEntryCouldBeOverwritten", HotWaterEntry.class);
+        } else {
+            tq = em.createNamedQuery("HotWaterEntry.checkIfHotWaterEntryCouldBeInserted", HotWaterEntry.class);
+        }
+        tq.setParameter("year", now.getYear());
+        tq.setParameter("month", now.getMonthValue());
+        tq.setParameter("placeId", placeId);
+
+        final List<HotWaterEntry> resultList = tq.getResultList();
+        return resultList.isEmpty() ? null :resultList.get(0);
     }
 }

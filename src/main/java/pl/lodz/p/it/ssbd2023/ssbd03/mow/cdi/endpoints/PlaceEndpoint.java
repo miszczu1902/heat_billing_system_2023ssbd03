@@ -95,7 +95,7 @@ public class PlaceEndpoint {
         final String etag = request.getHeader("If-Match");
 
         final String user = request.getUserPrincipal().getName();
-        final boolean userRole = request.isUserInRole("OWNER");
+        final boolean userRole = request.isUserInRole(Roles.OWNER);
 
         int retryTXCounter = txRetries; //limit prób ponowienia transakcji
         boolean rollbackTX = false;

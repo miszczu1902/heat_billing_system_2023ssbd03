@@ -7,6 +7,8 @@ import lombok.Getter;
 import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.building.AddingPlaceToTheSameAccountException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.advanceFactor.AdvanceChangeFactorNotModified;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.advanceFactor.AdvanceChangeFactorWasInserted;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.building.BuildingCommunalAreaBiggerOrEqualTotalAreaException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.building.LackOfSpaceInTheBuildingException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
@@ -20,6 +22,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.PredictedHotWaterConsumptio
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.HotWaterEntryCouldNotBeInsertedException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.HotWaterEntryCouldNotBeModifiedException;
 
 @ApplicationException(rollback = true)
 public class AppException extends WebApplicationException {
@@ -67,6 +71,10 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_NOT_OWNER_OF_THIS_PLACE = "excpetion.not_owner_of_this_place";
     private static final String LACK_OF_SPACE = "exception.building.lack.of.space";
     private static final String ERROR_ADDING_PLACE_TO_THE_SAME_ADMIN_MANAGER = "exception.building.adding_place_to_the_same_manager_account";
+    protected final static String ERROR_ADVANCE_CHANGE_FACTOR_NOT_MODIFIED = "exception.advance_factor.cannot_modify_factor";
+    protected final static String ERROR_ADVANCE_CHANGE_FACTOR_WAS_INSERTED = "exception.advance_factor.factor_was_inserted";
+    protected final static String ERROR_HOT_WATER_ENTRY_NOT_INSERTED = "exception.hot_water_entry.not_inserted";
+    protected final static String ERROR_HOT_WATER_ENTRY_NOT_MODIFIED = "exception.hot_water_entry.not_modified";
 
     @Getter
     private Throwable cause;
@@ -109,7 +117,8 @@ public class AppException extends WebApplicationException {
     public static NoQueryResultException createNoResultException(Throwable cause) {
         return new NoQueryResultException(ERROR_RESULT_NOT_FOUND, Response.Status.NOT_FOUND, cause);
     }
-    public static AppException tokenNoResultException () {
+
+    public static AppException tokenNoResultException() {
         return new AppException(ERROR_TOKEN_NOT_FOUND, Response.Status.NOT_FOUND);
     }
 
@@ -226,6 +235,7 @@ public class AppException extends WebApplicationException {
     public static SignerException createSignerException() {
         return new SignerException(ERROR_ETAG_SIGNER, Response.Status.BAD_REQUEST);
     }
+
     public static InvalidTokenException tokenIsNotValidException() {
         return new InvalidTokenException(TOKEN_IS_NOT_VALID, Response.Status.BAD_REQUEST);
     }
@@ -234,14 +244,15 @@ public class AppException extends WebApplicationException {
         return new TransactionRollbackException();
     }
 
-    public static BuildingCommunalAreaBiggerOrEqualTotalAreaException createCommunalAreaBiggerOrEqualTotalAreaException(){
+    public static BuildingCommunalAreaBiggerOrEqualTotalAreaException createCommunalAreaBiggerOrEqualTotalAreaException() {
         return new BuildingCommunalAreaBiggerOrEqualTotalAreaException(COMMUNAL_AREA_EQUAL_OR_BIGGER_THAT_TOTAL_AREA, Response.Status.FORBIDDEN);
     }
 
-    public static ConsumptionAddException consumptionAddException() {
+    public static ConsumptionAddException createConsumptionAddException() {
         return new ConsumptionAddException(ERROR_ADDING_HEAT_VALUES, Response.Status.CONFLICT);
     }
-    public static NoHeatDistributionCentreException noHeatDistributionCentreException() {
+
+    public static NoHeatDistributionCentreException createNoHeatDistributionCentreException() {
         return new NoHeatDistributionCentreException(ERROR_NO_HEAT_DISTRIBUTION_CENTRE, Response.Status.NOT_FOUND);
     }
 
@@ -259,6 +270,22 @@ public class AppException extends WebApplicationException {
 
     public static AddingPlaceToTheSameAccountException addingPlaceToTheSameAccountException() {
         return new AddingPlaceToTheSameAccountException(AppException.ERROR_ADDING_PLACE_TO_THE_SAME_ADMIN_MANAGER, Response.Status.FORBIDDEN);
+    }
+
+    public static AdvanceChangeFactorNotModified createAdvanceChangeFactorNotModifiedException() {
+        return new AdvanceChangeFactorNotModified(ERROR_ADVANCE_CHANGE_FACTOR_NOT_MODIFIED, Response.Status.BAD_REQUEST);
+    }
+
+    public static AdvanceChangeFactorWasInserted createAdvanceChangeFactorWasInsertedException() {
+        return new AdvanceChangeFactorWasInserted(ERROR_ADVANCE_CHANGE_FACTOR_WAS_INSERTED, Response.Status.CONFLICT);
+    }
+
+    public static HotWaterEntryCouldNotBeInsertedException createHotWaterEntryCouldNotBeInsertedException() {
+        return new HotWaterEntryCouldNotBeInsertedException(ERROR_HOT_WATER_ENTRY_NOT_INSERTED, Response.Status.BAD_REQUEST);
+    }
+
+    public static HotWaterEntryCouldNotBeModifiedException createHotWaterEntryCouldNotBeModifiedException() {
+        return new HotWaterEntryCouldNotBeModifiedException(ERROR_HOT_WATER_ENTRY_NOT_MODIFIED, Response.Status.CONFLICT);
     }
 }
 

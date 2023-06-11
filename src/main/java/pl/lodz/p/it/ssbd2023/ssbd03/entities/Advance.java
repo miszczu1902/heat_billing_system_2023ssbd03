@@ -27,4 +27,9 @@ public abstract class Advance extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "place_id", updatable = false, referencedColumnName = "id")
     protected Place place;
+
+    public Advance(LocalDate date, Place place) {
+        this.date = date;
+        this.place = place;
+    }
 }
