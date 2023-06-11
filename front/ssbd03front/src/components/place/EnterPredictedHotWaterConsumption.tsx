@@ -75,6 +75,7 @@ const EnterPredictedHotWaterConsumption = () => {
                 'If-Match': localStorage.getItem("etag")
             }
         }).then((response) => {
+            window.location.reload();
         }).catch((error) => {
             setConfirmOpen(false); 
             setOpenSnackbar(true);
