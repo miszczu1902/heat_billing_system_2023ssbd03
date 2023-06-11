@@ -21,9 +21,9 @@ import java.time.LocalDate;
         })
 @NamedQueries({
         @NamedQuery(name = "HotWaterEntry.checkIfHotWaterEntryCouldBeInserted",
-                query = "SELECT e FROM HotWaterEntry e WHERE e.place.id = :placeId AND YEAR(e.date) = :year AND MONTH(e.date) = :month"),
+                query = "SELECT e FROM HotWaterEntry e WHERE e.place.id = :placeId AND YEAR(e.date) = :year AND MONTH(e.date) = :month AND e.place.hotWaterConnection IS TRUE"),
         @NamedQuery(name = "HotWaterEntry.checkIfHotWaterEntryCouldBeOverwritten",
-                query = "SELECT e FROM HotWaterEntry e WHERE e.place.id = :placeId AND YEAR(e.date) = :year AND MONTH(e.date) = :month AND e.manager IS NULL"),
+                query = "SELECT e FROM HotWaterEntry e WHERE e.place.id = :placeId AND YEAR(e.date) = :year AND MONTH(e.date) = :month AND e.manager IS NULL AND e.place.hotWaterConnection IS TRUE"),
         @NamedQuery(name = "HotWaterEntry.getListOfHotWaterEntriesForPlace", query = "SELECT k FROM HotWaterEntry k WHERE k.place.id = :id  ORDER BY k.date desc ")
 })
 public class HotWaterEntry extends AbstractEntity implements Serializable, Signable {
