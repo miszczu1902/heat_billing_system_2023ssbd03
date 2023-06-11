@@ -11,7 +11,6 @@ import {useParams} from "react-router-dom";
 import EnterPredictedHotWaterConsumption from "../place/EnterPredictedHotWaterConsumption";
 import DoorIcon from "../icons/DoorIcon";
 import {Account} from "../../types/account";
-import AdvancesList from "../advances/AdvancesList";
 
 const PlaceInfo = () => {
     const {t} = useTranslation();
