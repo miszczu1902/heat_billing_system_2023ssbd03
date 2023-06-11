@@ -339,6 +339,7 @@
     "water": "Wartość zaliczki dla ciepłej wody",
     "place_heat": "Wartość zaliczki dla ogrzania lokalu",
     "communal_area_heat": "Wartość zaliczki dla ogrzania części wspólnej",
-    "date": "Data"
+    "date": "Data",
+    "change_factor": "Współczynnik modyfikacji wielkości zaliczki"
   }
 }

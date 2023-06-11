@@ -339,6 +339,7 @@
     "water": "Hot water advance value",
     "place_heat": "Heating place advance value",
     "communal_area_heat": "Communal area advance value",
-    "date": "Date"
+    "date": "Date",
+    "change_factor": "Advance change factor"
   }
 }

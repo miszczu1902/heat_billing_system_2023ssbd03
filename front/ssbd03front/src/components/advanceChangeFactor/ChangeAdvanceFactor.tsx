@@ -1,9 +1,12 @@
 import {useNavigate, useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {API_URL, MANAGER} from "../../consts";
 import axios from "axios";
 import {ActualAdvanceChangeFactor} from "../../types/ActualAdvanceChangeFactor";
+import {Box, Paper, Typography} from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import IconViewList from "../icons/IconViewList";
 
 const ChangeAdvanceFactor = () => {
     const params = useParams();
@@ -31,6 +34,20 @@ const ChangeAdvanceFactor = () => {
         fetchData();
     }, []);
 
-    return (<div>{advanceChangeFactor?.advanceChangeFactor}</div>)
+    return (<div style={{width: '50vw', boxSizing: 'border-box', left: 0, bottom: 0}}>
+        <Box sx={{width: '100%', maxWidth: '600px', margin: '2vh'}}>
+            <Paper elevation={3} style={{padding: '2vh'}}>
+                <IconButton
+                    edge="start"
+                    color="inherit"
+                    aria-label="close"
+                >
+                    <IconViewList/>
+                </IconButton>
+                <Typography variant="h5">
+                    <b>{t('annual_balance.change_factor')}: </b> {advanceChangeFactor?.advanceChangeFactor}
+                </Typography>
+            </Paper>
+    </Box></div>)
 }
 export default ChangeAdvanceFactor;
