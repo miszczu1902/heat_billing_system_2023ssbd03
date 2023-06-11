@@ -17,7 +17,7 @@ public class GetSelfAnnualBalanceReportsTest  extends BasicIntegrationConfigTest
     private static final String URL_GET = "/accounts/self";
 
     @Test
-    public void getSelfAnnualBalanceReports() {
+    public void getSelfAnnualBalanceReportsAsOwner() {
         auth(new LoginDTO(Account.OWNER, Account.PASSWORD));
         Response response = sendRequestAndGetResponse(Method.GET, URL_GET, null, null);
         assertEquals(200, response.getStatusCode(), "check if request responses ok.");
