@@ -16,7 +16,9 @@ public class AdvanceForMonthDTO {
     private Integer month;
     private Integer year;
 
-    public AdvanceForMonthDTO(Integer month, Integer year) {
+    public AdvanceForMonthDTO(BigDecimal heatingPlaceAdvanceValue, BigDecimal heatingCommunalAreaAdvanceValue, Integer month, Integer year) {
+        this.heatingPlaceAdvanceValue = heatingPlaceAdvanceValue;
+        this.heatingCommunalAreaAdvanceValue = heatingCommunalAreaAdvanceValue;
         this.month = month;
         this.year = year;
     }

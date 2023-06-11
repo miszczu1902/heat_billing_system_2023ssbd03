@@ -9,6 +9,8 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AdvanceForMonthDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatingPlaceAndCommunalAreaAdvance;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterAdvance;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.BalanceService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AdvanceMapper;
@@ -84,9 +86,10 @@ public class BalanceEndpoint {
     @GET
     @RolesAllowed({Roles.OWNER})
     public Response getSelfAdvancesValues(@PathParam("placeId") Long placeId) {
-        List<AdvanceForMonthDTO> collect = balanceService.getSelfHeatingAdvanceValue(placeId).stream()
-                .map(AdvanceMapper::createAdvanceForMonthDTOFromAdvance).toList();
-        return Response.ok().entity(collect).build();
+        List<HotWaterAdvance> hotWaterAdvancesValues = balanceService.getSelfWaterAdvanceValue(placeId);
+        List<HeatingPlaceAndCommunalAreaAdvance> heatingPlaceAndCommunalAreaAdvancesValues = balanceService.getSelfHeatingAdvanceValue(placeId);
+        List<AdvanceForMonthDTO> result = AdvanceMapper.createListOfAdvanceForMonthDTOFromListOfAdvances(hotWaterAdvancesValues, heatingPlaceAndCommunalAreaAdvancesValues);
+        return Response.ok().entity(result).build();
     }
 
     //MOW 7
@@ -95,9 +98,10 @@ public class BalanceEndpoint {
     @GET
     @RolesAllowed({Roles.MANAGER})
     public Response getAdvancesValuesForPlace(@PathParam("placeId") Long placeId) {
-        List<AdvanceForMonthDTO> collect = balanceService.getUserHeatingAdvanceValue(placeId).stream()
-                .map(AdvanceMapper::createAdvanceForMonthDTOFromAdvance).toList();
-        return Response.ok().entity(collect).build();
+        List<HotWaterAdvance> hotWaterAdvancesValues = balanceService.getUserWaterAdvanceValue(placeId);
+        List<HeatingPlaceAndCommunalAreaAdvance> heatingPlaceAndCommunalAreaAdvancesValues = balanceService.getUserHeatingAdvanceValue(placeId);
+        List<AdvanceForMonthDTO> result = AdvanceMapper.createListOfAdvanceForMonthDTOFromListOfAdvances(hotWaterAdvancesValues, heatingPlaceAndCommunalAreaAdvancesValues);
+        return Response.ok().entity(result).build();
     }
 
     //MOW8

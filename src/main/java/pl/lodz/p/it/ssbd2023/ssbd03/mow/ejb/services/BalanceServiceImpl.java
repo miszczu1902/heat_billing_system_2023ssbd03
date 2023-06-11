@@ -13,7 +13,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BalanceFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BuildingFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.HeatingPlaceAndCommunalAreaAdvanceFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
 
 import java.math.BigDecimal;
@@ -80,19 +79,13 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
             throw AppException.createNotOwnerOfPlaceException();
         }
 
-        return balanceFacade.findAllAdvancesForPlace(placeId).stream()
-                .filter(advance -> advance instanceof HotWaterAdvance)
-                .map(advance -> (HotWaterAdvance) advance)
-                .collect(Collectors.toList());
+        return balanceFacade.findAllHotWaterAdvancesForPlace(placeId);
     }
 
     @Override
     @RolesAllowed({Roles.MANAGER})
     public List<HotWaterAdvance> getUserWaterAdvanceValue(Long placeId) {
-        return balanceFacade.findAllAdvancesForPlace(placeId).stream()
-                .filter(advance -> advance instanceof HotWaterAdvance)
-                .map(advance -> (HotWaterAdvance) advance)
-                .collect(Collectors.toList());
+        return balanceFacade.findAllHotWaterAdvancesForPlace(placeId);
     }
 
     @Override
@@ -105,19 +98,13 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
             throw AppException.createNotOwnerOfPlaceException();
         }
 
-        return balanceFacade.findAllAdvancesForPlace(placeId).stream()
-                .filter(advance -> advance instanceof HeatingPlaceAndCommunalAreaAdvance)
-                .map(advance -> (HeatingPlaceAndCommunalAreaAdvance) advance)
-                .collect(Collectors.toList());
+        return balanceFacade.findAllHeatingPlaceAndCommunalAreaAdvancesForPlace(placeId);
     }
 
     @Override
     @RolesAllowed({Roles.MANAGER})
     public List<HeatingPlaceAndCommunalAreaAdvance> getUserHeatingAdvanceValue(Long placeId) {
-        return balanceFacade.findAllAdvancesForPlace(placeId).stream()
-                .filter(advance -> advance instanceof HeatingPlaceAndCommunalAreaAdvance)
-                .map(advance -> (HeatingPlaceAndCommunalAreaAdvance) advance)
-                .collect(Collectors.toList());
+        return balanceFacade.findAllHeatingPlaceAndCommunalAreaAdvancesForPlace(placeId);
     }
 
     @Override

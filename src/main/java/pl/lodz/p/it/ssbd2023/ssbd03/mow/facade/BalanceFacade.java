@@ -10,10 +10,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Advance;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.AnnualBalance;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.MonthPayoff;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,8 +92,15 @@ public class BalanceFacade extends AbstractFacade<AnnualBalance> {
     }
 
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    public List<Advance> findAllAdvancesForPlace(Long placeId) {
-        TypedQuery<Advance> tq = em.createNamedQuery("Advance.findAllAdvancesForPlace", Advance.class);
+    public List<HotWaterAdvance> findAllHotWaterAdvancesForPlace(Long placeId) {
+        TypedQuery<HotWaterAdvance> tq = em.createNamedQuery("Advance.findAllHotWaterAdvancesForPlace", HotWaterAdvance.class);
+        tq.setParameter("placeId", placeId);
+        return tq.getResultList();
+    }
+
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    public List<HeatingPlaceAndCommunalAreaAdvance> findAllHeatingPlaceAndCommunalAreaAdvancesForPlace(Long placeId) {
+        TypedQuery<HeatingPlaceAndCommunalAreaAdvance> tq = em.createNamedQuery("Advance.findAllHeatingPlaceAndCommunalAreaAdvancesForPlace", HeatingPlaceAndCommunalAreaAdvance.class);
         tq.setParameter("placeId", placeId);
         return tq.getResultList();
     }
