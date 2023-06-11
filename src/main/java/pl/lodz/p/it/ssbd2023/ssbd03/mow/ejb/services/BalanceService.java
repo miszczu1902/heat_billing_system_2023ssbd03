@@ -2,10 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services;
 
 import jakarta.ejb.Local;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.CommonManagerLocalInterface;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.AnnualBalance;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatingPlaceAndCommunalAreaAdvance;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterAdvance;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.MonthPayoff;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -23,21 +20,13 @@ public interface BalanceService extends CommonManagerLocalInterface {
 
     List<AnnualBalance> getSelfReports(int pageNumber, int pageSize);
 
-    HotWaterAdvance getSelfWaterAdvanceValue();
+    List<HotWaterAdvance>  getSelfWaterAdvanceValue(Long placeId, Integer year);
 
-    HotWaterAdvance getSelfWaterAdvance();
+    List<HotWaterAdvance>  getUserWaterAdvanceValue(Long placeId, Integer year);
 
-    HotWaterAdvance getUserWaterAdvanceValue();
+    List<HeatingPlaceAndCommunalAreaAdvance>  getSelfHeatingAdvanceValue(Long placeId, Integer year);
 
-    HotWaterAdvance getUserWaterAdvance();
-
-    HeatingPlaceAndCommunalAreaAdvance getSelfHeatingAdvanceValue();
-
-    HeatingPlaceAndCommunalAreaAdvance getSelfHeatingAdvance();
-
-    HeatingPlaceAndCommunalAreaAdvance getUserHeatingAdvanceValue();
-
-    HeatingPlaceAndCommunalAreaAdvance getUserHeatingAdvance();
+    List<HeatingPlaceAndCommunalAreaAdvance>  getUserHeatingAdvanceValue(Long placeId, Integer year);
 
     BigDecimal getUserHeatingBalance();
 

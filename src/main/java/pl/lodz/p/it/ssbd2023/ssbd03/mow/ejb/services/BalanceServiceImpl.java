@@ -10,6 +10,7 @@ import jakarta.security.enterprise.SecurityContext;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BalanceFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BuildingFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
@@ -19,6 +20,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
@@ -70,50 +72,40 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
 
     @Override
     @RolesAllowed({Roles.OWNER})
-    public HotWaterAdvance getSelfWaterAdvanceValue() {
-        throw new UnsupportedOperationException();
+    public List<HotWaterAdvance> getSelfWaterAdvanceValue(Long placeId, Integer year) {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Place place = placeFacade.findPlaceById(placeId);
+
+        if (!place.getOwner().getAccount().getUsername().equals(username)) {
+            throw AppException.createNotOwnerOfPlaceException();
+        }
+
+        return balanceFacade.findAllHotWaterAdvancesForPlace(placeId, year);
+    }
+
+    @Override
+    @RolesAllowed({Roles.MANAGER})
+    public List<HotWaterAdvance> getUserWaterAdvanceValue(Long placeId, Integer year) {
+        return balanceFacade.findAllHotWaterAdvancesForPlace(placeId, year);
     }
 
     @Override
     @RolesAllowed({Roles.OWNER})
-    public HotWaterAdvance getSelfWaterAdvance() {
-        throw new UnsupportedOperationException();
+    public List<HeatingPlaceAndCommunalAreaAdvance> getSelfHeatingAdvanceValue(Long placeId, Integer year) {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Place place = placeFacade.findPlaceById(placeId);
+
+        if (!place.getOwner().getAccount().getUsername().equals(username)) {
+            throw AppException.createNotOwnerOfPlaceException();
+        }
+
+        return balanceFacade.findAllHeatingPlaceAndCommunalAreaAdvancesForPlace(placeId, year);
     }
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public HotWaterAdvance getUserWaterAdvanceValue() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    @RolesAllowed({Roles.MANAGER})
-    public HotWaterAdvance getUserWaterAdvance() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    @RolesAllowed({Roles.OWNER})
-    public HeatingPlaceAndCommunalAreaAdvance getSelfHeatingAdvanceValue() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    @RolesAllowed({Roles.OWNER})
-    public HeatingPlaceAndCommunalAreaAdvance getSelfHeatingAdvance() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    @RolesAllowed({Roles.MANAGER})
-    public HeatingPlaceAndCommunalAreaAdvance getUserHeatingAdvanceValue() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    @RolesAllowed({Roles.MANAGER})
-    public HeatingPlaceAndCommunalAreaAdvance getUserHeatingAdvance() {
-        throw new UnsupportedOperationException();
+    public List<HeatingPlaceAndCommunalAreaAdvance> getUserHeatingAdvanceValue(Long placeId, Integer year) {
+        return balanceFacade.findAllHeatingPlaceAndCommunalAreaAdvancesForPlace(placeId, year);
     }
 
     @Override

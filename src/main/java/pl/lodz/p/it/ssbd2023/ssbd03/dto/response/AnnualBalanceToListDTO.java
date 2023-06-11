@@ -17,8 +17,9 @@ public class AnnualBalanceToListDTO extends AbstractDTO {
     private String streetNumber;
     private String city;
     private String postalCode;
+    private Long placeId;
 
-    public AnnualBalanceToListDTO(Long id, Long version, Short year, Short placeNumber, String firstName, String surname, String street, String streetNumber, String city, String postalCode) {
+    public AnnualBalanceToListDTO(Long id, Long version, Short year, Short placeNumber, String firstName, String surname, String street, String streetNumber, String city, String postalCode, Long placeId) {
         super(id, version);
         this.year = year;
         this.placeNumber = placeNumber;
@@ -28,5 +29,6 @@ public class AnnualBalanceToListDTO extends AbstractDTO {
         this.streetNumber = streetNumber;
         this.city = city;
         this.postalCode = postalCode;
+        this.placeId = placeId;
     }
 }

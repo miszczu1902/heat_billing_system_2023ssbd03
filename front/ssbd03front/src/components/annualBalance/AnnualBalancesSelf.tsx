@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
 import axios from 'axios';
 import {API_URL} from '../../consts';
-import {useNavigate, useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {BalancesFromList} from "../../types/BalancesFromList";
 import RefreshIcon from "../icons/RefreshIcon";
@@ -10,6 +10,7 @@ import RefreshIcon from "../icons/RefreshIcon";
 const AnnualBalancesSelf = () => {
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
+    const location = useLocation();
     const token = 'Bearer ' + localStorage.getItem("token");
     const [reports, setReports] = useState<BalancesFromList[]>([]);
 
@@ -21,7 +22,7 @@ const AnnualBalancesSelf = () => {
         }).then(response => {
             setReports(response.data);
         }).catch(error => {
-            if (error.response.status == 403) navigate('/');
+            if (error.response.status == 403) navigate(location.pathname);
         })
     };
 
@@ -33,6 +34,10 @@ const AnnualBalancesSelf = () => {
         fetchData();
         navigate('/annual-reports/self');
     };
+
+    const goToAnnualBalance = (placeId: number, year: number) => {
+        navigate(`/annual-reports/self/annual-balance/${placeId}/${year}`);
+    }
 
     return (
         <TableContainer component={Paper}>
@@ -65,7 +70,7 @@ const AnnualBalancesSelf = () => {
                 </TableHead>
                 <TableBody>
                     {reports.map((reports) => (
-                        <TableRow key={reports.id}>
+                        <TableRow key={reports.id} onClick={() => goToAnnualBalance(reports.placeId, reports.year)}>
                             <TableCell component='th' scope='row'/>
                             <TableCell>{reports.firstName} {reports.surname}</TableCell>
                             <TableCell>{reports.year}</TableCell>

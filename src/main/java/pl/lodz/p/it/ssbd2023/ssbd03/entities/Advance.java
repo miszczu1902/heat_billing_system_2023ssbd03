@@ -15,6 +15,10 @@ import java.time.LocalDate;
         indexes = {
                 @Index(name = "advance_place_id", columnList = "place_id")
         })
+@NamedQueries({
+        @NamedQuery(name = "Advance.findAllHotWaterAdvancesForPlace", query = "SELECT a FROM HotWaterAdvance a WHERE a.place.id = :placeId AND YEAR(a.date) = :year ORDER BY a.date DESC"),
+        @NamedQuery(name = "Advance.findAllHeatingPlaceAndCommunalAreaAdvancesForPlace", query = "SELECT a FROM HeatingPlaceAndCommunalAreaAdvance a WHERE a.place.id = :placeId AND YEAR(a.date) = :year ORDER BY a.date DESC")
+})
 public abstract class Advance extends AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

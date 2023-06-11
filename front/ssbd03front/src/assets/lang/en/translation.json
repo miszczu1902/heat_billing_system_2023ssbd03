@@ -335,5 +335,11 @@
     "error": "An error occurred while adding a new place",
     "yes": "Yes",
     "no": "No"
+  },
+  "annual_balance" : {
+    "water": "Hot water advance value",
+    "place_heat": "Heating place advance value",
+    "communal_area_heat": "Communal area advance value",
+    "date": "Date"
   }
 }
