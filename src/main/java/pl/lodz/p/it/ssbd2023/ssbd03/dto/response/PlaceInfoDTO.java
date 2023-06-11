@@ -20,12 +20,13 @@ public class PlaceInfoDTO extends AbstractDTO implements Signable {
     private BigDecimal predictedHotWaterConsumption;
     private String firstName;
     private String surname;
+    private String username;
     private String street;
     private String buildingNumber;
     private String city;
     private String postalCode;
 
-    public PlaceInfoDTO(Long id, Long version, String createdBy, Short placeNumber, BigDecimal area, Boolean hotWaterConnection, Boolean centralHeatingConnection, BigDecimal predictedHotWaterConsumption, String firstName, String surname, String street, String buildingNumber, String city, String postalCode) {
+    public PlaceInfoDTO(Long id, Long version, String createdBy, Short placeNumber, BigDecimal area, Boolean hotWaterConnection, Boolean centralHeatingConnection, BigDecimal predictedHotWaterConsumption, String firstName, String surname, String username, String street, String buildingNumber, String city, String postalCode) {
         super(id, version);
         this.createdBy = createdBy;
         this.placeNumber = placeNumber;
@@ -35,6 +36,7 @@ public class PlaceInfoDTO extends AbstractDTO implements Signable {
         this.predictedHotWaterConsumption = predictedHotWaterConsumption;
         this.firstName = firstName;
         this.surname = surname;
+        this.username = username;
         this.street = street;
         this.buildingNumber = buildingNumber;
         this.city = city;
@@ -49,10 +51,9 @@ public class PlaceInfoDTO extends AbstractDTO implements Signable {
                 .concat(getHotWaterConnection().toString())
                 .concat(getCentralHeatingConnection().toString())
                 .concat(getPredictedHotWaterConsumption().toString())
-                .concat(getFirstName())
-                .concat(getSurname())
+                .concat(getUsername())
                 .concat(getStreet())
-                .concat(getBuildingNumber().toString())
+                .concat(getBuildingNumber())
                 .concat(getCity())
                 .concat(getPostalCode());
     }

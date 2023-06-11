@@ -309,6 +309,7 @@
     "predictedHotWaterConsumption" : "Przewidywane zużycie wody",
     "firstName" : "Imię właściciela",
     "surname": "Nazwisko właściciela",
+    "username": "Nazwa właściciela",
     "connected": "Podłączony",
     "disconnected": "Nie podłączony",
     "dialogText": "Formularz dodawania lokalu",
