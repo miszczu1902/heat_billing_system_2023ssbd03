@@ -94,7 +94,6 @@ public class Place extends AbstractEntity implements Serializable, Signable {
     @Override
     public String messageToSign() {
         return getVersion().toString()
-                .concat(getPlaceNumber().toString())
                 .concat(getArea().toString())
                 .concat(getPredictedHotWaterConsumption().toString())
                 .concat(owner.getAccount().getUsername());
