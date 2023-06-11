@@ -8,7 +8,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AdvanceForMonthDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatingPlaceAndCommunalAreaAdvance;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterAdvance;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.BalanceService;
@@ -18,7 +17,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.BalanceMapper;
 
 import java.util.List;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 @Path("/balances")
 @RequestScoped
@@ -88,8 +86,9 @@ public class BalanceEndpoint {
     public Response getSelfAdvancesValues(@PathParam("placeId") Long placeId, @PathParam("year") Integer year) {
         List<HotWaterAdvance> hotWaterAdvancesValues = balanceService.getSelfWaterAdvanceValue(placeId, year);
         List<HeatingPlaceAndCommunalAreaAdvance> heatingPlaceAndCommunalAreaAdvancesValues = balanceService.getSelfHeatingAdvanceValue(placeId, year);
-        List<AdvanceForMonthDTO> result = AdvanceMapper.createListOfAdvanceForMonthDTOFromListOfAdvances(hotWaterAdvancesValues, heatingPlaceAndCommunalAreaAdvancesValues);
-        return Response.ok().entity(result).build();
+        return Response.ok()
+                .entity(AdvanceMapper.createListOfAdvanceForMonthDTOFromListOfAdvances(hotWaterAdvancesValues, heatingPlaceAndCommunalAreaAdvancesValues))
+                .build();
     }
 
     //MOW 7
@@ -100,8 +99,9 @@ public class BalanceEndpoint {
     public Response getAdvancesValuesForPlace(@PathParam("placeId") Long placeId, @PathParam("year") Integer year) {
         List<HotWaterAdvance> hotWaterAdvancesValues = balanceService.getUserWaterAdvanceValue(placeId, year);
         List<HeatingPlaceAndCommunalAreaAdvance> heatingPlaceAndCommunalAreaAdvancesValues = balanceService.getUserHeatingAdvanceValue(placeId, year);
-        List<AdvanceForMonthDTO> result = AdvanceMapper.createListOfAdvanceForMonthDTOFromListOfAdvances(hotWaterAdvancesValues, heatingPlaceAndCommunalAreaAdvancesValues);
-        return Response.ok().entity(result).build();
+        return Response.ok()
+                .entity(AdvanceMapper.createListOfAdvanceForMonthDTOFromListOfAdvances(hotWaterAdvancesValues, heatingPlaceAndCommunalAreaAdvancesValues))
+                .build();
     }
 
     //MOW8

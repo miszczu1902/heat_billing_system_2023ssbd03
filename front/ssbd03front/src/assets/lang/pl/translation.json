@@ -333,5 +333,11 @@
     "enter_predicted_hot_water_consumption_error" : "Wartość musi być w formacie X.XX oraz przed kropką może znajdować się maksymalnie 8 cyfr",
     "enter_predicted_hot_water_consumption_confirm" : "Czy na pewno wprowadziłeś poprawne dane? Tej operacji nie można cofnąć",
     "enter_predicted_hot_water_consumption_failed" : "Wystąpił błąd podczas wprowadzania danych przedwidywanego zużycia ciepłej wody"
+  },
+  "annual_balance" : {
+    "water": "Wartość zaliczki dla ciepłej wody",
+    "place_heat": "Wartość zaliczki dla ogrzania lokalu",
+    "communal_area_heat": "Wartość zaliczki dla ogrzania części wspólnej",
+    "date": "Data"
   }
 }
