@@ -15,6 +15,8 @@ public class BasicFacadeExceptionInterceptor {
             return ictx.proceed();
         } catch (OptimisticLockException ole) {
             throw AppException.createOptimisticLockAppException();
+        } catch (NoResultException nre) {
+            throw AppException.createNoResultException(nre.getCause());
         } catch (PersistenceException | java.sql.SQLException pe) {
             if (pe.getCause() instanceof ConstraintViolationException)
                 throw AppException.createAccountExistsException(pe.getCause());
