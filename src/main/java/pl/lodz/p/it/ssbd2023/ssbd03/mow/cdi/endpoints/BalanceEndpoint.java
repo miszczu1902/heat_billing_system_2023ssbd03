@@ -82,13 +82,13 @@ public class BalanceEndpoint {
     }
 
     //MOW 7
-    @Path("/self/{placeId}/advances-values")
+    @Path("/self/{placeId}/advances-values/{year}")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
     @RolesAllowed({Roles.OWNER})
-    public Response getSelfAdvancesValues(@PathParam("placeId") Long placeId) {
-        List<HotWaterAdvance> hotWaterAdvancesValues = balanceService.getSelfWaterAdvanceValue(placeId);
-        List<HeatingPlaceAndCommunalAreaAdvance> heatingPlaceAndCommunalAreaAdvancesValues = balanceService.getSelfHeatingAdvanceValue(placeId);
+    public Response getSelfAdvancesValues(@PathParam("placeId") Long placeId, @PathParam("year") Integer year) {
+        List<HotWaterAdvance> hotWaterAdvancesValues = balanceService.getSelfWaterAdvanceValue(placeId, year);
+        List<HeatingPlaceAndCommunalAreaAdvance> heatingPlaceAndCommunalAreaAdvancesValues = balanceService.getSelfHeatingAdvanceValue(placeId, year);
         return Response.ok()
                 .entity(AdvanceMapper.createListOfAdvanceForMonthDTOFromListOfAdvances(hotWaterAdvancesValues, heatingPlaceAndCommunalAreaAdvancesValues))
                 .build();
