@@ -32,7 +32,6 @@ import Building from "../components/building/Building";
 import PlacesList from "../components/places/PlacesList";
 import PlaceInfo from "../components/places/PlaceInfo";
 import AnnualBalance from "../components/annualBalance/AnnualBalance";
-import AdvancesList from "../components/advances/AdvancesList";
 
 interface PrivateRouteProps {
     component: React.ComponentType<any>;
@@ -173,12 +172,8 @@ const router = createBrowserRouter([
                         element: <PrivateRoute component={AnnualBalances} accessLevels={[MANAGER]}/>
                     },
                     {
-                        path: '/buildings/:buildingId/annual-balance/:annualBalanceId',
+                        path: '/buildings/:buildingId/annual-balance/:placeId/:year',
                         element: <PrivateRoute component={AnnualBalance} accessLevels={[MANAGER, OWNER]}/>
-                    },
-                    {
-                        path: '/buildings/:buildingId/annual-balance/:annualBalanceId/:placeId/:year',
-                        element: <PrivateRoute component={AdvancesList} accessLevels={[MANAGER, OWNER]}/>
                     },
                     {
                         path: '/buildings/building/:buildingId',

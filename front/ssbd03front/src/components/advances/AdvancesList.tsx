@@ -17,7 +17,6 @@ const AdvancesList = () => {
     const placeId = params.placeId;
     const year = params.year;
     const buildingId = params.year;
-    const annualBalanceId = params.annualBalanceId;
 
     const fetchData = async () => {
         const URL = role === MANAGER ? `${API_URL}/balances/${placeId}/advances-values/${year}` : `${API_URL}/balances/self/${placeId}/advances-values/${year}`
@@ -38,7 +37,7 @@ const AdvancesList = () => {
 
     const handleClick = () => {
         fetchData();
-        navigate(`/buildings/${buildingId}/annual-balance/${annualBalanceId}/${placeId}/${year}`);
+        navigate(`/buildings/${buildingId}/annual-balance/${placeId}/${year}`);
     };
 
     return (

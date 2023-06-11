@@ -29,38 +29,28 @@ const AnnualBalances = () => {
         fetchData();
     }, []);
 
+    const goToAnnualBalance = (placeId: number, year: number) => {
+        navigate(`/buildings/${buildingId}/annual-balance/${placeId}/${year}`);
+    }
+
     return (
         <TableContainer component={Paper}>
             <Table aria-label='simple table'>
                 <TableHead>
                     <TableRow>
                         <TableCell/>
-                        <TableCell>
-                            {t('balances.personal_data')}
-                        </TableCell>
-                        <TableCell>
-                            {t('balances.year')}
-                        </TableCell>
-                        <TableCell>
-                            {t('balances.street')}
-                        </TableCell>
-                        <TableCell>
-                            {t('balances.building_number')}
-                        </TableCell>
-                        <TableCell>
-                            {t('balances.place_number')}
-                        </TableCell>
-                        <TableCell>
-                            {t('balances.city')}
-                        </TableCell>
-                        <TableCell>
-                            {t('balances.postal_code')}
-                        </TableCell>
+                        <TableCell>{t('balances.personal_data')}</TableCell>
+                        <TableCell>{t('balances.year')}</TableCell>
+                        <TableCell>{t('balances.street')}</TableCell>
+                        <TableCell>{t('balances.building_number')}</TableCell>
+                        <TableCell>{t('balances.place_number')}</TableCell>
+                        <TableCell>{t('balances.city')}</TableCell>
+                        <TableCell>{t('balances.postal_code')}</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {reports.map((reports) => (
-                        <TableRow key={reports.id}>
+                        <TableRow key={reports.id} onClick={() => goToAnnualBalance(reports.placeId, reports.year)}>
                             <TableCell component='th' scope='row'/>
                             <TableCell>{reports.firstName} {reports.surname}</TableCell>
                             <TableCell>{reports.year}</TableCell>
