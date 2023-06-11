@@ -44,7 +44,6 @@ const NavbarPanel = () => {
     const token = "Bearer " + localStorage.getItem("token");
 
     useEffect(() => {
-
         if (localStorage.getItem("token") != null) {
             const dataToken = decode(token);
             const currentTimestamp = Math.floor(new Date().getTime() / 1000);
