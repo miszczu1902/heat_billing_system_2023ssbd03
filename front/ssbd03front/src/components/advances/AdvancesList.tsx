@@ -38,7 +38,6 @@ const AdvancesList = () => {
 
     const handleClick = () => {
         fetchData();
-        console.log(location.pathname);
         if (location.pathname.includes('places')) {
             navigate(`/places/place/${placeId}`);
         } else {
