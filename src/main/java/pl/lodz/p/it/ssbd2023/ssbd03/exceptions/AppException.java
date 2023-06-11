@@ -81,9 +81,6 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ADVANCE_CHANGE_FACTOR_WAS_INSERTED = "exception.advance_factor.factor_was_inserted";
     protected final static String ERROR_HOT_WATER_ENTRY_NOT_INSERTED = "exception.hot_water_entry.not_inserted";
     protected final static String ERROR_HOT_WATER_ENTRY_NOT_MODIFIED = "exception.hot_water_entry.not_modified";
-    protected final static String ERROR_CAN_NOT_MAKE_YOURSELF_OWNER = "exception.place.can_not_make_yourself_owner";
-    protected final static String ERROR_NO_RESULT = "exception.database.no_result";
-    protected final static String USER_IS_ALREADY_OWNER_OF_THIS_PLACE = "exception.place.user_is_already_owner_of_this_place";
 
     @Getter
     private Throwable cause;
@@ -304,12 +301,6 @@ public static UserIsAlreadyOwnerOfThisPlaceException userIsAlreadyOwnerOfThisPla
 
     public static HotWaterEntryCouldNotBeModifiedException createHotWaterEntryCouldNotBeModifiedException() {
         return new HotWaterEntryCouldNotBeModifiedException(ERROR_HOT_WATER_ENTRY_NOT_MODIFIED, Response.Status.CONFLICT);
-    }
-    public static CanNotMakeYourselfOwnerOfThePlaceException canNotMakeYourselfOwnerOfThePlaceException() {
-        return new CanNotMakeYourselfOwnerOfThePlaceException(ERROR_CAN_NOT_MAKE_YOURSELF_OWNER, Response.Status.FORBIDDEN);
-    }
-    public static NoResultException noResultException() {
-        return new NoResultException(ERROR_NO_RESULT, Response.Status.NOT_FOUND);
     }
 }
 
