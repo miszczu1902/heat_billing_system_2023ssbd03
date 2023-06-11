@@ -7,7 +7,7 @@ import {useTranslation} from "react-i18next";
 import {BalancesFromList} from "../../types/BalancesFromList";
 import RefreshIcon from "../icons/RefreshIcon";
 
-const AnnualBalances = () => {
+const AnnualBalancesSelf = () => {
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
     const token = 'Bearer ' + localStorage.getItem("token");
@@ -83,4 +83,4 @@ const AnnualBalances = () => {
     );
 }
 
-export default AnnualBalances;
+export default AnnualBalancesSelf;

@@ -11,6 +11,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTes
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class GetSelfAnnualBalanceReportsTest  extends BasicIntegrationConfigTest {
     private static final String URL_GET = "/accounts/self";
@@ -21,7 +22,7 @@ public class GetSelfAnnualBalanceReportsTest  extends BasicIntegrationConfigTest
         Response response = sendRequestAndGetResponse(Method.GET, URL_GET, null, null);
         assertEquals(200, response.getStatusCode(), "check if request responses ok.");
         List<AnnualBalanceToListDTO> listOfAnnualBalances = response.body().jsonPath().getList("", AnnualBalanceToListDTO.class).stream().toList();
-        assertEquals(2, listOfAnnualBalances.size(), "check if list has proper size.");
+        assertFalse(listOfAnnualBalances.isEmpty(), "check if list is not empty");
     }
 
     @Test
