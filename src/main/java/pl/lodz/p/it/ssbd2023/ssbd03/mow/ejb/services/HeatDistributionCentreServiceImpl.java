@@ -52,9 +52,6 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @Inject
     private ManagerFacade managerFacade;
 
-    @Inject
-    private ManagerFacade managerFacade;
-
     @Override
     @RolesAllowed({Roles.MANAGER})
     public Void getHeatDistributionCentreParameters() {
