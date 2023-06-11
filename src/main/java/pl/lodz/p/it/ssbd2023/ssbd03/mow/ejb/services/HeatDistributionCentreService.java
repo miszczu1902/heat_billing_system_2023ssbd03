@@ -3,6 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services;
 import jakarta.ejb.Local;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.CommonManagerLocalInterface;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatDistributionCentre;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatingPlaceAndCommunalAreaAdvance;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterEntry;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 
@@ -13,7 +14,7 @@ public interface HeatDistributionCentreService extends CommonManagerLocalInterfa
 
     Void getHeatDistributionCentreParameters();
 
-    void insertAdvanceChangeFactor(BigDecimal heatingAreaFactorValue, Long buildingId);
+    void insertAdvanceChangeFactor(BigDecimal heatingAreaFactorValue, Long buildingId, String etag, Long version);
 
     void insertConsumption(BigDecimal consumptionValue, Long placeId);
 
@@ -24,4 +25,6 @@ public interface HeatDistributionCentreService extends CommonManagerLocalInterfa
     HeatDistributionCentre getHeatDistributionCentre(Long id);
 
     HotWaterEntry getHotWaterEntry(Long hotWaterEntryId);
+
+    HeatingPlaceAndCommunalAreaAdvance getActualAdvanceChangeFactor(Long buildingId);
 }

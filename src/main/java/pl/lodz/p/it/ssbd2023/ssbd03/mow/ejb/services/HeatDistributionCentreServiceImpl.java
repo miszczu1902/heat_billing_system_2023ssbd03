@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -57,7 +58,14 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public void insertAdvanceChangeFactor(BigDecimal heatingAreaFactorValue, Long buildingId) {
+    public void insertAdvanceChangeFactor(BigDecimal heatingAreaFactorValue, Long buildingId, String etag, Long version) {
+        HeatingPlaceAndCommunalAreaAdvance actualAdvanceChangeFactor = getActualAdvanceChangeFactor(buildingId);
+        if (!etag.equals(messageSigner.sign(actualAdvanceChangeFactor))) {
+            throw AppException.createVerifierException();
+        }
+        if (!actualAdvanceChangeFactor.getVersion().equals(version)) {
+            throw AppException.createOptimisticLockAppException();
+        }
         LocalDate date = LocalDate.now();
         if (date.getDayOfMonth() != 1) { // sprawdzamy czy mam pierszy dzień w danym miesiącu na nowy kwartał
             throw AppException.createAdvanceChangeFactorNotModifiedException();
@@ -76,6 +84,12 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
         } else {
             throw AppException.createAdvanceChangeFactorWasInsertedException();
         }
+    }
+
+    @Override
+    @RolesAllowed({Roles.MANAGER})
+    public HeatingPlaceAndCommunalAreaAdvance getActualAdvanceChangeFactor(Long buildingId) {
+        return heatingPlaceAndCommunalAreaAdvanceFacade.findTheNewestAdvanceChangeFactor(buildingId);
     }
 
     @Override
