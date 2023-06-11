@@ -48,8 +48,6 @@ public class PlaceInfoDTO extends AbstractDTO implements Signable {
         return getVersion().toString()
                 .concat(getPlaceNumber().toString())
                 .concat(getArea().toString())
-                .concat(getHotWaterConnection().toString())
-                .concat(getCentralHeatingConnection().toString())
                 .concat(getPredictedHotWaterConsumption().toString())
                 .concat(getUsername());
     }
