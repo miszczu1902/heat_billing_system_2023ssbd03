@@ -11,6 +11,9 @@ import {useParams} from "react-router-dom";
 import EnterPredictedHotWaterConsumption from "../place/EnterPredictedHotWaterConsumption";
 import DoorIcon from "../icons/DoorIcon";
 import {Account} from "../../types/account";
+import EditPlace from "../place/EditPlace";
+import IconCheckboxMarked from "../icons/IconCheckboxMarked";
+import IconCloseBox from "../icons/IconCloseBox";
 
 const PlaceInfo = () => {
     const {t} = useTranslation();
@@ -19,6 +22,7 @@ const PlaceInfo = () => {
     const [version, setVersion] = useState("");
     const placeId = useParams().placeId;
     const [authorizationErrorOpen, setAuthorizationErrorOpen] = useState(false);
+    const [role, setRole] = useState(localStorage.getItem("role"));
     const [confirmOpen, setConfirmOpen] = React.useState(false);
 
     useEffect(() => {
@@ -62,6 +66,9 @@ const PlaceInfo = () => {
                         </Typography>
                         <DoorIcon />
                     </Box>
+                    <Box sx={{ my: 30, display: 'flex', flexDirection: 'column', alignItems: 'left', margin: '2vh'}}>
+                        {role === "MANAGER"? <EditPlace/> : <></>} 
+                    </Box>
                     <Box sx={{ my: 30, display: 'flex', flexDirection: 'column', alignItems: 'left', margin: '2vh' }}>
                         {place !== null && (
                             <>
@@ -98,12 +105,12 @@ const PlaceInfo = () => {
                                 </Paper>
                                 <Paper elevation={3} style={{ marginTop: '0.5vh', position: 'relative', overflow: 'auto' }}>
                                     <Typography sx={{ marginLeft: '2vw', marginRight: '2vw', padding: '1vh', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} variant="h5">
-                                        <b>{t('place.hotWaterConnection')}:</b> {place.hotWaterConnection ? t('place.connected') : t('place.disconnected')}
+                                        <b>{t('place.hotWaterConnection')}:</b> {place.hotWaterConnection ? <IconCheckboxMarked/> : <IconCloseBox/>}
                                     </Typography>
                                 </Paper>
                                 <Paper elevation={3} style={{ marginTop: '0.5vh', position: 'relative', overflow: 'auto' }}>
                                     <Typography sx={{ marginLeft: '2vw', marginRight: '2vw', padding: '1vh', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} variant="h5">
-                                        <b>{t('place.centralHeatingConnection')}:</b> {place.centralHeatingConnection ? t('place.connected') : t('place.disconnected')}
+                                        <b>{t('place.centralHeatingConnection')}:</b> {place.centralHeatingConnection ? <IconCheckboxMarked/> : <IconCloseBox/>}
                                     </Typography>
                                 </Paper>
                                 <Paper elevation={3} style={{ marginTop: '0.5vh', position: 'relative', overflow: 'auto' }}>
