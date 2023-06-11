@@ -1,5 +1,5 @@
 import {useTranslation} from "react-i18next";
-import {useNavigate, useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import {API_URL, MANAGER} from "../../consts";
 import {Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
@@ -8,6 +8,7 @@ import {AdvanceForMonthInYear} from "../../types/AdvanceForMonthInYear";
 import axios from "axios";
 
 const AdvancesList = () => {
+    const location = useLocation();
     const params = useParams();
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
@@ -16,10 +17,11 @@ const AdvancesList = () => {
     const role = localStorage.getItem("role");
     const placeId = params.placeId;
     const year = params.year;
-    const URL = role === MANAGER ? `${API_URL}/balances/${placeId}/advances-values/${year}` : `${API_URL}/balances/self/${placeId}/advances-values`
+    const buildingId = params.year;
+    const URL = role === MANAGER ? `${API_URL}/balances/${placeId}/advances-values/${year}` : `${API_URL}/balances/self/${placeId}/advances-values/${year}`
 
     const fetchData = async () => {
-            axios.get(URL, {
+        axios.get(URL, {
             headers: {
                 Authorization: token
             }
@@ -32,11 +34,11 @@ const AdvancesList = () => {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [URL]);
 
     const handleClick = () => {
         fetchData();
-        navigate(URL);
+        navigate(`/buildings/${buildingId}/annual-balance/${placeId}/${year}`);
     };
 
     return (
@@ -65,7 +67,8 @@ const AdvancesList = () => {
                             <TableCell>{advances.heatingCommunalAreaAdvanceValue}</TableCell>
                         </TableRow>
                     ))}
-                    <TableRow><Button className="landing-page-button" onClick={handleClick}><RefreshIcon/></Button></TableRow>
+                    <TableRow><Button className="landing-page-button"
+                                      onClick={handleClick}><RefreshIcon/></Button></TableRow>
                 </TableBody>
             </Table>
         </TableContainer>

@@ -1,10 +1,7 @@
 import AdvancesList from "../advances/AdvancesList";
-import {MANAGER} from "../../consts";
 import ChangeAdvanceFactor from "../advanceChangeFactor/ChangeAdvanceFactor";
 
 const AnnualBalance = () => {
-    const role = localStorage.getItem("role");
-
-    return (<div>Tu bedzie raport{ role === MANAGER && <div><ChangeAdvanceFactor/><AdvancesList/></div>}</div>);
+    return (<div>Tu bedzie raport <ChangeAdvanceFactor/><AdvancesList/></div>);
 }
 export default AnnualBalance;
