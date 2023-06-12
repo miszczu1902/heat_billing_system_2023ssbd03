@@ -27,10 +27,14 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(name = "Place.findPlacesByBuildingId", query = "SELECT k FROM Place k WHERE k.building.id = :id"),
         @NamedQuery(name = "Place.findById", query = "SELECT k FROM Place k WHERE k.id = :id"),
+        @NamedQuery(name = "Place.findPlacesByOwner", query = "SELECT k FROM Place k WHERE k.owner.id = :id"),
+        @NamedQuery(name = "Place.findPlaceByUsernameAndCheckIfHeIsOwnerOfPlace",
+                query = "SELECT k FROM Place k WHERE k.id = :placeId AND k.owner.account.username = :username"),
         @NamedQuery(name = "Place.findAllPlaces", query = "SELECT k FROM Place k"),
-        @NamedQuery(name = "Place.findPlacesByOwner", query = "SELECT k FROM Place k WHERE k.owner.id = :id")
+        @NamedQuery(name = "Place.findAllPlacesByBuildingIdAndNewerThanDate",
+                query = "SELECT k FROM Place k WHERE k.building.id = :buildingId AND k.creationDateTime >= :date"),
 })
-public class Place extends AbstractEntity implements Signable {
+public class Place extends AbstractEntity implements Serializable, Signable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -66,7 +70,8 @@ public class Place extends AbstractEntity implements Signable {
     private Building building;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id", updatable = false, referencedColumnName = "id")
+    @Setter
+    @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private Owner owner;
 
     @OneToMany(mappedBy = "place")
@@ -92,12 +97,8 @@ public class Place extends AbstractEntity implements Signable {
     @Override
     public String messageToSign() {
         return getVersion().toString()
-                .concat(getPlaceNumber().toString())
                 .concat(getArea().toString())
-                .concat(getHotWaterConnection().toString())
-                .concat(getCentralHeatingConnection().toString())
                 .concat(getPredictedHotWaterConsumption().toString())
-                .concat(owner.getAccount().getPersonalData().getFirstName())
-                .concat(owner.getAccount().getPersonalData().getSurname());
+                .concat(owner.getAccount().getUsername());
     }
 }

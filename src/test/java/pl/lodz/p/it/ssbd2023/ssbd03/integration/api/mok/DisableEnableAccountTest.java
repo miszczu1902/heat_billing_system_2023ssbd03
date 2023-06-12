@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.integration.api;
+package pl.lodz.p.it.ssbd2023.ssbd03.integration.api.mok;
 
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
@@ -14,36 +14,14 @@ import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTes
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Testcontainers
-public class EnableAccountTest extends BasicIntegrationConfigTest {
-
+public class DisableEnableAccountTest extends BasicIntegrationConfigTest {
     @Before
     public void initialize() {
         auth(new LoginDTO("johndoe", "Password$123"));
     }
 
     @Test
-    public void shouldAdminEnableGivenUserAccount() {
-        Response getUserResponse = sendRequestAndGetResponse(Method.GET,
-                "/accounts/janekowalski",
-                null,
-                ContentType.JSON);
-
-        assertEquals(200, getUserResponse.getStatusCode());
-
-        JsonPath jsonPath = new JsonPath(getUserResponse.getBody().asString());
-        int version = jsonPath.getInt("version");
-        VersionDTO versionDTO = new VersionDTO(version);
-
-        Response enableUser = sendRequestAndGetResponse(Method.PATCH,
-                "/accounts/janekowalski/enable",
-                versionDTO,
-                ContentType.JSON);
-
-        assertEquals(204, enableUser.getStatusCode());
-    }
-
-    @Test
-    public void shouldNotAdminEnableSelfAccount() {
+    public void shouldNotAdminDisableSelfAccount() {
         Response getUserResponse = sendRequestAndGetResponse(Method.GET,
                 "/accounts/johndoe",
                 null,
@@ -56,7 +34,7 @@ public class EnableAccountTest extends BasicIntegrationConfigTest {
         VersionDTO versionDTO = new VersionDTO(version);
 
         Response enableUser = sendRequestAndGetResponse(Method.PATCH,
-                "/accounts/johndoe/enable",
+                "/accounts/johndoe/disable",
                 versionDTO,
                 ContentType.JSON);
 
@@ -65,7 +43,7 @@ public class EnableAccountTest extends BasicIntegrationConfigTest {
     }
 
     @Test
-    public void shouldNotManagerEnableSelfAccount() {
+    public void shouldNotManagerDisableSelfAccount() {
         auth(new LoginDTO("janekowalski", "Password$123"));
 
         Response getUserResponse = sendRequestAndGetResponse(Method.GET,
@@ -80,7 +58,7 @@ public class EnableAccountTest extends BasicIntegrationConfigTest {
         VersionDTO versionDTO = new VersionDTO(version);
 
         Response enableUser = sendRequestAndGetResponse(Method.PATCH,
-                "/accounts/janekowalski/enable",
+                "/accounts/janekowalski/disable",
                 versionDTO,
                 ContentType.JSON);
 
@@ -89,7 +67,7 @@ public class EnableAccountTest extends BasicIntegrationConfigTest {
     }
 
     @Test
-    public void shouldNotManagerEnableAdminAccount() {
+    public void shouldNotManagerDisableAdminAccount() {
         auth(new LoginDTO("janekowalski", "Password$123"));
 
         Response getUserResponse = sendRequestAndGetResponse(Method.GET,
@@ -104,7 +82,7 @@ public class EnableAccountTest extends BasicIntegrationConfigTest {
         VersionDTO versionDTO = new VersionDTO(version);
 
         Response enableUser = sendRequestAndGetResponse(Method.PATCH,
-                "/accounts/johndoe/enable",
+                "/accounts/johndoe/disable",
                 versionDTO,
                 ContentType.JSON);
 
@@ -114,7 +92,7 @@ public class EnableAccountTest extends BasicIntegrationConfigTest {
 
 
     @Test
-    public void shouldNotEnableWhenEtagNotMatch() {
+    public void shouldNotDisableWhenEtagNotMatch() {
         Response getUserResponse = sendRequestAndGetResponse(Method.GET,
                 "/accounts/janekowalski",
                 null,
@@ -127,11 +105,10 @@ public class EnableAccountTest extends BasicIntegrationConfigTest {
         VersionDTO versionDTO = new VersionDTO(version + 1);
 
         Response enableUser = sendRequestAndGetResponse(Method.PATCH,
-                "/accounts/janekowalski/enable",
+                "/accounts/janekowalski/disable",
                 versionDTO,
                 ContentType.JSON);
 
         assertEquals(409, enableUser.getStatusCode());
     }
-
 }

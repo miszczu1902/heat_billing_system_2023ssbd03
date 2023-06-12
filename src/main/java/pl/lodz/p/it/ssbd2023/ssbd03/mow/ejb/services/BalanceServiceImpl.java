@@ -6,16 +6,21 @@ import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.security.enterprise.SecurityContext;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BalanceFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BuildingFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +37,9 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
 
     @Inject
     private PlaceFacade placeFacade;
+
+    @Inject
+    private SecurityContext securityContext;
 
     @Override
     @RolesAllowed({Roles.GUEST, Roles.MANAGER, Roles.OWNER})
@@ -59,56 +67,47 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
 
     @Override
     @RolesAllowed({Roles.OWNER})
-    public AnnualBalance getSelfReports() {
-        throw new UnsupportedOperationException();
+    public List<AnnualBalance> getSelfReports(int pageNumber, int pageSize) {
+        final String username = securityContext.getCallerPrincipal().getName();
+        return balanceFacade.getListOfAnnualBalancesForOwner(pageNumber, pageSize, username);
     }
 
     @Override
     @RolesAllowed({Roles.OWNER})
-    public HotWaterAdvance getSelfWaterAdvanceValue() {
-        throw new UnsupportedOperationException();
+    public List<HotWaterAdvance> getSelfWaterAdvanceValue(Long placeId, Integer year) {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Place place = placeFacade.findPlaceById(placeId);
+
+        if (!place.getOwner().getAccount().getUsername().equals(username)) {
+            throw AppException.createNotOwnerOfPlaceException();
+        }
+
+        return balanceFacade.findAllHotWaterAdvancesForPlace(placeId, year);
+    }
+
+    @Override
+    @RolesAllowed({Roles.MANAGER})
+    public List<HotWaterAdvance> getUserWaterAdvanceValue(Long placeId, Integer year) {
+        return balanceFacade.findAllHotWaterAdvancesForPlace(placeId, year);
     }
 
     @Override
     @RolesAllowed({Roles.OWNER})
-    public HotWaterAdvance getSelfWaterAdvance() {
-        throw new UnsupportedOperationException();
+    public List<HeatingPlaceAndCommunalAreaAdvance> getSelfHeatingAdvanceValue(Long placeId, Integer year) {
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Place place = placeFacade.findPlaceById(placeId);
+
+        if (!place.getOwner().getAccount().getUsername().equals(username)) {
+            throw AppException.createNotOwnerOfPlaceException();
+        }
+
+        return balanceFacade.findAllHeatingPlaceAndCommunalAreaAdvancesForPlace(placeId, year);
     }
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public HotWaterAdvance getUserWaterAdvanceValue() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    @RolesAllowed({Roles.MANAGER})
-    public HotWaterAdvance getUserWaterAdvance() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    @RolesAllowed({Roles.OWNER})
-    public HeatingPlaceAndCommunalAreaAdvance getSelfHeatingAdvanceValue() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    @RolesAllowed({Roles.OWNER})
-    public HeatingPlaceAndCommunalAreaAdvance getSelfHeatingAdvance() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    @RolesAllowed({Roles.MANAGER})
-    public HeatingPlaceAndCommunalAreaAdvance getUserHeatingAdvanceValue() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    @RolesAllowed({Roles.MANAGER})
-    public HeatingPlaceAndCommunalAreaAdvance getUserHeatingAdvance() {
-        throw new UnsupportedOperationException();
+    public List<HeatingPlaceAndCommunalAreaAdvance> getUserHeatingAdvanceValue(Long placeId, Integer year) {
+        return balanceFacade.findAllHeatingPlaceAndCommunalAreaAdvancesForPlace(placeId, year);
     }
 
     @Override
@@ -155,12 +154,24 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
                             && monthPayoff.getPayoffDate().getMonth() == month).findFirst();
 
             monthPayoffForThisYearOptional.ifPresent(monthPayoffForThisYear -> {
-                final BigDecimal hotWaterCost = monthPayoffForThisYear.getHotWaterConsumption()
-                        .multiply(monthPayoffForThisYear.getWaterHeatingUnitCost());
+                final LocalDateTime firstDayOfPreviousMonth = LocalDateTime.now(TIME_ZONE).minusMonths(1).with(TemporalAdjusters
+                        .firstDayOfMonth()).truncatedTo(ChronoUnit.DAYS);
+                final List<Place> newPlacesList = placeFacade.findAllPlacesByBuildingIdAndNewerThanDate(
+                       place.getBuilding().getId(), firstDayOfPreviousMonth);
+                BigDecimal communalAreaInLastMonth = place.getBuilding().getCommunalAreaAggregate();
+                if (!newPlacesList.isEmpty()) {
+                    final BigDecimal totalAreaOfNewPlaces = newPlacesList.stream()
+                            .map(Place::getArea)
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                    communalAreaInLastMonth = communalAreaInLastMonth.add(totalAreaOfNewPlaces);
+                }
+
+                final BigDecimal heatingCommunalAreaCost = monthPayoffForThisYear.getCentralHeatingUnitCost()
+                        .multiply(communalAreaInLastMonth);
                 final BigDecimal heatingPlaceCost = monthPayoffForThisYear.getCentralHeatingUnitCost()
                         .multiply(place.getArea());
-                final BigDecimal heatingCommunalAreaCost = monthPayoffForThisYear.getCentralHeatingUnitCost()
-                        .multiply(place.getBuilding().getCommunalAreaAggregate());
+                final BigDecimal hotWaterCost = monthPayoffForThisYear.getHotWaterConsumption()
+                        .multiply(monthPayoffForThisYear.getWaterHeatingUnitCost());
 
                 annualBalance.setTotalHotWaterCost(annualBalance.getTotalHotWaterCost().add(hotWaterCost));
                 annualBalance.setTotalHeatingPlaceCost(annualBalance.getTotalHeatingPlaceCost().add(heatingPlaceCost));

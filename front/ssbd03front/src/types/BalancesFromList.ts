@@ -8,4 +8,5 @@ export interface BalancesFromList {
     year: number;
     city: String;
     postalCode: String;
+    placeId: number;
 }

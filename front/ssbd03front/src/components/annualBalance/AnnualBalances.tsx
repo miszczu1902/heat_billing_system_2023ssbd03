@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
+import {Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
 import axios from 'axios';
 import {API_URL} from '../../consts';
 import {useNavigate, useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import {BalancesFromList} from "../../types/BalancesFromList";
+import RefreshIcon from "../icons/RefreshIcon";
 
 const AnnualBalances = () => {
     const {t, i18n} = useTranslation();
@@ -25,9 +26,18 @@ const AnnualBalances = () => {
         })
     };
 
+    const handleClick = () => {
+        fetchData();
+        navigate(`/buildings/${buildingId}`);
+    };
+
     useEffect(() => {
         fetchData();
     }, []);
+
+    const goToAnnualBalance = (placeId: number, year: number) => {
+        navigate(`/buildings/${buildingId}/annual-balance/${placeId}/${year}`);
+    }
 
     return (
         <TableContainer component={Paper}>
@@ -35,32 +45,18 @@ const AnnualBalances = () => {
                 <TableHead>
                     <TableRow>
                         <TableCell/>
-                        <TableCell>
-                            {t('balances.personal_data')}
-                        </TableCell>
-                        <TableCell>
-                            {t('balances.year')}
-                        </TableCell>
-                        <TableCell>
-                            {t('balances.street')}
-                        </TableCell>
-                        <TableCell>
-                            {t('balances.building_number')}
-                        </TableCell>
-                        <TableCell>
-                            {t('balances.place_number')}
-                        </TableCell>
-                        <TableCell>
-                            {t('balances.city')}
-                        </TableCell>
-                        <TableCell>
-                            {t('balances.postal_code')}
-                        </TableCell>
+                        <TableCell>{t('balances.personal_data')}</TableCell>
+                        <TableCell>{t('balances.year')}</TableCell>
+                        <TableCell>{t('balances.street')}</TableCell>
+                        <TableCell>{t('balances.building_number')}</TableCell>
+                        <TableCell>{t('balances.place_number')}</TableCell>
+                        <TableCell>{t('balances.city')}</TableCell>
+                        <TableCell>{t('balances.postal_code')}</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {reports.map((reports) => (
-                        <TableRow key={reports.id}>
+                        <TableRow key={reports.id} onClick={() => goToAnnualBalance(reports.placeId, reports.year)}>
                             <TableCell component='th' scope='row'/>
                             <TableCell>{reports.firstName} {reports.surname}</TableCell>
                             <TableCell>{reports.year}</TableCell>
@@ -71,6 +67,8 @@ const AnnualBalances = () => {
                             <TableCell>{reports.postalCode}</TableCell>
                         </TableRow>
                     ))}
+                    <TableRow><Button className="landing-page-button"
+                                      onClick={handleClick}><RefreshIcon/></Button></TableRow>
                 </TableBody>
             </Table>
         </TableContainer>

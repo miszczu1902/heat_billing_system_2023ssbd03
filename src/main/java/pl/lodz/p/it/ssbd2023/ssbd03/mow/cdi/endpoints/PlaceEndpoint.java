@@ -15,12 +15,17 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.EnterPredictedHotWaterConsumptionDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyPlaceOwnerDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyPlaceOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyPlaceDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.PlaceInfoDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.PlaceService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.EtagValidator;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.EtagValidator;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.PlaceMapper;
 
@@ -58,16 +63,41 @@ public class PlaceEndpoint {
 
     //MOW 20
     @PATCH
+    @EtagValidator
     @Path("/owner/{placeId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.MANAGER)
-    public Response modifyPlaceOwner(@NotBlank @PathParam("placeId") String placeId) {
-        placeService.modifyPlaceOwner();
-        return Response.status(200).build();
+    public Response modifyPlaceOwner(@PathParam("placeId") Long placeId, @NotNull @Valid ModifyPlaceOwnerDTO modifyPlaceOwnerDTO, @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
+
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                placeService.modifyPlaceOwner(placeId, modifyPlaceOwnerDTO.getUsername(), etag, modifyPlaceOwnerDTO.getVersion());
+                rollbackTX = placeService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return Response.status(Response.Status.NO_CONTENT).build();
+            } catch (TransactionRollbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
+        placeService.modifyPlaceOwner(placeId, modifyPlaceOwnerDTO.getUsername(), etag, modifyPlaceOwnerDTO.getVersion());
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
     //MOW 21
     @PATCH
+    @EtagValidator
     @Path("/place/{placeId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.MANAGER)
@@ -120,7 +150,7 @@ public class PlaceEndpoint {
         final String etag = request.getHeader("If-Match");
 
         final String user = request.getUserPrincipal().getName();
-        final boolean userRole = request.isUserInRole("OWNER");
+        final boolean userRole = request.isUserInRole(Roles.OWNER);
 
         int retryTXCounter = txRetries; //limit prób ponowienia transakcji
         boolean rollbackTX = false;

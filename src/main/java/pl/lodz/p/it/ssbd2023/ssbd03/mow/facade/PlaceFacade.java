@@ -6,6 +6,7 @@ import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
@@ -14,6 +15,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -98,5 +100,14 @@ public class PlaceFacade extends AbstractFacade<Place> {
 
         return Optional.of(tq.getResultList()).orElse(Collections.emptyList());
 
+    }
+
+    @PermitAll
+    public List<Place> findAllPlacesByBuildingIdAndNewerThanDate(Long buildingId, LocalDateTime date) {
+        TypedQuery<Place> tq = em.createNamedQuery("Place.findAllPlacesByBuildingIdAndNewerThanDate", Place.class);
+        tq.setParameter("buildingId", buildingId);
+        tq.setParameter("date", date);
+
+        return Optional.of(tq.getResultList()).orElse(Collections.emptyList());
     }
 }

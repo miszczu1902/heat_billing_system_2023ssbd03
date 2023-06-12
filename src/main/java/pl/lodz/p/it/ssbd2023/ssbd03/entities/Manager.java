@@ -20,7 +20,9 @@ import java.io.Serializable;
         }
 )
 @NamedQueries({
-        @NamedQuery(name = "Manager.findByLicenseAndWithoutUsername", query = "SELECT d FROM Manager d WHERE d.license = :license AND d.account.username != :username")
+        @NamedQuery(name = "Manager.findByUsername", query = "SELECT d FROM Manager d WHERE d.account.username = :username"),
+        @NamedQuery(name = "Manager.findByLicenseAndWithoutUsername",
+                query = "SELECT d FROM Manager d WHERE d.license = :license AND d.account.username != :username")
 })
 public class Manager extends AccessLevelMapping implements Serializable, Signable {
     @Column(name = "license", nullable = false, length = 20)

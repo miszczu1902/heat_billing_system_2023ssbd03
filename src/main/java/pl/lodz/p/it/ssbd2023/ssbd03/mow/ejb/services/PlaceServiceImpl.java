@@ -8,12 +8,15 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.ws.rs.core.Context;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.AccountFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.OwnerFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Internationalization;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
@@ -40,6 +43,9 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
     private MessageSigner messageSigner;
 
     @Inject
+    private OwnerFacade ownerFacade;
+
+    @Inject
     private AccountFacade accountFacade;
 
     @Inject
@@ -47,10 +53,33 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
 
     @Override
     @RolesAllowed(Roles.MANAGER)
-    public void modifyPlaceOwner() {
-        throw new UnsupportedOperationException();
+    public void modifyPlaceOwner(Long placeId, String username, String etag, Long version) {
+        final Owner owner = ownerFacade.findOwnerByUsername(username);
+        final String ManagerUsername = securityContext.getCallerPrincipal().getName();
 
-        //poproszę o wyzerowanie predictedHotWaterConsumption przy zmianie właściciela
+        if (!owner.getAccount().getIsActive()) {
+            throw AppException.createAccountIsNotActivatedException();
+        }
+
+        final Place place = placeFacade.findPlaceById(placeId);
+
+        if (!etag.equals(messageSigner.sign(place))) {
+            throw AppException.createVerifierException();
+        }
+
+        if (!Objects.equals(version, place.getVersion())) {
+            throw AppException.createOptimisticLockAppException();
+        }
+        if (place.getOwner().getAccount().getUsername().equals(username)) {
+            throw AppException.userIsAlreadyOwnerOfThisPlaceException();
+        }
+
+        if (owner.getAccount().getUsername().equals(ManagerUsername)) {
+            throw AppException.canNotMakeYourselfOwnerOfThePlaceException();
+        }
+        place.setOwner(owner);
+        place.setPredictedHotWaterConsumption(new BigDecimal(0));
+        placeFacade.edit(place);
     }
 
     @Override

@@ -24,7 +24,10 @@ import java.util.Objects;
         })
 @NamedQueries({
         @NamedQuery(name = "AccessLevelMapping.findByUsername",
-                query = "SELECT k.account FROM AccessLevelMapping k WHERE k.account.username = :username")
+                query = "SELECT k.account FROM AccessLevelMapping k WHERE k.account.username = :username"),
+        @NamedQuery(name = "AccessLevelMapping.findAccessLevelForAccountByUsername",
+                query = "SELECT k.account FROM AccessLevelMapping k WHERE k.account.username = :username AND k.accessLevel = :accessLevel"),
+
 })
 public abstract class AccessLevelMapping extends AbstractEntity implements Serializable {
     @Id
