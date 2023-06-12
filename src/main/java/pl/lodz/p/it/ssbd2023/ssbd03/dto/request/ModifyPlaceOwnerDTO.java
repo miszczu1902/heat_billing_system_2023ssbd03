@@ -11,7 +11,6 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class ModifyPlaceOwnerDTO extends VersionDTO implements Serializable {
     @NotNull
     private String username;

@@ -89,14 +89,9 @@ public class PlaceFacade extends AbstractFacade<Place> {
 
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public Place findPlaceById(Long id) {
-        try {
         TypedQuery<Place> tq = em.createNamedQuery("Place.findById", Place.class);
         tq.setParameter("id", id);
         return tq.getSingleResult();
-        }catch (NoResultException e)
-        {
-            throw AppException.noResultException();
-        }
     }
 
     @PermitAll
