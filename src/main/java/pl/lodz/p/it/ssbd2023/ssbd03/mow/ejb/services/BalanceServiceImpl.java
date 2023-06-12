@@ -17,10 +17,12 @@ import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
@@ -152,12 +154,24 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
                             && monthPayoff.getPayoffDate().getMonth() == month).findFirst();
 
             monthPayoffForThisYearOptional.ifPresent(monthPayoffForThisYear -> {
-                final BigDecimal hotWaterCost = monthPayoffForThisYear.getHotWaterConsumption()
-                        .multiply(monthPayoffForThisYear.getWaterHeatingUnitCost());
+                final LocalDateTime firstDayOfPreviousMonth = LocalDateTime.now(TIME_ZONE).minusMonths(1).with(TemporalAdjusters
+                        .firstDayOfMonth()).truncatedTo(ChronoUnit.DAYS);
+                final List<Place> newPlacesList = placeFacade.findAllPlacesByBuildingIdAndNewerThanDate(
+                       place.getBuilding().getId(), firstDayOfPreviousMonth);
+                BigDecimal communalAreaInLastMonth = place.getBuilding().getCommunalAreaAggregate();
+                if (!newPlacesList.isEmpty()) {
+                    final BigDecimal totalAreaOfNewPlaces = newPlacesList.stream()
+                            .map(Place::getArea)
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                    communalAreaInLastMonth = communalAreaInLastMonth.add(totalAreaOfNewPlaces);
+                }
+
+                final BigDecimal heatingCommunalAreaCost = monthPayoffForThisYear.getCentralHeatingUnitCost()
+                        .multiply(communalAreaInLastMonth);
                 final BigDecimal heatingPlaceCost = monthPayoffForThisYear.getCentralHeatingUnitCost()
                         .multiply(place.getArea());
-                final BigDecimal heatingCommunalAreaCost = monthPayoffForThisYear.getCentralHeatingUnitCost()
-                        .multiply(place.getBuilding().getCommunalAreaAggregate());
+                final BigDecimal hotWaterCost = monthPayoffForThisYear.getHotWaterConsumption()
+                        .multiply(monthPayoffForThisYear.getWaterHeatingUnitCost());
 
                 annualBalance.setTotalHotWaterCost(annualBalance.getTotalHotWaterCost().add(hotWaterCost));
                 annualBalance.setTotalHeatingPlaceCost(annualBalance.getTotalHeatingPlaceCost().add(heatingPlaceCost));
