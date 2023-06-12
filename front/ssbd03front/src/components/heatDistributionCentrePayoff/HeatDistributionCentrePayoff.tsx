@@ -6,6 +6,7 @@ import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import RefreshIcon from "../icons/RefreshIcon";
 import {HeatDistributionCenterPayoffsFromList} from "../../types/HeatDistributionCenterPayoffsFromList";
+import AddInvoiceValues from "./AddInvoiceValues";
 
 const HeatDistributionCentrePayoff = () => {
     const {t, i18n} = useTranslation();
@@ -72,6 +73,7 @@ const HeatDistributionCentrePayoff = () => {
                     <TableRow><Button className="landing-page-button" onClick={handleClick}><RefreshIcon/></Button></TableRow>
                 </TableBody>
             </Table>
+            <AddInvoiceValues/>
         </TableContainer>
     );
 }
