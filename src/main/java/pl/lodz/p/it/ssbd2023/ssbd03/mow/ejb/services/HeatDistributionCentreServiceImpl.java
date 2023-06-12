@@ -107,6 +107,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
                 final Manager manager = accessLevelFacade.findManagerByUsername(username);
                 hotWaterEntry.setManager(manager);
             }
+
             hotWaterEntryFacade.create(hotWaterEntry);
         } else {
             throw AppException.createHotWaterEntryCouldNotBeInsertedException();
