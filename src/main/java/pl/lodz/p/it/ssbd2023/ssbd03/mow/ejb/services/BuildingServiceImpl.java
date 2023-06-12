@@ -6,9 +6,9 @@ import jakarta.ejb.Stateful;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
+import jakarta.security.enterprise.SecurityContext;
 import jakarta.servlet.http.HttpServletRequest;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
-import jakarta.security.enterprise.SecurityContext;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
@@ -17,6 +17,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.Internationalization;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -41,6 +42,15 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
     private OwnerFacade ownerFacade;
 
     @Inject
+    private HotWaterAdvanceFacade hotWaterAdvanceFacade;
+
+    @Inject
+    private HeatingPlaceAndCommunalAreaAdvanceFacade heatingPlaceAndCommunalAreaAdvanceFacade;
+
+    @Inject
+    private HeatDistributionCentrePayoffFacade heatDistributionCentrePayoffFacade;
+
+    @Inject
     private Internationalization internationalization;
 
     @Inject
@@ -59,12 +69,14 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
         buildingFacade.findById(id);
         return placeFacade.findByBuildingId(id, pageNumber, pageSize);
     }
+
     @Override
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public Building getBuilding(String buildingId) {
         final Long id = Long.valueOf(buildingId);
         return buildingFacade.findById(id);
     }
+
     @Override
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public void modifyBuilding(String buildingId) {
@@ -103,8 +115,8 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
                 .map(Place::getArea)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        final BigDecimal newCommunalAreaAggreagate = building.getTotalArea().subtract(sum).subtract(area);
-        final int comparisonResult = newCommunalAreaAggreagate.compareTo(building.getTotalArea().multiply(BigDecimal.valueOf(0.1)));
+        final BigDecimal newCommunalAreaAgregate = building.getTotalArea().subtract(sum).subtract(area);
+        final int comparisonResult = newCommunalAreaAgregate.compareTo(building.getTotalArea().multiply(BigDecimal.valueOf(0.1)));
         if (comparisonResult < 0) {
             throw AppException.lackOfSpaceInTheBuildingException();
         }
@@ -113,14 +125,55 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
         final Place place = new Place(placeNumber, area, hotWaterConnection, centralHeatingConnection, predictedHotWaterConsumption, building, owner);
         placeFacade.create(place);
 
-        building.setCommunalAreaAggregate(newCommunalAreaAggreagate);
+        building.setCommunalAreaAggregate(newCommunalAreaAgregate);
         building.getPlaces().add(place);
         buildingFacade.edit(building);
 
         final BigDecimal bigDecimal = new BigDecimal(0);
         final AnnualBalance annualBalance = new AnnualBalance((short) LocalDateTime.now().getYear(), bigDecimal, bigDecimal, bigDecimal, bigDecimal, bigDecimal, bigDecimal, place);
         balanceFacade.create(annualBalance);
+
+        if (place.getHotWaterConnection()) {
+            calculateHotWaterAdvanceForNewPlace(place);
+        }
     }
+
+    @RolesAllowed({Roles.MANAGER})
+    private void calculateHotWaterAdvanceForNewPlace(Place place) {
+        final BigDecimal averageValue = place.getPredictedHotWaterConsumption().divide(BigDecimal.valueOf(30), 2, BigDecimal.ROUND_HALF_UP);
+        final HeatingPlaceAndCommunalAreaAdvance heatingPlaceAndCommunalAreaAdvance = heatingPlaceAndCommunalAreaAdvanceFacade.findLatestHeatingPlaceAndCommunalAreaAdvance(place.getBuilding().getId());
+        final List<Place> places = placeFacade.findAllPlaces()
+                .stream()
+                .filter(Place::getHotWaterConnection)
+                .toList();
+        final BigDecimal totalWater = places.stream()
+                .map(Place::getMonthPayoffs)
+                .filter(monthPayoffs -> !monthPayoffs.isEmpty())
+                .map(monthPayoffs -> monthPayoffs.get(monthPayoffs.size() - 1))
+                .map(MonthPayoff::getHotWaterConsumption)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final HeatDistributionCentrePayoff heatDistributionCentrePayoff = heatDistributionCentrePayoffFacade.findLatestHeatDistributionCentrePayoff();
+        final BigDecimal price = heatDistributionCentrePayoff.getConsumptionCost().divide(heatDistributionCentrePayoff.getConsumption(), 2, BigDecimal.ROUND_HALF_UP)
+                .multiply(BigDecimal.ONE.subtract(heatDistributionCentrePayoff.getHeatingAreaFactor()));
+        final BigDecimal pricePerCubicMeter = price.divide(totalWater, 2, BigDecimal.ROUND_HALF_UP);
+        final int month = LocalDate.now().getMonthValue();
+        int count = 0;
+
+        if (month == 1 || month == 4 || month == 7 || month == 10) {
+            count = 3;
+        }
+        if (month == 2 || month == 5 || month == 8 || month == 11) {
+            count = 2;
+        }
+        for (int i = 1; i < count; i++) {
+            final BigDecimal hotWaterAdvance = averageValue.multiply(BigDecimal.valueOf(LocalDate.now().plusMonths(i).lengthOfMonth()))
+                    .multiply(pricePerCubicMeter)
+                    .multiply(heatingPlaceAndCommunalAreaAdvance.getAdvanceChangeFactor());
+            final HotWaterAdvance advance = new HotWaterAdvance(LocalDate.now().plusMonths(i), place, hotWaterAdvance);
+            hotWaterAdvanceFacade.create(advance);
+        }
+    }
+
     @Override
     @RolesAllowed({Roles.MANAGER})
     public List<Building> getAllBuildings(int pageNumber, int pageSize) {

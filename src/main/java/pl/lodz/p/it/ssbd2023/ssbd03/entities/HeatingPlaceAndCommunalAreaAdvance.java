@@ -18,7 +18,10 @@ import java.time.LocalDate;
 @Table(name = "heating_place_and_communal_area_advance")
 @NamedQueries({
         @NamedQuery(name = "HeatingPlaceAndCommunalAreaAdvance.getAllHeatingPlaceAndCommunalAreaAdvances",
-                query = "SELECT a FROM HeatingPlaceAndCommunalAreaAdvance a WHERE a.place.building.id = :buildingId AND a.place.centralHeatingConnection IS TRUE AND a.date >= :date ORDER BY a.date DESC")
+                query = "SELECT a FROM HeatingPlaceAndCommunalAreaAdvance a WHERE a.place.building.id = :buildingId AND a.place.centralHeatingConnection IS TRUE AND a.date >= :date ORDER BY a.date DESC"),
+        @NamedQuery(name = "HeatingPlaceAndCommunalAreaAdvance.getLatestHeatingPlaceAndCommunalAreaAdvance",
+                query = "SELECT k FROM HeatingPlaceAndCommunalAreaAdvance k WHERE k.place.building.id = :buildingId ORDER BY k.creationDateTime DESC"
+        )
 })
 public final class HeatingPlaceAndCommunalAreaAdvance extends Advance implements Serializable {
 

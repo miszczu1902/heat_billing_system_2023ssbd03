@@ -25,6 +25,9 @@ public class MowSystemScheduler {
     private final int txRetries = Integer.parseInt(LoadConfig.loadPropertyFromConfig("tx.retries"));
 
     @Inject
+    private AdvanceService advanceService;
+
+    @Inject
     private BalanceService balanceService;
 
     @Schedule(dayOfMonth = "2", timezone = "Europe/Warsaw", persistent = false) //drugi dzien kazdego miesiaca o polnocy
@@ -77,5 +80,31 @@ public class MowSystemScheduler {
             throw AppException.createTransactionRollbackException();
         }
         balanceService.createYearReports();
+    }
+
+    @Schedule(dayOfMonth = "2", hour = "1", month = "1,4,7,10", timezone = "Europe/Warsaw", persistent = false)
+    private void calculatePastQuarterHotWaterPayoff() {
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                advanceService.calculateHotWaterAdvance();
+                rollbackTX = advanceService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return;
+            } catch (TransactionRollbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
+        advanceService.calculateHotWaterAdvance();
     }
 }

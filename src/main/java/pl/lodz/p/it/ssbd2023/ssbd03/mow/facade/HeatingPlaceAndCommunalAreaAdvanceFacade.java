@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.facade;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
@@ -54,5 +55,13 @@ public class HeatingPlaceAndCommunalAreaAdvanceFacade extends AbstractFacade<Hea
         tq.setParameter("buildingId", buildingId);
         tq.setParameter("date", date);
         return tq.getResultList().isEmpty();
+    }
+
+    @PermitAll
+    public HeatingPlaceAndCommunalAreaAdvance findLatestHeatingPlaceAndCommunalAreaAdvance(Long buildingId) {
+        TypedQuery<HeatingPlaceAndCommunalAreaAdvance> tq = getEntityManager()
+                .createNamedQuery("HeatingPlaceAndCommunalAreaAdvance.getLatestHeatingPlaceAndCommunalAreaAdvance", HeatingPlaceAndCommunalAreaAdvance.class);
+        tq.setParameter("buildingId", buildingId);
+        return tq.getSingleResult();
     }
 }
