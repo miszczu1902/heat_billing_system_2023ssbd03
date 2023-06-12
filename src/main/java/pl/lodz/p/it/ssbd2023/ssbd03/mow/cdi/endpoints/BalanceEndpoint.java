@@ -3,7 +3,6 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mow.cdi.endpoints;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -38,22 +37,16 @@ public class BalanceEndpoint {
         return Response.ok().entity(balanceService.getUnitWarmCostReport()).build();
     }
 
-    //MOW 2
-    @Path("/self/report/{placeId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @GET
-    @RolesAllowed({Roles.OWNER})
-    public Response getSelfReport(@NotBlank @PathParam("placeId") String placeId) {
-        return Response.ok().entity(balanceService.getSelfReport(placeId)).build();
-    }
 
     //MOW 2
-    @Path("/report/{placeId}")
+    @Path("/report/{reportId}")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    @RolesAllowed({Roles.MANAGER})
-    public Response getUserReport(@NotBlank @PathParam("placeId") String placeId) {
-        return Response.ok().entity(balanceService.getUserReport(placeId)).build();
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    public Response getUserReport(@PathParam("reportId") Long reportId) {
+        return Response.ok().entity(
+                BalanceMapper.createYearReportDTOFromAnnualBalance(
+                balanceService.getYearReport(reportId))).build();
     }
 
     //MOW 3

@@ -14,19 +14,19 @@ public interface BalanceService extends CommonManagerLocalInterface {
 
     AnnualBalance getSelfReport(String placeId);
 
-    AnnualBalance getUserReport(String placeId);
+    AnnualBalance getYearReport(Long reportId);
 
     List<AnnualBalance> getAllReports(int pageNumber, int pageSize, Long buildingId);
 
     List<AnnualBalance> getSelfReports(int pageNumber, int pageSize);
 
-    List<HotWaterAdvance>  getSelfWaterAdvanceValue(Long placeId, Integer year);
+    List<HotWaterAdvance> getSelfWaterAdvanceValue(Long placeId, Integer year);
 
-    List<HotWaterAdvance>  getUserWaterAdvanceValue(Long placeId, Integer year);
+    List<HotWaterAdvance> getUserWaterAdvanceValue(Long placeId, Integer year);
 
-    List<HeatingPlaceAndCommunalAreaAdvance>  getSelfHeatingAdvanceValue(Long placeId, Integer year);
+    List<HeatingPlaceAndCommunalAreaAdvance> getSelfHeatingAdvanceValue(Long placeId, Integer year);
 
-    List<HeatingPlaceAndCommunalAreaAdvance>  getUserHeatingAdvanceValue(Long placeId, Integer year);
+    List<HeatingPlaceAndCommunalAreaAdvance> getUserHeatingAdvanceValue(Long placeId, Integer year);
 
     BigDecimal getUserHeatingBalance();
 

@@ -54,9 +54,9 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
     }
 
     @Override
-    @RolesAllowed({Roles.MANAGER})
-    public AnnualBalance getUserReport(String placeId) {
-        throw new UnsupportedOperationException();
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    public AnnualBalance getYearReport(Long reportId) {
+        return balanceFacade.find(reportId);
     }
 
     @Override
