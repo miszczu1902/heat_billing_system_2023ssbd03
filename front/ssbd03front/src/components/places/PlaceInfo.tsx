@@ -155,7 +155,7 @@ const PlaceInfo = () => {
                                     alignItems: 'center',
                                     justifyContent: 'space-between'
                                 }} variant="h5">
-                                    <b>{t('place.hotWaterConnection')}:</b> {place.hotWaterConnection ? t('place.connected') : t('place.disconnected')}
+                                    <b>{t('place.hotWaterConnection')}:</b> {place?.hotWaterConnection ? t('place.connected') : t('place.disconnected')}
                                 </Typography>
                             </Paper>
                             <Paper elevation={3} style={{marginTop: '0.5vh', position: 'relative', overflow: 'auto'}}>
@@ -187,7 +187,7 @@ const PlaceInfo = () => {
                     )}
                 </Box>
             </Paper>
-            <HotWaterEntriesList/>
+            {place?.hotWaterConnection && <HotWaterEntriesList/>}
             <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
                 <DialogTitle>{t('personal_data.authorization_error')}</DialogTitle>
                 <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>

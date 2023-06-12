@@ -20,7 +20,6 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import axios from 'axios';
 
-
 const ChangeAdvanceFactor = () => {
     const params = useParams();
     const location = useLocation();
@@ -127,7 +126,6 @@ const ChangeAdvanceFactor = () => {
             });
         handleClose(event, reason);
     }
-
 
     const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
         if (reason !== 'backdropClick') {

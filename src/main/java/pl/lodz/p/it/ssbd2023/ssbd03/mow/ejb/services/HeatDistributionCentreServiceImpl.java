@@ -104,10 +104,12 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
                 throw AppException.createHotWaterEntryCouldNotBeInsertedException();
             }
 
-            final HotWaterEntry newestHotWaterEntry = getHotWaterEntriesForPlaceWithoutActualEntry(placeId).get(0);
-
-            if (newestHotWaterEntry.getEntryValue().compareTo(consumptionValue) > 0) {
-                throw AppException.createHotWaterEntryCouldNotBeInsertedException();
+            final List<HotWaterEntry> hotWaterEntries = getHotWaterEntriesForPlaceWithoutActualEntry(placeId);
+            if (!hotWaterEntries.isEmpty()) {
+                final HotWaterEntry newestHotWaterEntry = getHotWaterEntriesForPlaceWithoutActualEntry(placeId).get(0);
+                if (newestHotWaterEntry.getEntryValue().compareTo(consumptionValue) > 0) {
+                    throw AppException.createHotWaterEntryCouldNotBeInsertedException();
+                }
             }
 
             HotWaterEntry hotWaterEntry = new HotWaterEntry(LocalDate.now(), consumptionValue, place);
@@ -134,7 +136,6 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
             }
 
             final HotWaterEntry newestHotWaterEntry = getHotWaterEntriesForPlaceWithoutActualEntry(placeId).get(0);
-
             if (newestHotWaterEntry.getEntryValue().compareTo(consumptionValue) > 0) {
                 throw AppException.createHotWaterEntryCouldNotBeInsertedException();
             }

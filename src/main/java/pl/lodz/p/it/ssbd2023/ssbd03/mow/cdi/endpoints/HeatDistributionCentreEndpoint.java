@@ -21,7 +21,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.HotWaterEntryDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.HeatDistributionCentreService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.EtagValidator;
@@ -131,7 +130,7 @@ public class HeatDistributionCentreEndpoint {
                         etag);
                 rollbackTX = heatDistributionCentreService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
-            } catch (TransactionRollbackException | EJBTransactionRolledbackException ex) {
+            } catch (TransactionRollbackException | OptimisticLockAppException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;

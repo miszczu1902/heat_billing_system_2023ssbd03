@@ -416,25 +416,25 @@ const Building = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {places.map((places) => (
-                            <TableRow key={places.id}>
-                                <TableCell>{places.createdBy}</TableCell>
-                                <TableCell>{places.placeNumber}</TableCell>
-                                <TableCell>{places.area}</TableCell>
+                        {places.map((place) => (
+                            <TableRow key={place.id}>
+                                <TableCell>{place.createdBy}</TableCell>
+                                <TableCell>{place.placeNumber}</TableCell>
+                                <TableCell>{place.area}</TableCell>
                                 <TableCell>
-                                    {places.centralHeatingConnection ? t('place.yes') : t('place.no')}
+                                    {place.centralHeatingConnection ? t('place.yes') : t('place.no')}
                                 </TableCell>
                                 <TableCell>
-                                    {places.predictedHotWaterConsumption ? t('place.yes') : t('place.no')}
+                                    {place.hotWaterConnection ? t('place.yes') : t('place.no')}
                                 </TableCell>
-                                <TableCell>{places.predictedHotWaterConsumption}</TableCell>
-                                <TableCell>{places.firstName}</TableCell>
-                                <TableCell>{places.surname}</TableCell>
+                                <TableCell>{place.predictedHotWaterConsumption}</TableCell>
+                                <TableCell>{place.firstName}</TableCell>
+                                <TableCell>{place.surname}</TableCell>
                                 <TableCell>
                                     <IconButton
                                         edge="start"
                                         color="inherit"
-                                        onClick={() => goToPlace(places.id.toString())}
+                                        onClick={() => goToPlace(place.id.toString())}
                                         aria-label="close"
                                     >
                                         <IconViewList/>
