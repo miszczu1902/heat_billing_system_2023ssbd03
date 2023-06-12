@@ -1,4 +1,3 @@
-import validator from "validator";
 import {useTranslation} from "react-i18next";
 import {
     Button,
@@ -8,13 +7,22 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    FormControl,
+    FormHelperText,
+    InputLabel,
+    List,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
     Snackbar,
-    SnackbarContent,
-    TextField
+    SnackbarContent
 } from '@mui/material';
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import {API_URL} from '../../consts';
+import ListItem from "@mui/material/ListItem";
+import {Account} from "../../types/account";
+import {useParams} from "react-router-dom";
 
 
 const ChangePlaceOwner = () => {
@@ -22,15 +30,14 @@ const ChangePlaceOwner = () => {
     const {t, i18n} = useTranslation();
     const [open, setOpen] = React.useState(false);
     const [confirmOpen, setConfirmOpen] = React.useState(false);
-    const [placeId, setPlaceId] = useState("0");
     const [version, setVersion] = useState("");
+    const placeId = useParams().placeId;
 
     const [username, setUsername] = useState("");
-    const [usernameValid, setUsernameValid] = useState(false);
-    const [usernameError, setUsernameError] = useState("");
+    const [message, setMessage] = useState("");
 
-    const [authorizationErrorOpen, setAuthorizationErrorOpen] = useState(false);
     const [openSnackbar, setOpenSnackbar] = React.useState(false);
+    const [accounts, setAccounts] = useState<Account[]>([]);
 
     useEffect(() => {
         fetchData();
@@ -46,19 +53,25 @@ const ChangePlaceOwner = () => {
             localStorage.setItem("etag", response.headers["etag"]);
             setUsername(response.data.username);
         }).catch((error) => {
-            if (error.response.status === 403) {
-                setAuthorizationErrorOpen(true);
+            setMessage(error.response.data.message);
+        });
+        axios.get(`${API_URL}/buildings/owners`, {
+            headers: {
+                Authorization: token
             }
+        }).then(response => {
+            setAccounts(response.data);
         });
     }
 
+    const handleOwnerChange = (event: SelectChangeEvent) => {
+        setUsername(event.target.value);
+    };
     const handleClickOpen = () => {
         setOpen(true);
     };
 
     const handleClose = () => {
-        setUsernameError("");
-        setUsernameValid(false);
         setOpen(false);
     };
 
@@ -67,11 +80,6 @@ const ChangePlaceOwner = () => {
     };
 
     const handleConfirmSave = () => {
-        if (!usernameValid) {
-            setOpenSnackbar(true);
-            setConfirmOpen(false);
-            return;
-        }
 
         const modifyPlaceOwnerDTO = {
             username: username,
@@ -84,10 +92,10 @@ const ChangePlaceOwner = () => {
                     'If-Match': localStorage.getItem("etag")
                 }
             }).then((response) => {
+            window.location.reload();
         }).catch((error) => {
-            setConfirmOpen(false);
+            setMessage(error.response.data.message);
             setOpenSnackbar(true);
-            return;
         });
 
         setConfirmOpen(false);
@@ -96,25 +104,6 @@ const ChangePlaceOwner = () => {
 
     const handleConfirmCancel = () => {
         setConfirmOpen(false);
-    };
-
-    const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const regex = /^[a-zA-Z0-9_]{6,16}$/;
-        if (validator.matches(event.target.value, regex)) {
-            setUsername(event.target.value);
-            setUsernameValid(true);
-            setUsernameError("");
-        } else {
-            setUsernameValid(false);
-            setUsernameError(t('modifyPlaceOwner.enter_username_error'));
-        }
-    }
-
-    const handleAuthorizationErrorOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setAuthorizationErrorOpen(false);
-            handleConfirmCancel();
-        }
     };
 
     const handleCloseSnackbar = () => {
@@ -141,18 +130,28 @@ const ChangePlaceOwner = () => {
                     <DialogContentText>
                         {t('modifyPlaceOwner.modify_place_owner_message')}
                     </DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        id="name"
-                        label={t('modifyPlaceOwner.enter_first_name')}
-                        fullWidth
-                        variant="standard"
-                        onChange={handleUsernameChange}
-                    />
-                    <DialogContentText style={{fontSize: "13px", color: "red"}}>
-                        {usernameError}
-                    </DialogContentText>
+                    <List>
+                        <ListItem>
+                            <div className="form-group">
+                                <FormControl>
+                                    <InputLabel id="owner-select-label">{t('place.ownerId')}</InputLabel>
+                                    <Select
+                                        labelId="owner-select-label"
+                                        id="owner-select"
+                                        value={username}
+                                        onChange={handleOwnerChange}
+                                        fullWidth>
+                                        {accounts.map((account) => (
+                                            <MenuItem key={account.username} value={account.username}>
+                                                {account.username}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                    <FormHelperText>{t('place.ownerIdInfo')}</FormHelperText>
+                                </FormControl>
+                            </div>
+                        </ListItem>
+                    </List>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleSave}>{t('confirm.save')}</Button>
@@ -173,14 +172,9 @@ const ChangePlaceOwner = () => {
                 </DialogActions>
             </Dialog>
 
-            <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
-                <DialogTitle>{t('personal_data.authorization_error')}</DialogTitle>
-                <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>
-            </Dialog>
-
             <Snackbar open={openSnackbar} onClose={handleCloseSnackbar}>
                 <SnackbarContent
-                    message={t('modifyPlaceOwner.modify_place_owner_failed')}/>
+                    message={t(message)}/>
             </Snackbar>
         </div>
     );

@@ -78,9 +78,6 @@ const PlaceInfo = () => {
                                     </Typography>
                                     <Typography sx={{ marginLeft: '4vw', marginRight: '2vw', padding: '1vh', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} variant="h5">
                                         <b>{t('place.firstName')}:</b> {place.firstName}
-                                        {
-                                            (currentRole === MANAGER) && <ChangePlaceOwner/>
-                                        }
                                     </Typography>
                                     <Typography sx={{ marginLeft: '4vw', marginRight: '2vw', padding: '1vh', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} variant="h5">
                                         <b>{t('place.surname')}:</b> {place.surname}
@@ -94,6 +91,9 @@ const PlaceInfo = () => {
                                     justifyContent: 'space-between'
                                 }} variant="h5">
                                     <b>{t('place.username')}:</b> {place.username}
+                                    {
+                                        (currentRole === MANAGER) && <ChangePlaceOwner/>
+                                    }
                                 </Typography>
                             </Paper>
                             <Paper elevation={3} style={{marginTop: '0.5vh', position: 'relative', overflow: 'auto'}}>
