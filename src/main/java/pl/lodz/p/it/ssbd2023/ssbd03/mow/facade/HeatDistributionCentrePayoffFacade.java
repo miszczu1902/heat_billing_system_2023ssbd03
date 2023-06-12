@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.facade;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
@@ -53,5 +54,12 @@ public class HeatDistributionCentrePayoffFacade extends AbstractFacade<HeatDistr
         tq.setParameter("month", LocalDate.now().getMonthValue());
 
         return tq.getResultList().isEmpty();
+    }
+
+    @PermitAll
+    public HeatDistributionCentrePayoff findLatestHeatDistributionCentrePayoff() {
+        TypedQuery<HeatDistributionCentrePayoff> query = getEntityManager()
+                .createNamedQuery("HeatDistributionCentrePayoff.getLatestHeatDistributionCentrePayoff", HeatDistributionCentrePayoff.class);
+        return query.getSingleResult();
     }
 }
