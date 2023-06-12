@@ -19,7 +19,10 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.heatDistributionCentre.NoHeatDist
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.personalData.PersonalDataConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.NotOwnerOfPlaceException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.PredictedHotWaterConsumptionValueAlreadySetException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.UserIsAlreadyOwnerOfThisPlaceException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoResultException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.CanNotMakeYourselfOwnerOfThePlaceException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.HotWaterEntryCouldNotBeInsertedException;
@@ -30,7 +33,6 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_UNKNOWN = "exception.error.unknown";
     protected final static String ERROR_GENERAL_PERSISTENCE = "exception.error.general_persistence";
     protected final static String ERROR_OPTIMISTIC_LOCK = "exception.error.optimistic_lock";
-    protected final static String ERROR_ACCESS_DENIED = "exception.error.access_denied";
     protected final static String ERROR_TRANSACTION_ROLLEDBACK = "exception.error.transaction_rolledback";
     protected final static String ERROR_ACCOUNT_NOT_REGISTERED = "exception.error.account_not_registered";
 
@@ -71,6 +73,9 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_NOT_OWNER_OF_THIS_PLACE = "excpetion.not_owner_of_this_place";
     private static final String LACK_OF_SPACE = "exception.building.lack.of.space";
     private static final String ERROR_ADDING_PLACE_TO_THE_SAME_ADMIN_MANAGER = "exception.building.adding_place_to_the_same_manager_account";
+    protected final static String ERROR_CAN_NOT_MAKE_YOURSELF_OWNER = "exception.place.can_not_make_yourself_owner";
+    protected final static String ERROR_NO_RESULT = "exception.database.no_result";
+    protected final static String USER_IS_ALREADY_OWNER_OF_THIS_PLACE = "exception.place.user_is_already_owner_of_this_place";
     protected final static String ERROR_ADVANCE_CHANGE_FACTOR_NOT_MODIFIED = "exception.advance_factor.cannot_modify_factor";
     protected final static String ERROR_ADVANCE_CHANGE_FACTOR_WAS_INSERTED = "exception.advance_factor.factor_was_inserted";
     protected final static String ERROR_HOT_WATER_ENTRY_NOT_INSERTED = "exception.hot_water_entry.not_inserted";
@@ -252,6 +257,9 @@ public class AppException extends WebApplicationException {
         return new ConsumptionAddException(ERROR_ADDING_HEAT_VALUES, Response.Status.CONFLICT);
     }
 
+public static UserIsAlreadyOwnerOfThisPlaceException userIsAlreadyOwnerOfThisPlaceException() {
+        return new UserIsAlreadyOwnerOfThisPlaceException(USER_IS_ALREADY_OWNER_OF_THIS_PLACE, Response.Status.CONFLICT);
+    }
     public static NoHeatDistributionCentreException createNoHeatDistributionCentreException() {
         return new NoHeatDistributionCentreException(ERROR_NO_HEAT_DISTRIBUTION_CENTRE, Response.Status.NOT_FOUND);
     }
@@ -270,6 +278,12 @@ public class AppException extends WebApplicationException {
 
     public static AddingPlaceToTheSameAccountException addingPlaceToTheSameAccountException() {
         return new AddingPlaceToTheSameAccountException(AppException.ERROR_ADDING_PLACE_TO_THE_SAME_ADMIN_MANAGER, Response.Status.FORBIDDEN);
+    }
+    public static CanNotMakeYourselfOwnerOfThePlaceException canNotMakeYourselfOwnerOfThePlaceException() {
+        return new CanNotMakeYourselfOwnerOfThePlaceException(ERROR_CAN_NOT_MAKE_YOURSELF_OWNER, Response.Status.FORBIDDEN);
+    }
+    public static NoResultException noResultException() {
+        return new NoResultException(ERROR_NO_RESULT, Response.Status.NOT_FOUND);
     }
 
     public static AdvanceChangeFactorNotModified createAdvanceChangeFactorNotModifiedException() {

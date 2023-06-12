@@ -7,6 +7,7 @@ import jakarta.interceptor.Interceptors;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 
@@ -38,7 +39,7 @@ public class MowSystemScheduler {
                 rollbackTX = balanceService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return;
-            } catch (OptimisticLockAppException | EJBTransactionRolledbackException ex) {
+            } catch (OptimisticLockAppException | TransactionRollbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -76,38 +77,5 @@ public class MowSystemScheduler {
             throw AppException.createTransactionRollbackException();
         }
         balanceService.createYearReports();
-    }
-
-    @Schedule(hour = "*", minute = "*/1", persistent = false)
-    private void calculateMainPayoff() {
-        throw new UnsupportedOperationException();
-    }
-
-    private void generateYearHeatReport() {
-        throw new UnsupportedOperationException();
-    }
-
-    private void calculateCommunalAreaPayoff() {
-        throw new UnsupportedOperationException();
-    }
-
-    private void calculatePlaceAreaPayoff() {
-        throw new UnsupportedOperationException();
-    }
-
-    private void calculateHotWaterPayoff() {
-        throw new UnsupportedOperationException();
-    }
-
-    private void calculateHotWaterBalance() {
-        throw new UnsupportedOperationException();
-    }
-
-    private void calculateAreaBalance() {
-        throw new UnsupportedOperationException();
-    }
-
-    private void calculateCommunalAreaBalance() {
-        throw new UnsupportedOperationException();
     }
 }

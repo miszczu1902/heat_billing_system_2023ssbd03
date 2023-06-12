@@ -246,7 +246,16 @@
     },
     "heat_distribution_centre": {
       "overwriting": "Nie można wprowadzić wartości dwa razy w jednym miesiącu"
-    }
+    },
+    "place": {
+      "can_not_make_yourself_owner": "Nie możesz sam przypisać sobie mieszkania",
+      "user_is_already_owner_of_this_place": "Ten użytkownik jest właścicielem tego mieszkania"
+
+    },
+  "database": {
+    "no_result": "Błędny numer bloku lub mieszkania"
+  }
+
   },
   "buildingFromList": {
     "id": "Identyfikator budynku",
@@ -340,6 +349,17 @@
     "water": "Wartość zaliczki dla ciepłej wody",
     "place_heat": "Wartość zaliczki dla ogrzania lokalu",
     "communal_area_heat": "Wartość zaliczki dla ogrzania części wspólnej",
+    "date": "Data"
+  },
+  "modifyPlaceOwner": {
+    "enter_first_name": "Nazwa użytkownika ",
+    "enter_surname": "Wprowadź nazwisko: ",
+    "modify_place_owner_title": "Zmiana właściciela lokalu",
+    "modify_place_owner_button": "Zmień właściciela",
+    "modify_place_owner_message": "Wprowadź dane nowego właściciela pamiętając, że nie możesz wpisać własnych danych.",
+    "modify_place_owner_failed": "Wystąpił błąd podczas modyfikacji właściciela lokalu.",
+    "modify_place_owner_confirm": "Czy na pewno wprowadziłeś poprawne dane? Tej operacji nie można cofnąć",
+    "enter_username_error": "Nazwa użytkownika może zaweriać: dużą, małą literę, cyfrę oraz znak _, oraz długość 6-16 znaków",
     "date": "Data",
     "change_factor": "Współczynnik modyfikacji wielkości zaliczki",
     "modify_change_factor" : "Zmodyfikuj współczynnik modyfikacji wielkości zaliczki",
