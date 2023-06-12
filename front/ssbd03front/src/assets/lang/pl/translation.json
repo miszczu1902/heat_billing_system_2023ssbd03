@@ -345,21 +345,19 @@
     "enter_predicted_hot_water_consumption_confirm" : "Czy na pewno wprowadziłeś poprawne dane? Tej operacji nie można cofnąć",
     "enter_predicted_hot_water_consumption_failed" : "Wystąpił błąd podczas wprowadzania danych przedwidywanego zużycia ciepłej wody"
   },
-  "modifyPlaceOwner": {
-    "enter_first_name": "Nazwa użytkownika ",
-    "enter_surname": "Wprowadź nazwisko: ",
-    "modify_place_owner_title": "Zmiana właściciela lokalu",
-    "modify_place_owner_button": "Zmień właściciela",
-    "modify_place_owner_message": "Wprowadź dane nowego właściciela pamiętając, że nie możesz wpisać własnych danych.",
-    "modify_place_owner_failed": "Wystąpił błąd podczas modyfikacji właściciela lokalu.",
-    "modify_place_owner_confirm": "Czy na pewno wprowadziłeś poprawne dane? Tej operacji nie można cofnąć",
-    "enter_username_error": "Nazwa użytkownika może zaweriać: dużą, małą literę, cyfrę oraz znak _, oraz długość 6-16 znaków"
-  },
   "annual_balance" : {
     "water": "Wartość zaliczki dla ciepłej wody",
     "place_heat": "Wartość zaliczki dla ogrzania lokalu",
     "communal_area_heat": "Wartość zaliczki dla ogrzania części wspólnej",
-    "date": "Data"
+    "date": "Data",
+    "change_factor": "Współczynnik modyfikacji wielkości zaliczki",
+    "modify_change_factor" : "Zmodyfikuj współczynnik modyfikacji wielkości zaliczki",
+    "new_change_factor": "Nowy współczynnik",
+    "error" : "Nie udało się zmodyfikować współczynnika",
+    "success_modified": "Współczynnik został zmodyfikowany",
+    "factor_invalid": "Niepoprawny współczynnik",
+    "factor_info": "Wartość musi być większa niż 0 ale nie większa niż 9",
+    "confirm_factor": "Czy na pewno chcesz zmienić wartość współczynnika?"
   },
   "modifyPlaceOwner": {
     "enter_first_name": "Nazwa użytkownika ",
@@ -370,5 +368,19 @@
     "modify_place_owner_failed": "Wystąpił błąd podczas modyfikacji właściciela lokalu.",
     "modify_place_owner_confirm": "Czy na pewno wprowadziłeś poprawne dane? Tej operacji nie można cofnąć",
     "enter_username_error": "Nazwa użytkownika może zaweriać: dużą, małą literę, cyfrę oraz znak _, oraz długość 6-16 znaków"
+  },
+  "hot_water" : {
+    "date": "Data",
+    "value": "Wartość wpisu",
+    "manager": "Zarządca, który wprowadził wpis",
+    "enter": "Modyfikuj wpis",
+    "confirm_changes" : "Czy na pewno chcesz zmodyfikować wpis?",
+    "success_title": "Udało się zmodyfikować wpis",
+    "failure_title" : "Nie udało się zmodyfikować wpisu",
+    "entry_not_correct" : "Wartość musi być większa niż 0",
+    "add": "Dodaj wpis",
+    "confirm_add": "Czy na pewno chcesz dodać wpis?",
+    "added": "Wpis został dodany",
+    "entry_error": "Błąd podczas wprowadzania wpisu"
   }
 }

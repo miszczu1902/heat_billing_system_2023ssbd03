@@ -12,6 +12,7 @@ import EnterPredictedHotWaterConsumption from "../place/EnterPredictedHotWaterCo
 import DoorIcon from "../icons/DoorIcon";
 import {Account} from "../../types/account";
 import ChangePlaceOwner from "../place/ChangePlaceOwner";
+import HotWaterEntriesList from "../place/hotWaterEntry/HotWaterEntriesList";
 
 const PlaceInfo = () => {
     const {t} = useTranslation();
@@ -154,7 +155,7 @@ const PlaceInfo = () => {
                                     alignItems: 'center',
                                     justifyContent: 'space-between'
                                 }} variant="h5">
-                                    <b>{t('place.hotWaterConnection')}:</b> {place.hotWaterConnection ? t('place.connected') : t('place.disconnected')}
+                                    <b>{t('place.hotWaterConnection')}:</b> {place?.hotWaterConnection ? t('place.connected') : t('place.disconnected')}
                                 </Typography>
                             </Paper>
                             <Paper elevation={3} style={{marginTop: '0.5vh', position: 'relative', overflow: 'auto'}}>
@@ -186,6 +187,7 @@ const PlaceInfo = () => {
                     )}
                 </Box>
             </Paper>
+            {place?.hotWaterConnection && <HotWaterEntriesList/>}
             <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
                 <DialogTitle>{t('personal_data.authorization_error')}</DialogTitle>
                 <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -18,9 +19,10 @@ import java.time.LocalDate;
 @Table(name = "heating_place_and_communal_area_advance")
 @NamedQueries({
         @NamedQuery(name = "HeatingPlaceAndCommunalAreaAdvance.getAllHeatingPlaceAndCommunalAreaAdvances",
-                query = "SELECT a FROM HeatingPlaceAndCommunalAreaAdvance a WHERE a.place.building.id = :buildingId AND a.place.centralHeatingConnection IS TRUE AND a.date >= :date ORDER BY a.date DESC")
+                query = "SELECT a FROM HeatingPlaceAndCommunalAreaAdvance a WHERE a.place.building.id = :buildingId AND a.place.centralHeatingConnection IS TRUE AND a.date >= :date ORDER BY a.date DESC"),
+        @NamedQuery(name = "HeatingPlaceAndCommunalAreaAdvance.findTheNewestAdvanceChangeFactor", query = "SELECT k FROM HeatingPlaceAndCommunalAreaAdvance k WHERE k.place.building.id = :buildingId  ORDER BY k.date DESC")
 })
-public final class HeatingPlaceAndCommunalAreaAdvance extends Advance implements Serializable {
+public final class HeatingPlaceAndCommunalAreaAdvance extends Advance implements Serializable, Signable {
 
     @DecimalMin(value = "0")
     @Column(name = "heating_place_advance_value", nullable = false, precision = 10, scale = 2)
@@ -41,6 +43,12 @@ public final class HeatingPlaceAndCommunalAreaAdvance extends Advance implements
         this.heatingPlaceAdvanceValue = heatingPlaceAdvanceValue;
         this.heatingCommunalAreaAdvanceValue = heatingCommunalAreaAdvanceValue;
         this.advanceChangeFactor = advanceChangeFactor;
+    }
+
+    @Override
+    public String messageToSign() {
+        return getVersion().toString()
+                .concat(getAdvanceChangeFactor().toString());
     }
 }
 

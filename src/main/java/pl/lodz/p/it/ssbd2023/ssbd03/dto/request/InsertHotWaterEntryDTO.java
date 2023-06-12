@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class InsertHotWaterEntryDTO {
     @NotNull
-    @DecimalMin(value = "0")
+    @DecimalMin(value = "0.01")
     private BigDecimal hotWaterConsumption;
 
     @NotNull

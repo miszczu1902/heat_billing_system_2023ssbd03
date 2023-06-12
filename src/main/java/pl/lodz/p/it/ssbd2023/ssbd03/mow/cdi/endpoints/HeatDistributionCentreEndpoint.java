@@ -16,12 +16,16 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.AddConsumptionDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.InsertAdvanceChangeFactorDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.InsertHotWaterEntryDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyHotWaterEntryDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.GetAdvanceChangeFactorDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.HotWaterEntryDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.HeatDistributionCentreService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.EtagValidator;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AdvanceMapper;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.HotWaterEntryMapper;
 
 import java.util.logging.Level;
@@ -52,13 +56,48 @@ public class HeatDistributionCentreEndpoint {
 
     //MOW 12
     @PATCH
+    @EtagValidator
     @Path("/parameters/advance-change-factor/{buildingId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.MANAGER)
-    public Response insertAdvanceChangeFactor(@PathParam("buildingId") Long buildingId,  InsertAdvanceChangeFactorDTO insertAdvanceChangeFactorDTO) {
-        heatDistributionCentreService.insertAdvanceChangeFactor(
-                insertAdvanceChangeFactorDTO.getAdvanceChangeFactor(), buildingId);
+    public Response insertAdvanceChangeFactor(@PathParam("buildingId") Long buildingId, @Valid InsertAdvanceChangeFactorDTO insertAdvanceChangeFactorDTO, @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
+        int retryTXCounter = txRetries;
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                heatDistributionCentreService.insertAdvanceChangeFactor(
+                        insertAdvanceChangeFactorDTO.getAdvanceChangeFactor(), buildingId, etag, insertAdvanceChangeFactorDTO.getVersion());
+
+                rollbackTX = heatDistributionCentreService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+            } catch (TransactionRollbackException | OptimisticLockAppException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
         return Response.status(204).build();
+    }
+
+    @GET
+    @Path("/parameters/advance-change-factor/{buildingId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({Roles.MANAGER})
+    public Response getAdvanceChangeFactor(@PathParam("buildingId") Long buildingId) {
+        GetAdvanceChangeFactorDTO actualAdvanceFactor = AdvanceMapper.createGetAdvanceChangeFactorDTOFromAdvanceChangeFactorValue(
+                heatDistributionCentreService.getActualAdvanceChangeFactor(buildingId));
+        return Response.status(200)
+                .header("ETag", messageSigner.sign(actualAdvanceFactor))
+                .entity(actualAdvanceFactor)
+                .build();
     }
 
     //MOW 13
@@ -75,12 +114,12 @@ public class HeatDistributionCentreEndpoint {
     @Path("/parameters/insert-consumption")
     @Produces(MediaType.APPLICATION_JSON)
     @PATCH
+    @EtagValidator
     @RolesAllowed({Roles.OWNER, Roles.MANAGER})
     public Response modifyConsumption(@NotNull @Valid ModifyHotWaterEntryDTO hotWaterEntryDTO, @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
-
+        final String etag = request.getHeader("If-Match");
         do {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
@@ -92,7 +131,7 @@ public class HeatDistributionCentreEndpoint {
                 rollbackTX = heatDistributionCentreService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
-            } catch (EJBTransactionRolledbackException | OptimisticLockAppException ex) {
+            } catch (TransactionRollbackException | OptimisticLockAppException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -108,8 +147,7 @@ public class HeatDistributionCentreEndpoint {
                 hotWaterEntryDTO.getPlaceId(),
                 hotWaterEntryDTO.getVersion(),
                 etag);
-
-        return Response.status(204).build();
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
 
@@ -124,6 +162,19 @@ public class HeatDistributionCentreEndpoint {
         return Response.status(200)
                 .header("ETag", messageSigner.sign(hotWaterEntry))
                 .entity(hotWaterEntry)
+                .build();
+    }
+
+    //MOW 13
+    @GET
+    @Path("/hot-water-consumption/place/{placeId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
+    public Response getHotWaterEntriesForPlace(@PathParam("placeId") Long placeId) {
+        return Response.status(200)
+                .entity(heatDistributionCentreService.getHotWaterEntriesForPlace(placeId).stream()
+                        .map(HotWaterEntryMapper::createHotWaterEntryToHotWaterEntryDTO)
+                        .toList())
                 .build();
     }
 
