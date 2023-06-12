@@ -1,7 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.cdi.endpoints;
 
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +17,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateBuildingDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountInfoDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.BuildingDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.BuildingService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
@@ -104,7 +105,7 @@ public class BuildingEndpoint {
     @RolesAllowed({Roles.MANAGER})
     public Response addPlaceToBuilding(@NotNull @Valid AddPlaceToBuildingDTO addPlaceToBuildingDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        int retryTXCounter = txRetries;
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
         boolean rollbackTX = false;
 
         do {
@@ -116,7 +117,7 @@ public class BuildingEndpoint {
                 rollbackTX = buildingService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
-            } catch (EJBTransactionRolledbackException ex) {
+            } catch (OptimisticLockAppException | TransactionRollbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
