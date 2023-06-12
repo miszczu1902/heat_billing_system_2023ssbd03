@@ -78,7 +78,7 @@ const ChangeAdvanceFactor = () => {
 
         console.log(newAreaFactorValue);
         const regex = /^[0-9]+(\.[0-9]{1,2})?$/;
-        if (!regex.test(newAreaFactorValue) || parseFloat(newAreaFactorValue) < 0) {
+        if (!regex.test(newAreaFactorValue) || parseFloat(newAreaFactorValue) <= 0) {
             setFactorError(t('annual_balance.factor_invalid'));
             setFactorValid(false);
         } else {
@@ -145,7 +145,7 @@ const ChangeAdvanceFactor = () => {
         }
     };
 
-    return (<div style={{width: '50vw', boxSizing: 'border-box', left: 0, bottom: 0}}>
+    return (<div style={{width: '50%', boxSizing: 'border-box', bottom: 0}}>
         <Box sx={{width: '100%', maxWidth: '600px', margin: '2vh'}}>
             <Paper elevation={3} style={{padding: '2vh'}}>
                 <Typography variant="h5">

@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
     Box,
+    Container,
     FormControl,
     FormHelperText,
     InputLabel,
@@ -19,7 +20,7 @@ import {
 import {useTranslation} from "react-i18next";
 import {useNavigate, useParams} from "react-router-dom";
 import axios from 'axios';
-import {API_URL} from '../../consts';
+import {API_URL, MANAGER} from '../../consts';
 import {BuildingFromList} from '../../types/buildingFromList';
 import {Place} from '../../types/place';
 import IconButton from "@mui/material/IconButton";
@@ -34,11 +35,13 @@ import TextField from "@mui/material/TextField";
 import DialogActions from "@mui/material/DialogActions";
 import Switch from '@mui/material/Switch';
 import {Account} from "../../types/account";
+import ChangeAdvanceFactor from "../advanceChangeFactor/ChangeAdvanceFactor";
 
 const Building = () => {
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
     const token = 'Bearer ' + localStorage.getItem("token");
+    const role = localStorage.getItem("role");
     const [version, setVersion] = useState("");
     const [building, setBuilding] = useState<BuildingFromList | null>(null);
     const buildingId = useParams().buildingId;
@@ -227,40 +230,45 @@ const Building = () => {
 
     return (
         <div style={{height: '93.3vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0}}>
-            <Box sx={{width: '50%', maxWidth: '600px', margin: '2vh'}}>
-                {building !== null && (
-                    <Paper elevation={3} style={{padding: '2vh'}}>
-                        <IconButton
-                            edge="start"
-                            color="inherit"
-                            onClick={handleClickOpen}
-                            aria-label="close"
-                        >
-                            <IconViewList/>
-                        </IconButton>
-                        <Typography variant="h5">
-                            <b>{t('buildingFromList.created_by')}:</b> {building.createdBy}
-                        </Typography>
-                        <Typography variant="h5">
-                            <b>{t('buildingFromList.total_area')}:</b> {building.totalArea}
-                        </Typography>
-                        <Typography variant="h5">
-                            <b>{t('buildingFromList.communal_area_aggregate')}:</b> {building.communalAreaAggregate}
-                        </Typography>
-                        <Typography variant="h5">
-                            <b>{t('buildingFromList.street')}:</b> {building.street}
-                        </Typography>
-                        <Typography variant="h5">
-                            <b>{t('buildingFromList.building_number')}:</b> {building.buildingNumber}
-                        </Typography>
-                        <Typography variant="h5">
-                            <b>{t('buildingFromList.city')}:</b> {building.city}
-                        </Typography>
-                        <Typography variant="h5">
-                            <b>{t('buildingFromList.postal_code')}:</b> {building.postalCode}
-                        </Typography>
-                    </Paper>
-                )}
+            <Box sx={{display: 'flex'}}>
+                <Box sx={{maxWidth: '600px', margin: '2vh'}}>
+                    {building !== null && (
+                        <Paper elevation={3} style={{padding: '2vh'}}>
+                            <IconButton
+                                edge="start"
+                                color="inherit"
+                                onClick={handleClickOpen}
+                                aria-label="close"
+                            >
+                                <IconViewList/>
+                            </IconButton>
+                            <Typography variant="h5">
+                                <b>{t('buildingFromList.created_by')}:</b> {building.createdBy}
+                            </Typography>
+                            <Typography variant="h5">
+                                <b>{t('buildingFromList.total_area')}:</b> {building.totalArea}
+                            </Typography>
+                            <Typography variant="h5">
+                                <b>{t('buildingFromList.communal_area_aggregate')}:</b> {building.communalAreaAggregate}
+                            </Typography>
+                            <Typography variant="h5">
+                                <b>{t('buildingFromList.street')}:</b> {building.street}
+                            </Typography>
+                            <Typography variant="h5">
+                                <b>{t('buildingFromList.building_number')}:</b> {building.buildingNumber}
+                            </Typography>
+                            <Typography variant="h5">
+                                <b>{t('buildingFromList.city')}:</b> {building.city}
+                            </Typography>
+                            <Typography variant="h5">
+                                <b>{t('buildingFromList.postal_code')}:</b> {building.postalCode}
+                            </Typography>
+                        </Paper>
+                    )}
+                </Box>
+                <Box>
+                    {role === MANAGER && <ChangeAdvanceFactor/>}
+                </Box>
             </Box>
 
             <Dialog disableEscapeKeyDown open={addPlace} onClose={handleClose}>

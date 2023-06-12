@@ -21,6 +21,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.HotWaterEntryDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.HeatDistributionCentreService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
@@ -77,7 +78,7 @@ public class HeatDistributionCentreEndpoint {
 
                 rollbackTX = heatDistributionCentreService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
-            } catch (EJBTransactionRolledbackException | OptimisticLockAppException ex) {
+            } catch (TransactionRollbackException | OptimisticLockAppException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -134,7 +135,7 @@ public class HeatDistributionCentreEndpoint {
                         etag);
                 rollbackTX = heatDistributionCentreService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
-            } catch (OptimisticLockAppException | EJBTransactionRolledbackException ex) {
+            } catch (TransactionRollbackException | EJBTransactionRolledbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
