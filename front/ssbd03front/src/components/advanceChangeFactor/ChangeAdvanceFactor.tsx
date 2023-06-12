@@ -28,7 +28,6 @@ const ChangeAdvanceFactor = () => {
     const navigate = useNavigate();
     const token = 'Bearer ' + localStorage.getItem("token");
     const [advanceChangeFactor, setAdvanceChangeFactor] = useState<ActualAdvanceChangeFactor | null>(null);
-    const [version, setVersion] = useState<number>();
     const [newChangeFactor, setNewChangeFactor] = useState('');
     const buildingId = params.buildingId;
     const URL  = `${API_URL}/heat-distribution-centre/parameters/advance-change-factor/${buildingId}`;

@@ -163,6 +163,19 @@ public class HeatDistributionCentreEndpoint {
                 .build();
     }
 
+    //MOW 13
+    @GET
+    @Path("/hot-water-consumption/place/{placeId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
+    public Response getHotWaterEntriesForPlace(@PathParam("placeId") Long placeId) {
+        return Response.status(200)
+                .entity(heatDistributionCentreService.getHotWaterEntriesForPlace(placeId).stream()
+                        .map(HotWaterEntryMapper::createHotWaterEntryToHotWaterEntryDTO)
+                        .toList())
+                .build();
+    }
+
     //MOW 14,15,16
     @Path("/parameters/consumption-cost")
     @Produces(MediaType.APPLICATION_JSON)

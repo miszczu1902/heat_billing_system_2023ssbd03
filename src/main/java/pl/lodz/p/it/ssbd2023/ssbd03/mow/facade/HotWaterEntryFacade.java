@@ -72,4 +72,11 @@ public class HotWaterEntryFacade extends AbstractFacade<HotWaterEntry> {
         final List<HotWaterEntry> resultList = tq.getResultList();
         return resultList.isEmpty() ? null :resultList.get(0);
     }
+
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
+    public List<HotWaterEntry> getHotWaterEntriesByPlaceId(Long placeId){
+        TypedQuery<HotWaterEntry> tq = em.createNamedQuery("HotWaterEntry.getListOfHotWaterEntriesForPlace", HotWaterEntry.class);
+        tq.setParameter("id", placeId);
+        return tq.getResultList();
+    }
 }

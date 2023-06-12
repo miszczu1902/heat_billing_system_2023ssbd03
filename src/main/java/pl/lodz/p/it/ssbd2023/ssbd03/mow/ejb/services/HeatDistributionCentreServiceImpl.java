@@ -67,10 +67,9 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
         }
 
         LocalDate date = LocalDate.now();
-        if (date.getDayOfMonth() != 12) { // sprawdzamy czy mam pierszy dzień w danym miesiącu na nowy kwartał
+        if (date.getDayOfMonth() != 1) { // sprawdzamy czy mam pierszy dzień w danym miesiącu na nowy kwartał
             throw AppException.createAdvanceChangeFactorNotModifiedException();
-        }
-        else date = date.minusMonths(3); //sprawdzamy czy w kwartale zmodyfikowano wspolczynnik
+        } else date = date.minusMonths(3); //sprawdzamy czy w kwartale zmodyfikowano wspolczynnik
 
         if (heatingPlaceAndCommunalAreaAdvanceFacade.checkIfAdvanceChangeFactorNotModified(buildingId, date)) {
             final List<Place> places = placeFacade.findPlacesByBuildingId(buildingId).stream()
@@ -181,7 +180,22 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     }
 
     @Override
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public HotWaterEntry getHotWaterEntry(Long hotWaterEntryId) {
         return hotWaterEntryFacade.find(hotWaterEntryId);
+    }
+
+    @Override
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    public List<HotWaterEntry> getHotWaterEntriesForPlace(Long placeId) {
+        if (securityContext.isCallerInRole(Roles.OWNER)) {
+            final String username = securityContext.getCallerPrincipal().getName();
+            final Place place = placeFacade.findPlaceById(placeId);
+
+            if (place != null && !place.getOwner().getAccount().getUsername().equals(username)) {
+                throw AppException.createNotOwnerOfPlaceException();
+            }
+        }
+        return hotWaterEntryFacade.getHotWaterEntriesByPlaceId(placeId);
     }
 }

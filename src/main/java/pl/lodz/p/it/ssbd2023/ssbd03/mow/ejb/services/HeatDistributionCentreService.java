@@ -8,6 +8,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterEntry;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Local
 public interface HeatDistributionCentreService extends CommonManagerLocalInterface {
@@ -27,4 +28,6 @@ public interface HeatDistributionCentreService extends CommonManagerLocalInterfa
     HotWaterEntry getHotWaterEntry(Long hotWaterEntryId);
 
     HeatingPlaceAndCommunalAreaAdvance getActualAdvanceChangeFactor(Long buildingId);
+
+    List<HotWaterEntry> getHotWaterEntriesForPlace(Long placeId);
 }
