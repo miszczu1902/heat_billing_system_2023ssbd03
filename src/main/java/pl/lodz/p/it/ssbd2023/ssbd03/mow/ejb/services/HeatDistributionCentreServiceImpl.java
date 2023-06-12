@@ -59,6 +59,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @RolesAllowed({Roles.MANAGER})
     public void insertAdvanceChangeFactor(BigDecimal heatingAreaFactorValue, Long buildingId, String etag, Long version) {
         HeatingPlaceAndCommunalAreaAdvance actualAdvanceChangeFactor = getActualAdvanceChangeFactor(buildingId);
+
         if (!etag.equals(messageSigner.sign(actualAdvanceChangeFactor))) {
             throw AppException.createVerifierException();
         }
