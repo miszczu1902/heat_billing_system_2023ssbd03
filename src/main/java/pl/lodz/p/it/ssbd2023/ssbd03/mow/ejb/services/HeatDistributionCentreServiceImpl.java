@@ -135,7 +135,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
                 throw AppException.createOptimisticLockAppException();
             }
 
-            final HotWaterEntry newestHotWaterEntry = getHotWaterEntriesForPlaceWithoutActualEntry(placeId).get(0);
+            final HotWaterEntry newestHotWaterEntry = hotWaterEntryFacade.getHotWaterEntriesByPlaceId(placeId).get(0);
             if (newestHotWaterEntry.getEntryValue().compareTo(consumptionValue) > 0) {
                 throw AppException.createHotWaterEntryCouldNotBeInsertedException();
             }
