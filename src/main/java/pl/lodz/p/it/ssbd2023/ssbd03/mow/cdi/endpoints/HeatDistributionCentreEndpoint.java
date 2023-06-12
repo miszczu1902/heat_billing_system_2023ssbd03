@@ -130,6 +130,7 @@ public class HeatDistributionCentreEndpoint {
                         etag);
                 rollbackTX = heatDistributionCentreService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return Response.status(Response.Status.NO_CONTENT).build();
             } catch (TransactionRollbackException | OptimisticLockAppException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
@@ -141,7 +142,12 @@ public class HeatDistributionCentreEndpoint {
         if (rollbackTX && retryTXCounter == 0) {
             throw AppException.createTransactionRollbackException();
         }
-        else return Response.status(Response.Status.NO_CONTENT).build();
+        heatDistributionCentreService.modifyConsumption(
+                hotWaterEntryDTO.getHotWaterConsumption(),
+                hotWaterEntryDTO.getPlaceId(),
+                hotWaterEntryDTO.getVersion(),
+                etag);
+        return Response.status(Response.Status.NO_CONTENT).build();
     }
 
 

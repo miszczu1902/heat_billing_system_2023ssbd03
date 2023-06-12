@@ -65,7 +65,7 @@ public class MowSystemScheduler {
                 rollbackTX = balanceService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return;
-            } catch (Exception ex) {
+            } catch (TransactionRollbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;

@@ -14,8 +14,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -100,5 +100,14 @@ public class PlaceFacade extends AbstractFacade<Place> {
 
         return Optional.of(tq.getResultList()).orElse(Collections.emptyList());
 
+    }
+
+    @PermitAll
+    public List<Place> findAllPlacesByBuildingIdAndNewerThanDate(Long buildingId, LocalDateTime date) {
+        TypedQuery<Place> tq = em.createNamedQuery("Place.findAllPlacesByBuildingIdAndNewerThanDate", Place.class);
+        tq.setParameter("buildingId", buildingId);
+        tq.setParameter("date", date);
+
+        return Optional.of(tq.getResultList()).orElse(Collections.emptyList());
     }
 }
