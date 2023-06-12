@@ -63,6 +63,13 @@ public class BalanceFacade extends AbstractFacade<AnnualBalance> {
         return super.find(id);
     }
 
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    public AnnualBalance findBalanceById(Long reportId) {
+        TypedQuery<AnnualBalance> tq = em.createNamedQuery("AnnualBalance.findBalanceById", AnnualBalance.class);
+        tq.setParameter("id", reportId);
+        return tq.getSingleResult();
+    }
+
     @RolesAllowed({Roles.MANAGER})
     public List<AnnualBalance> getListOfAnnualBalancesFromBuilding(int pageNumber, int pageSize, List<Place> placeList) {
        final List<Long> idList = new ArrayList<>();

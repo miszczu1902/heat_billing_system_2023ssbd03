@@ -105,7 +105,7 @@ public class HeatDistributionCentreEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @POST
     @RolesAllowed({Roles.OWNER, Roles.MANAGER})
-    public Response insertConsumption(InsertHotWaterEntryDTO hotWaterEntryDTO) {
+    public Response insertConsumption(@Valid InsertHotWaterEntryDTO hotWaterEntryDTO) {
         heatDistributionCentreService.insertConsumption(hotWaterEntryDTO.getHotWaterConsumption(), hotWaterEntryDTO.getPlaceId());
         return Response.status(204).build();
     }

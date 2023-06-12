@@ -50,22 +50,22 @@ const AnnualBalance = () => {
                             <b>{t('year_report.placeNumber')}: </b> {annualBalance?.placeNumber}
                         </Typography>
                         <Typography variant="h5">
-                            <b>{t('year_report.totalHeatingCommunalAreaAdvance')}:</b> {annualBalance?.totalHeatingCommunalAreaAdvance}
+                            <b>{t('year_report.totalHeatingCommunalAreaAdvance')}:</b> {annualBalance?.totalHeatingCommunalAreaAdvance + ' PLN'}
                         </Typography>
                         <Typography variant="h5">
-                            <b>{t('year_report.totalHeatingCommunalAreaCost')}:  </b> {annualBalance?.totalHeatingCommunalAreaCost}
+                            <b>{t('year_report.totalHeatingCommunalAreaCost')}:  </b> {annualBalance?.totalHeatingCommunalAreaCost + ' PLN'}
                         </Typography>
                         <Typography variant="h5">
-                            <b>{t('year_report.totalHeatingPlaceAdvance')}: </b> {annualBalance?.totalHeatingPlaceAdvance}
+                            <b>{t('year_report.totalHeatingPlaceAdvance')}: </b> {annualBalance?.totalHeatingPlaceAdvance + ' PLN'}
                         </Typography>
                         <Typography variant="h5">
-                            <b>{t('year_report.totalHeatingPlaceCost')}: </b> {annualBalance?.totalHeatingPlaceCost}
+                            <b>{t('year_report.totalHeatingPlaceCost')}: </b> {annualBalance?.totalHeatingPlaceCost + ' PLN'}
                         </Typography>
                         <Typography variant="h5">
-                            <b>{t('year_report.totalHotWaterAdvance')}: </b> {annualBalance?.totalHotWaterAdvance}
+                            <b>{t('year_report.totalHotWaterAdvance')}: </b> {annualBalance?.totalHotWaterAdvance + ' PLN'}
                         </Typography>
                         <Typography variant="h5">
-                            <b>{t('year_report.totalHotWaterCost')}: </b> {annualBalance?.totalHotWaterCost}
+                            <b>{t('year_report.totalHotWaterCost')}: </b> {annualBalance?.totalHotWaterCost + ' PLN'}
                         </Typography>
                     </Paper>
             </Box>

@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.dto.request;
 
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,10 +17,16 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ModifyHotWaterEntryDTO extends VersionDTO implements Serializable, Signable {
-    @DecimalMin(value = "0")
+    @DecimalMin(value = "0.01")
     private BigDecimal hotWaterConsumption;
 
     private Long placeId;
+
+    public ModifyHotWaterEntryDTO(@NotNull Long version, BigDecimal hotWaterConsumption, Long placeId) {
+        super(version);
+        this.hotWaterConsumption = hotWaterConsumption;
+        this.placeId = placeId;
+    }
 
     @Override
     public String messageToSign() {

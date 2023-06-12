@@ -56,7 +56,7 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
     @Override
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public AnnualBalance getYearReport(Long reportId) {
-        final AnnualBalance annualBalance = balanceFacade.find(reportId);
+        final AnnualBalance annualBalance = balanceFacade.findBalanceById(reportId);
 
         if (securityContext.isCallerInRole(Roles.OWNER)) {
             final String username = securityContext.getCallerPrincipal().getName();
