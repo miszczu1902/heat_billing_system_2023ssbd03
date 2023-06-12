@@ -16,7 +16,6 @@ public class ModifyPlaceOwnerDTO extends VersionDTO implements Serializable {
     @NotNull
     private String username;
 
-
     public ModifyPlaceOwnerDTO(@NotNull Long version, String username) {
         super(version);
         this.username = username;

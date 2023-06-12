@@ -27,7 +27,7 @@ public class GetBuildingAnnualBalanceReportsTest extends BasicIntegrationConfigT
 
     @Test
     public void getBuildingAnnualBalanceReportsForbiddenAsOwner() {
-        auth(new LoginDTO(Account.OWNER, Account.PASSWORD));
+        auth(new LoginDTO(Account.OWNER2, Account.PASSWORD));
         Response response = sendRequestAndGetResponse(Method.GET, URL_GET, null, null);
         assertEquals(403, response.getStatusCode(), "check if request responses forbidden.");
     }

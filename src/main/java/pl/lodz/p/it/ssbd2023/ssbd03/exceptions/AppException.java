@@ -22,7 +22,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.PredictedHotWaterConsumptio
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.UserIsAlreadyOwnerOfThisPlaceException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoResultException;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.CanNotMakeYourselfOwnerOfThePlaceException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.CanNotMakeYourselfOwnerOfThePlaceException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.HotWaterEntryCouldNotBeInsertedException;

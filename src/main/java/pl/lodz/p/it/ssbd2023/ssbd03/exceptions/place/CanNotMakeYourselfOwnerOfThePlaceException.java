@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role;
+package pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place;
 
 import jakarta.ejb.ApplicationException;
 import jakarta.ws.rs.core.Response;
