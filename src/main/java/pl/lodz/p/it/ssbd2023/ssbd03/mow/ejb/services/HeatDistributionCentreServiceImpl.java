@@ -104,7 +104,8 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
                 throw AppException.createHotWaterEntryCouldNotBeInsertedException();
             }
 
-            final HotWaterEntry newestHotWaterEntry = hotWaterEntryFacade.getHotWaterEntriesByPlaceId(placeId).get(0);
+            final HotWaterEntry newestHotWaterEntry = getHotWaterEntriesForPlaceWithoutActualEntry(placeId).get(0);
+
             if (newestHotWaterEntry.getEntryValue().compareTo(consumptionValue) > 0) {
                 throw AppException.createHotWaterEntryCouldNotBeInsertedException();
             }
@@ -132,7 +133,8 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
                 throw AppException.createOptimisticLockAppException();
             }
 
-            final HotWaterEntry newestHotWaterEntry = hotWaterEntryFacade.getHotWaterEntriesByPlaceId(placeId).get(0);
+            final HotWaterEntry newestHotWaterEntry = getHotWaterEntriesForPlaceWithoutActualEntry(placeId).get(0);
+
             if (newestHotWaterEntry.getEntryValue().compareTo(consumptionValue) > 0) {
                 throw AppException.createHotWaterEntryCouldNotBeInsertedException();
             }
@@ -222,5 +224,13 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
             }
         }
         return hotWaterEntryFacade.getHotWaterEntriesByPlaceId(placeId);
+    }
+
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    private List<HotWaterEntry> getHotWaterEntriesForPlaceWithoutActualEntry(Long placeId) {
+        final List<HotWaterEntry> hotWaterEntries = hotWaterEntryFacade.getHotWaterEntriesByPlaceId(placeId);
+        final LocalDate now = LocalDate.now();
+        hotWaterEntries.removeIf(entry -> entry.getDate().getYear() == now.getYear() && entry.getDate().getMonthValue() == now.getMonthValue());
+        return hotWaterEntries;
     }
 }
