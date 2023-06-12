@@ -35,8 +35,8 @@ const AnnualBalancesSelf = () => {
         navigate('/annual-reports/self');
     };
 
-    const goToAnnualBalance = (placeId: number, year: number) => {
-        navigate(`/annual-reports/self/annual-balance/${placeId}/${year}`);
+    const goToAnnualBalance = (placeId: number, year: number, reportId: number) => {
+        navigate(`/annual-reports/self/annual-balance/${reportId}/${placeId}/${year}`);
     }
 
     return (
@@ -70,7 +70,7 @@ const AnnualBalancesSelf = () => {
                 </TableHead>
                 <TableBody>
                     {reports.map((reports) => (
-                        <TableRow key={reports.id} onClick={() => goToAnnualBalance(reports.placeId, reports.year)}>
+                        <TableRow key={reports.id} onClick={() => goToAnnualBalance(reports.placeId, reports.year, reports.id)}>
                             <TableCell component='th' scope='row'/>
                             <TableCell>{reports.firstName} {reports.surname}</TableCell>
                             <TableCell>{reports.year}</TableCell>

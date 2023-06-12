@@ -38,7 +38,7 @@ const AdvancesList = () => {
 
     const handleClick = () => {
         fetchData();
-        navigate(`/buildings/${buildingId}/annual-balance/${placeId}/${year}`);
+        navigate(location.pathname);
     };
 
     return (

@@ -379,5 +379,17 @@
     "confirm_add": "Are you sure that you want to add entry?",
     "entry_error": "Error during entry insertion",
     "added": "Hot water entry added"
+  },
+  "year_report": {
+    "year": "Year",
+    "address": "Address",
+    "postalCode": "Postal code",
+    "placeNumber": "Place number",
+    "totalHeatingCommunalAreaAdvance": "Total heating communal area advance",
+    "totalHeatingCommunalAreaCost": "Total heating communal area cost",
+    "totalHeatingPlaceAdvance": "Total heating place advance",
+    "totalHeatingPlaceCost": "Total heating place cost",
+    "totalHotWaterAdvance": "Total hot water advance",
+    "totalHotWaterCost": "Total hot water cost"
   }
 }
