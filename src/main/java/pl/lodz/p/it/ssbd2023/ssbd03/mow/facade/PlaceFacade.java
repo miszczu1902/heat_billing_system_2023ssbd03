@@ -109,6 +109,5 @@ public class PlaceFacade extends AbstractFacade<Place> {
         tq.setParameter("date", date);
 
         return Optional.of(tq.getResultList()).orElse(Collections.emptyList());
-
     }
 }
