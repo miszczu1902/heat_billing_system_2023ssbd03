@@ -21,4 +21,3 @@ public class ModifyPlaceOwnerDTO extends VersionDTO implements Serializable {
         this.username = username;
     }
 }
-

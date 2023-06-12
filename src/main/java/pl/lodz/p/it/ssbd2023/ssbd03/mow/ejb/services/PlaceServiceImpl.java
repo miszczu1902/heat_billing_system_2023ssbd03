@@ -61,7 +61,7 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
             throw AppException.createAccountIsNotActivatedException();
         }
 
-        Place place = placeFacade.findPlaceById(placeId);
+        final Place place = placeFacade.findPlaceById(placeId);
 
         if (!etag.equals(messageSigner.sign(place))) {
             throw AppException.createVerifierException();
