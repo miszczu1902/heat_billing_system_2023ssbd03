@@ -19,7 +19,9 @@ import java.time.LocalDate;
                 @Index(name = "heat_distribution_centre_pay_off_manager_id", columnList = "manager_id")
         })
 @NamedQueries({
-        @NamedQuery(name = "HeatDistributionCentrePayoff.getPayoffByDate", query = "SELECT k FROM HeatDistributionCentrePayoff k WHERE YEAR(k.date) = :year AND MONTH(k.date)= :month")
+        @NamedQuery(name = "HeatDistributionCentrePayoff.getPayoffByDate", query = "SELECT k FROM HeatDistributionCentrePayoff k WHERE YEAR(k.date) = :year AND MONTH(k.date)= :month"),
+        @NamedQuery(name = "HeatDistributionCentrePayoff.getLatestHeatDistributionCentrePayoff",
+                query = "SELECT k FROM HeatDistributionCentrePayoff k ORDER BY k.creationDateTime DESC")
 })
 public class HeatDistributionCentrePayoff extends AbstractEntity implements Serializable {
     @Id
