@@ -135,7 +135,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
         }
         final List<HeatDistributionCentre> heatDistributionCentre = heatDistributionCentreFacade.getListOfHeatDistributionCentre();
         if (heatDistributionCentre.isEmpty()) {
-            throw AppException.noHeatDistributionCentreException();
+            throw AppException.createNoHeatDistributionCentreException();
         }
         final HeatDistributionCentrePayoff heatDistributionCentrePayoff = new HeatDistributionCentrePayoff(consumption, consumptionCost, LocalDate.now(), heatingAreaFactor, manager, heatDistributionCentre.get(0));
         heatDistributionCentrePayoffFacade.create(heatDistributionCentrePayoff);
