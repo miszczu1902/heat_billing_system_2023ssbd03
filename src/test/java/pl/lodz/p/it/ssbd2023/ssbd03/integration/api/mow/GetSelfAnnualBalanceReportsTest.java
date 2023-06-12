@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class GetSelfAnnualBalanceReportsTest  extends BasicIntegrationConfigTest {
-    private static final String URL_GET = "/accounts/self";
+    private static final String URL_GET = "/balances/self/all-reports";
 
     @Test
     public void getSelfAnnualBalanceReportsAsOwner() {
