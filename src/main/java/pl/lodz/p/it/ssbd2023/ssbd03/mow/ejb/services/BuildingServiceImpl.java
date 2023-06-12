@@ -141,7 +141,7 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
     @RolesAllowed({Roles.MANAGER})
     private void calculateHotWaterAdvanceForNewPlace(Place place) {
         final BigDecimal averageValue = place.getPredictedHotWaterConsumption().divide(BigDecimal.valueOf(30), 2, BigDecimal.ROUND_HALF_UP);
-        final HeatingPlaceAndCommunalAreaAdvance heatingPlaceAndCommunalAreaAdvance = heatingPlaceAndCommunalAreaAdvanceFacade.findLatestHeatingPlaceAndCommunalAreaAdvance(place.getBuilding().getId());
+        final HeatingPlaceAndCommunalAreaAdvance heatingPlaceAndCommunalAreaAdvance = heatingPlaceAndCommunalAreaAdvanceFacade.findTheNewestAdvanceChangeFactor(place.getBuilding().getId());
         final List<Place> places = placeFacade.findAllPlaces()
                 .stream()
                 .filter(Place::getHotWaterConnection)

@@ -54,7 +54,7 @@ public class AdvanceServiceImpl extends AbstractService implements AdvanceServic
         final BigDecimal pricePerCubicMeter = price.divide(totalWater, 2, BigDecimal.ROUND_HALF_UP);
 
         for (Place place : places) {
-            final HeatingPlaceAndCommunalAreaAdvance heatingPlaceAndCommunalAreaAdvance = heatingPlaceAndCommunalAreaAdvanceFacade.findLatestHeatingPlaceAndCommunalAreaAdvance(place.getBuilding().getId());
+            final HeatingPlaceAndCommunalAreaAdvance heatingPlaceAndCommunalAreaAdvance = heatingPlaceAndCommunalAreaAdvanceFacade.findTheNewestAdvanceChangeFactor(place.getBuilding().getId());
             final List<HotWaterEntry> hotWaterEntries = place.getHotWaterEntries();
 
             if (hotWaterEntries.size() >= 3) {
