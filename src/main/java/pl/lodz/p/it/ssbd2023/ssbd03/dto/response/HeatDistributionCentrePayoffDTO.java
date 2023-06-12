@@ -18,14 +18,17 @@ public class HeatDistributionCentrePayoffDTO extends AbstractDTO {
     private Long heatDistributionCentreId;
     private String manager;
     private BigDecimal heatingAreaFactor;
+    private BigDecimal consumption;
     private BigDecimal consumptionCost;
 
-    public HeatDistributionCentrePayoffDTO(Long id, Long version, LocalDate date, Long heatDistributionCentreId, String manager, BigDecimal heatingAreaFactor, BigDecimal consumptionCost) {
+    public HeatDistributionCentrePayoffDTO(Long id, Long version, LocalDate date, Long heatDistributionCentreId,
+                                           String manager, BigDecimal heatingAreaFactor, BigDecimal consumption, BigDecimal consumptionCost) {
         super(id, version);
         this.date = date;
         this.heatDistributionCentreId = heatDistributionCentreId;
         this.manager = manager;
         this.heatingAreaFactor = heatingAreaFactor;
+        this.consumption = consumption;
         this.consumptionCost = consumptionCost;
     }
 }

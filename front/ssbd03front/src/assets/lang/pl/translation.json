@@ -298,6 +298,13 @@
     "error": "Wystąpił błąd podczas wprowadzania danych",
     "not_exists": "Wystąpił błąd z pobraniem informacji o węźle cieplnym"
   },
+  "heatDistributionCentrePayoff": {
+    "consumption": "Zużycie ciepła",
+    "consumptionCost": "Koszt zużytego ciepła",
+    "heatingAreaFactor": "Współczynnik zużycia ciepła",
+    "date": "Data",
+    "manager": "Zarządca, który wprowadził fakturę"
+  },
   "balances": {
     "personal_data": "Właściciel",
     "year": "Rok",

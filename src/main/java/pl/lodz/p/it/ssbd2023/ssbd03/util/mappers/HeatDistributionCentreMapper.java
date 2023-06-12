@@ -12,6 +12,7 @@ public class HeatDistributionCentreMapper {
                 heatDistributionCentrePayoff.getHeatDistributionCentre().getId(),
                 heatDistributionCentrePayoff.getManager().getAccount().getUsername(),
                 heatDistributionCentrePayoff.getHeatingAreaFactor(),
+                heatDistributionCentrePayoff.getConsumption(),
                 heatDistributionCentrePayoff.getConsumptionCost());
     }
 }
