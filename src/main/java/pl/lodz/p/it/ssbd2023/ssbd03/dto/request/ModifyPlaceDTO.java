@@ -20,15 +20,8 @@ public class ModifyPlaceDTO extends VersionDTO implements Serializable {
     @Digits(integer = 8, fraction = 2, message = "value can have 8 digits before the decimal point and max 2 digits after the decimal point")
     private BigDecimal area;
 
-    private Boolean hotWaterConnection;
-
-    private Boolean centralHeatingConnection;
-
-
     public ModifyPlaceDTO(@NotNull Long version, BigDecimal area, Boolean hotWaterConnection, Boolean centralHeatingConnection) {
         super(version);
         this.area = area;
-        this.hotWaterConnection = hotWaterConnection;
-        this.centralHeatingConnection = centralHeatingConnection;
     }
 }

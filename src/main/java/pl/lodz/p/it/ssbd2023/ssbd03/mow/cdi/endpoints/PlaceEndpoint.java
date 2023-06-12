@@ -5,6 +5,7 @@ import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.TransactionRolledbackException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,7 +16,6 @@ import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.EnterPredictedHotWaterConsumptionDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyPlaceDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.PlaceDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.PlaceInfoDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
@@ -25,7 +25,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.PlaceMapper;
 
 import java.math.BigDecimal;
-import java.security.Principal;
 import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -83,12 +82,11 @@ public class PlaceEndpoint {
         do {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
-                placeService.modifyPlace(placeId, modifyPlaceDTO.getArea(), modifyPlaceDTO.getCentralHeatingConnection(),
-                        modifyPlaceDTO.getHotWaterConnection(), etag, modifyPlaceDTO.getVersion());
+                placeService.modifyPlace(placeId, modifyPlaceDTO.getArea(), etag, modifyPlaceDTO.getVersion());
                 rollbackTX = placeService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
-            } catch (EJBTransactionRolledbackException ex) {
+            } catch (TransactionRolledbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -99,8 +97,7 @@ public class PlaceEndpoint {
         if (rollbackTX && retryTXCounter == 0) {
             throw AppException.createTransactionRollbackException();
         }
-        placeService.modifyPlace(placeId ,modifyPlaceDTO.getArea(), modifyPlaceDTO.getCentralHeatingConnection(),
-                modifyPlaceDTO.getHotWaterConnection(), etag, modifyPlaceDTO.getVersion());
+        placeService.modifyPlace(placeId ,modifyPlaceDTO.getArea(), etag, modifyPlaceDTO.getVersion());
         return Response.noContent().build();
     }
 

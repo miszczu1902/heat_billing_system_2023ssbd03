@@ -5,8 +5,7 @@ import { ButtonGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentT
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import { API_URL } from '../../consts';
-import { set } from "react-hook-form";
-import { use } from "i18next";
+
 const EditPlace = () => {
     const token = 'Bearer ' + localStorage.getItem("token");
     const { t, i18n } = useTranslation();
@@ -22,15 +21,6 @@ const EditPlace = () => {
     const [areaValid, setAreaValid] = useState(true);
     const [areaError, setAreaError] = useState("");
 
-    const [hotWaterConnection, setWaterConnection] = useState(true);
-    const [hotWaterConnectionValid, setWaterConnectionValid] = useState(false);
-    const [hotWaterConnectionError, setWaterConnectionError] = useState("");
-
-    const [centralHeatingConnection, setCentralHeatingConnection] = useState(true);
-    const [centralHeatingConnectionValid, setCentralHeatingConnectionValid] = useState(false);
-    const [centralHeatingConnectionError, setCentralHeatingConnectionError] = useState("");
-
-
     const fetchData = async () => {
         axios.get(`${API_URL}/places/place/${placeId}`,{
             headers: {
@@ -40,8 +30,6 @@ const EditPlace = () => {
             setVersion(response.data.version);
             localStorage.setItem("etag", response.headers["etag"]);
             setArea(response.data.area);
-            setWaterConnection(response.data.hotWaterConnection);
-            setCentralHeatingConnection(response.data.centralHeatingConnection);
         }).catch((error) => {
             if (error.response.status === 403) {
                 setAuthorizationErrorOpen(true);
@@ -65,15 +53,6 @@ const EditPlace = () => {
         }
     };
 
-    const handleWaterConnectionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setWaterConnection(event.target.checked);
-    };
-
-    const handleCentralHeatingConnectionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setCentralHeatingConnection(event.target.checked);
-    };
-
-
     const handleClickOpen = () => {
         fetchData();
         setOpen(true);
@@ -82,12 +61,6 @@ const EditPlace = () => {
     const handleClose = () => {
         setAreaError("");
         setAreaValid(false);
-
-        setWaterConnectionError("");
-        setWaterConnectionValid(false);
-
-        setCentralHeatingConnectionError("");
-        setCentralHeatingConnectionValid(false);
 
         setOpen(false);
     };
@@ -107,7 +80,7 @@ const EditPlace = () => {
     };
 
     const handleConfirmSave = () => {  
-        if(!areaValid && !hotWaterConnectionValid && !centralHeatingConnectionValid) {
+        if(!areaValid) {
             setOpenSnackbar(true);
             setConfirmOpen(false);
             return;
@@ -115,8 +88,6 @@ const EditPlace = () => {
 
         const editPlaceDTO = {
             area : area,
-            hotWaterConnection : hotWaterConnection,
-            centralHeatingConnection : centralHeatingConnection,
             version: version
         }
         axios.patch(`${API_URL}/places/place/${placeId}`,
@@ -174,20 +145,6 @@ const EditPlace = () => {
                     <DialogContentText style={{ fontSize: "13px", color: "red" }}>
                         {areaError}
                     </DialogContentText>
-                </DialogContent>
-                <DialogContent>
-                <DialogContentText>
-                </DialogContentText>                    
-                     <FormGroup>
-                        <FormControlLabel control={<Switch 
-                                                    checked={hotWaterConnection}
-                                                    onChange={handleWaterConnectionChange}
-                                                    inputProps={{ 'aria-label': 'controlled' }} />} label={t('editPlace.edit_place_text_field_hot_water_connection')} />
-                        <FormControlLabel control={<Switch 
-                                                    checked={centralHeatingConnection}
-                                                    onChange={handleCentralHeatingConnectionChange}
-                                                    inputProps={{ 'aria-label': 'controlled' }} />} label={t('editPlace.edit_place_text_field_central_heating_connection')} />
-                    </FormGroup>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleSave}>{t('confirm.save')}</Button>

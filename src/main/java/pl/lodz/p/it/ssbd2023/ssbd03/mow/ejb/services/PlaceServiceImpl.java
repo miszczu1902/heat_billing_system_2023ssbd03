@@ -55,8 +55,7 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
 
     @Override
     @RolesAllowed(Roles.MANAGER)
-    public void modifyPlace(String placeId, BigDecimal area, Boolean centralHeatingConnection,
-                            Boolean hotWaterConnection, String etag, Long version) {
+    public void modifyPlace(String placeId, BigDecimal area, String etag, Long version) {
         final Long id = Long.valueOf(placeId);
         Place place = placeFacade.findPlaceById(id);
 
@@ -71,12 +70,7 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
         if (area != null) {
             place.setArea(area);
         }
-        if (centralHeatingConnection != null) {
-            place.setCentralHeatingConnection(centralHeatingConnection);
-        }
-        if (hotWaterConnection != null) {
-            place.setHotWaterConnection(hotWaterConnection);
-        }
+
         placeFacade.edit(place);
     }
 

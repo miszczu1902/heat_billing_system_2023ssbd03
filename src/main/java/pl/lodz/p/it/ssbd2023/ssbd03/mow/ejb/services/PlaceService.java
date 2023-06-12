@@ -15,8 +15,7 @@ public interface PlaceService extends CommonManagerLocalInterface {
 
     void modifyPlaceOwner();
 
-    void modifyPlace(String placeId, BigDecimal area, Boolean centralHeatingConnection, Boolean hotWaterConnection,
-                     String etag, Long version);
+    void modifyPlace(String placeId, BigDecimal area, String etag, Long version);
 
     void enterHotWaterConsumption(String placeId, LocalDate date, BigDecimal value);
 
