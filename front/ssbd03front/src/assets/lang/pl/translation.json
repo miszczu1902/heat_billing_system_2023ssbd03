@@ -358,6 +358,10 @@
     "confirm_changes" : "Czy na pewno chcesz zmodyfikować wpis?",
     "success_title": "Udało się zmodyfikować wpis",
     "failure_title" : "Nie udało się zmodyfikować wpisu",
-    "entry_not_correct" : "Wartość musi być większa niż 0"
+    "entry_not_correct" : "Wartość musi być większa niż 0",
+    "add": "Dodaj wpis",
+    "confirm_add": "Czy na pewno chcesz dodać wpis?",
+    "added": "Wpis został dodany",
+    "entry_error": "Błąd podczas wprowadzania wpisu"
   }
 }

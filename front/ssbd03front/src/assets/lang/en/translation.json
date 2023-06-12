@@ -271,7 +271,8 @@
     "building_number_error": "Wrong building number format, use only letters and numbers (e.g. 1A)",
     "city_error": "Wrong city format, use only letters, spaces (e.g. New York) and contains up to 32 characters",
     "postal_code_error": "Wrong postal code format, use only numbers and dash (e.g. 00-000)",
-  "add_building_error" : "Cannot add building due to input errors"},
+    "add_building_error": "Cannot add building due to input errors"
+  },
   "invoice": {
     "consumption": "Heat consumption value",
     "consumptionCost": "Heat consumption cost value",
@@ -288,15 +289,14 @@
     "error": "An error occured while inserting data",
     "not_exists": "An error occured while tried to get information about heat distribution centre"
   },
-  "enterPredictedHotWaterConsumption" :
-  {
-    "enter_predicted_hot_water_consumption_button" : "Enter predicted hot water consumption",
-    "enter_predicted_hot_water_consumption_title" : "Predicted hot water consumption",
-    "enter_predicted_hot_water_consumption_description" : "Each new owner of the premises must enter the predicted hot water consumption. Enter the data in the fields below. After entering your data, they can only be modified by the manager.",
-    "enter_predicted_hot_water_consumption_text_field_name" : "Predicted hot water consumption [m3]",
+  "enterPredictedHotWaterConsumption": {
+    "enter_predicted_hot_water_consumption_button": "Enter predicted hot water consumption",
+    "enter_predicted_hot_water_consumption_title": "Predicted hot water consumption",
+    "enter_predicted_hot_water_consumption_description": "Each new owner of the premises must enter the predicted hot water consumption. Enter the data in the fields below. After entering your data, they can only be modified by the manager.",
+    "enter_predicted_hot_water_consumption_text_field_name": "Predicted hot water consumption [m3]",
     "enter_predicted_hot_water_consumption_error": "Wrong predicted hot water consumption format, use only numbers and dot (e.g. 100.00)",
-    "enter_predicted_hot_water_consumption_confirm" : "Are you sure you want to add predicted hot water consumption?",
-    "enter_predicted_hot_water_consumption_failed" : "An error occurred while adding predicted hot water consumption"
+    "enter_predicted_hot_water_consumption_confirm": "Are you sure you want to add predicted hot water consumption?",
+    "enter_predicted_hot_water_consumption_failed": "An error occurred while adding predicted hot water consumption"
   },
   "balances": {
     "address": "Address",
@@ -308,17 +308,16 @@
     "city": "City",
     "postal_code": "Postal code"
   },
-  "place" :
-  {
+  "place": {
     "title": "Place info",
-    "id" : "Place id",
-    "created_by" : "Created by",
-    "placeNumber" : "Place number",
-    "area" : "Place area",
-    "hotWaterConnection" : "Water connection",
-    "centralHeatingConnection" : "Heating connection",
-    "predictedHotWaterConsumption" : "Water consumption prediction",
-    "firstName" : "Owner's first name",
+    "id": "Place id",
+    "created_by": "Created by",
+    "placeNumber": "Place number",
+    "area": "Place area",
+    "hotWaterConnection": "Water connection",
+    "centralHeatingConnection": "Heating connection",
+    "predictedHotWaterConsumption": "Water consumption prediction",
+    "firstName": "Owner's first name",
     "surname": "Owner's surname",
     "username": "Username",
     "connected": "Connected",
@@ -336,23 +335,32 @@
     "yes": "Yes",
     "no": "No"
   },
-  "annual_balance" : {
+  "annual_balance": {
     "water": "Hot water advance value",
     "place_heat": "Heating place advance value",
     "communal_area_heat": "Communal area advance value",
     "date": "Date",
     "change_factor": "Advance change factor",
-    "modify_change_factor" : "Modify advance change factor",
+    "modify_change_factor": "Modify advance change factor",
     "new_change_factor": "New change factor",
-    "error" : "Factor not modified",
+    "error": "Factor not modified",
     "success_modified": "Factor was modified",
     "factor_invalid": "Incorrect factor",
     "factor_info": "Could be value greater than 0 and no greater then 9",
     "confirm_factor": "Are you sure to confirm factor change?"
   },
-  "hot_water" : {
+  "hot_water": {
     "date": "Date",
     "value": "Value",
-    "manager": "Manager who insert entry"
+    "manager": "Manager who insert entry",
+    "enter": "Modify entry",
+    "confirm_changes": "Are you sure that you want to modify entry?",
+    "success_title": "Entry modified",
+    "failure_title": "Entry not modified",
+    "entry_not_correct": "Value must be greater than 0",
+    "add": "Add entry",
+    "confirm_add": "Are you sure that you want to add entry?",
+    "entry_error": "Error during entry insertion",
+    "added": "Hot water entry added"
   }
 }

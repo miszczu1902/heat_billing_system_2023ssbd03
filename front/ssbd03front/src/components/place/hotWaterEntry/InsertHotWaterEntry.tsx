@@ -13,7 +13,7 @@ import ListItem from "@mui/material/ListItem";
 import {TextField} from "@mui/material";
 import DialogActions from "@mui/material/DialogActions";
 
-const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}> = ({ hotWaterEntryId, placeId }) => {
+const InsertHotWaterEntry: React.FC<{placeId: any}> = ({placeId}) => {
     const {t} = useTranslation();
     const token = "Bearer " + localStorage.getItem("token");
     const [version, setVersion] = useState("");
@@ -37,7 +37,7 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
         let value = event.target.value;
         setEntryValue(value);
         if (parseFloat(value) <= 0) {
-            setEntryError(t('hot_water.entry_error'));
+            setEntryError(t('hot_water.entry_not_correct'));
             setEmailValid(false);
         } else {
             setEntryError("");
@@ -46,18 +46,6 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
     };
 
     const handleClickOpen = () => {
-        const fetchData = async () => {
-            await axios.get(`${API_URL}/heat-distribution-centre/hot-water-consumption/${hotWaterEntryId}`, {
-                headers: {
-                    Authorization: token
-                }
-            })
-                .then(response => {
-                    localStorage.setItem("etagHotWaterEntry", response.headers["etag"]);
-                    setVersion(response.data.version);
-                });
-        };
-        fetchData();
         setOpen(true);
     };
 
@@ -77,14 +65,13 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
         if (reason !== 'backdropClick') {
             setConfirmOpen(false);
         }
-        const modifyHotWaterEntry = {
+        const insertHotWaterEntry = {
             hotWaterConsumption: entryValue,
-            placeId: placeId,
-            version: parseInt(version)
+            placeId: placeId
         }
         const fetchData = async () => {
-            await axios.patch(`${API_URL}/heat-distribution-centre/parameters/insert-consumption`,
-                modifyHotWaterEntry, {
+            await axios.post(`${API_URL}/heat-distribution-centre/parameters/insert-consumption`,
+                insertHotWaterEntry, {
                     headers: {
                         'Authorization': token,
                         'If-Match': localStorage.getItem("etagHotWaterEntry"),
@@ -129,10 +116,10 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
     return (
         <div>
             <div>
-                <Button onClick={handleClickOpen} variant="contained">{t('hot_water.enter')}</Button>
+                <Button onClick={handleClickOpen} variant="contained">{t('hot_water.add')}</Button>
             </div>
             <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
-                <DialogTitle>{t('hot_water.enter')}</DialogTitle>
+                <DialogTitle>{t('hot_water.add')}</DialogTitle>
                 <DialogContent>
                     <Box sx={{display: 'flex', flexWrap: 'wrap'}}>
                         <form onSubmit={handleSumbit}>
@@ -165,7 +152,7 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
             </Dialog>
 
             <Dialog disableEscapeKeyDown open={confirmOpen} onClose={handleConfirmClose}>
-                <DialogTitle>{t('hot_water.confirm_changes')}</DialogTitle>
+                <DialogTitle>{t('hot_water.confirm_add')}</DialogTitle>
                 <DialogActions>
                     <Button onClick={handleConfirmClose}>{t('confirm.no')}</Button>
                     <Button onClick={handleConfirmConfirm}>{t('confirm.yes')}</Button>
@@ -173,7 +160,7 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
             </Dialog>
 
             <Dialog disableEscapeKeyDown open={successOpen}>
-                <DialogTitle>{t('hot_water.success_title')}</DialogTitle>
+                <DialogTitle>{t('hot_water.added')}</DialogTitle>
                 <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
             </Dialog>
 
@@ -184,4 +171,4 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
         </div>
     );
 }
-export default ModifyHotWaterEntry;
+export default InsertHotWaterEntry;

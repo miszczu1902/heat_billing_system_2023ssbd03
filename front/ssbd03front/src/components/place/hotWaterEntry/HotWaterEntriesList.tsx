@@ -8,6 +8,7 @@ import RefreshIcon from "../../icons/RefreshIcon";
 import {HotWaterEntryForList} from "../../../types/HotWaterEntryForList";
 import { format } from 'date-fns';
 import ModifyHotWaterEntry from "./ModifyHotWaterEntry";
+import InsertHotWaterEntry from "./InsertHotWaterEntry";
 
 const HotWaterEntriesList = () => {
     const location = useLocation();
@@ -54,7 +55,11 @@ const HotWaterEntriesList = () => {
                         <TableCell>
                             {t('hot_water.manager')}
                         </TableCell>
-                        <TableCell/>
+                        <TableCell>
+                            {!hotWaterEntries.some(entry => {
+                                return entry.date.includes(formattedDate)
+                            }) ? <InsertHotWaterEntry placeId={placeId}/> : <div/>}
+                        </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
