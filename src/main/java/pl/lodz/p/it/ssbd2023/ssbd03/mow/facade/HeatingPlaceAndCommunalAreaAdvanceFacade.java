@@ -11,6 +11,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatingPlaceAndCommunalAreaAdvance;
 
+import javax.management.relation.Role;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Stateless
@@ -54,5 +56,13 @@ public class HeatingPlaceAndCommunalAreaAdvanceFacade extends AbstractFacade<Hea
         tq.setParameter("buildingId", buildingId);
         tq.setParameter("date", date);
         return tq.getResultList().isEmpty();
+    }
+
+
+    @RolesAllowed({Roles.MANAGER})
+    public HeatingPlaceAndCommunalAreaAdvance findTheNewestAdvanceChangeFactor(Long buildingId) {
+        TypedQuery<HeatingPlaceAndCommunalAreaAdvance> tq = em.createNamedQuery("HeatingPlaceAndCommunalAreaAdvance.findTheNewestAdvanceChangeFactor", HeatingPlaceAndCommunalAreaAdvance.class);
+        tq.setParameter("buildingId", buildingId);
+        return tq.getResultList().get(0);
     }
 }

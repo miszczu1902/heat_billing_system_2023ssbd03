@@ -47,6 +47,12 @@ public class HotWaterEntryFacade extends AbstractFacade<HotWaterEntry> {
         super.remove(entity);
     }
 
+    @Override
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    public HotWaterEntry find(Object id) {
+        return super.find(id);
+    }
+
     @RolesAllowed({Roles.MANAGER})
     public List<HotWaterEntry> getListOfHotWaterEntriesForPlace(Long id) {
         TypedQuery<HotWaterEntry> tq = em.createNamedQuery("HotWaterEntry.getListOfHotWaterEntriesForPlace", HotWaterEntry.class);
@@ -71,5 +77,12 @@ public class HotWaterEntryFacade extends AbstractFacade<HotWaterEntry> {
 
         final List<HotWaterEntry> resultList = tq.getResultList();
         return resultList.isEmpty() ? null :resultList.get(0);
+    }
+
+    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
+    public List<HotWaterEntry> getHotWaterEntriesByPlaceId(Long placeId){
+        TypedQuery<HotWaterEntry> tq = em.createNamedQuery("HotWaterEntry.getListOfHotWaterEntriesForPlace", HotWaterEntry.class);
+        tq.setParameter("id", placeId);
+        return tq.getResultList();
     }
 }

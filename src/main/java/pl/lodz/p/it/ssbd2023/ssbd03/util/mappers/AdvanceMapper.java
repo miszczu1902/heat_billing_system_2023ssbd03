@@ -1,9 +1,11 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.util.mappers;
 
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AdvanceForMonthInYearDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.GetAdvanceChangeFactorDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatingPlaceAndCommunalAreaAdvance;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterAdvance;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -27,7 +29,7 @@ public class AdvanceMapper {
         }));
         resultToDisplay.forEach(advance -> heatingAdvances.removeIf(heatingAdvance ->
                 heatingAdvance.getDate().getYear() == advance.getYear()
-                && heatingAdvance.getDate().getMonthValue() == advance.getMonth()));
+                        && heatingAdvance.getDate().getMonthValue() == advance.getMonth()));
 
         if (!heatingAdvances.isEmpty()) {
             resultToDisplay = Stream.concat(resultToDisplay.stream(),
@@ -42,5 +44,9 @@ public class AdvanceMapper {
         }
 
         return resultToDisplay;
+    }
+
+    public static GetAdvanceChangeFactorDTO createGetAdvanceChangeFactorDTOFromAdvanceChangeFactorValue(HeatingPlaceAndCommunalAreaAdvance advanceChangeFactor) {
+        return new GetAdvanceChangeFactorDTO(advanceChangeFactor.getVersion(), advanceChangeFactor.getAdvanceChangeFactor());
     }
 }

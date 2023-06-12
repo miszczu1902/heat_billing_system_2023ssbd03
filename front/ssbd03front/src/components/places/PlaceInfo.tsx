@@ -15,6 +15,7 @@ import EditPlace from "../place/EditPlace";
 import IconCheckboxMarked from "../icons/IconCheckboxMarked";
 import IconCloseBox from "../icons/IconCloseBox";
 import ChangePlaceOwner from "../place/ChangePlaceOwner";
+import HotWaterEntriesList from "../place/hotWaterEntry/HotWaterEntriesList";
 
 const PlaceInfo = () => {
     const {t} = useTranslation();
@@ -193,6 +194,7 @@ const PlaceInfo = () => {
                     )}
                 </Box>
             </Paper>
+            {place?.hotWaterConnection && <HotWaterEntriesList/>}
             <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
                 <DialogTitle>{t('personal_data.authorization_error')}</DialogTitle>
                 <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>
