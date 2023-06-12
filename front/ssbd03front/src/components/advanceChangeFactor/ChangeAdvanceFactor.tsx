@@ -143,8 +143,8 @@ const ChangeAdvanceFactor = () => {
         }
     };
 
-    return (<div style={{width: '50%', boxSizing: 'border-box', bottom: 0}}>
-        <Box sx={{width: '100%', maxWidth: '600px', margin: '2vh'}}>
+    return (<div style={{width: '100%', boxSizing: 'border-box', bottom: 0}}>
+        <Box sx={{maxWidth: '600px', margin: '2vh'}}>
             <Paper elevation={3} style={{padding: '2vh'}}>
                 <Typography variant="h5">
                     <b>{t('annual_balance.change_factor')}: </b> {advanceChangeFactor?.advanceChangeFactor}

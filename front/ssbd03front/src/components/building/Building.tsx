@@ -229,8 +229,16 @@ const Building = () => {
     };
 
     return (
-        <div style={{height: '93.3vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0}}>
-            <Box sx={{display: 'flex'}}>
+        <div style={{
+            height: '90vh',
+            width: '100vw',
+            boxSizing: 'border-box',
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: 'flex'
+        }}>
+            <Box>
                 <Box sx={{maxWidth: '600px', margin: '2vh'}}>
                     {building !== null && (
                         <Paper elevation={3} style={{padding: '2vh'}}>
@@ -384,68 +392,69 @@ const Building = () => {
                 <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
             </Dialog>
 
-            <TableContainer component={Paper}>
-                <Table aria-label='simple table'>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell>
-                                {t('place.created_by')}
-                            </TableCell>
-                            <TableCell>
-                                {t('place.placeNumber')}
-                            </TableCell>
-                            <TableCell>
-                                {t('place.area')}
-                            </TableCell>
-                            <TableCell>
-                                {t('place.hotWaterConnection')}
-                            </TableCell>
-                            <TableCell>
-                                {t('place.centralHeatingConnection')}
-                            </TableCell>
-                            <TableCell>
-                                {t('place.predictedHotWaterConsumption')}
-                            </TableCell>
-                            <TableCell>
-                                {t('place.firstName')}
-                            </TableCell>
-                            <TableCell>
-                                {t('place.surname')}
-                            </TableCell>
-                            <TableCell></TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {places.map((place) => (
-                            <TableRow key={place.id}>
-                                <TableCell>{place.createdBy}</TableCell>
-                                <TableCell>{place.placeNumber}</TableCell>
-                                <TableCell>{place.area}</TableCell>
+            <Box sx={{margin: '2vh'}}>
+                <TableContainer component={Paper}>
+                    <Table aria-label='simple table'>
+                        <TableHead>
+                            <TableRow>
                                 <TableCell>
-                                    {place.centralHeatingConnection ? t('place.yes') : t('place.no')}
+                                    {t('place.created_by')}
                                 </TableCell>
                                 <TableCell>
-                                    {place.hotWaterConnection ? t('place.yes') : t('place.no')}
+                                    {t('place.placeNumber')}
                                 </TableCell>
-                                <TableCell>{place.predictedHotWaterConsumption}</TableCell>
-                                <TableCell>{place.firstName}</TableCell>
-                                <TableCell>{place.surname}</TableCell>
                                 <TableCell>
-                                    <IconButton
-                                        edge="start"
-                                        color="inherit"
-                                        onClick={() => goToPlace(place.id.toString())}
-                                        aria-label="close"
-                                    >
-                                        <IconViewList/>
-                                    </IconButton>
+                                    {t('place.area')}
                                 </TableCell>
+                                <TableCell>
+                                    {t('place.hotWaterConnection')}
+                                </TableCell>
+                                <TableCell>
+                                    {t('place.centralHeatingConnection')}
+                                </TableCell>
+                                <TableCell>
+                                    {t('place.predictedHotWaterConsumption')}
+                                </TableCell>
+                                <TableCell>
+                                    {t('place.firstName')}
+                                </TableCell>
+                                <TableCell>
+                                    {t('place.surname')}
+                                </TableCell>
+                                <TableCell></TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-
+                        </TableHead>
+                        <TableBody>
+                            {places.map((place) => (
+                                <TableRow key={place.id}>
+                                    <TableCell>{place.createdBy}</TableCell>
+                                    <TableCell>{place.placeNumber}</TableCell>
+                                    <TableCell>{place.area}</TableCell>
+                                    <TableCell>
+                                        {place.centralHeatingConnection ? t('place.yes') : t('place.no')}
+                                    </TableCell>
+                                    <TableCell>
+                                        {place.hotWaterConnection ? t('place.yes') : t('place.no')}
+                                    </TableCell>
+                                    <TableCell>{place.predictedHotWaterConsumption}</TableCell>
+                                    <TableCell>{place.firstName}</TableCell>
+                                    <TableCell>{place.surname}</TableCell>
+                                    <TableCell>
+                                        <IconButton
+                                            edge="start"
+                                            color="inherit"
+                                            onClick={() => goToPlace(place.id.toString())}
+                                            aria-label="close"
+                                        >
+                                            <IconViewList/>
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </Box>
         </div>
     );
 }
