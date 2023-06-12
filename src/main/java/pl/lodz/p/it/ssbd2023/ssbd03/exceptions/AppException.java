@@ -33,7 +33,6 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_UNKNOWN = "exception.error.unknown";
     protected final static String ERROR_GENERAL_PERSISTENCE = "exception.error.general_persistence";
     protected final static String ERROR_OPTIMISTIC_LOCK = "exception.error.optimistic_lock";
-    protected final static String ERROR_ACCESS_DENIED = "exception.error.access_denied";
     protected final static String ERROR_TRANSACTION_ROLLEDBACK = "exception.error.transaction_rolledback";
     protected final static String ERROR_ACCOUNT_NOT_REGISTERED = "exception.error.account_not_registered";
 

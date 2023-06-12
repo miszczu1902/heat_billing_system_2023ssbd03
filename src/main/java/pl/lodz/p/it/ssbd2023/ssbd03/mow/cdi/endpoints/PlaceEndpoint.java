@@ -19,6 +19,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyPlaceOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.PlaceInfoDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.PlaceService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.EtagValidator;
@@ -76,7 +77,7 @@ public class PlaceEndpoint {
                 rollbackTX = placeService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
-            } catch (EJBTransactionRolledbackException ex) {
+            } catch (TransactionRollbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
