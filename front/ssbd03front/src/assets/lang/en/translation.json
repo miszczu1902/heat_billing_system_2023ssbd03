@@ -349,5 +349,10 @@
     "factor_invalid": "Incorrect factor",
     "factor_info": "Could be value greater than 0 and no greater then 9",
     "confirm_factor": "Are you sure to confirm factor change?"
+  },
+  "hot_water" : {
+    "date": "Date",
+    "value": "Value",
+    "manager": "Manager who insert entry"
   }
 }

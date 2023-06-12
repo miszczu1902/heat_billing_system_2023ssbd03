@@ -11,6 +11,7 @@ import {useParams} from "react-router-dom";
 import EnterPredictedHotWaterConsumption from "../place/EnterPredictedHotWaterConsumption";
 import DoorIcon from "../icons/DoorIcon";
 import {Account} from "../../types/account";
+import HotWaterEntriesList from "../place/hotWaterEntry/HotWaterEntriesList";
 
 const PlaceInfo = () => {
     const {t} = useTranslation();
@@ -200,6 +201,7 @@ const PlaceInfo = () => {
                     )}
                 </Box>
             </Paper>
+            <HotWaterEntriesList/>
             <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
                 <DialogTitle>{t('personal_data.authorization_error')}</DialogTitle>
                 <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>

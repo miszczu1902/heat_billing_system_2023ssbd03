@@ -182,7 +182,17 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @Override
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public HotWaterEntry getHotWaterEntry(Long hotWaterEntryId) {
-        return hotWaterEntryFacade.find(hotWaterEntryId);
+        HotWaterEntry hotWaterEntry = hotWaterEntryFacade.find(hotWaterEntryId);
+        if (securityContext.isCallerInRole(Roles.OWNER)) {
+            final String username = securityContext.getCallerPrincipal().getName();
+            Place place = hotWaterEntry.getPlace();
+
+            if (place != null && !place.getOwner().getAccount().getUsername().equals(username)) {
+                throw AppException.createNotOwnerOfPlaceException();
+            }
+        }
+
+        return hotWaterEntry;
     }
 
     @Override

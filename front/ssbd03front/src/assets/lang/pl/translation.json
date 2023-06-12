@@ -349,5 +349,15 @@
     "factor_invalid": "Niepoprawny współczynnik",
     "factor_info": "Wartość musi być większa niż 0 ale nie większa niż 9",
     "confirm_factor": "Czy na pewno chcesz zmienić wartość współczynnika?"
+  },
+  "hot_water" : {
+    "date": "Data",
+    "value": "Wartość wpisu",
+    "manager": "Zarządca, który wprowadził wpis",
+    "enter": "Modyfikuj wpis",
+    "confirm_changes" : "Czy na pewno chcesz zmodyfikować wpis?",
+    "success_title": "Udało się zmodyfikować wpis",
+    "failure_title" : "Nie udało się zmodyfikować wpisu",
+    "entry_not_correct" : "Wartość musi być większa niż 0"
   }
 }
