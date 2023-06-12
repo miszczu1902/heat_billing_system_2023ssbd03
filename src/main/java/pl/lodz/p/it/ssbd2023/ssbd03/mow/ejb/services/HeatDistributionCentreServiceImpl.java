@@ -49,6 +49,9 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @Inject
     private AccessLevelFacade accessLevelFacade;
 
+    @Inject
+    private ManagerFacade managerFacade;
+
     @Override
     @RolesAllowed({Roles.MANAGER})
     public Void getHeatDistributionCentreParameters() {
@@ -61,8 +64,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
         LocalDate date = LocalDate.now();
         if (date.getDayOfMonth() != 1) { // sprawdzamy czy mam pierszy dzień w danym miesiącu na nowy kwartał
             throw AppException.createAdvanceChangeFactorNotModifiedException();
-        }
-        else date = date.minusMonths(3); //sprawdzamy czy w kwartale zmodyfikowano wspolczynnik
+        } else date = date.minusMonths(3); //sprawdzamy czy w kwartale zmodyfikowano wspolczynnik
 
         if (heatingPlaceAndCommunalAreaAdvanceFacade.checkIfAdvanceChangeFactorNotModified(buildingId, date)) {
             final List<Place> places = placeFacade.findPlacesByBuildingId(buildingId).stream()
@@ -125,7 +127,9 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public void addConsumptionFromInvoice(BigDecimal consumption, BigDecimal consumptionCost, BigDecimal heatingAreaFactor, Manager manager) {
+    public void addConsumptionFromInvoice(BigDecimal consumption, BigDecimal consumptionCost, BigDecimal heatingAreaFactor) {
+        final Manager manager = managerFacade.findManagerByUsername(securityContext.getCallerPrincipal().getName());
+
         if (!heatDistributionCentrePayoffFacade.checkIfRecordForThisMonthNotExists()) {
             throw AppException.createConsumptionAddException();
         }
