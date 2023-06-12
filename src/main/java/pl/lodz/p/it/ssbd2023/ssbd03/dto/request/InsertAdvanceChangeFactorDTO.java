@@ -17,12 +17,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class InsertAdvanceChangeFactorDTO extends VersionDTO {
     @NotNull
-    @DecimalMin(value = "0")
+    @DecimalMin(value = "0.01")
     @DecimalMax(value = "9")
     private BigDecimal advanceChangeFactor;
-
-    public InsertAdvanceChangeFactorDTO(@NotNull Long version, @NotNull BigDecimal advanceChangeFactor) {
-        super(version);
-        this.advanceChangeFactor = advanceChangeFactor;
-    }
 }

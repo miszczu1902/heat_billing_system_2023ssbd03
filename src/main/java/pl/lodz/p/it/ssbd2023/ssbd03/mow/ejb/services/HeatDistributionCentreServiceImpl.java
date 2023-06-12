@@ -49,6 +49,9 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @Inject
     private AccessLevelFacade accessLevelFacade;
 
+    @Inject
+    private ManagerFacade managerFacade;
+
     @Override
     @RolesAllowed({Roles.MANAGER})
     public Void getHeatDistributionCentreParameters() {
@@ -58,7 +61,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @Override
     @RolesAllowed({Roles.MANAGER})
     public void insertAdvanceChangeFactor(BigDecimal heatingAreaFactorValue, Long buildingId, String etag, Long version) {
-        HeatingPlaceAndCommunalAreaAdvance actualAdvanceChangeFactor = getActualAdvanceChangeFactor(buildingId);
+        final HeatingPlaceAndCommunalAreaAdvance actualAdvanceChangeFactor = getActualAdvanceChangeFactor(buildingId);
 
         if (!etag.equals(messageSigner.sign(actualAdvanceChangeFactor))) {
             throw AppException.createVerifierException();
@@ -79,8 +82,6 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
             places.forEach(place -> heatingPlaceAndCommunalAreaAdvanceFacade.create(
                     new HeatingPlaceAndCommunalAreaAdvance(LocalDate.now(), place,
                             new BigDecimal(0), new BigDecimal(0), heatingAreaFactorValue)));
-
-            //TODO - tu trzeba dodac wywolanie metody liczaczej zaliczke z mowSchedulera
         } else {
             throw AppException.createAdvanceChangeFactorWasInsertedException();
         }
@@ -101,6 +102,14 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
             if (place == null || !place.getHotWaterConnection()) {
                 throw AppException.createHotWaterEntryCouldNotBeInsertedException();
+            }
+
+            final List<HotWaterEntry> hotWaterEntries = getHotWaterEntriesForPlaceWithoutActualEntry(placeId);
+            if (!hotWaterEntries.isEmpty()) {
+                final HotWaterEntry newestHotWaterEntry = getHotWaterEntriesForPlaceWithoutActualEntry(placeId).get(0);
+                if (newestHotWaterEntry.getEntryValue().compareTo(consumptionValue) > 0) {
+                    throw AppException.createHotWaterEntryCouldNotBeInsertedException();
+                }
             }
 
             HotWaterEntry hotWaterEntry = new HotWaterEntry(LocalDate.now(), consumptionValue, place);
@@ -126,6 +135,12 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
             if (!hotWaterEntry.getVersion().equals(version)) {
                 throw AppException.createOptimisticLockAppException();
             }
+
+            final HotWaterEntry newestHotWaterEntry = getHotWaterEntriesForPlaceWithoutActualEntry(placeId).get(0);
+            if (newestHotWaterEntry.getEntryValue().compareTo(consumptionValue) > 0) {
+                throw AppException.createHotWaterEntryCouldNotBeInsertedException();
+            }
+
             if (securityContext.isCallerInRole(Roles.MANAGER)) {
                 final String username = securityContext.getCallerPrincipal().getName();
                 hotWaterEntry.setManager(accessLevelFacade.findManagerByUsername(username));
@@ -140,7 +155,9 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public void addConsumptionFromInvoice(BigDecimal consumption, BigDecimal consumptionCost, BigDecimal heatingAreaFactor, Manager manager) {
+    public void addConsumptionFromInvoice(BigDecimal consumption, BigDecimal consumptionCost, BigDecimal heatingAreaFactor) {
+        final Manager manager = managerFacade.findManagerByUsername(securityContext.getCallerPrincipal().getName());
+
         if (!heatDistributionCentrePayoffFacade.checkIfRecordForThisMonthNotExists()) {
             throw AppException.createConsumptionAddException();
         }
@@ -184,7 +201,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @Override
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public HotWaterEntry getHotWaterEntry(Long hotWaterEntryId) {
-        HotWaterEntry hotWaterEntry = hotWaterEntryFacade.find(hotWaterEntryId);
+        final HotWaterEntry hotWaterEntry = hotWaterEntryFacade.find(hotWaterEntryId);
         if (securityContext.isCallerInRole(Roles.OWNER)) {
             final String username = securityContext.getCallerPrincipal().getName();
             Place place = hotWaterEntry.getPlace();
@@ -209,5 +226,13 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
             }
         }
         return hotWaterEntryFacade.getHotWaterEntriesByPlaceId(placeId);
+    }
+
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    private List<HotWaterEntry> getHotWaterEntriesForPlaceWithoutActualEntry(Long placeId) {
+        final List<HotWaterEntry> hotWaterEntries = hotWaterEntryFacade.getHotWaterEntriesByPlaceId(placeId);
+        final LocalDate now = LocalDate.now();
+        hotWaterEntries.removeIf(entry -> entry.getDate().getYear() == now.getYear() && entry.getDate().getMonthValue() == now.getMonthValue());
+        return hotWaterEntries;
     }
 }

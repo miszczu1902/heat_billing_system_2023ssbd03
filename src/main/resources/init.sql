@@ -49,21 +49,21 @@ GRANT SELECT,UPDATE ON SEQUENCE hot_water_entry_id_seq TO ssbd03mow;
 GRANT SELECT,UPDATE ON SEQUENCE month_pay_off_id_seq TO ssbd03mow;
 GRANT SELECT,UPDATE ON SEQUENCE place_id_seq TO ssbd03mow;
 
-INSERT INTO address (id, street, building_number, city, postal_code, version, creation_date_time, last_modification_date_time) VALUES (0, 'Main Street', 12, 'New York', '12-345', 1, NOW(), NOW()), (-1, 'Abbey Road', 7, 'London', '34-123', 1, NOW(), NOW()), (-2, 'Champs-Élysées', 15, 'Paris', '12-345', 1, NOW(), NOW());
+INSERT INTO address (id, street, building_number, city, postal_code, version, creation_date_time, last_modification_date_time) VALUES (0, 'Main Street', 12, 'New York', '12-345', 1, NOW(), NOW()), (-1, 'Abbey Road', 7, 'London', '34-123', 1, NOW(), NOW()), (-2, 'Champs-Élysées', 15, 'Paris', '12-345', 1, NOW(), NOW()),(-3, 'Przykladowa 1', 'Warszawa', '00-001', 'Polska', 1, NOW(), NOW());
 
-INSERT INTO account (id, email, username, password, is_enable, is_active, register_date, language_, version, creation_date_time, last_modification_date_time) VALUES (0, 'johndoe@example.com', 'johndoe', '$2a$10$JgIl/CXyYZtLFXMfYJ34Neh5JYlS/.Um5KWArokqP.rZHr085sAzq', TRUE, TRUE, NOW(), 'EN', 1, NOW(), NOW()), (-1, 'janekowalski@example.com', 'janekowalski', '$2a$10$JgIl/CXyYZtLFXMfYJ34Neh5JYlS/.Um5KWArokqP.rZHr085sAzq', TRUE, TRUE, NOW(), 'PL', 1, NOW(), NOW()), (-2, 'maria.silva@example.com', 'mariasilva', '$2a$10$JgIl/CXyYZtLFXMfYJ34Neh5JYlS/.Um5KWArokqP.rZHr085sAzq', TRUE, TRUE, NOW(), 'PL', 1, NOW(), NOW());
+INSERT INTO account (id, email, username, password, is_enable, is_active, register_date, language_, version, creation_date_time, last_modification_date_time) VALUES (0, 'johndoe@example.com', 'johndoe', '$2a$10$JgIl/CXyYZtLFXMfYJ34Neh5JYlS/.Um5KWArokqP.rZHr085sAzq', TRUE, TRUE, NOW(), 'EN', 1, NOW(), NOW()), (-1, 'janekowalski@example.com', 'janekowalski', '$2a$10$JgIl/CXyYZtLFXMfYJ34Neh5JYlS/.Um5KWArokqP.rZHr085sAzq', TRUE, TRUE, NOW(), 'PL', 1, NOW(), NOW()), (-2, 'maria.silva@example.com', 'mariasilva', '$2a$10$JgIl/CXyYZtLFXMfYJ34Neh5JYlS/.Um5KWArokqP.rZHr085sAzq', TRUE, TRUE, NOW(), 'PL', 1, NOW(), NOW()),(-3, 'owner@example.com', 'ownerTestowy', '$2a$10$JgIl/CXyYZtLFXMfYJ34Neh5JYlS/.Um5KWArokqP.rZHr085sAzq', TRUE, TRUE, NOW(), 'EN', 1, NOW(), NOW());
 
-INSERT INTO personal_data (id, first_name, surname, version, creation_date_time, last_modification_date_time) VALUES (0, 'John', 'Doe', 1, NOW(), NOW()), (-1, 'Jan', 'Kowalski', 1, NOW(), NOW()), (-2, 'Maria', 'Silva', 1, NOW(), NOW());
+INSERT INTO personal_data (id, first_name, surname, version, creation_date_time, last_modification_date_time) VALUES (0, 'John', 'Doe', 1, NOW(), NOW()), (-1, 'Jan', 'Kowalski', 1, NOW(), NOW()), (-2, 'Maria', 'Silva', 1, NOW(), NOW()),(-3, 'Owner', 'Smith', 1, NOW(), NOW());
 
-INSERT INTO login_data (id, last_valid_login_date, last_valid_logic_address, last_invalid_login_date, last_invalid_logic_address, invalid_login_counter, version, creation_date_time, last_modification_date_time) VALUES (0, NOW() - INTERVAL '1 day', '192.168.0.1', NOW() - INTERVAL '3 days', '192.168.0.2', 2, 1, NOW(), NOW()), (-1, NOW() - INTERVAL '5 days', '10.0.0.1', NOW() - INTERVAL '8 days', '10.0.0.2', 2, 1, NOW(), NOW()), (-2, NOW() - INTERVAL '2 days', '192.168.1.1', NOW() - INTERVAL '4 days', '192.168.1.2', 0, 1, NOW(), NOW());
+INSERT INTO login_data (id, last_valid_login_date, last_valid_logic_address, last_invalid_login_date, last_invalid_logic_address, invalid_login_counter, version, creation_date_time, last_modification_date_time) VALUES (0, NOW() - INTERVAL '1 day', '192.168.0.1', NOW() - INTERVAL '3 days', '192.168.0.2', 2, 1, NOW(), NOW()), (-1, NOW() - INTERVAL '5 days', '10.0.0.1', NOW() - INTERVAL '8 days', '10.0.0.2', 2, 1, NOW(), NOW()), (-2, NOW() - INTERVAL '2 days', '192.168.1.1', NOW() - INTERVAL '4 days', '192.168.1.2', 0, 1, NOW(), NOW()),(-3, NOW() - INTERVAL '2 days', '192.168.2.1', NOW() - INTERVAL '4 days', '192.168.2.2', 0, 1, NOW(), NOW());
 
-INSERT INTO access_level_mapping (id, access_level, is_active, account_id, version, creation_date_time, last_modification_date_time) VALUES (0, 'ADMIN', true, 0, 1, NOW(), NOW()), (-1, 'MANAGER', true, -1, 1, NOW(), NOW()), (-2, 'OWNER', true, -2, 1, NOW(), NOW());
+INSERT INTO access_level_mapping (id, access_level, is_active, account_id, version, creation_date_time, last_modification_date_time) VALUES (0, 'ADMIN', true, 0, 1, NOW(), NOW()), (-1, 'MANAGER', true, -1, 1, NOW(), NOW()), (-2, 'OWNER', true, -2, 1, NOW(), NOW()),(-3, 'OWNER', true, -3, 1, NOW(), NOW());
 
 INSERT INTO admin (id) VALUES (0);
 
 INSERT INTO manager (id, license) VALUES (-1, '12345678912345678912');
 
-INSERT INTO owner (id, phone_number) VALUES (-2, '123456789');
+INSERT INTO owner (id, phone_number) VALUES (-2, '123456789'),(-3, '987654321');
 
 INSERT INTO heat_distribution_centre (id, version, creation_date_time, last_modification_date_time) VALUES (0, 1, NOW(), NOW());
 

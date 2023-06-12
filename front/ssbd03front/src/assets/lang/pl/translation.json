@@ -246,7 +246,16 @@
     },
     "heat_distribution_centre": {
       "overwriting": "Nie można wprowadzić wartości dwa razy w jednym miesiącu"
-    }
+    },
+    "place": {
+      "can_not_make_yourself_owner": "Nie możesz sam przypisać sobie mieszkania",
+      "user_is_already_owner_of_this_place": "Ten użytkownik jest właścicielem tego mieszkania"
+
+    },
+  "database": {
+    "no_result": "Błędny numer bloku lub mieszkania"
+  }
+
   },
   "buildingFromList": {
     "id": "Identyfikator budynku",
@@ -349,6 +358,16 @@
     "factor_invalid": "Niepoprawny współczynnik",
     "factor_info": "Wartość musi być większa niż 0 ale nie większa niż 9",
     "confirm_factor": "Czy na pewno chcesz zmienić wartość współczynnika?"
+  },
+  "modifyPlaceOwner": {
+    "enter_first_name": "Nazwa użytkownika ",
+    "enter_surname": "Wprowadź nazwisko: ",
+    "modify_place_owner_title": "Zmiana właściciela lokalu",
+    "modify_place_owner_button": "Zmień właściciela",
+    "modify_place_owner_message": "Wprowadź dane nowego właściciela pamiętając, że nie możesz wpisać własnych danych.",
+    "modify_place_owner_failed": "Wystąpił błąd podczas modyfikacji właściciela lokalu.",
+    "modify_place_owner_confirm": "Czy na pewno wprowadziłeś poprawne dane? Tej operacji nie można cofnąć",
+    "enter_username_error": "Nazwa użytkownika może zaweriać: dużą, małą literę, cyfrę oraz znak _, oraz długość 6-16 znaków"
   },
   "hot_water" : {
     "date": "Data",

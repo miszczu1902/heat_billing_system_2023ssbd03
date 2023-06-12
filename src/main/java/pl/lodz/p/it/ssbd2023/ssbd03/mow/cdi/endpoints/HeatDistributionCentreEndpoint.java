@@ -18,10 +18,9 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.InsertHotWaterEntryDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyHotWaterEntryDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.GetAdvanceChangeFactorDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.HotWaterEntryDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
-import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.HeatDistributionCentreService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.EtagValidator;
@@ -38,9 +37,6 @@ public class HeatDistributionCentreEndpoint {
 
     @Inject
     private HeatDistributionCentreService heatDistributionCentreService;
-
-    @Inject
-    private AccountService accountService;
 
     private int txRetries = Integer.parseInt(LoadConfig.loadPropertyFromConfig("tx.retries"));
 
@@ -77,7 +73,7 @@ public class HeatDistributionCentreEndpoint {
 
                 rollbackTX = heatDistributionCentreService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
-            } catch (EJBTransactionRolledbackException | OptimisticLockAppException ex) {
+            } catch (TransactionRollbackException | OptimisticLockAppException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -134,7 +130,7 @@ public class HeatDistributionCentreEndpoint {
                         etag);
                 rollbackTX = heatDistributionCentreService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
-            } catch (OptimisticLockAppException | EJBTransactionRolledbackException ex) {
+            } catch (TransactionRollbackException | OptimisticLockAppException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
@@ -184,11 +180,10 @@ public class HeatDistributionCentreEndpoint {
     public Response addConsumptionFromInvoice(@NotNull @Valid AddConsumptionDTO addConsumptionDTO) {
         int retryTXCounter = txRetries; //limit prób ponowienia transakcji
         boolean rollbackTX = false;
-        final Manager manager = accountService.getManager();
         do {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
-                heatDistributionCentreService.addConsumptionFromInvoice(addConsumptionDTO.getConsumption(), addConsumptionDTO.getConsumptionCost(), addConsumptionDTO.getHeatingAreaFactor(), manager);
+                heatDistributionCentreService.addConsumptionFromInvoice(addConsumptionDTO.getConsumption(), addConsumptionDTO.getConsumptionCost(), addConsumptionDTO.getHeatingAreaFactor());
 
                 rollbackTX = heatDistributionCentreService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");

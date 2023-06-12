@@ -246,6 +246,13 @@
     },
     "heat_distribution_centre": {
       "overwriting": "Values can't be added twice a month"
+    },
+    "place": {
+      "can_not_make_yourself_owner": "You cannot assign an apartment to yourself",
+      "user_is_already_owner_of_this_place": "This user is owner of this place"
+    },
+    "database": {
+      "no_result": "Wrong building or place number"
     }
   },
   "buildingFromList": {
@@ -297,6 +304,16 @@
     "enter_predicted_hot_water_consumption_error": "Wrong predicted hot water consumption format, use only numbers and dot (e.g. 100.00)",
     "enter_predicted_hot_water_consumption_confirm": "Are you sure you want to add predicted hot water consumption?",
     "enter_predicted_hot_water_consumption_failed": "An error occurred while adding predicted hot water consumption"
+  },
+  "modifyPlaceOwner": {
+    "enter_first_name": "Username",
+    "enter_surname": "Wprowadź nazwisko: ",
+    "modify_place_owner_title": "Change owner",
+    "modify_place_owner_button": "Change owner",
+    "modify_place_owner_message": "Enter new owner username don't forget that you can't enter own username.",
+    "modify_place_owner_failed": "An error occurred while changing place owner",
+    "modify_place_owner_confirm": "Are you sure you want to change owner? You can't redo this operation",
+    "enter_username_error": "Username can contain: uppercase, lowercase, number and _, length 6-16"
   },
   "balances": {
     "address": "Address",
