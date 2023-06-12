@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.interceptors;
 
 import jakarta.ejb.AccessLocalException;
 import jakarta.ejb.EJBAccessException;
+import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.InvocationContext;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
@@ -13,6 +14,8 @@ public class BasicServiceExceptionInterceptor {
             return ictx.proceed();
         } catch (AppException ae) {
             throw ae;
+        } catch (EJBTransactionRolledbackException e) {
+            throw AppException.createTransactionRollbackException();
         } catch (EJBAccessException | AccessLocalException e) {
             throw AppException.createNotAllowedActionException();
         } catch (Exception e) {

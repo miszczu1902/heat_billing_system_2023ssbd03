@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.interceptors;
 
+import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.InvocationContext;
 import jakarta.persistence.NoResultException;
@@ -17,6 +18,8 @@ public class BasicFacadeExceptionInterceptor {
             throw AppException.createOptimisticLockAppException();
         } catch (NoResultException nre) {
             throw AppException.createNoResultException(nre.getCause());
+        } catch (EJBTransactionRolledbackException e) {
+            throw AppException.createTransactionRollbackException();
         } catch (PersistenceException | java.sql.SQLException pe) {
             if (pe.getCause() instanceof ConstraintViolationException)
                 throw AppException.createAccountExistsException(pe.getCause());
