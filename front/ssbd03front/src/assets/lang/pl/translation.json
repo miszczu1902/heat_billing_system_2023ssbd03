@@ -341,6 +341,13 @@
     "place_heat": "Wartość zaliczki dla ogrzania lokalu",
     "communal_area_heat": "Wartość zaliczki dla ogrzania części wspólnej",
     "date": "Data",
-    "change_factor": "Współczynnik modyfikacji wielkości zaliczki"
+    "change_factor": "Współczynnik modyfikacji wielkości zaliczki",
+    "modify_change_factor" : "Zmodyfikuj współczynnik modyfikacji wielkości zaliczki",
+    "new_change_factor": "Nowy współczynnik",
+    "error" : "Nie udało się zmodyfikować współczynnika",
+    "success_modified": "Współczynnik został zmodyfikowany",
+    "factor_invalid": "Niepoprawny współczynnik",
+    "factor_info": "Wartość musi być większa niż 0 ale nie większa niż 9",
+    "confirm_factor": "Czy na pewno chcesz zmienić wartość współczynnika?"
   }
 }

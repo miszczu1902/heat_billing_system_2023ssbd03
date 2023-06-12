@@ -67,7 +67,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
         }
 
         LocalDate date = LocalDate.now();
-        if (date.getDayOfMonth() != 1) { // sprawdzamy czy mam pierszy dzień w danym miesiącu na nowy kwartał
+        if (date.getDayOfMonth() != 12) { // sprawdzamy czy mam pierszy dzień w danym miesiącu na nowy kwartał
             throw AppException.createAdvanceChangeFactorNotModifiedException();
         }
         else date = date.minusMonths(3); //sprawdzamy czy w kwartale zmodyfikowano wspolczynnik

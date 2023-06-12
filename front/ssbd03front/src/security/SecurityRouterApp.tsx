@@ -174,7 +174,7 @@ const router = createBrowserRouter([
                     },
                     {
                         path: '/buildings/:buildingId/annual-balance/:placeId/:year',
-                        element: <PrivateRoute component={AnnualBalance} accessLevels={[OWNER]}/>
+                        element: <PrivateRoute component={AnnualBalance} accessLevels={[MANAGER]}/>
                     },
                     {
                         path: '/buildings/building/:buildingId',

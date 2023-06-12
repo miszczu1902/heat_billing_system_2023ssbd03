@@ -341,6 +341,13 @@
     "place_heat": "Heating place advance value",
     "communal_area_heat": "Communal area advance value",
     "date": "Date",
-    "change_factor": "Advance change factor"
+    "change_factor": "Advance change factor",
+    "modify_change_factor" : "Modify advance change factor",
+    "new_change_factor": "New change factor",
+    "error" : "Factor not modified",
+    "success_modified": "Factor was modified",
+    "factor_invalid": "Incorrect factor",
+    "factor_info": "Could be value greater than 0 and no greater then 9",
+    "confirm_factor": "Are you sure to confirm factor change?"
   }
 }
