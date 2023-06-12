@@ -17,7 +17,12 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
+
+import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -167,7 +172,8 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
         final HeatDistributionCentrePayoff heatDistributionCentrePayoff = new HeatDistributionCentrePayoff(consumption, consumptionCost, LocalDate.now(), heatingAreaFactor, manager, heatDistributionCentre.get(0));
         heatDistributionCentrePayoffFacade.create(heatDistributionCentrePayoff);
 
-        final List<Place> places = placeFacade.findAllPlaces();
+        final List<Place> places = placeFacade.findAllPlacesAddedBeforeDate(LocalDateTime.now(TIME_ZONE).minusMonths(1).with(TemporalAdjusters
+                .firstDayOfMonth()).truncatedTo(ChronoUnit.DAYS));
         final BigDecimal waterHeatingUnitCost = heatDistributionCentrePayoff.getConsumptionCost().multiply(new BigDecimal(1)
                 .subtract(heatDistributionCentrePayoff.getHeatingAreaFactor())).divide(heatDistributionCentrePayoff.getConsumption(), 2, RoundingMode.CEILING);
         final BigDecimal centralHeatingUnitCost = heatDistributionCentrePayoff.getConsumptionCost().multiply(heatDistributionCentrePayoff.getHeatingAreaFactor())

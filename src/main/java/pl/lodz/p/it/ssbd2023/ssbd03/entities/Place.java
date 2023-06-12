@@ -33,6 +33,8 @@ import java.util.List;
         @NamedQuery(name = "Place.findAllPlaces", query = "SELECT k FROM Place k"),
         @NamedQuery(name = "Place.findAllPlacesByBuildingIdAndNewerThanDate",
                 query = "SELECT k FROM Place k WHERE k.building.id = :buildingId AND k.creationDateTime >= :date"),
+        @NamedQuery(name = "Place.findAllPlacesAddedBeforeDate",
+                query = "SELECT k FROM Place k WHERE k.creationDateTime <= :date"),
 })
 public class Place extends AbstractEntity implements Serializable, Signable {
     @Id

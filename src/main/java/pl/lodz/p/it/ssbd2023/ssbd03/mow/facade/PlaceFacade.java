@@ -99,7 +99,14 @@ public class PlaceFacade extends AbstractFacade<Place> {
         TypedQuery<Place> tq = em.createNamedQuery("Place.findAllPlaces", Place.class);
 
         return Optional.of(tq.getResultList()).orElse(Collections.emptyList());
+    }
 
+    @PermitAll
+    public List<Place> findAllPlacesAddedBeforeDate( LocalDateTime date) {
+        TypedQuery<Place> tq = em.createNamedQuery("Place.findAllPlacesAddedBeforeDate", Place.class);
+        tq.setParameter("date", date);
+
+        return Optional.of(tq.getResultList()).orElse(Collections.emptyList());
     }
 
     @PermitAll
