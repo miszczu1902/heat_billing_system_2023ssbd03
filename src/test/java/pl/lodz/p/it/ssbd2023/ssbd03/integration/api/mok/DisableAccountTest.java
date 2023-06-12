@@ -2,28 +2,34 @@ package pl.lodz.p.it.ssbd2023.ssbd03.integration.api.mok;
 
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
-import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import org.junit.Before;
 import org.junit.Test;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.VersionDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class EnableAccountTest extends BasicIntegrationConfigTest {
-
+public class DisableAccountTest extends BasicIntegrationConfigTest {
     @Before
     public void initialize() {
         auth(new LoginDTO("johndoe", "Password$123"));
     }
 
     @Test
-    public void shouldAdminEnableGivenUserAccount() {
+    public void shouldNotAdminDisableSelfAccount() {
         Response enableUser = sendRequestAndGetResponse(Method.PATCH,
-                "/accounts/janekowalski/enable",
+                "/accounts/johndoe/disable",
+                null,
+                ContentType.JSON);
+
+        assertEquals(405, enableUser.getStatusCode());
+    }
+
+    @Test
+    public void shouldAdminDisableManagerAccount() {
+        Response enableUser = sendRequestAndGetResponse(Method.PATCH,
+                "/accounts/janekowalski/disable",
                 null,
                 ContentType.JSON);
 
@@ -31,12 +37,12 @@ public class EnableAccountTest extends BasicIntegrationConfigTest {
     }
 
     @Test
-    public void shouldNotAdminEnableSelfAccount() {
+    public void shouldAdminDisableOwnerAccount() {
         Response enableUser = sendRequestAndGetResponse(Method.PATCH,
-                "/accounts/johndoe/enable",
+                "/accounts/mariasilva/disable",
                 null,
                 ContentType.JSON);
 
-        assertEquals(405, enableUser.getStatusCode());
+        assertEquals(204, enableUser.getStatusCode());
     }
 }
