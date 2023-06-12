@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import React, {useEffect, useState} from 'react';
-import {Button, Dialog, DialogTitle, Grid} from '@mui/material';
+import {Button, Dialog, DialogTitle, Grid, Icon} from '@mui/material';
 import {ADMIN, API_URL, MANAGER} from "../../consts";
 import axios from 'axios';
 import Paper from "@mui/material/Paper";
@@ -161,7 +161,7 @@ const PlaceInfo = () => {
                                     alignItems: 'center',
                                     justifyContent: 'space-between'
                                 }} variant="h5">
-                                    <b>{t('place.hotWaterConnection')}:</b> {place.hotWaterConnection ? t('place.connected') : t('place.disconnected')}
+                                    <b>{t('place.hotWaterConnection')}:</b> {place.hotWaterConnection ? <IconCheckboxMarked/> : <IconCloseBox/>}
                                 </Typography>
                             </Paper>
                             <Paper elevation={3} style={{marginTop: '0.5vh', position: 'relative', overflow: 'auto'}}>
@@ -173,7 +173,7 @@ const PlaceInfo = () => {
                                     alignItems: 'center',
                                     justifyContent: 'space-between'
                                 }} variant="h5">
-                                    <b>{t('place.centralHeatingConnection')}:</b> {place.centralHeatingConnection ? t('place.connected') : t('place.disconnected')}
+                                    <b>{t('place.centralHeatingConnection')}:</b> {place.centralHeatingConnection ? <IconCheckboxMarked/> : <IconCloseBox/>}
                                 </Typography>
                             </Paper>
                             <Paper elevation={3} style={{marginTop: '0.5vh', position: 'relative', overflow: 'auto'}}>
