@@ -19,7 +19,6 @@ public class AddPlaceToBuildingDTO extends VersionDTO {
     @Digits(integer = 8, fraction = 2, message = "value can have 8 digits before the decimal point and max 2 digits after the decimal point")
     private BigDecimal area;
     private Boolean hotWaterConnection;
-    private Boolean centralHeatingConnection;
     @NotNull
     @DecimalMin(value = "0")
     @Digits(integer = 8, fraction = 2, message = "value can have 8 digits before the decimal point and max 2 digits after the decimal point")
