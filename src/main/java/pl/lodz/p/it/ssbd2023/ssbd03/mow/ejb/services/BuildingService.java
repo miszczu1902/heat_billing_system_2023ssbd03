@@ -22,8 +22,8 @@ public interface BuildingService extends CommonManagerLocalInterface {
 
     void addBuilding(Building building);
 
-    void addPlaceToBuilding(BigDecimal area, Boolean hotWaterConnection, Boolean centralHeatingConnection,
-                            BigDecimal predictedHotWaterConsumption, Long buildingId, Long ownerId, String etag, Long version);
+    void addPlaceToBuilding(BigDecimal area, Boolean hotWaterConnection, BigDecimal predictedHotWaterConsumption,
+                            Long buildingId, Long ownerId, String etag, Long version);
 
     List<Account> getListOfOwners();
 }

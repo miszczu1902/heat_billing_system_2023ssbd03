@@ -91,8 +91,8 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public void addPlaceToBuilding(BigDecimal area, Boolean hotWaterConnection, Boolean centralHeatingConnection,
-                                   BigDecimal predictedHotWaterConsumption, Long buildingId, Long ownerId, String etag, Long version) {
+    public void addPlaceToBuilding(BigDecimal area, Boolean hotWaterConnection, BigDecimal predictedHotWaterConsumption,
+                                   Long buildingId, Long ownerId, String etag, Long version) {
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
 
@@ -122,7 +122,7 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
         }
 
         final Short placeNumber = (short) (building.getPlaces().size() + 1);
-        final Place place = new Place(placeNumber, area, hotWaterConnection, centralHeatingConnection, predictedHotWaterConsumption, building, owner);
+        final Place place = new Place(placeNumber, area, hotWaterConnection, true, predictedHotWaterConsumption, building, owner);
         placeFacade.create(place);
 
         building.setCommunalAreaAggregate(newCommunalAreaAgregate);

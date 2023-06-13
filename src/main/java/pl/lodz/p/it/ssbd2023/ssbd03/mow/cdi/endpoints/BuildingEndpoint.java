@@ -112,7 +112,7 @@ public class BuildingEndpoint {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
                 buildingService.addPlaceToBuilding(addPlaceToBuildingDTO.getArea(), addPlaceToBuildingDTO.getHotWaterConnection(),
-                        addPlaceToBuildingDTO.getCentralHeatingConnection(), addPlaceToBuildingDTO.getPredictedHotWaterConsumption(), addPlaceToBuildingDTO.getBuildingId(),
+                         addPlaceToBuildingDTO.getPredictedHotWaterConsumption(), addPlaceToBuildingDTO.getBuildingId(),
                         addPlaceToBuildingDTO.getOwnerId(), etag, addPlaceToBuildingDTO.getVersion());
                 rollbackTX = buildingService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
@@ -129,7 +129,7 @@ public class BuildingEndpoint {
             throw AppException.createTransactionRollbackException();
         }
         buildingService.addPlaceToBuilding(addPlaceToBuildingDTO.getArea(), addPlaceToBuildingDTO.getHotWaterConnection(),
-                addPlaceToBuildingDTO.getCentralHeatingConnection(), addPlaceToBuildingDTO.getPredictedHotWaterConsumption(), addPlaceToBuildingDTO.getBuildingId(),
+                 addPlaceToBuildingDTO.getPredictedHotWaterConsumption(), addPlaceToBuildingDTO.getBuildingId(),
                 addPlaceToBuildingDTO.getOwnerId(), etag, addPlaceToBuildingDTO.getVersion());
         return Response.status(Response.Status.NO_CONTENT).build();
     }
