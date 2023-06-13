@@ -17,7 +17,12 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
+
+import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
 @Stateful
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
@@ -54,8 +59,8 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public Void getHeatDistributionCentreParameters() {
-        throw new UnsupportedOperationException();
+    public List<HeatDistributionCentrePayoff> getHeatDistributionCentreParameters() {
+        return heatDistributionCentrePayoffFacade.findAllHeatDistributionCentrePayoff();
     }
 
     @Override
@@ -106,8 +111,8 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
             final List<HotWaterEntry> hotWaterEntries = getHotWaterEntriesForPlaceWithoutActualEntry(placeId);
             if (!hotWaterEntries.isEmpty()) {
-                final HotWaterEntry newestHotWaterEntry = getHotWaterEntriesForPlaceWithoutActualEntry(placeId).get(0);
-                if (newestHotWaterEntry.getEntryValue().compareTo(consumptionValue) > 0) {
+                final HotWaterEntry newestHotWaterEntry = hotWaterEntries.get(0);
+                if (consumptionValue.compareTo(newestHotWaterEntry.getEntryValue()) > 0) {
                     throw AppException.createHotWaterEntryCouldNotBeInsertedException();
                 }
             }
@@ -117,6 +122,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
                 final Manager manager = accessLevelFacade.findManagerByUsername(username);
                 hotWaterEntry.setManager(manager);
             }
+
             hotWaterEntryFacade.create(hotWaterEntry);
         } else {
             throw AppException.createHotWaterEntryCouldNotBeInsertedException();
@@ -136,7 +142,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
             }
 
             final HotWaterEntry newestHotWaterEntry = hotWaterEntryFacade.getHotWaterEntriesByPlaceId(placeId).get(0);
-            if (newestHotWaterEntry.getEntryValue().compareTo(consumptionValue) > 0) {
+            if (consumptionValue.compareTo(newestHotWaterEntry.getEntryValue()) < 0) {
                 throw AppException.createHotWaterEntryCouldNotBeInsertedException();
             }
 
@@ -167,7 +173,8 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
         final HeatDistributionCentrePayoff heatDistributionCentrePayoff = new HeatDistributionCentrePayoff(consumption, consumptionCost, LocalDate.now(), heatingAreaFactor, manager, heatDistributionCentre.get(0));
         heatDistributionCentrePayoffFacade.create(heatDistributionCentrePayoff);
 
-        final List<Place> places = placeFacade.findAllPlaces();
+        final List<Place> places = placeFacade.findAllPlacesAddedBeforeDate(LocalDateTime.now(TIME_ZONE).minusMonths(1).with(TemporalAdjusters
+                .firstDayOfMonth()).truncatedTo(ChronoUnit.DAYS));
         final BigDecimal waterHeatingUnitCost = heatDistributionCentrePayoff.getConsumptionCost().multiply(new BigDecimal(1)
                 .subtract(heatDistributionCentrePayoff.getHeatingAreaFactor())).divide(heatDistributionCentrePayoff.getConsumption(), 2, RoundingMode.CEILING);
         final BigDecimal centralHeatingUnitCost = heatDistributionCentrePayoff.getConsumptionCost().multiply(heatDistributionCentrePayoff.getHeatingAreaFactor())

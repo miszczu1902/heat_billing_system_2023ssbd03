@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.integration.api.mok;
 
 import io.restassured.http.ContentType;
 import io.restassured.http.Method;
+import org.junit.Before;
 import org.junit.Test;
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
@@ -13,7 +14,12 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RegistrationTest extends BasicIntegrationConfigTest {
+    @Before
+    public void initTest() {
+        setBEARER_TOKEN("");
+    }
     @Test
+
     public void registerOwnerTest() {
         CreateOwnerDTO owner = IntegrationTestObjectsFactory.createAccountToRegister();
         int statusCode = sendRequestAndGetResponse(Method.POST, "/accounts/register", owner, ContentType.JSON)

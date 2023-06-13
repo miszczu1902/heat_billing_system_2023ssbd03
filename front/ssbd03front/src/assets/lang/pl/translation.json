@@ -298,6 +298,13 @@
     "error": "Wystąpił błąd podczas wprowadzania danych",
     "not_exists": "Wystąpił błąd z pobraniem informacji o węźle cieplnym"
   },
+  "heatDistributionCentrePayoff": {
+    "consumption": "Zużycie ciepła",
+    "consumptionCost": "Koszt zużytego ciepła",
+    "heatingAreaFactor": "Współczynnik zużycia ciepła",
+    "date": "Data",
+    "manager": "Zarządca, który wprowadził fakturę"
+  },
   "balances": {
     "personal_data": "Właściciel",
     "year": "Rok",
@@ -393,5 +400,17 @@
     "confirm_add": "Czy na pewno chcesz dodać wpis?",
     "added": "Wpis został dodany",
     "entry_error": "Błąd podczas wprowadzania wpisu"
+  },
+  "year_report": {
+    "year": "Rok",
+    "address": "Adres",
+    "postalCode": "Kod pocztowy",
+    "placeNumber": "Numer lokalu",
+    "totalHeatingCommunalAreaAdvance": "Całkowita zaliczka za ogrzanie części wspólnej",
+    "totalHeatingCommunalAreaCost": "Całkowity koszt ogrzania części wspólnej",
+    "totalHeatingPlaceAdvance": "Całkowita zaliczka za ogrzanie lokalu",
+    "totalHeatingPlaceCost": "Całkowity koszt ogrzania lokalu",
+    "totalHotWaterAdvance": "Całkowita zaliczka ze zużycie ciepłej wody",
+    "totalHotWaterCost": "Całkowity koszt zużycia ciepłej wody"
   }
 }

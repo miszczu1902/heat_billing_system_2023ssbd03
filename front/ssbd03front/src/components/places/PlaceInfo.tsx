@@ -61,8 +61,8 @@ const PlaceInfo = () => {
 
 
     return (
-        <div style={{height: '93.3vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0}}>
-            <Paper elevation={3} style={{position: 'relative', overflow: 'auto'}}>
+        <div style={{height: '90vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0}}>
+            <Paper elevation={3} style={{position: 'relative', overflow: 'auto', display: 'flex', alignItems: 'center', top: 0}}>
                 <Box component="form" sx={{
                     display: 'flex',
                     flexWrap: 'wrap',
@@ -193,8 +193,8 @@ const PlaceInfo = () => {
                         </>
                     )}
                 </Box>
+                {place?.hotWaterConnection && <Box sx={{margin: '2vh'}}><HotWaterEntriesList/></Box>}
             </Paper>
-            {place?.hotWaterConnection && <HotWaterEntriesList/>}
             <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
                 <DialogTitle>{t('personal_data.authorization_error')}</DialogTitle>
                 <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>

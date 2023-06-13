@@ -25,7 +25,6 @@ import {useEffect} from "react";
 import NotFoundPage from "../components/notFound/NotFoundPage";
 import Logout from "../components/login/Logout";
 import BuildingsList from '../components/building/BuildingsList';
-import AddInvoiceValues from '../components/heatDistributionCentrePayoff/AddInvoiceValues';
 import EnterPredictedHotWaterConsumption from '../components/place/EnterPredictedHotWaterConsumption';
 import ChangePlaceOwner from '../components/place/ChangePlaceOwner';
 import AnnualBalances from "../components/annualBalance/AnnualBalances";
@@ -34,6 +33,7 @@ import Building from "../components/building/Building";
 import PlacesList from "../components/places/PlacesList";
 import PlaceInfo from "../components/places/PlaceInfo";
 import AnnualBalance from "../components/annualBalance/AnnualBalance";
+import HeatDistributionCentrePayoff from "../components/heatDistributionCentrePayoff/HeatDistributionCentrePayoff";
 
 interface PrivateRouteProps {
     component: React.ComponentType<any>;
@@ -174,7 +174,7 @@ const router = createBrowserRouter([
                         element: <PrivateRoute component={AnnualBalances} accessLevels={[MANAGER]}/>
                     },
                     {
-                        path: '/buildings/:buildingId/annual-balance/:placeId/:year',
+                        path: '/buildings/:buildingId/annual-balance/:reportId/:placeId/:year',
                         element: <PrivateRoute component={AnnualBalance} accessLevels={[MANAGER]}/>
                     },
                     {
@@ -211,7 +211,7 @@ const router = createBrowserRouter([
                 children: [
                     {
                         path: '/manage',
-                        element: <PrivateRoute component={AddInvoiceValues} accessLevels={[MANAGER]}/>
+                        element: <PrivateRoute component={HeatDistributionCentrePayoff} accessLevels={[MANAGER]}/>
                     },
                 ]
             },
@@ -224,7 +224,7 @@ const router = createBrowserRouter([
                         element: <PrivateRoute component={AnnualBalancesSelf} accessLevels={[OWNER]}/>
                     },
                     {
-                        path: '/annual-reports/self/annual-balance/:placeId/:year',
+                        path: '/annual-reports/self/annual-balance/:reportId/:placeId/:year',
                         element: <PrivateRoute component={AnnualBalance} accessLevels={[OWNER]}/>
                     },
                 ]

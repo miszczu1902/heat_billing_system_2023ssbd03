@@ -229,7 +229,7 @@ const BuildingsList = () => {
     }
 
     return (
-        <div style={{ height: '93.3vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0 }}>
+        <div style={{ height: '90vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0 }}>
             <Grid container>
                 <Box sx={{ flexGrow: 1 }}>
                     <Button onClick={() => handleClickNewBuildingAddOpen()}
