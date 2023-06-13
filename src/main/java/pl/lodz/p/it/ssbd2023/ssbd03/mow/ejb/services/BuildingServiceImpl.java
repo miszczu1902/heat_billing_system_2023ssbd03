@@ -153,8 +153,7 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
                 .map(MonthPayoff::getHotWaterConsumption)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         final HeatDistributionCentrePayoff heatDistributionCentrePayoff = heatDistributionCentrePayoffFacade.findLatestHeatDistributionCentrePayoff();
-        final BigDecimal price = heatDistributionCentrePayoff.getConsumptionCost().divide(heatDistributionCentrePayoff.getConsumption(), 2, BigDecimal.ROUND_HALF_UP)
-                .multiply(BigDecimal.ONE.subtract(heatDistributionCentrePayoff.getHeatingAreaFactor()));
+        final BigDecimal price = heatDistributionCentrePayoff.getConsumptionCost().multiply(BigDecimal.ONE.subtract(heatDistributionCentrePayoff.getHeatingAreaFactor()));
         final BigDecimal pricePerCubicMeter = price.divide(totalWater, 2, BigDecimal.ROUND_HALF_UP);
         final int month = LocalDate.now().getMonthValue();
         int count = 0;

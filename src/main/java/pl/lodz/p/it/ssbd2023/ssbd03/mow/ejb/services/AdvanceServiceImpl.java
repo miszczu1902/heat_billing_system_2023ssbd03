@@ -49,8 +49,7 @@ public class AdvanceServiceImpl extends AbstractService implements AdvanceServic
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         final HeatDistributionCentrePayoff heatDistributionCentrePayoff = heatDistributionCentrePayoffFacade.findLatestHeatDistributionCentrePayoff();
-        final BigDecimal price = heatDistributionCentrePayoff.getConsumptionCost().divide(heatDistributionCentrePayoff.getConsumption(), 2, BigDecimal.ROUND_HALF_UP)
-                .multiply(BigDecimal.ONE.subtract(heatDistributionCentrePayoff.getHeatingAreaFactor()));
+        final BigDecimal price = heatDistributionCentrePayoff.getConsumptionCost().multiply(BigDecimal.ONE.subtract(heatDistributionCentrePayoff.getHeatingAreaFactor()));
         final BigDecimal pricePerCubicMeter = price.divide(totalWater, 2, BigDecimal.ROUND_HALF_UP);
 
         for (Place place : places) {
