@@ -8,6 +8,13 @@
     "places_list": "Lista lokali",
     "annual_reports": "Roczne rozliczenia",
     "manage": "Zarządzaj",
+    "report": "Cennik ogrzewania",
+    "close": "Zamknij",
+    "price_per_cubic_meter": "Cena ogrzania 1m3 wody",
+    "price_per_square_meter": "Cena ogrzania 1m2",
+    "month_year": "Dane z miesiąca",
+    "costs_info": "Zestawienie kosztów ogrzewania w naszej współdzielni mieszkaniowej",
+    "costs_error": "Nie udało wyświetlić się cennika",
     "languages": {
       "title": "Zmień język",
       "default": "Język",

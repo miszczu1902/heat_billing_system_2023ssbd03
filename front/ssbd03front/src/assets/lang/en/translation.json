@@ -8,6 +8,13 @@
     "places_list": "Places list",
     "annual_reports": "Annual reports",
     "manage": "Manage",
+    "report": "Heating price list",
+    "close": "Close",
+    "price_per_cubic_meter": "Price to heat 1m3 of water",
+    "price_per_square_meter": "Price to heat 1m2",
+    "month_year": "Data from month",
+    "costs_info": "Overview of heating costs in our residential cooperative",
+    "costs_error": "Failed to display price list",
     "languages": {
       "title": "Change language",
       "default": "Language",

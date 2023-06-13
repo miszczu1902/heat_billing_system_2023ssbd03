@@ -13,6 +13,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BalanceFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BuildingFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.HeatDistributionCentrePayoffFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
 
 import java.math.BigDecimal;
@@ -36,6 +37,9 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
     private BuildingFacade buildingFacade;
 
     @Inject
+    private HeatDistributionCentrePayoffFacade heatDistributionCentrePayoffFacade;
+
+    @Inject
     private PlaceFacade placeFacade;
 
     @Inject
@@ -43,8 +47,37 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
 
     @Override
     @RolesAllowed({Roles.GUEST, Roles.MANAGER, Roles.OWNER})
-    public MonthPayoff getUnitWarmCostReport() {
-        throw new UnsupportedOperationException();
+    public UnitWarmCostReport getUnitWarmCostReport() {
+        final List<Place> placesWithHotWater = placeFacade.findAllPlaces()
+                .stream()
+                .filter(Place::getHotWaterConnection)
+                .toList();
+        final BigDecimal totalWater = placesWithHotWater.stream()
+                .map(Place::getMonthPayoffs)
+                .filter(monthPayoffs -> !monthPayoffs.isEmpty())
+                .map(monthPayoffs -> monthPayoffs.get(monthPayoffs.size() - 1))
+                .map(MonthPayoff::getHotWaterConsumption)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final HeatDistributionCentrePayoff heatDistributionCentrePayoff = heatDistributionCentrePayoffFacade.findLatestHeatDistributionCentrePayoff();
+        final BigDecimal price = heatDistributionCentrePayoff.getConsumptionCost().multiply(BigDecimal.ONE.subtract(heatDistributionCentrePayoff.getHeatingAreaFactor()));
+        final BigDecimal pricePerCubicMeter = price.divide(totalWater, 2, BigDecimal.ROUND_HALF_UP);
+        final List<Building> buildings = buildingFacade.findAllBuildings();
+        final BigDecimal totalCommunalArea = buildings.stream()
+                .map(Building::getCommunalAreaAggregate)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final List<Place> placesWithCentralHeating = placeFacade.findAllPlaces()
+                .stream()
+                .filter(Place::getCentralHeatingConnection)
+                .toList();
+        final BigDecimal totalPlacesArea = placesWithCentralHeating.stream()
+                .map(Place::getArea)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final BigDecimal totalHeatingArea = totalCommunalArea.add(totalPlacesArea);
+
+        final BigDecimal heatingPrice = heatDistributionCentrePayoff.getConsumptionCost().multiply(heatDistributionCentrePayoff.getHeatingAreaFactor());
+        final BigDecimal pricePerSquareMeter = heatingPrice.divide(totalHeatingArea, 2, BigDecimal.ROUND_HALF_UP);
+
+        return new UnitWarmCostReport(pricePerCubicMeter, pricePerSquareMeter, LocalDate.now().getMonthValue(), LocalDate.now().getYear());
     }
 
     @Override
@@ -157,7 +190,7 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
                 final LocalDateTime firstDayOfPreviousMonth = LocalDateTime.now(TIME_ZONE).minusMonths(1).with(TemporalAdjusters
                         .firstDayOfMonth()).truncatedTo(ChronoUnit.DAYS);
                 final List<Place> newPlacesList = placeFacade.findAllPlacesByBuildingIdAndNewerThanDate(
-                       place.getBuilding().getId(), firstDayOfPreviousMonth);
+                        place.getBuilding().getId(), firstDayOfPreviousMonth);
                 BigDecimal communalAreaInLastMonth = place.getBuilding().getCommunalAreaAggregate();
                 if (!newPlacesList.isEmpty()) {
                     final BigDecimal totalAreaOfNewPlaces = newPlacesList.stream()

@@ -30,9 +30,9 @@ public class BalanceEndpoint {
     protected static final Logger LOGGER = Logger.getGlobal();
 
     //MOW 1
+    @GET
     @Path("/unit-cost-report")
     @Produces(MediaType.APPLICATION_JSON)
-    @GET
     @RolesAllowed({Roles.GUEST, Roles.MANAGER, Roles.OWNER})
     public Response getUnitWarmCostReport() {
         return Response.ok().entity(balanceService.getUnitWarmCostReport()).build();
