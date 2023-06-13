@@ -10,7 +10,6 @@ import RefreshIcon from "../icons/RefreshIcon";
 const AnnualBalancesSelf = () => {
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
-    const location = useLocation();
     const token = 'Bearer ' + localStorage.getItem("token");
     const [reports, setReports] = useState<BalancesFromList[]>([]);
 
@@ -22,7 +21,7 @@ const AnnualBalancesSelf = () => {
         }).then(response => {
             setReports(response.data);
         }).catch(error => {
-            if (error.response.status == 403) navigate(location.pathname);
+            if (error.response.status == 403) navigate("/");
         })
     };
 

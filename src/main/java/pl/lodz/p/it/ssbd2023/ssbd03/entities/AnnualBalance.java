@@ -19,7 +19,8 @@ import java.math.BigDecimal;
         })
 @NamedQueries({
         @NamedQuery(name = "AnnualBalance.findAllBalancesByPlacesId", query = "SELECT k FROM AnnualBalance k WHERE k.place.id IN :ids"),
-        @NamedQuery(name = "AnnualBalance.findAllBalancesByOwnerUsername", query = "SELECT k FROM AnnualBalance k WHERE k.place.owner.account.username = :username"),
+        @NamedQuery(name = "AnnualBalance.findAllBalancesByOwnerUsername",
+                query = "SELECT k FROM AnnualBalance k WHERE k.place.owner.account.username = :username ORDER BY k.year DESC"),
         @NamedQuery(name = "AnnualBalance.findAllBalancesByYear", query = "SELECT k FROM AnnualBalance k WHERE k.year = :year")
 })
 public class AnnualBalance extends AbstractEntity implements Serializable {
