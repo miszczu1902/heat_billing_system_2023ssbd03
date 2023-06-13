@@ -398,5 +398,16 @@
     "totalHeatingPlaceCost": "Total heating place cost",
     "totalHotWaterAdvance": "Total hot water advance",
     "totalHotWaterCost": "Total hot water cost"
+  },
+  "editPlace" : {
+    "edit_place_button" : "Edit place",
+    "edit_place_title" : "Edit place",
+    "edit_place_description" : "Edit place data",
+    "edit_place_text_field_area" : "Place area [sqm]",
+    "edit_place_text_field_hot_water_connection" : "Water connection",
+    "edit_place_text_field_central_heating_connection" : "Heating connection",
+    "edit_place_confirm" : "Are you sure you want to edit place?",
+    "edit_place_failed" : "An error occurred while editing place",
+    "edit_place_error" : "Wrong place number format, use only numbers and dot (e.g. 100.00)"
   }
 }

@@ -13,7 +13,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTes
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Testcontainers
 public class EditPersonalDataTest extends BasicIntegrationConfigTest {
 
     @Before

@@ -5,6 +5,7 @@ import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.TransactionRolledbackException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,12 +17,14 @@ import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.EnterPredictedHotWaterConsumptionDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyPlaceOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyPlaceOwnerDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyPlaceDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.PlaceInfoDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.PlaceService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.EtagValidator;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.EtagValidator;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.PlaceMapper;
@@ -94,12 +97,38 @@ public class PlaceEndpoint {
 
     //MOW 21
     @PATCH
+    @EtagValidator
     @Path("/place/{placeId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.MANAGER)
-    public Response modifyPlace(@NotBlank @PathParam("placeId") String placeId) {
-        placeService.modifyPlace();
-        return Response.status(200).build();
+    public Response modifyPlace(@NotBlank @PathParam("placeId") String placeId,
+                                @NotNull @Valid ModifyPlaceDTO modifyPlaceDTO,
+                                @Context HttpServletRequest request) {
+        final String etag = request.getHeader("If-Match");
+
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                placeService.modifyPlace(placeId, modifyPlaceDTO.getArea(), etag, modifyPlaceDTO.getVersion());
+                rollbackTX = placeService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return Response.status(Response.Status.NO_CONTENT).build();
+            } catch (TransactionRollbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
+        placeService.modifyPlace(placeId ,modifyPlaceDTO.getArea(), etag, modifyPlaceDTO.getVersion());
+        return Response.noContent().build();
     }
 
     //MOW 16
@@ -134,7 +163,7 @@ public class PlaceEndpoint {
                 rollbackTX = placeService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
-            } catch (EJBTransactionRolledbackException ex) {
+            } catch (TransactionRollbackException ex) {
                 rollbackTX = true;
                 if (retryTXCounter < 2) {
                     throw ex;
