@@ -301,7 +301,7 @@
     "consumptionCost": "Heat consumption cost value",
     "heatingAreaFactor": "Heat consumption factor",
     "date": "Date",
-    "manager": "Manager who insert invoice"
+    "manager": "Manager who inserted invoice"
   },
   "enterPredictedHotWaterConsumption": {
     "enter_predicted_hot_water_consumption_button": "Enter predicted hot water consumption",
