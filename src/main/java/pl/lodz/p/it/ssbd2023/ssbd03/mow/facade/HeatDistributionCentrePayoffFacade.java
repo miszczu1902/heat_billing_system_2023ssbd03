@@ -13,6 +13,9 @@ import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatDistributionCentrePayoff;
 
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -61,5 +64,13 @@ public class HeatDistributionCentrePayoffFacade extends AbstractFacade<HeatDistr
         TypedQuery<HeatDistributionCentrePayoff> query = getEntityManager()
                 .createNamedQuery("HeatDistributionCentrePayoff.getLatestHeatDistributionCentrePayoff", HeatDistributionCentrePayoff.class);
         return query.getSingleResult();
+    }
+
+    @RolesAllowed({Roles.MANAGER})
+    public List<HeatDistributionCentrePayoff> findAllHeatDistributionCentrePayoff() {
+        TypedQuery<HeatDistributionCentrePayoff> tq = em.createNamedQuery("HeatDistributionCentrePayoff.findAllHeatDistributionCentrePayoff", HeatDistributionCentrePayoff.class);
+
+        return Optional.of(tq.getResultList()).orElse(Collections.emptyList());
+
     }
 }

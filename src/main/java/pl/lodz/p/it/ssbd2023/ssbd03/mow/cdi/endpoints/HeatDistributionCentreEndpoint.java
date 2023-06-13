@@ -26,6 +26,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.EtagValidator;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AdvanceMapper;
+import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.HeatDistributionCentreMapper;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.HotWaterEntryMapper;
 
 import java.util.logging.Level;
@@ -51,7 +52,10 @@ public class HeatDistributionCentreEndpoint {
     @GET
     @RolesAllowed({Roles.MANAGER})
     public Response getHeatDistributionCentreParameters() {
-        return Response.status(200).entity(heatDistributionCentreService.getHeatDistributionCentreParameters()).build();
+        return Response.status(200).entity(
+                heatDistributionCentreService.getHeatDistributionCentreParameters().stream()
+                        .map(HeatDistributionCentreMapper::createHeatDistributionCentrePayoffToHeatDistributionCentrePayoffDTO)
+                        .toList()).build();
     }
 
     //MOW 12
