@@ -62,20 +62,12 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
         final BigDecimal price = heatDistributionCentrePayoff.getConsumptionCost().multiply(BigDecimal.ONE.subtract(heatDistributionCentrePayoff.getHeatingAreaFactor()));
         final BigDecimal pricePerCubicMeter = price.divide(totalWater, 2, BigDecimal.ROUND_HALF_UP);
         final List<Building> buildings = buildingFacade.findAllBuildings();
-        final BigDecimal totalCommunalArea = buildings.stream()
-                .map(Building::getCommunalAreaAggregate)
+        final BigDecimal totalArea = buildings.stream()
+                .map(Building::getTotalArea)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        final List<Place> placesWithCentralHeating = placeFacade.findAllPlaces()
-                .stream()
-                .filter(Place::getCentralHeatingConnection)
-                .toList();
-        final BigDecimal totalPlacesArea = placesWithCentralHeating.stream()
-                .map(Place::getArea)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        final BigDecimal totalHeatingArea = totalCommunalArea.add(totalPlacesArea);
 
         final BigDecimal heatingPrice = heatDistributionCentrePayoff.getConsumptionCost().multiply(heatDistributionCentrePayoff.getHeatingAreaFactor());
-        final BigDecimal pricePerSquareMeter = heatingPrice.divide(totalHeatingArea, 2, BigDecimal.ROUND_HALF_UP);
+        final BigDecimal pricePerSquareMeter = heatingPrice.divide(totalArea, 2, BigDecimal.ROUND_HALF_UP);
 
         return new UnitWarmCostReport(pricePerCubicMeter, pricePerSquareMeter, LocalDate.now().getMonthValue(), LocalDate.now().getYear());
     }
