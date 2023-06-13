@@ -22,7 +22,7 @@ import java.time.LocalDate;
         @NamedQuery(name = "HeatDistributionCentrePayoff.getPayoffByDate",
                 query = "SELECT k FROM HeatDistributionCentrePayoff k WHERE YEAR(k.date) = :year AND MONTH(k.date)= :month"),
         @NamedQuery(name = "HeatDistributionCentrePayoff.findAllHeatDistributionCentrePayoff",
-                query = "SELECT k FROM HeatDistributionCentrePayoff k"),
+                query = "SELECT k FROM HeatDistributionCentrePayoff k ORDER BY k.date DESC"),
         @NamedQuery(name = "HeatDistributionCentrePayoff.getLatestHeatDistributionCentrePayoff",
                 query = "SELECT k FROM HeatDistributionCentrePayoff k ORDER BY k.creationDateTime DESC")
 })

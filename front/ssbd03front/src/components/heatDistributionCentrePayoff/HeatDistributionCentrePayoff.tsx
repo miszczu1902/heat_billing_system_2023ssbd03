@@ -33,7 +33,7 @@ const HeatDistributionCentrePayoff = () => {
 
     const handleClick = () => {
         fetchData();
-        navigate('/heat-distribution-centre');
+        navigate('/manage');
     };
 
     return (
