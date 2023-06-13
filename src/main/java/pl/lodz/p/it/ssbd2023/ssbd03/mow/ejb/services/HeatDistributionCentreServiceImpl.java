@@ -59,8 +59,8 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
     @Override
     @RolesAllowed({Roles.MANAGER})
-    public Void getHeatDistributionCentreParameters() {
-        throw new UnsupportedOperationException();
+    public List<HeatDistributionCentrePayoff> getHeatDistributionCentreParameters() {
+        return heatDistributionCentrePayoffFacade.findAllHeatDistributionCentrePayoff();
     }
 
     @Override

@@ -296,6 +296,13 @@
     "error": "An error occured while inserting data",
     "not_exists": "An error occured while tried to get information about heat distribution centre"
   },
+  "heatDistributionCentrePayoff": {
+    "consumption": "Heat consumption value",
+    "consumptionCost": "Heat consumption cost value",
+    "heatingAreaFactor": "Heat consumption factor",
+    "date": "Date",
+    "manager": "Manager who inserted invoice"
+  },
   "enterPredictedHotWaterConsumption": {
     "enter_predicted_hot_water_consumption_button": "Enter predicted hot water consumption",
     "enter_predicted_hot_water_consumption_title": "Predicted hot water consumption",
