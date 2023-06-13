@@ -23,7 +23,7 @@ const HeatDistributionCentrePayoff = () => {
         }).then(response => {
             setPayoffs(response.data);
         }).catch(error => {
-            if (error.response.status == 403) navigate(location.pathname);
+            if (error.response.status == 403) navigate("/");
         })
     };
 
