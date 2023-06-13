@@ -1,6 +1,8 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.integration.config;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.restassured.RestAssured;
+import io.restassured.config.ObjectMapperConfig;
 import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import io.restassured.http.Method;
@@ -11,8 +13,8 @@ import lombok.Setter;
 import org.junit.BeforeClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 
 import java.util.Optional;
@@ -22,7 +24,7 @@ import static io.restassured.RestAssured.*;
 public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
     /* RestAssured config */
     protected static Logger logger = LoggerFactory.getLogger("e2e-tests");
-    private static ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     /* Test data */
     @Setter
@@ -87,6 +89,10 @@ public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
         RestAssured.port = NGINX_PORT;
         RestAssured.defaultParser = Parser.JSON;
         RestAssured.useRelaxedHTTPSValidation();
+        mapper.registerModule(new JavaTimeModule());
+        RestAssured.config = RestAssured.config().objectMapperConfig(new ObjectMapperConfig().jackson2ObjectMapperFactory(
+                (cls, charset) -> mapper
+        ));
 
         logger.info("URI: " + baseURI);
         logger.info("Default port: " + port);

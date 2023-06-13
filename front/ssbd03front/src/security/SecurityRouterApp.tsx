@@ -174,7 +174,7 @@ const router = createBrowserRouter([
                         element: <PrivateRoute component={AnnualBalances} accessLevels={[MANAGER]}/>
                     },
                     {
-                        path: '/buildings/:buildingId/annual-balance/:placeId/:year',
+                        path: '/buildings/:buildingId/annual-balance/:reportId/:placeId/:year',
                         element: <PrivateRoute component={AnnualBalance} accessLevels={[MANAGER]}/>
                     },
                     {
@@ -224,7 +224,7 @@ const router = createBrowserRouter([
                         element: <PrivateRoute component={AnnualBalancesSelf} accessLevels={[OWNER]}/>
                     },
                     {
-                        path: '/annual-reports/self/annual-balance/:placeId/:year',
+                        path: '/annual-reports/self/annual-balance/:reportId/:placeId/:year',
                         element: <PrivateRoute component={AnnualBalance} accessLevels={[OWNER]}/>
                     },
                 ]

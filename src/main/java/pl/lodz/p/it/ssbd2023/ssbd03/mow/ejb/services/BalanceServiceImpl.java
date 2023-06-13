@@ -54,9 +54,18 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
     }
 
     @Override
-    @RolesAllowed({Roles.MANAGER})
-    public AnnualBalance getUserReport(String placeId) {
-        throw new UnsupportedOperationException();
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    public AnnualBalance getYearReport(Long reportId) {
+        final AnnualBalance annualBalance = balanceFacade.findBalanceById(reportId);
+
+        if (securityContext.isCallerInRole(Roles.OWNER)) {
+            final String username = securityContext.getCallerPrincipal().getName();
+            if (!annualBalance.getPlace().getOwner().getAccount().getUsername().equals(username)) {
+                throw AppException.createNotOwnerOfPlaceException();
+            }
+        }
+
+        return annualBalance;
     }
 
     @Override
@@ -157,7 +166,7 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
                 final LocalDateTime firstDayOfPreviousMonth = LocalDateTime.now(TIME_ZONE).minusMonths(1).with(TemporalAdjusters
                         .firstDayOfMonth()).truncatedTo(ChronoUnit.DAYS);
                 final List<Place> newPlacesList = placeFacade.findAllPlacesByBuildingIdAndNewerThanDate(
-                       place.getBuilding().getId(), firstDayOfPreviousMonth);
+                        place.getBuilding().getId(), firstDayOfPreviousMonth);
                 BigDecimal communalAreaInLastMonth = place.getBuilding().getCommunalAreaAggregate();
                 if (!newPlacesList.isEmpty()) {
                     final BigDecimal totalAreaOfNewPlaces = newPlacesList.stream()

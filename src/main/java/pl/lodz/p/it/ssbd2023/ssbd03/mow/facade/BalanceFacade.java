@@ -57,15 +57,17 @@ public class BalanceFacade extends AbstractFacade<AnnualBalance> {
         throw new UnsupportedOperationException();
     }
 
-    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    public List<AnnualBalance> findReports() {
-        throw new UnsupportedOperationException();
-    }
-
     @Override
-    @RolesAllowed({Roles.MANAGER})
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public AnnualBalance find(Object id) {
         return super.find(id);
+    }
+
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    public AnnualBalance findBalanceById(Long reportId) {
+        TypedQuery<AnnualBalance> tq = em.createNamedQuery("AnnualBalance.findBalanceById", AnnualBalance.class);
+        tq.setParameter("id", reportId);
+        return tq.getSingleResult();
     }
 
     @RolesAllowed({Roles.MANAGER})

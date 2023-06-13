@@ -111,8 +111,8 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
             final List<HotWaterEntry> hotWaterEntries = getHotWaterEntriesForPlaceWithoutActualEntry(placeId);
             if (!hotWaterEntries.isEmpty()) {
-                final HotWaterEntry newestHotWaterEntry = getHotWaterEntriesForPlaceWithoutActualEntry(placeId).get(0);
-                if (newestHotWaterEntry.getEntryValue().compareTo(consumptionValue) > 0) {
+                final HotWaterEntry newestHotWaterEntry = hotWaterEntries.get(0);
+                if (consumptionValue.compareTo(newestHotWaterEntry.getEntryValue()) > 0) {
                     throw AppException.createHotWaterEntryCouldNotBeInsertedException();
                 }
             }
@@ -122,6 +122,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
                 final Manager manager = accessLevelFacade.findManagerByUsername(username);
                 hotWaterEntry.setManager(manager);
             }
+
             hotWaterEntryFacade.create(hotWaterEntry);
         } else {
             throw AppException.createHotWaterEntryCouldNotBeInsertedException();
@@ -141,7 +142,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
             }
 
             final HotWaterEntry newestHotWaterEntry = hotWaterEntryFacade.getHotWaterEntriesByPlaceId(placeId).get(0);
-            if (newestHotWaterEntry.getEntryValue().compareTo(consumptionValue) > 0) {
+            if (consumptionValue.compareTo(newestHotWaterEntry.getEntryValue()) < 0) {
                 throw AppException.createHotWaterEntryCouldNotBeInsertedException();
             }
 

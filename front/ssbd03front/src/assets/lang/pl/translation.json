@@ -389,5 +389,17 @@
     "confirm_add": "Czy na pewno chcesz dodać wpis?",
     "added": "Wpis został dodany",
     "entry_error": "Błąd podczas wprowadzania wpisu"
+  },
+  "year_report": {
+    "year": "Rok",
+    "address": "Adres",
+    "postalCode": "Kod pocztowy",
+    "placeNumber": "Numer lokalu",
+    "totalHeatingCommunalAreaAdvance": "Całkowita zaliczka za ogrzanie części wspólnej",
+    "totalHeatingCommunalAreaCost": "Całkowity koszt ogrzania części wspólnej",
+    "totalHeatingPlaceAdvance": "Całkowita zaliczka za ogrzanie lokalu",
+    "totalHeatingPlaceCost": "Całkowity koszt ogrzania lokalu",
+    "totalHotWaterAdvance": "Całkowita zaliczka ze zużycie ciepłej wody",
+    "totalHotWaterCost": "Całkowity koszt zużycia ciepłej wody"
   }
 }

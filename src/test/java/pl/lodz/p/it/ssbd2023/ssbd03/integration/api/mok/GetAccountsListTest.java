@@ -8,6 +8,7 @@ import org.junit.Test;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountForListDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTest;
 import pl.lodz.p.it.ssbd2023.ssbd03.integration.factory.IntegrationTestObjectsFactory;
 
@@ -15,11 +16,12 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static pl.lodz.p.it.ssbd2023.ssbd03.integration.factory.IntegrationTestObjectsFactory.credentialsToAuth;
 
 public class GetAccountsListTest extends BasicIntegrationConfigTest {
     @Before
     public void initTest() {
-        auth(new LoginDTO("johndoe", "Password$123"));
+        auth(credentialsToAuth(Account.MANAGER, Account.PASSWORD));
     }
 
     @Test
@@ -50,11 +52,13 @@ public class GetAccountsListTest extends BasicIntegrationConfigTest {
     @Test
     public void registerNewAccountAndGetListOfAccountsTest() {
         CreateOwnerDTO owner = IntegrationTestObjectsFactory.createAccountToRegister();
+        setBEARER_TOKEN("");
         int statusCode = sendRequestAndGetResponse(Method.POST, "/accounts/register", owner, ContentType.JSON)
                 .getStatusCode();
         assertEquals(201, statusCode, "Check if account was registered");
         logger.info("Owner registered.");
 
+        auth(credentialsToAuth(Account.MANAGER, Account.PASSWORD));
         Response response = sendRequestAndGetResponse(Method.GET, "/accounts", null, null);
         statusCode = response.getStatusCode();
         List<String> listOfAccounts = response.body().jsonPath().getList("", AccountForListDTO.class).stream()
