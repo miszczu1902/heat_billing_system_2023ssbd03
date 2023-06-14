@@ -2,7 +2,7 @@ import {useTranslation} from "react-i18next";
 import {useState} from "react";
 import * as React from "react";
 import axios from "axios";
-import {API_URL} from "../../../consts";
+import {API_URL, MANAGER} from "../../../consts";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -28,6 +28,8 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
     const [successOpen, setSuccessOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
     const [errorOpenMessage, setErrorOpenMessage] = useState("");
+    const role = localStorage.getItem("role");
+    const URL = role === MANAGER ? `${API_URL}/heat-distribution-centre/hot-water-consumption/${hotWaterEntryId}` : `${API_URL}/heat-distribution-centre/hot-water-consumption/owner${hotWaterEntryId}`;
 
     const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -47,7 +49,7 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
 
     const handleClickOpen = () => {
         const fetchData = async () => {
-            await axios.get(`${API_URL}/heat-distribution-centre/hot-water-consumption/${hotWaterEntryId}`, {
+            await axios.get(URL, {
                 headers: {
                     Authorization: token
                 }

@@ -1,7 +1,7 @@
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import React, {useEffect, useState} from "react";
-import {API_URL} from "../../../consts";
+import {API_URL, MANAGER} from "../../../consts";
 import axios from "axios";
 import {Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from "@mui/material";
 import RefreshIcon from "../../icons/RefreshIcon";
@@ -13,12 +13,13 @@ import InsertHotWaterEntry from "./InsertHotWaterEntry";
 const HotWaterEntriesList = () => {
     const location = useLocation();
     const params = useParams();
+    const role = localStorage.getItem("role");
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
     const token = 'Bearer ' + localStorage.getItem("token");
     const [hotWaterEntries, setHotWaterEntries] = useState<HotWaterEntryForList[]>([]);
     const placeId = params.placeId;
-    const URL = `${API_URL}/heat-distribution-centre/hot-water-consumption/place/${placeId}`;
+    const URL = role === MANAGER ? `${API_URL}/heat-distribution-centre/hot-water-consumption/place/${placeId}` : `${API_URL}/heat-distribution-centre/hot-water-consumption/place/owner/${placeId}`;
     const currentDate = new Date();
     const formattedDate = format(currentDate, 'yyyy-MM');
 

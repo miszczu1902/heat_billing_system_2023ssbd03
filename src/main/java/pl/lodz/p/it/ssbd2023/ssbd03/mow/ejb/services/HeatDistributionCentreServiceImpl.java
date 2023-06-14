@@ -242,32 +242,38 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     }
 
     @Override
-    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    public HotWaterEntry getHotWaterEntry(Long hotWaterEntryId) {
+    @RolesAllowed(Roles.OWNER)
+    public HotWaterEntry getHotWaterEntryForOwner(Long hotWaterEntryId) {
         final HotWaterEntry hotWaterEntry = hotWaterEntryFacade.find(hotWaterEntryId);
-        if (securityContext.isCallerInRole(Roles.OWNER)) {
             final String username = securityContext.getCallerPrincipal().getName();
             Place place = hotWaterEntry.getPlace();
-
             if (place != null && !place.getOwner().getAccount().getUsername().equals(username)) {
                 throw AppException.createNotOwnerOfPlaceException();
-            }
         }
 
         return hotWaterEntry;
     }
 
     @Override
-    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    @RolesAllowed(Roles.MANAGER)
+    public HotWaterEntry getHotWaterEntry(Long hotWaterEntryId) {
+        return hotWaterEntryFacade.find(hotWaterEntryId);
+    }
+
+    @Override
+    @RolesAllowed(Roles.MANAGER)
     public List<HotWaterEntry> getHotWaterEntriesForPlace(Long placeId) {
-        if (securityContext.isCallerInRole(Roles.OWNER)) {
+        return hotWaterEntryFacade.getHotWaterEntriesByPlaceId(placeId);
+    }
+
+    @RolesAllowed(Roles.OWNER)
+    public List<HotWaterEntry> getHotWaterEntriesForPlaceForOwner(Long placeId) {
             final String username = securityContext.getCallerPrincipal().getName();
             final Place place = placeFacade.findPlaceById(placeId);
 
             if (place != null && !place.getOwner().getAccount().getUsername().equals(username)) {
                 throw AppException.createNotOwnerOfPlaceException();
             }
-        }
         return hotWaterEntryFacade.getHotWaterEntriesByPlaceId(placeId);
     }
 

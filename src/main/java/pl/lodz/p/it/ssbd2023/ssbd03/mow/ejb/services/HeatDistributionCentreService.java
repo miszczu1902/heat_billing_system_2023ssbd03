@@ -27,7 +27,11 @@ public interface HeatDistributionCentreService extends CommonManagerLocalInterfa
 
     HotWaterEntry getHotWaterEntry(Long hotWaterEntryId);
 
+    HotWaterEntry getHotWaterEntryForOwner(Long hotWaterEntryId);
+
     HeatingPlaceAndCommunalAreaAdvance getActualAdvanceChangeFactor(Long buildingId);
 
     List<HotWaterEntry> getHotWaterEntriesForPlace(Long placeId);
+
+    List<HotWaterEntry> getHotWaterEntriesForPlaceForOwner(Long placeId);
 }
