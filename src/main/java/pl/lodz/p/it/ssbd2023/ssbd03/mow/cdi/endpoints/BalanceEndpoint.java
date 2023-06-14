@@ -8,6 +8,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.UnitWarmCostReportDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatingPlaceAndCommunalAreaAdvance;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterAdvance;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.BalanceService;
@@ -15,6 +16,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AdvanceMapper;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.BalanceMapper;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -35,7 +37,9 @@ public class BalanceEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({Roles.GUEST, Roles.MANAGER, Roles.OWNER})
     public Response getUnitWarmCostReport() {
-        return Response.ok().entity(balanceService.getUnitWarmCostReport()).build();
+        UnitWarmCostReportDTO unitWarmCostReportDTO = new UnitWarmCostReportDTO(balanceService.getUnitWarmCostReportHotWater(), balanceService.getUnitWarmCostReportCentralHeating(),
+                LocalDate.now().getMonthValue(), LocalDate.now().getYear());
+        return Response.ok().entity(unitWarmCostReportDTO).build();
     }
 
     //MOW 2

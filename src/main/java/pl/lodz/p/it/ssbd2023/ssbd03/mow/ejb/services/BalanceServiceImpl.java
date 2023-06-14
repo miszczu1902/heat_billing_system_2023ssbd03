@@ -47,7 +47,7 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
 
     @Override
     @RolesAllowed({Roles.GUEST, Roles.MANAGER, Roles.OWNER})
-    public UnitWarmCostReport getUnitWarmCostReport() {
+    public BigDecimal getUnitWarmCostReportHotWater() {
         final List<Place> placesWithHotWater = placeFacade.findAllPlaces()
                 .stream()
                 .filter(Place::getHotWaterConnection)
@@ -61,15 +61,22 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
         final HeatDistributionCentrePayoff heatDistributionCentrePayoff = heatDistributionCentrePayoffFacade.findLatestHeatDistributionCentrePayoff();
         final BigDecimal price = heatDistributionCentrePayoff.getConsumptionCost().multiply(BigDecimal.ONE.subtract(heatDistributionCentrePayoff.getHeatingAreaFactor()));
         final BigDecimal pricePerCubicMeter = price.divide(totalWater, 2, BigDecimal.ROUND_HALF_UP);
+
+        return pricePerCubicMeter;
+    }
+
+    @Override
+    @RolesAllowed({Roles.GUEST, Roles.MANAGER, Roles.OWNER})
+    public BigDecimal getUnitWarmCostReportCentralHeating() {
+        final HeatDistributionCentrePayoff heatDistributionCentrePayoff = heatDistributionCentrePayoffFacade.findLatestHeatDistributionCentrePayoff();
         final List<Building> buildings = buildingFacade.findAllBuildings();
         final BigDecimal totalArea = buildings.stream()
                 .map(Building::getTotalArea)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-
         final BigDecimal heatingPrice = heatDistributionCentrePayoff.getConsumptionCost().multiply(heatDistributionCentrePayoff.getHeatingAreaFactor());
         final BigDecimal pricePerSquareMeter = heatingPrice.divide(totalArea, 2, BigDecimal.ROUND_HALF_UP);
 
-        return new UnitWarmCostReport(pricePerCubicMeter, pricePerSquareMeter, LocalDate.now().getMonthValue(), LocalDate.now().getYear());
+        return pricePerSquareMeter;
     }
 
     @Override
