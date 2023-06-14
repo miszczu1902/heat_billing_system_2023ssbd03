@@ -46,7 +46,7 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
     private SecurityContext securityContext;
 
     @Override
-    @RolesAllowed({Roles.GUEST, Roles.MANAGER, Roles.OWNER})
+    @PermitAll
     public BigDecimal getUnitWarmCostReportHotWater() {
         final List<Place> placesWithHotWater = placeFacade.findAllPlaces()
                 .stream()

@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.facade;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
@@ -61,7 +62,7 @@ public class HeatingPlaceAndCommunalAreaAdvanceFacade extends AbstractFacade<Hea
     }
 
 
-    @RolesAllowed({Roles.MANAGER})
+    @PermitAll
     public HeatingPlaceAndCommunalAreaAdvance findTheNewestAdvanceChangeFactor(Long buildingId) {
         TypedQuery<HeatingPlaceAndCommunalAreaAdvance> tq = em.createNamedQuery("HeatingPlaceAndCommunalAreaAdvance.findTheNewestAdvanceChangeFactor", HeatingPlaceAndCommunalAreaAdvance.class);
         tq.setParameter("buildingId", buildingId);

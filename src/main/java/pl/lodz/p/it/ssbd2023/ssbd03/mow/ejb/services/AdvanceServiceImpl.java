@@ -45,7 +45,6 @@ public class AdvanceServiceImpl extends AbstractService implements AdvanceServic
     @Override
     @PermitAll
     public void calculateHotWaterAdvance() {
-        boolean newOwner = false;
         BigDecimal averageValue = null;
         final List<Place> places = placeFacade.findAllPlaces()
                 .stream()
@@ -59,25 +58,23 @@ public class AdvanceServiceImpl extends AbstractService implements AdvanceServic
             final List<HotWaterEntry> lastThreeEntries = hotWaterEntries.subList(hotWaterEntries.size() - 3, hotWaterEntries.size());
             final List<Manager> managers = managerFacade.getListOfManagers();
 
-            newOwner = lastThreeEntries.stream()
-                    .noneMatch(entry -> entry.getCreatedBy().getId().equals(place.getOwner().getId()));
-            if (newOwner) {
-                newOwner = lastThreeEntries.stream()
-                        .map(entry -> entry.getCreatedBy().getId())
-                        .anyMatch(createdById -> managers.stream()
-                                .anyMatch(manager -> manager.getId().equals(createdById) && !manager.getId().equals(place.getOwner().getId())));
+            boolean oldOwner = lastThreeEntries.stream()
+                    .map(entry -> entry.getCreatedBy().getId())
+                    .distinct()
+                    .count() == 1;
+
+            if (!oldOwner) {
+                oldOwner = lastThreeEntries.stream()
+                        .anyMatch(entry -> managers.stream()
+                                .anyMatch(manager -> manager.getAccount().getId().equals(entry.getCreatedBy().getId()) && !manager.getAccount().getId().equals(place.getOwner().getAccount().getId())));
             }
 
-            if (hotWaterEntries.size() >= 3 && !newOwner) {
+            if (hotWaterEntries.size() >= 3 && oldOwner) {
                 final BigDecimal sum = lastThreeEntries.get(2).getEntryValue().subtract(lastThreeEntries.get(0).getEntryValue());
                 final LocalDate firstEntryDate = lastThreeEntries.get(0).getDate();
                 final LocalDate thirdEntryDate = lastThreeEntries.get(2).getDate();
                 final long daysBetween = ChronoUnit.DAYS.between(firstEntryDate, thirdEntryDate);
                 averageValue = sum.divide(BigDecimal.valueOf(daysBetween), 2, BigDecimal.ROUND_HALF_UP);
-                final Integer daysOfQuarter = lastThreeEntries.get(0).getDate().lengthOfMonth() + lastThreeEntries.get(1).getDate().lengthOfMonth() +
-                        lastThreeEntries.get(2).getDate().lengthOfMonth();
-                final PastQuarterHotWaterPayoff pastQuarterHotWaterPayoff = new PastQuarterHotWaterPayoff(place, averageValue, daysOfQuarter);
-                pastQuarterHotWaterPayoffFacade.create(pastQuarterHotWaterPayoff);
             } else {
                 averageValue = place.getPredictedHotWaterConsumption().divide(BigDecimal.valueOf(30), 2, BigDecimal.ROUND_HALF_UP);
             }
