@@ -100,7 +100,7 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
 
         BigDecimal areaPlaces = place.getBuilding().getCommunalAreaAggregate();
 
-        BigDecimal sumOfAreas = places.stream()
+        final BigDecimal sumOfAreas = places.stream()
                 .map(Place::getArea) // Assuming 'getArea' returns a BigDecimal representing the area
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
