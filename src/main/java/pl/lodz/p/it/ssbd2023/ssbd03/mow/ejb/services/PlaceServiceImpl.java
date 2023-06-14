@@ -111,24 +111,18 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
             throw AppException.createOptimisticLockAppException();
         }
 
-        final List<Place> places = place.getBuilding().getPlaces().stream().filter(p -> !Objects.equals(p.getId(), id)).toList();
-
-        BigDecimal areaPlaces = place.getBuilding().getCommunalAreaAggregate();
-
-        final BigDecimal sumOfAreas = places.stream()
-                .map(Place::getArea) // Assuming 'getArea' returns a BigDecimal representing the area
+        final BigDecimal sum = place.getBuilding().getPlaces().stream()
+                .map(Place::getArea)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        areaPlaces = areaPlaces.add(sumOfAreas).add(area);
-
-        if (place.getBuilding().getTotalArea().compareTo(areaPlaces) != 0) {
-            throw AppException.createTooBigPlaceAreaException();
+        final BigDecimal newCommunalAreaAgregate = place.getBuilding().getTotalArea().subtract(sum).subtract(area);
+        final int comparisonResult = newCommunalAreaAgregate.compareTo(place.getBuilding().getTotalArea().multiply(BigDecimal.valueOf(0.1)));
+        if (comparisonResult < 0) {
+            throw AppException.lackOfSpaceInTheBuildingException();
         }
-
         if (area != null) {
             place.setArea(area);
         }
-
         placeFacade.edit(place);
     }
 
