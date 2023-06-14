@@ -94,9 +94,14 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
 
     @Override
     @RolesAllowed(Roles.MANAGER)
-    public void modifyPlace(String placeId, BigDecimal area, String etag, Long version) {
+    public void modifyPlace(String placeId, BigDecimal area, String etag, Long version,
+                            String username, boolean isOwner, boolean isManager) {
         final Long id = Long.valueOf(placeId);
         Place place = placeFacade.findPlaceById(id);
+
+        if (isOwner && isManager && place.getOwner().getAccount().getUsername().equals(username)) {
+            throw AppException.createManagerCouldNotEditOwnedPlaceException();
+        }
 
         if (!etag.equals(messageSigner.sign(place))) {
             throw AppException.createVerifierException();
@@ -136,12 +141,16 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
     @Override
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public void enterPredictedHotWaterConsumption(String placeId, BigDecimal consumption, String etag, Long version,
-                                                  String username, boolean isOwner) {
+                                                  String username, boolean isOwner, boolean isManager) {
         final Long id = Long.valueOf(placeId);
         Place place = placeFacade.findPlaceById(id);
 
         if (isOwner && !place.getOwner().getAccount().getUsername().equals(username)) {
             throw AppException.createNotOwnerOfPlaceException();
+        }
+
+        if (isOwner && isManager && place.getOwner().getAccount().getUsername().equals(username)) {
+            throw AppException.createManagerCouldNotEditOwnedPlaceException();
         }
 
         if (!etag.equals(messageSigner.sign(place))) {

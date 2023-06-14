@@ -13,12 +13,13 @@ public interface PlaceService extends CommonManagerLocalInterface {
 
     void modifyPlaceOwner(Long placeId, String username,String etag, Long version);
 
-    void modifyPlace(String placeId, BigDecimal area, String etag, Long version);
+    void modifyPlace(String placeId, BigDecimal area, String etag, Long version,
+                     String username, boolean isOwner, boolean isManager);
 
     void enterHotWaterConsumption(String placeId, LocalDate date, BigDecimal value);
 
     void enterPredictedHotWaterConsumption(String placeId, BigDecimal consumption, String etag, Long version,
-                                           String username, boolean isOwner);
+                                           String username, boolean isOwner, boolean isManager);
 
     Place getPlace(String placeId);
 

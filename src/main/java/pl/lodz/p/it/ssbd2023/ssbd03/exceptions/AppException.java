@@ -77,6 +77,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ADVANCE_CHANGE_FACTOR_WAS_INSERTED = "exception.advance_factor.factor_was_inserted";
     protected final static String ERROR_HOT_WATER_ENTRY_NOT_INSERTED = "exception.hot_water_entry.not_inserted";
     protected final static String ERROR_HOT_WATER_ENTRY_NOT_MODIFIED = "exception.hot_water_entry.not_modified";
+    protected final static String ERROR_MANAGER_COULD_NOT_EDIT_OWNED_PLACE = "exception.error.manager_could_not_edit_owned_place";
     protected final static String TOO_BIG_PLACE_AREA = "exception.error.too_big_place_area";
     protected final static String NO_PLACE_FOUND = "exception.error.no_place_found";
     protected final static String NO_BUILDING_FOUND = "exception.error.no_building_found";
@@ -325,6 +326,10 @@ public static UserIsAlreadyOwnerOfThisPlaceException userIsAlreadyOwnerOfThisPla
 
     public static TotalHotWaterUsageIsZeroException totalHotWaterUsageIsZeroException() {
         return new TotalHotWaterUsageIsZeroException(TOTAL_HOT_WATER_USAGE_IS_ZERO, Response.Status.NOT_FOUND);
+    }
+
+    public static ManagerCouldNotEditOwnedPlaceException  createManagerCouldNotEditOwnedPlaceException() {
+        return new ManagerCouldNotEditOwnedPlaceException(ERROR_MANAGER_COULD_NOT_EDIT_OWNED_PLACE, Response.Status.FORBIDDEN);
     }
 }
 

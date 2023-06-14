@@ -106,13 +106,18 @@ public class PlaceEndpoint {
                                 @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
 
+        final String user = request.getUserPrincipal().getName();
+        final boolean isOwner = request.isUserInRole(Roles.OWNER);
+        final boolean isManager = request.isUserInRole(Roles.MANAGER);
+
         int retryTXCounter = txRetries; //limit prób ponowienia transakcji
         boolean rollbackTX = false;
 
         do {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
-                placeService.modifyPlace(placeId, modifyPlaceDTO.getArea(), etag, modifyPlaceDTO.getVersion());
+                placeService.modifyPlace(placeId, modifyPlaceDTO.getArea(), etag, modifyPlaceDTO.getVersion(),
+                        user, isOwner, isManager);
                 rollbackTX = placeService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
@@ -127,7 +132,8 @@ public class PlaceEndpoint {
         if (rollbackTX && retryTXCounter == 0) {
             throw AppException.createTransactionRollbackException();
         }
-        placeService.modifyPlace(placeId ,modifyPlaceDTO.getArea(), etag, modifyPlaceDTO.getVersion());
+        placeService.modifyPlace(placeId ,modifyPlaceDTO.getArea(), etag, modifyPlaceDTO.getVersion(),
+                user, isOwner, isManager);
         return Response.noContent().build();
     }
 
@@ -150,7 +156,8 @@ public class PlaceEndpoint {
         final String etag = request.getHeader("If-Match");
 
         final String user = request.getUserPrincipal().getName();
-        final boolean userRole = request.isUserInRole(Roles.OWNER);
+        final boolean isOwner = request.isUserInRole(Roles.OWNER);
+        final boolean isManager = request.isUserInRole(Roles.MANAGER);
 
         int retryTXCounter = txRetries; //limit prób ponowienia transakcji
         boolean rollbackTX = false;
@@ -159,7 +166,7 @@ public class PlaceEndpoint {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
                 placeService.enterPredictedHotWaterConsumption(placeId, enterPredictedHotWaterConsumptionDTO.getConsumption(),
-                        etag, enterPredictedHotWaterConsumptionDTO.getVersion(), user, userRole);
+                        etag, enterPredictedHotWaterConsumptionDTO.getVersion(), user, isOwner, isManager);
                 rollbackTX = placeService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
                 else return Response.status(Response.Status.NO_CONTENT).build();
@@ -175,7 +182,7 @@ public class PlaceEndpoint {
             throw AppException.createTransactionRollbackException();
         }
         placeService.enterPredictedHotWaterConsumption(placeId, enterPredictedHotWaterConsumptionDTO.getConsumption(),
-                etag, enterPredictedHotWaterConsumptionDTO.getVersion(), user, userRole);
+                etag, enterPredictedHotWaterConsumptionDTO.getVersion(), user, isOwner, isManager);
         return Response.noContent().build();
     }
 
