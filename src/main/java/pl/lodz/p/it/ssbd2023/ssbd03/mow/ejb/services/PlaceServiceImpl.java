@@ -96,7 +96,7 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
             throw AppException.createOptimisticLockAppException();
         }
 
-        List<Place> places = place.getBuilding().getPlaces().stream().filter(p -> !Objects.equals(p.getId(), id)).toList();
+        final List<Place> places = place.getBuilding().getPlaces().stream().filter(p -> !Objects.equals(p.getId(), id)).toList();
 
         BigDecimal areaPlaces = place.getBuilding().getCommunalAreaAggregate();
 

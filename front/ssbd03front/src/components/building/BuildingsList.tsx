@@ -17,7 +17,7 @@ import { API_URL } from '../../consts';
 import { BuildingFromList } from '../../types/buildingFromList';
 import validator from "validator";
 import { Snackbar, SnackbarContent } from '@mui/material';
-import { set } from 'react-hook-form';
+import RefreshIcon from "../icons/RefreshIcon";
 
 const BuildingsList = () => {
     const { t, i18n } = useTranslation();
@@ -208,6 +208,11 @@ const BuildingsList = () => {
         navigate('/buildings/building/' + buildingId);
     }
 
+    const handleClick = () => {
+        fetchData();
+        navigate('/buildings');
+    };
+
     return (
         <div style={{ height: '90vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0 }}>
             <Grid container>
@@ -280,6 +285,7 @@ const BuildingsList = () => {
                                 </TableCell>
                             </TableRow>
                         ))}
+                         <TableRow><Button className="landing-page-button" onClick={handleClick}><RefreshIcon/></Button></TableRow>
                     </TableBody>
                 </Table>
             </TableContainer>
