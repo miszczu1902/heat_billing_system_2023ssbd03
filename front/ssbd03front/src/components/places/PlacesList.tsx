@@ -34,7 +34,7 @@ const PlacesList = () => {
     }
 
     return (
-        <div style={{height: '93.3vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0}}>
+        <div style={{height: '90vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0}}>
             <TableContainer component={Paper}>
                 <Table aria-label='simple table'>
                     <TableHead>

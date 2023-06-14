@@ -397,6 +397,9 @@
     "totalHeatingPlaceAdvance": "Total heating place advance",
     "totalHeatingPlaceCost": "Total heating place cost",
     "totalHotWaterAdvance": "Total hot water advance",
-    "totalHotWaterCost": "Total hot water cost"
+    "totalHotWaterCost": "Total hot water cost",
+    "water_balance": "Balance of heating hot water",
+    "communal_balance": "Heating balance of the communal area",
+    "place_balance": "Heating balance of the place"
   }
 }

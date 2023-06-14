@@ -10,5 +10,8 @@ export interface YearReport {
     "totalHeatingPlaceCost": number,
     "totalHotWaterAdvance": number,
     "totalHotWaterCost": number,
+    "hotWaterBalance": number;
+    "heatingPlaceBalance": number;
+    "communalAreaBalance": number;
     "year": number
 }
