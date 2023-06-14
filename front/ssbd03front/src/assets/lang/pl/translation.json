@@ -214,7 +214,11 @@
       "optimistic_lock": "BŁĄD_OPTYMISTYCZNEGO_BLOKOWANIA",
       "access_denied": "BŁĄD_ODMOWY_DOSTĘPU",
       "transaction_rolledback": "BŁĄD_WYCOFANIA_TRANSAKCJI",
-      "account_not_registered": "BŁĄD_KONTO_NIEZAREJESTROWANE"
+      "account_not_registered": "BŁĄD_KONTO_NIEZAREJESTROWANE",
+      "no_place_found": "Nie znaleziono lokalu w systemie",
+      "no_building_found": "Nie znaleziono budynku w systemie",
+      "total_area_is_zero": "Całkowita powierzchnia budynków jest równa 0",
+      "total_hot_water_usage_is_zero": "Całkowite zużycie ciepłej wody w budynkach jest równe 0"
     },
     "password": {
       "not_same_message": "Hasła nie są identyczne",
