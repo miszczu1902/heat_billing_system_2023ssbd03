@@ -99,7 +99,7 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
         final Long id = Long.valueOf(placeId);
         Place place = placeFacade.findPlaceById(id);
 
-        if (isOwner && isManager && place.getOwner().getAccount().getUsername().equals(username)) {
+        if (isManager && place.getOwner().getAccount().getUsername().equals(username)) {
             throw AppException.createManagerCouldNotEditOwnedPlaceException();
         }
 
@@ -145,11 +145,11 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
         final Long id = Long.valueOf(placeId);
         Place place = placeFacade.findPlaceById(id);
 
-        if (isOwner && !place.getOwner().getAccount().getUsername().equals(username)) {
+        if (!isManager && !place.getOwner().getAccount().getUsername().equals(username)) {
             throw AppException.createNotOwnerOfPlaceException();
         }
 
-        if (isOwner && isManager && place.getOwner().getAccount().getUsername().equals(username)) {
+        if (isManager && place.getOwner().getAccount().getUsername().equals(username)) {
             throw AppException.createManagerCouldNotEditOwnedPlaceException();
         }
 
@@ -161,7 +161,7 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
             throw AppException.createOptimisticLockAppException();
         }
 
-        if (place.getPredictedHotWaterConsumption().intValue() != 0.00 && isOwner) {
+        if (place.getPredictedHotWaterConsumption().intValue() != 0.00 && isOwner && !isManager) {
             throw AppException.createPredictedHotWaterConsumptionValueAlreadySetException();
         }
 
