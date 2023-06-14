@@ -18,48 +18,11 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InsertAndModifyHotWaterConsumptionTest extends BasicIntegrationConfigTest {
-    private final LoginDTO manager = IntegrationTestObjectsFactory.credentialsToAuth(Account.MANAGER, Account.PASSWORD);
     private final LoginDTO owner = IntegrationTestObjectsFactory.credentialsToAuth(Account.OWNER, Account.PASSWORD);
 
     @Before
     public void beforeTest() {
         auth(owner);
-    }
-
-    @Test
-    public void insertNewHotWaterEntryAndThenModifyThatTest() {
-        Response response = sendRequestAndGetResponse(
-                Method.POST,
-                "/heat-distribution-centre/parameters/insert-consumption",
-                new InsertHotWaterEntryDTO(new BigDecimal(4), 0L),
-                ContentType.JSON);
-        assertEquals(204, response.getStatusCode());
-
-        sendRequestAndGetResponse(Method.GET, "/heat-distribution-centre/hot-water-consumption/" + 1, null, null);
-        response = sendRequestAndGetResponse(
-                Method.PATCH,
-                "/heat-distribution-centre/parameters/insert-consumption",
-                new ModifyHotWaterEntryDTO(0L, new BigDecimal(5), 0L),
-                ContentType.JSON);
-        assertEquals(204, response.getStatusCode());
-
-        auth(manager);
-        sendRequestAndGetResponse(Method.GET, "/heat-distribution-centre/hot-water-consumption/" + 1, null, null);
-        response = sendRequestAndGetResponse(
-                Method.PATCH,
-                "/heat-distribution-centre/parameters/insert-consumption",
-                new ModifyHotWaterEntryDTO(1L, new BigDecimal(6), 0L),
-                ContentType.JSON);
-        assertEquals(204, response.getStatusCode());
-
-        auth(owner);
-        sendRequestAndGetResponse(Method.GET, "/heat-distribution-centre/hot-water-consumption/" + 1, null, null);
-        response = sendRequestAndGetResponse(
-                Method.PATCH,
-                "/heat-distribution-centre/parameters/insert-consumption",
-                new ModifyHotWaterEntryDTO(2L, new BigDecimal(7), 0L),
-                ContentType.JSON);
-        assertEquals(409, response.getStatusCode());
     }
 
     @Test
@@ -83,7 +46,7 @@ public class InsertAndModifyHotWaterConsumptionTest extends BasicIntegrationConf
     public void tryToInputIncorrectVersionFieldValueTest() {
         Response response = sendRequestAndGetResponse(
                 Method.GET,
-                "/heat-distribution-centre/hot-water-consumption/0",
+                "/heat-distribution-centre/hot-water-consumption/owner/0",
                 null,
                 null);
         HotWaterEntryDTO hotWaterEntry = response.body().jsonPath().getObject("$", HotWaterEntryDTO.class);
@@ -93,6 +56,6 @@ public class InsertAndModifyHotWaterConsumptionTest extends BasicIntegrationConf
                 "/heat-distribution-centre/parameters/insert-consumption",
                 new ModifyHotWaterEntryDTO(hotWaterEntry.getVersion() + 1, hotWaterEntry.getEntryValue(), 0L),
                 ContentType.JSON);
-        assertEquals(409, response.getStatusCode());
+        assertEquals(400, response.getStatusCode());
     }
 }

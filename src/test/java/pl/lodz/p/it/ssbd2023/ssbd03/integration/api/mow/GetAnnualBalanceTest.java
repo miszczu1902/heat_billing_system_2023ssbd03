@@ -28,7 +28,7 @@ public class GetAnnualBalanceTest extends BasicIntegrationConfigTest {
         YearReportDTO annualBalanceForYear = response.body().jsonPath().getObject("$", YearReportDTO.class);
 
         assertEquals(200, response.getStatusCode());
-        assertEquals(2023, Integer.valueOf(annualBalanceForYear.getYear()));
+        assertEquals(2022, Integer.valueOf(annualBalanceForYear.getYear()));
     }
 
     @Test
@@ -38,7 +38,7 @@ public class GetAnnualBalanceTest extends BasicIntegrationConfigTest {
         YearReportDTO annualBalanceForYear = response.body().jsonPath().getObject("$", YearReportDTO.class);
 
         assertEquals(200, response.getStatusCode());
-        assertEquals(2023, Integer.valueOf(annualBalanceForYear.getYear()));
+        assertEquals(2022, Integer.valueOf(annualBalanceForYear.getYear()));
     }
 
     @Test

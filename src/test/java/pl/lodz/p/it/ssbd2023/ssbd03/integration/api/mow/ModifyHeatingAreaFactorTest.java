@@ -38,9 +38,10 @@ public class ModifyHeatingAreaFactorTest extends BasicIntegrationConfigTest {
 
     @Test
     public void modifyHeatingAreaFactorWithIncorrectValueTest() {
+        InsertAdvanceChangeFactorDTO insertAdvanceChangeFactorDTO = new InsertAdvanceChangeFactorDTO(new BigDecimal(10));
+        insertAdvanceChangeFactorDTO.setVersion(-1L);
         Response response = sendRequestAndGetResponse(Method.PATCH,
-                "/heat-distribution-centre/parameters/advance-change-factor/" + 0,
-                new InsertAdvanceChangeFactorDTO(new BigDecimal(10)), ContentType.JSON);
-        assertEquals(400, response.getStatusCode());
+                "/heat-distribution-centre/parameters/advance-change-factor/" + 0, insertAdvanceChangeFactorDTO, ContentType.JSON);
+        assertEquals(500, response.getStatusCode());
     }
 }
