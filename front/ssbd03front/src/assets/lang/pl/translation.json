@@ -376,6 +376,17 @@
     "modify_place_owner_confirm": "Czy na pewno wprowadziłeś poprawne dane? Tej operacji nie można cofnąć",
     "enter_username_error": "Nazwa użytkownika może zaweriać: dużą, małą literę, cyfrę oraz znak _, oraz długość 6-16 znaków"
   },
+  "editPlace" : {
+    "edit_place_button" : "Edytuj lokal",
+    "edit_place_title" : "Edytuj lokal",
+    "edit_place_description" : "Edytuj dane lokalu.",
+    "edit_place_text_field_area" : "Powierzchnia lokalu [m2]",
+    "edit_place_text_field_hot_water_connection" : "Podłączenie wody",
+    "edit_place_text_field_central_heating_connection" : "Podłączenie ogrzewania",
+    "edit_place_error" : "Wartość musi być w formacie X.XX oraz przed kropką może znajdować się maksymalnie 8 cyfr",
+    "edit_place_confirm" : "Czy na pewno wprowadziłeś poprawne dane? Tej operacji nie można cofnąć",
+    "edit_place_failed" : "Wystąpił błąd podczas edytowania danych lokalu"
+  },
   "hot_water" : {
     "date": "Data",
     "value": "Wartość wpisu",

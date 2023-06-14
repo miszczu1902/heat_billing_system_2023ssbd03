@@ -36,8 +36,6 @@ const EnterPredictedHotWaterConsumption = () => {
             setVersion(response.data.version);
             localStorage.setItem("etag", response.headers["etag"]);
             setPredictedHotWaterConsumption(response.data.predictedHotWaterConsumption);
-            console.log(response.data.version);
-            console.log(response.data);
         }).catch((error) => {
             if (error.response.status === 403) {
                 setAuthorizationErrorOpen(true);
@@ -77,6 +75,7 @@ const EnterPredictedHotWaterConsumption = () => {
                 'If-Match': localStorage.getItem("etag")
             }
         }).then((response) => {
+            window.location.reload();
         }).catch((error) => {
             setConfirmOpen(false); 
             setOpenSnackbar(true);
@@ -175,7 +174,7 @@ const EnterPredictedHotWaterConsumption = () => {
         <Snackbar open={openSnackbar} onClose={handleCloseSnackbar}>
                 <SnackbarContent 
                 message={t('enterPredictedHotWaterConsumption.enter_predicted_hot_water_consumption_failed')}/>
-            </Snackbar>
+        </Snackbar>
       </div>
     );
 }

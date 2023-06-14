@@ -84,8 +84,23 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
 
     @Override
     @RolesAllowed(Roles.MANAGER)
-    public void modifyPlace() {
-        throw new UnsupportedOperationException();
+    public void modifyPlace(String placeId, BigDecimal area, String etag, Long version) {
+        final Long id = Long.valueOf(placeId);
+        Place place = placeFacade.findPlaceById(id);
+
+        if (!etag.equals(messageSigner.sign(place))) {
+            throw AppException.createVerifierException();
+        }
+
+        if (!Objects.equals(version, place.getVersion())) {
+            throw AppException.createOptimisticLockAppException();
+        }
+
+        if (area != null) {
+            place.setArea(area);
+        }
+
+        placeFacade.edit(place);
     }
 
     @Override

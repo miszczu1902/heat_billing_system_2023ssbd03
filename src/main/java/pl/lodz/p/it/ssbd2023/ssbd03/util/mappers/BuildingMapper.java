@@ -32,10 +32,9 @@ public class BuildingMapper {
     }
 
     public Building createBuilding(CreateBuildingDTO createBuildingDTO) {
-        BigDecimal totalArea = new BigDecimal(createBuildingDTO.getTotalArea());
         return new Building(
-                totalArea,
-                totalArea,
+                createBuildingDTO.getTotalArea(),
+                createBuildingDTO.getTotalArea(),
                 new Address(createBuildingDTO.getStreet(),
                         createBuildingDTO.getBuildingNumber(),
                         createBuildingDTO.getCity(),

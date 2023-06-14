@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import React, {useEffect, useState} from 'react';
-import {Button, Dialog, DialogTitle, Grid} from '@mui/material';
+import {Button, Dialog, DialogTitle, Grid, Icon} from '@mui/material';
 import {ADMIN, API_URL, MANAGER} from "../../consts";
 import axios from 'axios';
 import Paper from "@mui/material/Paper";
@@ -11,6 +11,9 @@ import {useParams} from "react-router-dom";
 import EnterPredictedHotWaterConsumption from "../place/EnterPredictedHotWaterConsumption";
 import DoorIcon from "../icons/DoorIcon";
 import {Account} from "../../types/account";
+import EditPlace from "../place/EditPlace";
+import IconCheckboxMarked from "../icons/IconCheckboxMarked";
+import IconCloseBox from "../icons/IconCloseBox";
 import ChangePlaceOwner from "../place/ChangePlaceOwner";
 import HotWaterEntriesList from "../place/hotWaterEntry/HotWaterEntriesList";
 
@@ -22,6 +25,7 @@ const PlaceInfo = () => {
     const [version, setVersion] = useState("");
     const placeId = useParams().placeId;
     const [authorizationErrorOpen, setAuthorizationErrorOpen] = useState(false);
+    const [role, setRole] = useState(localStorage.getItem("role"));
     const [confirmOpen, setConfirmOpen] = React.useState(false);
 
     useEffect(() => {
@@ -69,6 +73,9 @@ const PlaceInfo = () => {
                             {t('place.title')}
                         </Typography>
                         <DoorIcon />
+                    </Box>
+                    <Box sx={{ my: 30, display: 'flex', flexDirection: 'column', alignItems: 'left', margin: '2vh'}}>
+                        {role === "MANAGER"? <EditPlace/> : <></>}
                     </Box>
                     <Box sx={{ my: 30, display: 'flex', flexDirection: 'column', alignItems: 'left', margin: '2vh' }}>
                         {place !== null && (
@@ -155,7 +162,7 @@ const PlaceInfo = () => {
                                     alignItems: 'center',
                                     justifyContent: 'space-between'
                                 }} variant="h5">
-                                    <b>{t('place.hotWaterConnection')}:</b> {place?.hotWaterConnection ? t('place.connected') : t('place.disconnected')}
+                                    <b>{t('place.hotWaterConnection')}:</b> {place.hotWaterConnection ? <IconCheckboxMarked/> : <IconCloseBox/>}
                                 </Typography>
                             </Paper>
                             <Paper elevation={3} style={{marginTop: '0.5vh', position: 'relative', overflow: 'auto'}}>
@@ -167,7 +174,7 @@ const PlaceInfo = () => {
                                     alignItems: 'center',
                                     justifyContent: 'space-between'
                                 }} variant="h5">
-                                    <b>{t('place.centralHeatingConnection')}:</b> {place.centralHeatingConnection ? t('place.connected') : t('place.disconnected')}
+                                    <b>{t('place.centralHeatingConnection')}:</b> {place.centralHeatingConnection ? <IconCheckboxMarked/> : <IconCloseBox/>}
                                 </Typography>
                             </Paper>
                             <Paper elevation={3} style={{marginTop: '0.5vh', position: 'relative', overflow: 'auto'}}>
