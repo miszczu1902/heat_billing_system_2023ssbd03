@@ -57,7 +57,7 @@ public class OwnerFacade extends AbstractFacade<Owner> {
     }
 
     @Override
-    @RolesAllowed(Roles.OWNER)
+    @RolesAllowed({Roles.OWNER, Roles.ADMIN})
     public void edit(Owner entity) {
         super.edit(entity);
     }
