@@ -18,6 +18,9 @@ import java.time.LocalDate;
                 @Index(name = "month_pay_off_place_id", columnList = "place_id"),
                 @Index(name = "month_pay_off_owner_id", columnList = "owner_id")
         })
+@NamedQueries({
+        @NamedQuery(name = "MonthPayoff.findWaterHeatingUnitCost", query = "SELECT k FROM MonthPayoff k WHERE k.payoffDate = (SELECT MAX(k2.payoffDate) FROM MonthPayoff k2) AND k.waterHeatingUnitCost <> 0")
+})
 public class MonthPayoff extends AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

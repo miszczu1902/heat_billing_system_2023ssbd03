@@ -11,10 +11,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
-import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BalanceFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BuildingFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.HeatDistributionCentrePayoffFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -43,26 +40,16 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
     private PlaceFacade placeFacade;
 
     @Inject
+    private MonthPayoffFacade monthPayoffFacade;
+
+    @Inject
     private SecurityContext securityContext;
 
     @Override
     @PermitAll
     public BigDecimal getUnitWarmCostReportHotWater() {
-        final List<Place> placesWithHotWater = placeFacade.findAllPlaces()
-                .stream()
-                .filter(Place::getHotWaterConnection)
-                .toList();
-        final BigDecimal totalWater = placesWithHotWater.stream()
-                .map(Place::getMonthPayoffs)
-                .filter(monthPayoffs -> !monthPayoffs.isEmpty())
-                .map(monthPayoffs -> monthPayoffs.get(monthPayoffs.size() - 1))
-                .map(MonthPayoff::getHotWaterConsumption)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-        final HeatDistributionCentrePayoff heatDistributionCentrePayoff = heatDistributionCentrePayoffFacade.findLatestHeatDistributionCentrePayoff();
-        final BigDecimal price = heatDistributionCentrePayoff.getConsumptionCost().multiply(BigDecimal.ONE.subtract(heatDistributionCentrePayoff.getHeatingAreaFactor()));
-        final BigDecimal pricePerCubicMeter = price.divide(totalWater, 2, BigDecimal.ROUND_HALF_UP);
-
-        return pricePerCubicMeter;
+        MonthPayoff monthPayoff = monthPayoffFacade.findWaterHeatingUnitCost();
+        return monthPayoff.getWaterHeatingUnitCost();
     }
 
     @Override
