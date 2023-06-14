@@ -84,6 +84,9 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
         if (owner.getAccount().getUsername().equals(ManagerUsername)) {
             throw AppException.canNotMakeYourselfOwnerOfThePlaceException();
         }
+        if (place.getOwner().getAccount().getUsername().equals(ManagerUsername)) {
+            throw AppException.canNotMakeSomeoneOwnerOfYourPlaceException();
+        }
         place.setOwner(owner);
         place.setPredictedHotWaterConsumption(new BigDecimal(0));
         placeFacade.edit(place);

@@ -260,8 +260,8 @@
     },
     "place": {
       "can_not_make_yourself_owner": "Nie możesz sam przypisać sobie mieszkania",
-      "user_is_already_owner_of_this_place": "Ten użytkownik jest właścicielem tego mieszkania"
-
+      "user_is_already_owner_of_this_place": "Ten użytkownik jest właścicielem tego mieszkania",
+      "can_not_make_someone_owner_of_your_place": "Nie możesz przepisać lokalu którego jesteś właścicielem"
     },
   "database": {
     "no_result": "Błędny numer bloku lub mieszkania"
