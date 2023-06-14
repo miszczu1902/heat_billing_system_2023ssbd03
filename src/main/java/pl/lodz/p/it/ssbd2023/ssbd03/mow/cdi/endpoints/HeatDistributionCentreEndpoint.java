@@ -159,7 +159,7 @@ public class HeatDistributionCentreEndpoint {
     @GET
     @Path("/hot-water-consumption/{hotWaterEntryId}")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
+    @RolesAllowed(Roles.MANAGER)
     public Response getHotWaterEntry(@PathParam("hotWaterEntryId") Long hotWaterEntryId) {
         HotWaterEntryDTO hotWaterEntry = HotWaterEntryMapper.createHotWaterEntryToHotWaterEntryDTO(
                 heatDistributionCentreService.getHotWaterEntry(hotWaterEntryId));
@@ -171,12 +171,39 @@ public class HeatDistributionCentreEndpoint {
 
     //MOW 13
     @GET
+    @Path("/hot-water-consumption/owner/{hotWaterEntryId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed(Roles.OWNER)
+    public Response getHotWaterEntryForOwner(@PathParam("hotWaterEntryId") Long hotWaterEntryId) {
+        HotWaterEntryDTO hotWaterEntry = HotWaterEntryMapper.createHotWaterEntryToHotWaterEntryDTO(
+                heatDistributionCentreService.getHotWaterEntryForOwner(hotWaterEntryId));
+        return Response.status(200)
+                .header("ETag", messageSigner.sign(hotWaterEntry))
+                .entity(hotWaterEntry)
+                .build();
+    }
+
+    //MOW 13
+    @GET
     @Path("/hot-water-consumption/place/{placeId}")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
+    @RolesAllowed(Roles.MANAGER)
     public Response getHotWaterEntriesForPlace(@PathParam("placeId") Long placeId) {
         return Response.status(200)
                 .entity(heatDistributionCentreService.getHotWaterEntriesForPlace(placeId).stream()
+                        .map(HotWaterEntryMapper::createHotWaterEntryToHotWaterEntryDTO)
+                        .toList())
+                .build();
+    }
+
+    //MOW 13
+    @GET
+    @Path("/hot-water-consumption/place/owner/{placeId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed(Roles.OWNER)
+    public Response getHotWaterEntriesForPlaceForOwner(@PathParam("placeId") Long placeId) {
+        return Response.status(200)
+                .entity(heatDistributionCentreService.getHotWaterEntriesForPlaceForOwner(placeId).stream()
                         .map(HotWaterEntryMapper::createHotWaterEntryToHotWaterEntryDTO)
                         .toList())
                 .build();
