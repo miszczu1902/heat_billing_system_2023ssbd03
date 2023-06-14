@@ -22,6 +22,12 @@ public class AdvanceServiceImpl extends AbstractService implements AdvanceServic
     private PlaceFacade placeFacade;
 
     @Inject
+    private ManagerFacade managerFacade;
+
+    @Inject
+    private BalanceFacade balanceFacade;
+
+    @Inject
     private HotWaterAdvanceFacade hotWaterAdvanceFacade;
 
     @Inject
@@ -33,31 +39,36 @@ public class AdvanceServiceImpl extends AbstractService implements AdvanceServic
     @Inject
     private HeatDistributionCentrePayoffFacade heatDistributionCentrePayoffFacade;
 
+    @Inject
+    private BalanceService balanceService;
+
     @Override
     @PermitAll
     public void calculateHotWaterAdvance() {
+        boolean newOwner = false;
         BigDecimal averageValue = null;
         final List<Place> places = placeFacade.findAllPlaces()
                 .stream()
                 .filter(Place::getHotWaterConnection)
                 .toList();
-        final BigDecimal totalWater = places.stream()
-                .map(Place::getMonthPayoffs)
-                .filter(monthPayoffs -> !monthPayoffs.isEmpty())
-                .map(monthPayoffs -> monthPayoffs.get(monthPayoffs.size() - 1))
-                .map(MonthPayoff::getHotWaterConsumption)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        final HeatDistributionCentrePayoff heatDistributionCentrePayoff = heatDistributionCentrePayoffFacade.findLatestHeatDistributionCentrePayoff();
-        final BigDecimal price = heatDistributionCentrePayoff.getConsumptionCost().multiply(BigDecimal.ONE.subtract(heatDistributionCentrePayoff.getHeatingAreaFactor()));
-        final BigDecimal pricePerCubicMeter = price.divide(totalWater, 2, BigDecimal.ROUND_HALF_UP);
+        final BigDecimal pricePerCubicMeter = balanceService.getUnitWarmCostReportHotWater();
 
         for (Place place : places) {
             final HeatingPlaceAndCommunalAreaAdvance heatingPlaceAndCommunalAreaAdvance = heatingPlaceAndCommunalAreaAdvanceFacade.findTheNewestAdvanceChangeFactor(place.getBuilding().getId());
             final List<HotWaterEntry> hotWaterEntries = place.getHotWaterEntries();
+            final List<HotWaterEntry> lastThreeEntries = hotWaterEntries.subList(hotWaterEntries.size() - 3, hotWaterEntries.size());
+            final List<Manager> managers = managerFacade.getListOfManagers();
 
-            if (hotWaterEntries.size() >= 3) {
-                final List<HotWaterEntry> lastThreeEntries = hotWaterEntries.subList(hotWaterEntries.size() - 3, hotWaterEntries.size());
+            newOwner = lastThreeEntries.stream()
+                    .noneMatch(entry -> entry.getCreatedBy().getId().equals(place.getOwner().getId()));
+            if (newOwner) {
+                newOwner = lastThreeEntries.stream()
+                        .map(entry -> entry.getCreatedBy().getId())
+                        .anyMatch(createdById -> managers.stream()
+                                .anyMatch(manager -> manager.getId().equals(createdById) && !manager.getId().equals(place.getOwner().getId())));
+            }
+
+            if (hotWaterEntries.size() >= 3 && !newOwner) {
                 final BigDecimal sum = lastThreeEntries.get(2).getEntryValue().subtract(lastThreeEntries.get(0).getEntryValue());
                 final LocalDate firstEntryDate = lastThreeEntries.get(0).getDate();
                 final LocalDate thirdEntryDate = lastThreeEntries.get(2).getDate();
@@ -71,10 +82,12 @@ public class AdvanceServiceImpl extends AbstractService implements AdvanceServic
                 averageValue = place.getPredictedHotWaterConsumption().divide(BigDecimal.valueOf(30), 2, BigDecimal.ROUND_HALF_UP);
             }
             for (int i = 0; i < 3; i++) {
+                final LocalDate currentDate = LocalDate.now().plusMonths(i);
+                final LocalDate firstDayOfMonth = currentDate.withDayOfMonth(1);
                 final BigDecimal hotWaterAdvance = averageValue.multiply(BigDecimal.valueOf(LocalDate.now().plusMonths(i).lengthOfMonth()))
                         .multiply(pricePerCubicMeter)
                         .multiply(heatingPlaceAndCommunalAreaAdvance.getAdvanceChangeFactor());
-                final HotWaterAdvance advance = new HotWaterAdvance(LocalDate.now().plusMonths(i), place, hotWaterAdvance);
+                final HotWaterAdvance advance = new HotWaterAdvance(firstDayOfMonth, place, hotWaterAdvance);
                 hotWaterAdvanceFacade.create(advance);
             }
         }
