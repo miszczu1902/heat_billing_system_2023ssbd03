@@ -19,7 +19,7 @@ import java.time.LocalDate;
                 @Index(name = "month_pay_off_owner_id", columnList = "owner_id")
         })
 @NamedQueries({
-        @NamedQuery(name = "MonthPayoff.findWaterHeatingUnitCost", query = "SELECT k FROM MonthPayoff k WHERE k.payoffDate = (SELECT MAX(k2.payoffDate) FROM MonthPayoff k2) AND k.waterHeatingUnitCost <> 0")
+        @NamedQuery(name = "MonthPayoff.findWaterHeatingUnitCost", query = "SELECT k FROM MonthPayoff k WHERE k.waterHeatingUnitCost != 0 ORDER BY k.payoffDate DESC")
 })
 public class MonthPayoff extends AbstractEntity implements Serializable {
     @Id
