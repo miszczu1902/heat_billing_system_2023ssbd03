@@ -36,10 +36,6 @@ const BuildingsList = () => {
     const [totalAreaValid, setTotalAreaValid] = useState(false);
     const [totalAreaError, setTotalAreaError] = useState("");
 
-    const [communalAreaAggregate, setCommunalAreaAggregate] = useState("");
-    const [communalAreaAggregateValid, setCommunalAreaAggregateValid] = useState(false);
-    const [communalAreaAggregateError, setCommunalAreaAggregateError] = useState("");
-
     const [street, setStreet] = useState<string>("");
     const [streetValid, setStreetValid] = useState(false);
     const [streetError, setStreetError] = useState("");
@@ -90,9 +86,6 @@ const BuildingsList = () => {
         setTotalArea("");
         setTotalAreaError("");
         setTotalAreaValid(false);
-        setCommunalAreaAggregate("");
-        setCommunalAreaAggregateError("");
-        setCommunalAreaAggregateValid(false);
         setNewBuildingAddOpen(true);
     };
 
@@ -117,18 +110,6 @@ const BuildingsList = () => {
         } else {
             setTotalAreaValid(false);
             setTotalAreaError(t("buildingFromList.total_area_error"));
-        }
-    };
-
-    const handleCommunalAreaAggregateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const regex = /^[0-9]+(?:\.[0-9]+)?$/;
-        if (validator.matches(event.target.value, regex) && event.target.value.length > 0) {
-            setCommunalAreaAggregate(event.target.value);
-            setCommunalAreaAggregateValid(true);
-            setCommunalAreaAggregateError("");
-        } else {
-            setCommunalAreaAggregateValid(false);
-            setCommunalAreaAggregateError(t("buildingFromList.communal_area_aggregate_error"));
         }
     };
 
@@ -195,14 +176,13 @@ const BuildingsList = () => {
     const handleSubmit = () => {
         const buildingDTO = {
             totalArea: totalArea,
-            communalAreaAggregate: communalAreaAggregate,
             street: street,
             buildingNumber: buildingNumber,
             city: city,
             postalCode: postalCode
         };
 
-        if(totalAreaValid && communalAreaAggregateValid && streetValid && buildingNumberValid && cityValid && postalCodeValid) {
+        if(totalAreaValid && streetValid && buildingNumberValid && cityValid && postalCodeValid) {
         axios.post(`${API_URL}/buildings/building`, buildingDTO, {
             headers: {
                 Authorization: token
@@ -354,28 +334,6 @@ const BuildingsList = () => {
                             </ListItem>
                             <ListItem>
                                 <DialogContentText style={{ fontSize: "13px", color: "red" }}>{totalAreaError}</DialogContentText>
-                            </ListItem>
-                            <Divider />
-                            <ListItem>
-                                <ListItem>
-                                    <DialogContentText>
-                                        <div >
-                                            {t('buildingFromList.building_communal_area_aggregate')}
-                                        </div>
-                                    </DialogContentText>
-                                </ListItem>
-                                <TextField
-                                    autoFocus
-                                    margin="dense"
-                                    id="communalAreaAggregate"
-                                    label={t('buildingFromList.communal_area_aggregate')}
-                                    type="text"
-                                    sx={{ width: '50%' }}
-                                    variant="standard"
-                                    onChange={handleCommunalAreaAggregateChange}/>
-                            </ListItem>
-                            <ListItem>
-                                <DialogContentText style={{ fontSize: "13px", color: "red" }}>{communalAreaAggregateError}</DialogContentText>
                             </ListItem>
                             <Divider />
                             <List>
