@@ -46,6 +46,6 @@ public class ModifyPlaceTest extends BasicIntegrationConfigTest {
         Response modifyResponse = sendRequestAndGetResponse(Method.PATCH, "/places/place/0",
                 modifyPlaceDTO, ContentType.JSON);
 
-        assertEquals(400, modifyResponse.getStatusCode());
+        assertEquals(409, modifyResponse.getStatusCode());
     }
 }
