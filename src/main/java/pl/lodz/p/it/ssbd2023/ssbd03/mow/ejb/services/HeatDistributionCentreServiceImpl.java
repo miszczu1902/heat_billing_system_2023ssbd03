@@ -112,7 +112,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
             final List<HotWaterEntry> hotWaterEntries = getHotWaterEntriesForPlaceWithoutActualEntry(placeId);
             if (!hotWaterEntries.isEmpty()) {
                 final HotWaterEntry newestHotWaterEntry = hotWaterEntries.get(0);
-                if (consumptionValue.compareTo(newestHotWaterEntry.getEntryValue()) > 0) {
+                if (consumptionValue.compareTo(newestHotWaterEntry.getEntryValue()) < 0) {
                     throw AppException.createHotWaterEntryCouldNotBeInsertedException();
                 }
             }

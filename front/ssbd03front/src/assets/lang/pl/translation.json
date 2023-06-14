@@ -418,6 +418,9 @@
     "totalHeatingPlaceAdvance": "Całkowita zaliczka za ogrzanie lokalu",
     "totalHeatingPlaceCost": "Całkowity koszt ogrzania lokalu",
     "totalHotWaterAdvance": "Całkowita zaliczka ze zużycie ciepłej wody",
-    "totalHotWaterCost": "Całkowity koszt zużycia ciepłej wody"
+    "totalHotWaterCost": "Całkowity koszt zużycia ciepłej wody",
+    "water_balance": "Bilans ogrzania ciepłej wody",
+    "communal_balance": "Bilans ogrzania części wspólnej",
+    "place_balance": "Bilans ogrzania lokalu"
   }
 }
