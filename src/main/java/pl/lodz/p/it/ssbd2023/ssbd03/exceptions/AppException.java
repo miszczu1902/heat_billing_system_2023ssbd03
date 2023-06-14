@@ -17,12 +17,9 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.VerifierException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.heatDistributionCentre.ConsumptionAddException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.heatDistributionCentre.NoHeatDistributionCentreException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.personalData.PersonalDataConstraintViolationException;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.NotOwnerOfPlaceException;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.PredictedHotWaterConsumptionValueAlreadySetException;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.UserIsAlreadyOwnerOfThisPlaceException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoResultException;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.CanNotMakeYourselfOwnerOfThePlaceException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.HotWaterEntryCouldNotBeInsertedException;
@@ -80,6 +77,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ADVANCE_CHANGE_FACTOR_WAS_INSERTED = "exception.advance_factor.factor_was_inserted";
     protected final static String ERROR_HOT_WATER_ENTRY_NOT_INSERTED = "exception.hot_water_entry.not_inserted";
     protected final static String ERROR_HOT_WATER_ENTRY_NOT_MODIFIED = "exception.hot_water_entry.not_modified";
+    protected final static String TOO_BIG_PLACE_AREA = "exception.too_big_place_area";
 
     @Getter
     private Throwable cause;
@@ -300,6 +298,10 @@ public static UserIsAlreadyOwnerOfThisPlaceException userIsAlreadyOwnerOfThisPla
 
     public static HotWaterEntryCouldNotBeModifiedException createHotWaterEntryCouldNotBeModifiedException() {
         return new HotWaterEntryCouldNotBeModifiedException(ERROR_HOT_WATER_ENTRY_NOT_MODIFIED, Response.Status.CONFLICT);
+    }
+
+    public static TooBigPlaceAreaException createTooBigPlaceAreaException() {
+        return new TooBigPlaceAreaException(TOO_BIG_PLACE_AREA, Response.Status.CONFLICT);
     }
 }
 
