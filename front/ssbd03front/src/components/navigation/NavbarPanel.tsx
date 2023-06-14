@@ -13,7 +13,18 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import {Breadcrumbs, ButtonGroup, Container, Icon, Link} from '@mui/material';
+import {
+    Breadcrumbs,
+    ButtonGroup,
+    Icon,
+    Link,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow
+} from '@mui/material';
 import {useLocation, useNavigate} from "react-router-dom";
 import Logo from "../../assets/logo.svg";
 import "../../i18n";
@@ -25,6 +36,7 @@ import GlobeIcon from '../icons/GlobeIcon';
 import SwitchUserIcon from "../icons/SwitchUserIcon";
 import decode from 'jwt-decode';
 import path from "path/posix";
+import {UnitWarmCostReport} from "../../types/unitWarmCostReport";
 
 const NavbarPanel = () => {
     const location2 = useLocation();
@@ -42,6 +54,9 @@ const NavbarPanel = () => {
     const [errorOpen, setErrorOpen] = useState(false);
     const [errorOpenMessage, setErrorOpenMessage] = useState("");
     const token = "Bearer " + localStorage.getItem("token");
+    const [report, setReport] = useState<UnitWarmCostReport | null>(null);
+    const [openReport, setOpenReport] = useState(false);
+    const [reportError, setReportError] = useState(false);
 
     useEffect(() => {
         if (localStorage.getItem("token") != null) {
@@ -220,6 +235,30 @@ const NavbarPanel = () => {
         }
     };
 
+    const handleReportClick = () => {
+        if (currentRole === GUEST) {
+            axios.get(`${API_URL}/balances/unit-cost-report`, {})
+                .then(response => {
+                    setReport(response.data);
+                    setOpenReport(true);
+                }).catch(error => {
+                setReportError(true);
+            });
+        } else {
+            axios.get(`${API_URL}/balances/unit-cost-report`, {
+                headers: {
+                    Authorization: token
+                }
+            })
+                .then(response => {
+                    setReport(response.data);
+                    setOpenReport(true);
+                }).catch(error => {
+                setReportError(true);
+            });
+        }
+    };
+
     return (
         <div>
             <Dialog disableEscapeKeyDown open={windowOpen}>
@@ -235,20 +274,20 @@ const NavbarPanel = () => {
                         <img src={Logo} alt="Logo" onClick={() => navigate('/')}/>
                     </Icon>
                     <ButtonGroup variant="contained" aria-label="outlined primary button group">
-                    {
-                        (currentRole === ADMIN || currentRole === MANAGER) &&
-                        <Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/accounts')}
+                        {
+                            (currentRole === ADMIN || currentRole === MANAGER) &&
+                            <Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/accounts')}
                                     sx={{marginLeft: '1vh', cursor: 'pointer'}}>
-                            {t('navbar.account_list')}
-                        </Button>
-                    }
-                    {
-                        (currentRole === MANAGER) &&
-                        <Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/buildings')}
+                                {t('navbar.account_list')}
+                            </Button>
+                        }
+                        {
+                            (currentRole === MANAGER) &&
+                            <Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/buildings')}
                                     sx={{marginLeft: '1vh', cursor: 'pointer'}}>
-                            {t('navbar.building_list')}
-                        </Button>
-                    }
+                                {t('navbar.building_list')}
+                            </Button>
+                        }
                         {
                             (currentRole === OWNER) &&
                             <Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/places/self')}
@@ -258,16 +297,27 @@ const NavbarPanel = () => {
                         }
                         {
                             (currentRole === OWNER) &&
-                            <Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/annual-reports/self')}
+                            <Button style={{backgroundColor: navbarColor}}
+                                    onClick={() => navigate('/annual-reports/self')}
                                     sx={{marginLeft: '1vh', cursor: 'pointer'}}>
                                 {t('navbar.annual_reports')}
                             </Button>
                         }
                         {
-                            (currentRole===MANAGER)&&
+                            (currentRole === MANAGER) &&
                             <Button style={{backgroundColor: navbarColor}} onClick={() => navigate('/manage')}
                                     sx={{marginLeft: '1vh', cursor: 'pointer'}}>
                                 {t('navbar.manage')}
+                            </Button>
+                        }
+                        {
+                            (currentRole === MANAGER || currentRole === GUEST || currentRole === OWNER) &&
+                            <Button
+                                style={{backgroundColor: navbarColor}}
+                                onClick={handleReportClick}
+                                sx={{marginLeft: '1vh', cursor: 'pointer'}}
+                            >
+                                {t('navbar.report')}
                             </Button>
                         }
                     </ButtonGroup>
@@ -315,11 +365,12 @@ const NavbarPanel = () => {
                         color="#ffffff"
                         href="/accounts/"
                     >Accounts</Link>}
-                    {(location2.pathname.includes("accounts/") && !location2.pathname.includes("accounts/self")) && <Link
-                        underline="hover"
-                        color="#ffffff"
-                        href={"/accounts/" + username}
-                    >Account</Link>}
+                    {(location2.pathname.includes("accounts/") && !location2.pathname.includes("accounts/self")) &&
+                        <Link
+                            underline="hover"
+                            color="#ffffff"
+                            href={"/accounts/" + username}
+                        >Account</Link>}
                     {location2.pathname.includes("accounts/self") && <Link
                         underline="hover"
                         color="#ffffff"
@@ -376,6 +427,41 @@ const NavbarPanel = () => {
                 <Dialog disableEscapeKeyDown open={errorOpen}>
                     <DialogTitle>{t(errorOpenMessage)}</DialogTitle>
                     <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
+                </Dialog>
+
+                <Dialog open={openReport}>
+                    <DialogTitle style={{textAlign: "center"}}>{t('navbar.costs_info')}</DialogTitle>
+                    <DialogContent>
+                        <TableContainer>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell>{t('navbar.price_per_cubic_meter')}</TableCell>
+                                        <TableCell>{t('navbar.price_per_square_meter')}</TableCell>
+                                        <TableCell>{t('navbar.month_year')}</TableCell>
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    <TableRow>
+                                        <TableCell>{report?.pricePerCubicMeter} PLN</TableCell>
+                                        <TableCell>{report?.pricePerSquareMeter} PLN</TableCell>
+                                        <TableCell>{`${report?.month}.${report?.year}`}</TableCell>
+                                    </TableRow>
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                    </DialogContent>
+                    <DialogActions style={{justifyContent: "center"}}>
+                        <Button onClick={() => setOpenReport(false)} color="primary">
+                            {t('navbar.close')}
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+                <Dialog disableEscapeKeyDown open={reportError}>
+                    <DialogTitle>{t('navbar.costs_error')}</DialogTitle>
+                    <Button onClick={() => setReportError(false)} color="primary">
+                        {t('navbar.close')}
+                    </Button>
                 </Dialog>
             </AppBar>
         </div>

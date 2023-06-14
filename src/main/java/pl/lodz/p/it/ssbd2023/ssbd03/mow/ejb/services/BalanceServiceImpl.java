@@ -13,6 +13,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BalanceFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.BuildingFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.HeatDistributionCentrePayoffFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
 
 import java.math.BigDecimal;
@@ -36,6 +37,9 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
     private BuildingFacade buildingFacade;
 
     @Inject
+    private HeatDistributionCentrePayoffFacade heatDistributionCentrePayoffFacade;
+
+    @Inject
     private PlaceFacade placeFacade;
 
     @Inject
@@ -43,8 +47,36 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
 
     @Override
     @RolesAllowed({Roles.GUEST, Roles.MANAGER, Roles.OWNER})
-    public MonthPayoff getUnitWarmCostReport() {
-        throw new UnsupportedOperationException();
+    public BigDecimal getUnitWarmCostReportHotWater() {
+        final List<Place> placesWithHotWater = placeFacade.findAllPlaces()
+                .stream()
+                .filter(Place::getHotWaterConnection)
+                .toList();
+        final BigDecimal totalWater = placesWithHotWater.stream()
+                .map(Place::getMonthPayoffs)
+                .filter(monthPayoffs -> !monthPayoffs.isEmpty())
+                .map(monthPayoffs -> monthPayoffs.get(monthPayoffs.size() - 1))
+                .map(MonthPayoff::getHotWaterConsumption)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final HeatDistributionCentrePayoff heatDistributionCentrePayoff = heatDistributionCentrePayoffFacade.findLatestHeatDistributionCentrePayoff();
+        final BigDecimal price = heatDistributionCentrePayoff.getConsumptionCost().multiply(BigDecimal.ONE.subtract(heatDistributionCentrePayoff.getHeatingAreaFactor()));
+        final BigDecimal pricePerCubicMeter = price.divide(totalWater, 2, BigDecimal.ROUND_HALF_UP);
+
+        return pricePerCubicMeter;
+    }
+
+    @Override
+    @RolesAllowed({Roles.GUEST, Roles.MANAGER, Roles.OWNER})
+    public BigDecimal getUnitWarmCostReportCentralHeating() {
+        final HeatDistributionCentrePayoff heatDistributionCentrePayoff = heatDistributionCentrePayoffFacade.findLatestHeatDistributionCentrePayoff();
+        final List<Building> buildings = buildingFacade.findAllBuildings();
+        final BigDecimal totalArea = buildings.stream()
+                .map(Building::getTotalArea)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final BigDecimal heatingPrice = heatDistributionCentrePayoff.getConsumptionCost().multiply(heatDistributionCentrePayoff.getHeatingAreaFactor());
+        final BigDecimal pricePerSquareMeter = heatingPrice.divide(totalArea, 2, BigDecimal.ROUND_HALF_UP);
+
+        return pricePerSquareMeter;
     }
 
     @Override

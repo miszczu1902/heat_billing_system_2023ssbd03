@@ -10,7 +10,9 @@ import java.util.List;
 @Local
 public interface BalanceService extends CommonManagerLocalInterface {
 
-    MonthPayoff getUnitWarmCostReport();
+    BigDecimal getUnitWarmCostReportHotWater();
+
+    BigDecimal getUnitWarmCostReportCentralHeating();
 
     AnnualBalance getSelfReport(String placeId);
 

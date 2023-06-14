@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.facade;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
@@ -10,8 +11,11 @@ import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -62,6 +66,13 @@ public class BuildingFacade extends AbstractFacade<Building> {
         }
 
         return tq.getResultList();
+    }
+
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER, Roles.GUEST})
+    public List<Building> findAllBuildings() {
+        TypedQuery<Building> tq = em.createNamedQuery("Building.findAll", Building.class);
+
+        return Optional.of(tq.getResultList()).orElse(Collections.emptyList());
     }
 
 }
