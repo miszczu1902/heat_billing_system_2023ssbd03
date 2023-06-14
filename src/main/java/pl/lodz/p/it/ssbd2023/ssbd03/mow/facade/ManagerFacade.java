@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.facade;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
@@ -11,6 +12,10 @@ import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -37,5 +42,11 @@ public class ManagerFacade extends AbstractFacade<Manager> {
             }
             return tq.getSingleResult();
         }
+    }
+
+    @PermitAll
+    public List<Manager> getListOfManagers() {
+        TypedQuery<Manager> query = em.createNamedQuery("Manager.findAllManagers", Manager.class);
+        return Optional.of(query.getResultList()).orElse(Collections.emptyList());
     }
 }

@@ -53,7 +53,6 @@ const Building = () => {
     const [areaValid, setAreaValid] = useState(false);
 
     const [hotWaterConnection, setHotWaterConnection] = useState(false);
-    const [centralHeatingConnection, setCentralHeatingConnection] = useState(false);
 
     const [predictedHotWaterConsumption, setPredictedHotWaterConsumption] = useState("");
     const [predictedHotWaterConsumptionError, setPredictedHotWaterConsumptionError] = useState("");
@@ -182,7 +181,6 @@ const Building = () => {
         const addPlaceDTO = {
             area: area,
             hotWaterConnection: hotWaterConnection,
-            centralHeatingConnection: centralHeatingConnection,
             predictedHotWaterConsumption: predictedHotWaterConsumption,
             buildingId: buildingId,
             ownerId: ownerId,
@@ -322,17 +320,6 @@ const Building = () => {
                                             id="hotWaterConnection"
                                             checked={hotWaterConnection}
                                             onChange={(e) => setHotWaterConnection(e.target.checked)}
-                                        />
-                                    </div>
-                                </ListItem>
-                                <ListItem>
-                                    <div className="form-group">
-                                        <label
-                                            htmlFor="centralHeatingConnection">{t('place.centralHeatingConnection')}</label>
-                                        <Switch
-                                            id="centralHeatingConnection"
-                                            checked={centralHeatingConnection}
-                                            onChange={(e) => setCentralHeatingConnection(e.target.checked)}
                                         />
                                     </div>
                                 </ListItem>

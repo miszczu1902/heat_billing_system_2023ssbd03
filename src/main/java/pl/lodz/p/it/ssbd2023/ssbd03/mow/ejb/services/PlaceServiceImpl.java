@@ -8,16 +8,11 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.core.Context;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
-import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.AccountFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.OwnerFacade;
-import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.PlaceFacade;
+import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Internationalization;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 
@@ -49,7 +44,19 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
     private AccountFacade accountFacade;
 
     @Inject
+    private BalanceFacade balanceFacade;
+
+    @Inject
+    private HotWaterAdvanceFacade hotWaterAdvanceFacade;
+
+    @Inject
+    private HeatingPlaceAndCommunalAreaAdvanceFacade heatingPlaceAndCommunalAreaAdvanceFacade;
+
+    @Inject
     private SecurityContext securityContext;
+
+    @Inject
+    private BalanceService balanceService;
 
     @Override
     @RolesAllowed(Roles.MANAGER)
@@ -148,6 +155,36 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
 
         place.setPredictedHotWaterConsumption(consumption);
         placeFacade.edit(place);
+
+        changeHotWaterAdvanceForNewPlace(place);
+    }
+
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    private void changeHotWaterAdvanceForNewPlace(Place place) {
+        final BigDecimal averageValue = place.getPredictedHotWaterConsumption().divide(BigDecimal.valueOf(30), 2, BigDecimal.ROUND_HALF_UP);
+        final HeatingPlaceAndCommunalAreaAdvance heatingPlaceAndCommunalAreaAdvance = heatingPlaceAndCommunalAreaAdvanceFacade.findTheNewestAdvanceChangeFactor(place.getBuilding().getId());
+        final BigDecimal pricePerCubicMeter = balanceService.getUnitWarmCostReportHotWater();
+        final int month = LocalDate.now().getMonthValue();
+        int count = 0;
+
+        if (month == 1 || month == 4 || month == 7 || month == 10) {
+            count = 3;
+        }
+        if (month == 2 || month == 5 || month == 8 || month == 11) {
+            count = 2;
+        }
+        for (int i = 1; i < count; i++) {
+            final LocalDate currentDate = LocalDate.now().minusMonths(2).plusMonths(i);
+            final LocalDate firstDayOfMonth = currentDate.withDayOfMonth(1);
+            final HotWaterAdvance hotWaterAdvance = hotWaterAdvanceFacade.findByDate(firstDayOfMonth, place.getId());
+            if (hotWaterAdvance != null) {
+                final BigDecimal hotWaterAdvancePrice = averageValue.multiply(BigDecimal.valueOf(LocalDate.now().plusMonths(i).lengthOfMonth()))
+                        .multiply(pricePerCubicMeter)
+                        .multiply(heatingPlaceAndCommunalAreaAdvance.getAdvanceChangeFactor());
+                hotWaterAdvance.setHotWaterAdvanceValue(hotWaterAdvancePrice);
+                hotWaterAdvanceFacade.edit(hotWaterAdvance);
+            }
+        }
     }
 
     @Override

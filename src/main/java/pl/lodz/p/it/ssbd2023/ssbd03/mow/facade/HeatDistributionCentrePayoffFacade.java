@@ -11,6 +11,7 @@ import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatDistributionCentrePayoff;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.MonthPayoff;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -61,9 +62,10 @@ public class HeatDistributionCentrePayoffFacade extends AbstractFacade<HeatDistr
 
     @PermitAll
     public HeatDistributionCentrePayoff findLatestHeatDistributionCentrePayoff() {
-        TypedQuery<HeatDistributionCentrePayoff> query = getEntityManager()
+        TypedQuery<HeatDistributionCentrePayoff> tq = getEntityManager()
                 .createNamedQuery("HeatDistributionCentrePayoff.getLatestHeatDistributionCentrePayoff", HeatDistributionCentrePayoff.class);
-        return query.getSingleResult();
+        List<HeatDistributionCentrePayoff> resultList = tq.getResultList();
+        return resultList.get(0);
     }
 
     @RolesAllowed({Roles.MANAGER})
