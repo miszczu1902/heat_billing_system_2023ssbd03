@@ -13,6 +13,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterAdvance;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -52,6 +53,10 @@ public class HotWaterAdvanceFacade extends AbstractFacade<HotWaterAdvance> {
         TypedQuery<HotWaterAdvance> tq = em.createNamedQuery("HotWaterAdvance.findByDate", HotWaterAdvance.class);
         tq.setParameter("date_", localDate);
         tq.setParameter("placeId", placeId);
-        return tq.getSingleResult();
+        List<HotWaterAdvance> resultList = tq.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        return resultList.get(0);
     }
 }

@@ -150,7 +150,7 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
         final BigDecimal averageValue = place.getPredictedHotWaterConsumption().divide(BigDecimal.valueOf(30), 2, BigDecimal.ROUND_HALF_UP);
         final HeatingPlaceAndCommunalAreaAdvance heatingPlaceAndCommunalAreaAdvance = heatingPlaceAndCommunalAreaAdvanceFacade.findTheNewestAdvanceChangeFactor(place.getBuilding().getId());
         final BigDecimal pricePerCubicMeter = balanceService.getUnitWarmCostReportHotWater();
-        final int month = LocalDate.now().minusMonths(2).getMonthValue();
+        final int month = LocalDate.now().getMonthValue();
         int count = 0;
 
         if (month == 1 || month == 4 || month == 7 || month == 10) {

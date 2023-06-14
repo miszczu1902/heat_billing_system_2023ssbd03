@@ -146,7 +146,11 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
         final BigDecimal averageValue = place.getPredictedHotWaterConsumption().divide(BigDecimal.valueOf(30), 2, BigDecimal.ROUND_HALF_UP);
         final HeatingPlaceAndCommunalAreaAdvance heatingPlaceAndCommunalAreaAdvance = heatingPlaceAndCommunalAreaAdvanceFacade.findTheNewestAdvanceChangeFactor(place.getBuilding().getId());
         final BigDecimal pricePerCubicMeter = balanceService.getUnitWarmCostReportHotWater();
-        final int month = LocalDate.now().minusMonths(2).getMonthValue();
+        BigDecimal advanceChangeFactor = new BigDecimal(1);
+        if (heatingPlaceAndCommunalAreaAdvance != null) {
+            advanceChangeFactor = heatingPlaceAndCommunalAreaAdvance.getAdvanceChangeFactor();
+        }
+        final int month = LocalDate.now().getMonthValue();
         int count = 0;
 
         if (month == 1 || month == 4 || month == 7 || month == 10) {
@@ -160,7 +164,7 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
             final LocalDate firstDayOfMonth = currentDate.withDayOfMonth(1);
             final BigDecimal hotWaterAdvance = averageValue.multiply(BigDecimal.valueOf(LocalDate.now().plusMonths(i).lengthOfMonth()))
                     .multiply(pricePerCubicMeter)
-                    .multiply(heatingPlaceAndCommunalAreaAdvance.getAdvanceChangeFactor());
+                    .multiply(advanceChangeFactor);
             final HotWaterAdvance advance = new HotWaterAdvance(firstDayOfMonth, place, hotWaterAdvance);
             hotWaterAdvanceFacade.create(advance);
         }

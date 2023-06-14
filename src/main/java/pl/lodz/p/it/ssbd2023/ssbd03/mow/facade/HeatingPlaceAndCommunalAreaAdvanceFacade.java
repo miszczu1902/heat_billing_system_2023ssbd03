@@ -10,10 +10,12 @@ import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatingPlaceAndCommunalAreaAdvance;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterAdvance;
 
 import javax.management.relation.Role;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
@@ -63,6 +65,10 @@ public class HeatingPlaceAndCommunalAreaAdvanceFacade extends AbstractFacade<Hea
     public HeatingPlaceAndCommunalAreaAdvance findTheNewestAdvanceChangeFactor(Long buildingId) {
         TypedQuery<HeatingPlaceAndCommunalAreaAdvance> tq = em.createNamedQuery("HeatingPlaceAndCommunalAreaAdvance.findTheNewestAdvanceChangeFactor", HeatingPlaceAndCommunalAreaAdvance.class);
         tq.setParameter("buildingId", buildingId);
-        return tq.getResultList().get(0);
+        List<HeatingPlaceAndCommunalAreaAdvance> resultList = tq.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        return resultList.get(0);
     }
 }
