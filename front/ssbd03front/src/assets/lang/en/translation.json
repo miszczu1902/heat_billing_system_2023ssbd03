@@ -214,7 +214,11 @@
       "optimistic_lock": "ERROR_OPTIMISTIC_LOCK",
       "access_denied": "ERROR_ACCESS_DENIED",
       "transaction_rolledback": "ERROR_TRANSACTION_ROLLEDBACK",
-      "account_not_registered": "ERROR_ACCOUNT_NOT_REGISTERED"
+      "account_not_registered": "ERROR_ACCOUNT_NOT_REGISTERED",
+      "no_place_found": "No location found in the system",
+      "no_building_found": "No building found in the system",
+      "total_area_is_zero": "The total area of the buildings is equal to 0",
+      "total_hot_water_usage_is_zero": "The total hot water usage in the buildings is equal to 0"
     },
     "password": {
       "not_same_message": "Passwords are not the same",

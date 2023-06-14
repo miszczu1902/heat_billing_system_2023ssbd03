@@ -6,11 +6,9 @@ import jakarta.ws.rs.core.Response;
 import lombok.Getter;
 import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.building.AddingPlaceToTheSameAccountException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.building.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.advanceFactor.AdvanceChangeFactorNotModified;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.advanceFactor.AdvanceChangeFactorWasInserted;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.building.BuildingCommunalAreaBiggerOrEqualTotalAreaException;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.building.LackOfSpaceInTheBuildingException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.SignerException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.VerifierException;
@@ -24,6 +22,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.HotWaterEntryCouldNotBeInsertedException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.HotWaterEntryCouldNotBeModifiedException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.TotalHotWaterUsageIsZeroException;
 
 @ApplicationException(rollback = true)
 public class AppException extends WebApplicationException {
@@ -77,7 +76,11 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_ADVANCE_CHANGE_FACTOR_WAS_INSERTED = "exception.advance_factor.factor_was_inserted";
     protected final static String ERROR_HOT_WATER_ENTRY_NOT_INSERTED = "exception.hot_water_entry.not_inserted";
     protected final static String ERROR_HOT_WATER_ENTRY_NOT_MODIFIED = "exception.hot_water_entry.not_modified";
-    protected final static String TOO_BIG_PLACE_AREA = "exception.too_big_place_area";
+    protected final static String TOO_BIG_PLACE_AREA = "exception.error.too_big_place_area";
+    protected final static String NO_PLACE_FOUND = "exception.error.no_place_found";
+    protected final static String NO_BUILDING_FOUND = "exception.error.no_building_found";
+    protected final static String TOTAL_AREA_IS_ZERO = "exception.error.total_area_is_zero";
+    protected final static String TOTAL_HOT_WATER_USAGE_IS_ZERO = "exception.error.total_hot_water_usage_is_zero";
 
     @Getter
     private Throwable cause;
@@ -302,6 +305,22 @@ public static UserIsAlreadyOwnerOfThisPlaceException userIsAlreadyOwnerOfThisPla
 
     public static TooBigPlaceAreaException createTooBigPlaceAreaException() {
         return new TooBigPlaceAreaException(TOO_BIG_PLACE_AREA, Response.Status.CONFLICT);
+    }
+
+    public static NoPlaceFoundException noPlaceFoundException() {
+        return new NoPlaceFoundException(NO_PLACE_FOUND, Response.Status.NOT_FOUND);
+    }
+
+    public static NoBuildingFoundException noBuildingFoundException() {
+        return new NoBuildingFoundException(NO_BUILDING_FOUND, Response.Status.NOT_FOUND);
+    }
+
+    public static TotalAreaIsZeroException totalAreaIsZeroException() {
+        return new TotalAreaIsZeroException(TOTAL_AREA_IS_ZERO, Response.Status.NOT_FOUND);
+    }
+
+    public static TotalHotWaterUsageIsZeroException totalHotWaterUsageIsZeroException() {
+        return new TotalHotWaterUsageIsZeroException(TOTAL_HOT_WATER_USAGE_IS_ZERO, Response.Status.NOT_FOUND);
     }
 }
 

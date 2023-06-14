@@ -40,6 +40,9 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     private PlaceFacade placeFacade;
 
     @Inject
+    private BuildingFacade buildingFacade;
+
+    @Inject
     private MonthPayoffFacade monthPayoffFacade;
 
     @Inject
@@ -175,20 +178,54 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
         final List<Place> places = placeFacade.findAllPlacesAddedBeforeDate(LocalDateTime.now(TIME_ZONE).minusMonths(1).with(TemporalAdjusters
                 .firstDayOfMonth()).truncatedTo(ChronoUnit.DAYS));
-        final BigDecimal waterHeatingUnitCost = heatDistributionCentrePayoff.getConsumptionCost().multiply(new BigDecimal(1)
-                .subtract(heatDistributionCentrePayoff.getHeatingAreaFactor())).divide(heatDistributionCentrePayoff.getConsumption(), 2, RoundingMode.CEILING);
-        final BigDecimal centralHeatingUnitCost = heatDistributionCentrePayoff.getConsumptionCost().multiply(heatDistributionCentrePayoff.getHeatingAreaFactor())
-                .divide(heatDistributionCentrePayoff.getConsumption(), 2, RoundingMode.CEILING);
+        final List<Building> buildings = buildingFacade.findAllBuildings();
+
+        if (buildings.isEmpty()) {
+            throw AppException.noBuildingFoundException();
+        }
+
+        if (places.isEmpty()) {
+            throw AppException.noPlaceFoundException();
+        }
+
+        BigDecimal totalBuildingsArea = BigDecimal.ZERO;
+        for (Building building : buildings) {
+            totalBuildingsArea = totalBuildingsArea.add(building.getTotalArea());
+        }
+
+        if (totalBuildingsArea.compareTo(BigDecimal.ZERO) == 0) {
+            throw AppException.totalAreaIsZeroException();
+        }
+
+        BigDecimal totalHotWaterUsage = BigDecimal.ZERO;
+
+        for (Place place : places) {
+            final List<HotWaterEntry> hotWaterEntries = hotWaterEntryFacade.getListOfHotWaterEntriesForPlace(place.getId());
+
+            if (hotWaterEntries.size() == 1) {
+                totalHotWaterUsage = totalHotWaterUsage.add(hotWaterEntries.get(0).getEntryValue());
+            } else if (hotWaterEntries.size() > 1) {
+                totalHotWaterUsage = totalHotWaterUsage.add(hotWaterEntries.get(0).getEntryValue().subtract(hotWaterEntries.get(1).getEntryValue()));
+            }
+        }
+
+        if (totalHotWaterUsage.compareTo(BigDecimal.ZERO) == 0) {
+            throw AppException.totalHotWaterUsageIsZeroException();
+        }
+
+        final BigDecimal centralHeatingUnitCost = heatDistributionCentrePayoff.getConsumptionCost().multiply(heatDistributionCentrePayoff.getHeatingAreaFactor()).divide(totalBuildingsArea, 2, RoundingMode.CEILING);
+        final BigDecimal waterHeatingUnitCost = heatDistributionCentrePayoff.getConsumptionCost().multiply(BigDecimal.ONE
+                .subtract(heatDistributionCentrePayoff.getHeatingAreaFactor())).divide(totalHotWaterUsage, 2, RoundingMode.CEILING);
 
         for (Place place : places) {
             final List<HotWaterEntry> hotWaterEntries = hotWaterEntryFacade.getListOfHotWaterEntriesForPlace(place.getId());
             final MonthPayoff monthPayoff;
 
-            if (hotWaterEntries.size() == 1) {
-                final BigDecimal hotWaterConsumption = hotWaterEntries.get(0).getEntryValue();
-                monthPayoff = new MonthPayoff(LocalDate.now(), waterHeatingUnitCost, centralHeatingUnitCost, hotWaterConsumption, place, place.getOwner());
-            } else if (hotWaterEntries.isEmpty()) {
-                monthPayoff = new MonthPayoff(LocalDate.now(), waterHeatingUnitCost, centralHeatingUnitCost, place.getPredictedHotWaterConsumption(), place, place.getOwner());
+            if (hotWaterEntries.isEmpty()) {
+                monthPayoff = new MonthPayoff(LocalDate.now(), waterHeatingUnitCost, centralHeatingUnitCost, BigDecimal.ZERO, place, place.getOwner());
+
+            } else if (hotWaterEntries.size() == 1) {
+                monthPayoff = new MonthPayoff(LocalDate.now(), waterHeatingUnitCost, centralHeatingUnitCost, hotWaterEntries.get(0).getEntryValue(), place, place.getOwner());
             } else {
                 final BigDecimal hotWaterConsumption = hotWaterEntries.get(0).getEntryValue().subtract(hotWaterEntries.get(1).getEntryValue());
                 monthPayoff = new MonthPayoff(LocalDate.now(), waterHeatingUnitCost, centralHeatingUnitCost, hotWaterConsumption, place, place.getOwner());
