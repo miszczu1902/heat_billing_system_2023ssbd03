@@ -1,11 +1,10 @@
 import validator from "validator";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ButtonGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Snackbar, SnackbarContent } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import { API_URL } from '../../consts';
-import { set } from "react-hook-form";
 
 const EnterPredictedHotWaterConsumption = () => {
     const token = 'Bearer ' + localStorage.getItem("token");
@@ -13,7 +12,7 @@ const EnterPredictedHotWaterConsumption = () => {
     const navigate = useNavigate();
     const [open, setOpen] = React.useState(false);
     const [confirmOpen, setConfirmOpen] = React.useState(false);
-    const [placeId, setPlaceId] = useState("0");
+    const placeId = useParams().placeId;
     const [version, setVersion] = useState("");
 
     const [predictedHotWaterConsumption, setPredictedHotWaterConsumption] = useState("");
