@@ -4,6 +4,6 @@ public class Account {
     public static final String OWNER = "mariasilva";
     public static final String OWNER2 = "ownerTestowy";
     public static final String ADMIN = "johndoe";
-    public static final String MANAGER = "janekowalski";
+    public static final String MANAGER = "JacksonLee";
     public static final String PASSWORD = "Password$123";
 }
