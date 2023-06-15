@@ -40,7 +40,7 @@ public class BasicIntegrationConfigTest extends DevelopEnvConfigTest {
         if (object != null) request.body(jsonObject);
         if (!BEARER_TOKEN.equals("") && !path.equals("/accounts/login") && !path.equals("/accounts/register"))
             request.header(new Header("Authorization", "Bearer " + BEARER_TOKEN));
-        if (!ETAG.equals("") && method.equals(Method.PATCH))
+        if (!ETAG.equals(""))
             request.header(new Header("If-Match", ETAG));
 
         logBeforeRequest(method, path, jsonObject, contentType);
