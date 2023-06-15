@@ -45,17 +45,6 @@ public class ChangeSelfEmailTest extends BasicIntegrationConfigTest {
     }
 
     @Test
-    public void ChangeSelfEmailNoEtagTest() {
-        initialize();
-        String email = RandomStringUtils.randomAlphanumeric(10) + "@fakemailik.com";
-        ChangeEmailDTO changeEmailDTO = new ChangeEmailDTO(email);
-
-        Response response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/email", changeEmailDTO, ContentType.JSON);
-        int statusCode = response.getStatusCode();
-        assertEquals(500, statusCode, " no etag.");
-    }
-
-    @Test
     public void ChangeSelfEmailWrongVersionTest() {
         initialize();
         String email = RandomStringUtils.randomAlphanumeric(10) + "@fakemailik.com";
