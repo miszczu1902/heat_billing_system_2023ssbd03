@@ -108,8 +108,7 @@ public class MowSystemScheduler {
         advanceService.calculateHotWaterAdvance();
     }
 
-//    @Schedule(dayOfMonth = "2", hour = "2", month = "1,4,7,10", timezone = "Europe/Warsaw", persistent = false)
-    @Schedule(hour = "*", minute = "*/1", persistent = false)
+    @Schedule(dayOfMonth = "2", hour = "2", month = "1,4,7,10", timezone = "Europe/Warsaw", persistent = false)
     private void calculateHeatingPlaceAndCommunalAreaAdvance() {
         int retryTXCounter = txRetries; //limit prób ponowienia transakcji
         boolean rollbackTX = false;

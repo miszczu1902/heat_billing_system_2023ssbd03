@@ -101,7 +101,7 @@ public class AdvanceServiceImpl extends AbstractService implements AdvanceServic
                 .filter(Place::getHotWaterConnection)
                 .toList();
         for (Place place : places) {
-            final HeatingPlaceAndCommunalAreaAdvance heatingPlaceAndCommunalAreaAdvance = heatingPlaceAndCommunalAreaAdvanceFacade.findTheNewestAdvanceChangeFactor(place.getBuilding().getId());
+            final HeatingPlaceAndCommunalAreaAdvance heatingPlaceAndCommunalAreaAdvance = heatingPlaceAndCommunalAreaAdvanceFacade.findTheNewestAdvanceChangeFactorByPlaceId(place.getId());
             final BigDecimal placeHeatingAdvance = costPerSquerMeter
                     .multiply(place.getArea())
                     .multiply(heatingPlaceAndCommunalAreaAdvance.getAdvanceChangeFactor());

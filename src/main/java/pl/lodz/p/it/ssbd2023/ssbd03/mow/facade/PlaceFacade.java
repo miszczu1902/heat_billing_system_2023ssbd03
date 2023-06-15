@@ -57,7 +57,7 @@ public class PlaceFacade extends AbstractFacade<Place> {
         throw new UnsupportedOperationException();
     }
 
-    @RolesAllowed({Roles.MANAGER})
+    @PermitAll
     public List<Place> findPlacesByBuildingId(Long id) {
         TypedQuery<Place> tq = em.createNamedQuery("Place.findPlacesByBuildingId", Place.class);
         tq.setParameter("id", id);
