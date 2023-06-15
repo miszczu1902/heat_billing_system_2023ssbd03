@@ -137,7 +137,7 @@ const EditPlace = () => {
                     autoFocus
                     margin="dense"
                     id="name"
-                    label={t('editPlace.edit_place_text_field_area')}
+                    label={t('editPlace.edit_place_text_field_area')+"*"}
                     fullWidth
                     variant="standard"
                     defaultValue={parseFloat(area).toFixed(2)}

@@ -287,7 +287,7 @@ const Building = () => {
                                     <div className="form-group" onChange={handleArea}>
                                         <TextField
                                             id="outlined-helperText"
-                                            label={t('place.area')}
+                                            label={t('place.area')+"*"}
                                             defaultValue={area}
                                             type="area"
                                             helperText={t('place.areaInfo')}
@@ -301,7 +301,7 @@ const Building = () => {
                                     <div className="form-group" onChange={handlePredictedHotWaterConsumption}>
                                         <TextField
                                             id="outlined-helperText"
-                                            label={t('place.predictedHotWaterConsumption')}
+                                            label={t('place.predictedHotWaterConsumption')+"*"}
                                             defaultValue={predictedHotWaterConsumption}
                                             type="predictedHotWaterConsumption"
                                             helperText={t('place.predictedHotWaterConsumptionInfo')}
@@ -315,7 +315,7 @@ const Building = () => {
                                 </ListItem>
                                 <ListItem>
                                     <div className="form-group">
-                                        <label htmlFor="hotWaterConnection">{t('place.hotWaterConnection')}</label>
+                                        <label htmlFor="hotWaterConnection">{t('place.hotWaterConnection')+"*"}</label>
                                         <Switch
                                             id="hotWaterConnection"
                                             checked={hotWaterConnection}
@@ -326,7 +326,7 @@ const Building = () => {
                                 <ListItem>
                                     <div className="form-group">
                                         <FormControl>
-                                            <InputLabel id="owner-select-label">{t('place.ownerId')}</InputLabel>
+                                            <InputLabel id="owner-select-label">{t('place.ownerId')+"*"}</InputLabel>
                                             <Select
                                                 labelId="owner-select-label"
                                                 id="owner-select"

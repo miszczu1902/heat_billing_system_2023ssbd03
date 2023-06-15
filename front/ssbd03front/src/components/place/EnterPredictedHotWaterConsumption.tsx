@@ -136,7 +136,7 @@ const EnterPredictedHotWaterConsumption = () => {
             autoFocus
             margin="dense"
             id="name"
-            label={t('enterPredictedHotWaterConsumption.enter_predicted_hot_water_consumption_text_field_name')}
+            label={t('enterPredictedHotWaterConsumption.enter_predicted_hot_water_consumption_text_field_name')+"*"}
             fullWidth
             variant="standard"
             defaultValue={parseFloat(predictedHotWaterConsumption).toFixed(2)}

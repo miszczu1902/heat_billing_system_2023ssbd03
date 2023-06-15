@@ -134,7 +134,7 @@ const ChangePlaceOwner = () => {
                         <ListItem>
                             <div className="form-group">
                                 <FormControl>
-                                    <InputLabel id="owner-select-label">{t('place.ownerId')}</InputLabel>
+                                    <InputLabel id="owner-select-label">{t('place.ownerId')+"*"}</InputLabel>
                                     <Select
                                         labelId="owner-select-label"
                                         id="owner-select"

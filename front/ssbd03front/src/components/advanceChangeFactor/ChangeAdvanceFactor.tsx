@@ -169,10 +169,10 @@ const ChangeAdvanceFactor = () => {
                                 <div className="form-group" onChange={handleNewFactorArea}>
                                     <TextField
                                         id="outlined-helperText"
-                                        label={t('annual_balance.factor_info')}
+                                        label={t('annual_balance.change_factor')+"*"}
                                         defaultValue={advanceChangeFactor?.advanceChangeFactor}
                                         type="area"
-                                        helperText={t('annual_balance.change_factor')}
+                                        helperText={t('annual_balance.factor_info')}
                                         error={Boolean(factorError)}
                                     />
                                     <div className={`form-group ${factorError ? 'error' : ''}`}> {factorError}

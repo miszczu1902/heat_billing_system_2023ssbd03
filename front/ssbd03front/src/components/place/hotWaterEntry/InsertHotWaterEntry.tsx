@@ -128,7 +128,7 @@ const InsertHotWaterEntry: React.FC<{placeId: any}> = ({placeId}) => {
                                     <div className="form-group" onChange={handleNewEmail}>
                                         <TextField
                                             id="outlined-helperText"
-                                            label={t('hot_water.value') + " [m3]"}
+                                            label={t('hot_water.value') + " [m3]*"}
                                             defaultValue={entryValue}
                                             type="email"
                                             helperText={t('hot_water.entry_not_correct')}
