@@ -11,10 +11,7 @@ import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatingPlaceAndCommunalAreaAdvance;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterAdvance;
 
-import javax.management.relation.Role;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -34,13 +31,13 @@ public class HeatingPlaceAndCommunalAreaAdvanceFacade extends AbstractFacade<Hea
     }
 
     @Override
-    @RolesAllowed({Roles.MANAGER})
+    @PermitAll
     public void edit(HeatingPlaceAndCommunalAreaAdvance entity) {
         super.edit(entity);
     }
 
     @Override
-    @RolesAllowed({Roles.MANAGER})
+    @PermitAll
     public void create(HeatingPlaceAndCommunalAreaAdvance entity) {
         super.create(entity);
     }
@@ -66,6 +63,25 @@ public class HeatingPlaceAndCommunalAreaAdvanceFacade extends AbstractFacade<Hea
     public HeatingPlaceAndCommunalAreaAdvance findTheNewestAdvanceChangeFactor(Long buildingId) {
         TypedQuery<HeatingPlaceAndCommunalAreaAdvance> tq = em.createNamedQuery("HeatingPlaceAndCommunalAreaAdvance.findTheNewestAdvanceChangeFactor", HeatingPlaceAndCommunalAreaAdvance.class);
         tq.setParameter("buildingId", buildingId);
+        List<HeatingPlaceAndCommunalAreaAdvance> resultList = tq.getResultList();
+        if (resultList.isEmpty()) {
+            return null;
+        }
+        return resultList.get(0);
+    }
+
+    @PermitAll
+    public List<HeatingPlaceAndCommunalAreaAdvance> findLastAdvances() {
+        TypedQuery<HeatingPlaceAndCommunalAreaAdvance> tq = em.createNamedQuery("HeatingPlaceAndCommunalAreaAdvance.findLastAdvances", HeatingPlaceAndCommunalAreaAdvance.class);
+        tq.setParameter("year", LocalDate.now().getYear());
+        tq.setParameter("month", LocalDate.now().minusMonths(1).getMonthValue());
+        return tq.getResultList();
+    }
+
+    @PermitAll
+    public HeatingPlaceAndCommunalAreaAdvance findTheNewestAdvanceChangeFactorByPlaceId(Long placeId) {
+        TypedQuery<HeatingPlaceAndCommunalAreaAdvance> tq = em.createNamedQuery("HeatingPlaceAndCommunalAreaAdvance.findTheNewestAdvanceChangeFactorByPlaceId", HeatingPlaceAndCommunalAreaAdvance.class);
+        tq.setParameter("placeId", placeId);
         List<HeatingPlaceAndCommunalAreaAdvance> resultList = tq.getResultList();
         if (resultList.isEmpty()) {
             return null;

@@ -107,4 +107,30 @@ public class MowSystemScheduler {
         }
         advanceService.calculateHotWaterAdvance();
     }
+
+    @Schedule(dayOfMonth = "2", hour = "2", month = "1,4,7,10", timezone = "Europe/Warsaw", persistent = false)
+    private void calculateHeatingPlaceAndCommunalAreaAdvance() {
+        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        boolean rollbackTX = false;
+
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                advanceService.calculateHeatingPlaceAndCommunalAreaAdvance();
+                rollbackTX = advanceService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return;
+            } catch (TransactionRollbackException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
+        advanceService.calculateHeatingPlaceAndCommunalAreaAdvance();
+    }
 }
