@@ -11,10 +11,7 @@ import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatingPlaceAndCommunalAreaAdvance;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterAdvance;
 
-import javax.management.relation.Role;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -71,5 +68,13 @@ public class HeatingPlaceAndCommunalAreaAdvanceFacade extends AbstractFacade<Hea
             return null;
         }
         return resultList.get(0);
+    }
+
+    @PermitAll
+    public List<HeatingPlaceAndCommunalAreaAdvance> findLastAdvances() {
+        TypedQuery<HeatingPlaceAndCommunalAreaAdvance> tq = em.createNamedQuery("HeatingPlaceAndCommunalAreaAdvance.findLastAdvances", HeatingPlaceAndCommunalAreaAdvance.class);
+        tq.setParameter("year", LocalDate.now().getYear());
+        tq.setParameter("month", LocalDate.now().minusMonths(1).getMonthValue());
+        return tq.getResultList();
     }
 }

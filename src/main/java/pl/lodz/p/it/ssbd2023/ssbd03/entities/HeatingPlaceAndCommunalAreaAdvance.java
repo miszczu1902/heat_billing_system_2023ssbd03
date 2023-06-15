@@ -20,14 +20,17 @@ import java.time.LocalDate;
 @NamedQueries({
         @NamedQuery(name = "HeatingPlaceAndCommunalAreaAdvance.getAllHeatingPlaceAndCommunalAreaAdvances",
                 query = "SELECT a FROM HeatingPlaceAndCommunalAreaAdvance a WHERE a.place.building.id = :buildingId AND a.place.centralHeatingConnection IS TRUE AND a.date >= :date ORDER BY a.date DESC"),
-        @NamedQuery(name = "HeatingPlaceAndCommunalAreaAdvance.findTheNewestAdvanceChangeFactor", query = "SELECT k FROM HeatingPlaceAndCommunalAreaAdvance k WHERE k.place.building.id = :buildingId  ORDER BY k.date DESC")
+        @NamedQuery(name = "HeatingPlaceAndCommunalAreaAdvance.findTheNewestAdvanceChangeFactor", query = "SELECT k FROM HeatingPlaceAndCommunalAreaAdvance k WHERE k.place.building.id = :buildingId  ORDER BY k.date DESC"),
+        @NamedQuery(name = "HeatingPlaceAndCommunalAreaAdvance.findLastAdvances", query = "SELECT k FROM HeatingPlaceAndCommunalAreaAdvance k WHERE YEAR(k.date) = :year AND MONTH(k.date)= :month")
 })
 public final class HeatingPlaceAndCommunalAreaAdvance extends Advance implements Serializable, Signable {
 
+    @Setter
     @DecimalMin(value = "0")
     @Column(name = "heating_place_advance_value", nullable = false, precision = 10, scale = 2)
     private BigDecimal heatingPlaceAdvanceValue;
 
+    @Setter
     @DecimalMin(value = "0")
     @Column(name = "heating_communal_area_advance_value", nullable = false, precision = 10, scale = 2)
     private BigDecimal heatingCommunalAreaAdvanceValue;

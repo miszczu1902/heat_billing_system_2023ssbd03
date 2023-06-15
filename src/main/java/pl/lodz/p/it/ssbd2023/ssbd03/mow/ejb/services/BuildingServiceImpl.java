@@ -17,6 +17,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.Internationalization;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -139,6 +140,7 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
         if (place.getHotWaterConnection()) {
             calculateHotWaterAdvanceForNewPlace(place);
         }
+        calculateHeatingPlaceAndCommunalAreaAdvanceForNewPlace(place);
     }
 
     @RolesAllowed({Roles.MANAGER})
@@ -168,6 +170,50 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
             final HotWaterAdvance advance = new HotWaterAdvance(firstDayOfMonth, place, hotWaterAdvance);
             hotWaterAdvanceFacade.create(advance);
         }
+    }
+
+    @RolesAllowed({Roles.MANAGER})
+    private void calculateHeatingPlaceAndCommunalAreaAdvanceForNewPlace(Place place) {
+        final BigDecimal costPerSquerMeter = calculateCostPerSquerMeterFromPastQuarterAdvancesForNewLocal();
+
+        final HeatingPlaceAndCommunalAreaAdvance heatingPlaceAndCommunalAreaAdvance = heatingPlaceAndCommunalAreaAdvanceFacade.findTheNewestAdvanceChangeFactor(place.getBuilding().getId());
+        final BigDecimal placeHeatingAdvance = costPerSquerMeter
+                .multiply(place.getArea())
+                .multiply(heatingPlaceAndCommunalAreaAdvance.getAdvanceChangeFactor());
+        final BigDecimal communalAreaAdvance = place.getBuilding().getCommunalAreaAggregate()
+                .divide(BigDecimal.valueOf(placeFacade.findPlacesByBuildingId(place.getBuilding().getId()).size()), 2, RoundingMode.HALF_UP);
+
+        final int month = LocalDate.now().getMonthValue();
+        int count = 0;
+
+        if (month == 1 || month == 4 || month == 7 || month == 10) {
+            count = 3;
+        }
+        else if (month == 2 || month == 5 || month == 8 || month == 11) {
+            count = 2;
+        }
+        for (int i = 1; i < count; i++) {
+            final HeatingPlaceAndCommunalAreaAdvance advance = new HeatingPlaceAndCommunalAreaAdvance(LocalDate.now().plusMonths(i), place, placeHeatingAdvance, communalAreaAdvance, heatingPlaceAndCommunalAreaAdvance.getAdvanceChangeFactor());
+            heatingPlaceAndCommunalAreaAdvanceFacade.create(advance);
+        }
+    }
+
+    @RolesAllowed({Roles.MANAGER})
+    private BigDecimal calculateCostPerSquerMeterFromPastQuarterAdvancesForNewLocal() {
+        final List<HeatingPlaceAndCommunalAreaAdvance> heatingPlaceAndCommunalAreaAdvances = heatingPlaceAndCommunalAreaAdvanceFacade.findLastAdvances()
+                .stream()
+                .toList();
+        final List<Place> placesInTheBuilding = placeFacade.findPlacesByBuildingId(heatingPlaceAndCommunalAreaAdvances.get(0).getPlace().getBuilding().getId())
+                .stream()
+                .toList();
+        final BigDecimal totalAdvanceSum = heatingPlaceAndCommunalAreaAdvances.stream()
+                .filter(advance -> placesInTheBuilding.stream()
+                        .anyMatch(place -> place.getId().equals(advance.getPlace().getId())))
+                .map(advance -> advance.getHeatingPlaceAdvanceValue().add(advance.getHeatingCommunalAreaAdvanceValue()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final BigDecimal costPerSquareMeter = totalAdvanceSum.divide(heatingPlaceAndCommunalAreaAdvances.get(0).getPlace().getBuilding().getTotalArea(), 2, RoundingMode.HALF_UP);
+
+        return costPerSquareMeter;
     }
 
     @Override
