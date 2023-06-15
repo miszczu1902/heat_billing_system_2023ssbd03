@@ -6,6 +6,7 @@ import io.restassured.response.Response;
 import org.junit.Test;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangeLanguageDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
+import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountInfoDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.ManagerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTest;
@@ -17,7 +18,12 @@ public class ChangeLanguageTest extends BasicIntegrationConfigTest {
     @Test
     public void ChangeLanguageToPlTest() {
         auth(new LoginDTO(Account.MANAGER, Account.PASSWORD));
-        Response response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/language", new ChangeLanguageDTO("PL"), ContentType.JSON);
+        Response response = sendRequestAndGetResponse(Method.GET, "/accounts/self", null, ContentType.JSON);
+        assertEquals(200, response.getStatusCode());
+        AccountInfoDTO accountInfoDTO = response.body().jsonPath().getObject("", AccountInfoDTO.class);
+        ChangeLanguageDTO changeLanguageDTO = new ChangeLanguageDTO("PL");
+        changeLanguageDTO.setVersion(accountInfoDTO.getVersion());
+        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/language", changeLanguageDTO, ContentType.JSON);
         int statusCode = response.getStatusCode();
 
         assertEquals(204, statusCode, "Check if request responses no content.");
@@ -36,7 +42,12 @@ public class ChangeLanguageTest extends BasicIntegrationConfigTest {
     @Test
     public void ChangeLanguageToEnTest() {
         auth(new LoginDTO(Account.MANAGER, Account.PASSWORD));
-        Response response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/language", new ChangeLanguageDTO("EN"), ContentType.JSON);
+        Response response = sendRequestAndGetResponse(Method.GET, "/accounts/self", null, ContentType.JSON);
+        assertEquals(200, response.getStatusCode());
+        AccountInfoDTO accountInfoDTO = response.body().jsonPath().getObject("", AccountInfoDTO.class);
+        ChangeLanguageDTO changeLanguageDTO = new ChangeLanguageDTO("EN");
+        changeLanguageDTO.setVersion(accountInfoDTO.getVersion());
+        response = sendRequestAndGetResponse(Method.PATCH, "/accounts/self/language", changeLanguageDTO, ContentType.JSON);
         int statusCode = response.getStatusCode();
 
         assertEquals(204, statusCode, "Check if request responses no content.");
