@@ -8,9 +8,7 @@ import org.junit.Test;
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ChangePhoneNumberDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.LoginDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.AccountInfoDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.OwnerDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.OwnerETagDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.integration.config.BasicIntegrationConfigTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
