@@ -42,6 +42,20 @@ public class ResetPasswordTest extends BasicIntegrationConfigTest {
     }
 
     @Test
+    public void shouldReturnNotFoundForNotExistingAccount() {
+        ResetPasswordDTO resetPasswordDTO = new ResetPasswordDTO("notExistingTest");
+        Response response = sendRequestAndGetResponse(Method.POST, URL_RESET_PASSWORD, resetPasswordDTO, ContentType.JSON);
+        assertEquals(404, response.getStatusCode());
+    }
+
+    @Test
+    public void shouldReturnBadRequestForNotValidUsername() {
+        ResetPasswordDTO resetPasswordDTO = new ResetPasswordDTO("notExistingTest");
+        Response response = sendRequestAndGetResponse(Method.POST, URL_RESET_PASSWORD, resetPasswordDTO, ContentType.JSON);
+        assertEquals(404, response.getStatusCode());
+    }
+
+    @Test
     public void shouldReturnNoContentForValidAccount() {
         ResetPasswordDTO resetPasswordDTO = new ResetPasswordDTO(USERNAME_FOR_SUCCESS_REQUEST);
         Response response = sendRequestAndGetResponse(Method.POST, URL_RESET_PASSWORD, resetPasswordDTO, ContentType.JSON);
