@@ -4,6 +4,7 @@ import React, {useState} from "react";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import { OWNER } from "../../consts";
+import HomeIcon from "../icons/HomeIcon";
 
 const BreadCrumb = () => {
     const location = useLocation();
@@ -17,14 +18,15 @@ const BreadCrumb = () => {
     const year = params.year;
 
     return (
-        <div>
+        <div style={{color: '#ffffff'}}>
             <Typography variant="h6" sx={{
                 marginLeft: '1vh',
-                marginRight: 'auto'
+                marginRight: 'auto',
+                color: '#ffffff'
             }}>
                 <Breadcrumbs aria-label="breadcrumb">
                     <Link underline="hover" color="#ffffff" href="/">
-                        *
+                        <HomeIcon/>
                     </Link>
                     {(location.pathname.includes("/accounts") && localStorage.getItem("role") !== OWNER) && <Link
                         underline="hover"
@@ -47,16 +49,16 @@ const BreadCrumb = () => {
                         color="#ffffff"
                         href={"/buildings"}>
                         {t('breadcrumb.building')}</Link>}
-                    {location.pathname.includes("/buildings/") && <Link
+                    {(location.pathname.includes("/buildings/") && location.pathname.includes("/buildings/building")) && <Link
                         underline="hover"
                         color="#ffffff"
                         href={"/buildings/" + building}>
                         {t('breadcrumb.building')}</Link>}
-                    {location.pathname.includes("/buildings/") && <Link
+                    {(location.pathname.includes("/buildings/") && !location.pathname.includes("/buildings/building")) && <Link
                         underline="hover"
                         color="#ffffff"
                         href={"/buildings/building" + building}>
-                        {building}</Link>}
+                        {t('breadcrumb.building')}</Link>}
                     {location.pathname.includes("/annual-balance") && <Link
                         underline="hover"
                         color="#ffffff"
