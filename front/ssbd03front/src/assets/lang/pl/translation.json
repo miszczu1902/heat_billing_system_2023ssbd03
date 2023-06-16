@@ -426,5 +426,16 @@
     "water_balance": "Bilans ogrzania ciepłej wody",
     "communal_balance": "Bilans ogrzania części wspólnej",
     "place_balance": "Bilans ogrzania lokalu"
+  },
+  "breadcrumb": {
+    "accounts": "Konta",
+    "account": "Konto",
+    "self": "Własne konto",
+    "buildings": "Budynki",
+    "building": "Budynek",
+    "annualBalance": "Roczne rozliczenie",
+    "places": "Lokale",
+    "place": "Lokal",
+    "manage": "Zarządzaj"
   }
 }

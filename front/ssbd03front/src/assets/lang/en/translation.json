@@ -424,5 +424,16 @@
     "edit_place_confirm" : "Are you sure you want to edit place?",
     "edit_place_failed" : "An error occurred while editing place",
     "edit_place_error" : "Wrong place number format, use only numbers and dot (e.g. 100.00)"
+  },
+  "breadcrumb": {
+    "accounts": "Accounts",
+    "account": "Account",
+    "self": "Self account",
+    "buildings": "Buildings",
+    "building": "Building",
+    "annualBalance": "Annual balance",
+    "places": "Places",
+    "place": "Place",
+    "manage": "Manage"
   }
 }
