@@ -215,17 +215,7 @@ const BuildingsList = () => {
 
     return (
         <div style={{ height: '90vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0 }}>
-            <Grid container>
-                <Box sx={{ flexGrow: 1 }}>
-                    <Button onClick={() => handleClickNewBuildingAddOpen()}
-                        style={buttonStyle}
-                        variant="text">
-                        <NewBuildingIcon />
-                    </Button>
-                </Box>
-            </Grid>
-
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} sx={{display: 'flex', flexDirection: 'column', overflowY: 'auto'}}>
                 <Table aria-label='simple table'>
                     <TableHead>
                         <TableRow>
@@ -250,11 +240,21 @@ const BuildingsList = () => {
                             <TableCell>
                                 {t('buildingFromList.postal_code')}
                             </TableCell>
-                            <TableCell></TableCell>
-                            <TableCell></TableCell>
+                            <TableCell>
+                                <Button onClick={() => handleClickNewBuildingAddOpen()}
+                                        style={buttonStyle}
+                                        variant="text">
+                                    <NewBuildingIcon />
+                                </Button>
+                            </TableCell>
+                            <TableCell>
+                                <Button className="landing-page-button" onClick={handleClick}>
+                                    <RefreshIcon/>
+                                </Button>
+                            </TableCell>
                         </TableRow>
                     </TableHead>
-                    <TableBody>
+                    <TableBody sx={{flexGrow: '1', minHeight: '0', overflowY: 'scroll'}}>
                         {buildings.map((buildings) => (
                             <TableRow key={buildings.id}>
                                 <TableCell>{buildings.createdBy}</TableCell>
@@ -285,7 +285,6 @@ const BuildingsList = () => {
                                 </TableCell>
                             </TableRow>
                         ))}
-                         <TableRow><Button className="landing-page-button" onClick={handleClick}><RefreshIcon/></Button></TableRow>
                     </TableBody>
                 </Table>
             </TableContainer>

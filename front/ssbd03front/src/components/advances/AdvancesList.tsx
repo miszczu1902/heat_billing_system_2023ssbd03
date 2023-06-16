@@ -41,7 +41,7 @@ const AdvancesList = () => {
     };
 
     return (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{display: 'flex', flexDirection: 'column', overflowY: 'auto'}}>
             <Table aria-label='simple table'>
                 <TableHead>
                     <TableRow>
@@ -55,9 +55,14 @@ const AdvancesList = () => {
                         <TableCell>
                             {t('annual_balance.communal_area_heat') + ' [PLN]'}
                         </TableCell>
+                        <TableCell>
+                            <Button className="landing-page-button"
+                                    onClick={handleClick}>
+                                <RefreshIcon/>
+                            </Button></TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody sx={{flexGrow: '1', minHeight: '0', overflowY: 'scroll'}}>
                     {advances.map((advances) => (
                         <TableRow key={advances.year + '-' + advances.month}>
                             <TableCell>{advances.year + '-' + advances.month}</TableCell>
@@ -66,8 +71,6 @@ const AdvancesList = () => {
                             <TableCell>{advances.heatingCommunalAreaAdvanceValue}</TableCell>
                         </TableRow>
                     ))}
-                    <TableRow><Button className="landing-page-button"
-                                      onClick={handleClick}><RefreshIcon/></Button></TableRow>
                 </TableBody>
             </Table>
         </TableContainer>

@@ -115,11 +115,11 @@ const EnterPredictedHotWaterConsumption = () => {
     setTimeout(handleCloseSnackbar, 10000);
 
     return (
-        <div className="container">
+        <div className="container" style={{maxWidth: '40%'}}>
             <div className="row">
                 <div className="col-12">
                     <ButtonGroup>
-                        <Button variant="contained" color="primary" onClick={handleClickOpen}>
+                        <Button variant="contained" color="primary" onClick={handleClickOpen} style={{wordWrap: 'break-word'}}>
                             {t('enterPredictedHotWaterConsumption.enter_predicted_hot_water_consumption_button')}
                         </Button>
                     </ButtonGroup>

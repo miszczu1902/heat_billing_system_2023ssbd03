@@ -37,44 +37,49 @@ const HeatDistributionCentrePayoff = () => {
     };
 
     return (
-        <TableContainer component={Paper}>
-            <Table aria-label='simple table'>
-                <TableHead>
-                    <TableRow>
-                        <TableCell/>
-                        <TableCell>
-                            {t('heatDistributionCentrePayoff.date')}
-                        </TableCell>
-                        <TableCell>
-                            {t('heatDistributionCentrePayoff.manager')}
-                        </TableCell>
-                        <TableCell>
-                            {t('heatDistributionCentrePayoff.heatingAreaFactor')}
-                        </TableCell>
-                        <TableCell>
-                            {t('heatDistributionCentrePayoff.consumption')}
-                        </TableCell>
-                        <TableCell>
-                            {t('heatDistributionCentrePayoff.consumptionCost')}
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {payoffs.map((payoffs) => (
-                        <TableRow>
-                            <TableCell component='th' scope='row'/>
-                            <TableCell>{payoffs.date}</TableCell>
-                            <TableCell>{payoffs.manager}</TableCell>
-                            <TableCell>{payoffs.heatingAreaFactor} </TableCell>
-                            <TableCell>{payoffs.consumption}</TableCell>
-                            <TableCell>{payoffs.consumptionCost}</TableCell>
-                        </TableRow>
-                    ))}
-                    <TableRow><Button className="landing-page-button" onClick={handleClick}><RefreshIcon/></Button></TableRow>
-                </TableBody>
-            </Table>
+        <div style={{overflow: 'hidden'}}>
             <AddInvoiceValues/>
-        </TableContainer>
+            <TableContainer component={Paper} sx={{display: 'flex', justifyContent: 'center', maxHeight: '85vh'}}>
+                <Table aria-label='simple table'>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>
+                                <Button className="landing-page-button" onClick={handleClick}>
+                                    <RefreshIcon/>
+                                </Button>
+                            </TableCell>
+                            <TableCell>
+                                {t('heatDistributionCentrePayoff.date')}
+                            </TableCell>
+                            <TableCell>
+                                {t('heatDistributionCentrePayoff.manager')}
+                            </TableCell>
+                            <TableCell>
+                                {t('heatDistributionCentrePayoff.heatingAreaFactor')}
+                            </TableCell>
+                            <TableCell>
+                                {t('heatDistributionCentrePayoff.consumption')}
+                            </TableCell>
+                            <TableCell>
+                                {t('heatDistributionCentrePayoff.consumptionCost')}
+                            </TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody sx={{flexGrow: '1', minHeight: '0', overflowY: 'scroll'}}>
+                        {payoffs.map((payoffs) => (
+                            <TableRow>
+                                <TableCell component='th' scope='row'/>
+                                <TableCell>{payoffs.date}</TableCell>
+                                <TableCell>{payoffs.manager}</TableCell>
+                                <TableCell>{payoffs.heatingAreaFactor} </TableCell>
+                                <TableCell>{payoffs.consumption}</TableCell>
+                                <TableCell>{payoffs.consumptionCost}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </div>
     );
 }
 

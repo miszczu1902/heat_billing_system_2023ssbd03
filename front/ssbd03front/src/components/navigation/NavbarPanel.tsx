@@ -35,13 +35,10 @@ import UserInfoIcon from '../icons/UserInfoIcon';
 import GlobeIcon from '../icons/GlobeIcon';
 import SwitchUserIcon from "../icons/SwitchUserIcon";
 import decode from 'jwt-decode';
-import path from "path/posix";
 import {UnitWarmCostReport} from "../../types/unitWarmCostReport";
 import BreadCrumb from './BreadCrumb';
 
 const NavbarPanel = () => {
-    const location2 = useLocation();
-    const getLocation = location2.pathname;
     const [windowOpen, setWindowOpen] = useState(false);
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();

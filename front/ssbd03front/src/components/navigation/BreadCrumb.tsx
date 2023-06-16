@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import React, {useState} from "react";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import { OWNER } from "../../consts";
+import {MANAGER, OWNER} from "../../consts";
 import HomeIcon from "../icons/HomeIcon";
 
 const BreadCrumb = () => {
@@ -20,7 +20,7 @@ const BreadCrumb = () => {
     return (
         <div style={{color: '#ffffff'}}>
             <Typography variant="h6" sx={{
-                marginLeft: '1vh',
+                marginLeft: '4vh',
                 marginRight: 'auto',
                 color: '#ffffff'
             }}>
@@ -48,7 +48,7 @@ const BreadCrumb = () => {
                         underline="hover"
                         color="#ffffff"
                         href={"/buildings"}>
-                        {t('breadcrumb.building')}</Link>}
+                        {t('breadcrumb.buildings')}</Link>}
                     {(location.pathname.includes("/buildings/") && location.pathname.includes("/buildings/building")) && <Link
                         underline="hover"
                         color="#ffffff"
@@ -57,7 +57,7 @@ const BreadCrumb = () => {
                     {(location.pathname.includes("/buildings/") && !location.pathname.includes("/buildings/building")) && <Link
                         underline="hover"
                         color="#ffffff"
-                        href={"/buildings/building" + building}>
+                        href={"/buildings/building/" + building}>
                         {t('breadcrumb.building')}</Link>}
                     {location.pathname.includes("/annual-balance") && <Link
                         underline="hover"
@@ -67,18 +67,18 @@ const BreadCrumb = () => {
                     {location.pathname.includes("/places") && <Link
                         underline="hover"
                         color="#ffffff"
-                        href={"/places"}>
+                        href={currentRole === MANAGER ? "/buildings/" : "/places/self"}>
                         {t('breadcrumb.places')}</Link>}
-                    {location.pathname.includes("/places/place") && <Link
+                    {location.pathname.includes("/places/place/") && <Link
                         underline="hover"
                         color="#ffffff"
                         href={"/places/place/" + place}>
                         {t('breadcrumb.place')}</Link>}
-                    {location.pathname.includes("/places/self") && <Link
+                    {location.pathname.includes("/places/self/") && <Link
                         underline="hover"
                         color="#ffffff"
                         href={"/places/self/" + place}>
-                        {t('breadcrumb.place')}</Link>}
+                        {t('breadcrumb.places')}</Link>}
                     {(location.pathname.includes("/manage") && !location.pathname.includes("/manager")) && <Link
                         underline="hover"
                         color="#ffffff"

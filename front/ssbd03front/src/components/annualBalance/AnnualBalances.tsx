@@ -44,7 +44,11 @@ const AnnualBalances = () => {
             <Table aria-label='simple table'>
                 <TableHead>
                     <TableRow>
-                        <TableCell/>
+                        <TableCell>
+                            <Button className="landing-page-button"
+                                    onClick={handleClick}><RefreshIcon/>
+                            </Button>
+                        </TableCell>
                         <TableCell>{t('balances.personal_data')}</TableCell>
                         <TableCell>{t('balances.year')}</TableCell>
                         <TableCell>{t('balances.street')}</TableCell>
@@ -56,7 +60,8 @@ const AnnualBalances = () => {
                 </TableHead>
                 <TableBody>
                     {reports.map((reports) => (
-                        <TableRow key={reports.id} onClick={() => goToAnnualBalance(reports.placeId, reports.year, reports.id)}>
+                        <TableRow key={reports.id}
+                                  onClick={() => goToAnnualBalance(reports.placeId, reports.year, reports.id)}>
                             <TableCell component='th' scope='row'/>
                             <TableCell>{reports.firstName} {reports.surname}</TableCell>
                             <TableCell>{reports.year}</TableCell>
@@ -67,8 +72,6 @@ const AnnualBalances = () => {
                             <TableCell>{reports.postalCode}</TableCell>
                         </TableRow>
                     ))}
-                    <TableRow><Button className="landing-page-button"
-                                      onClick={handleClick}><RefreshIcon/></Button></TableRow>
                 </TableBody>
             </Table>
         </TableContainer>
