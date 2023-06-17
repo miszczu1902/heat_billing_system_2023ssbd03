@@ -15,7 +15,9 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Typography
+    Typography,
+    Snackbar,
+    SnackbarContent,
 } from '@mui/material';
 import {useTranslation} from "react-i18next";
 import {useNavigate, useParams} from "react-router-dom";
@@ -63,7 +65,7 @@ const Building = () => {
 
     const [dataError, setDataError] = useState("");
     const [confirmOpen, setConfirmOpen] = useState(false);
-    const [errorOpen, setErrorOpen] = useState(false);
+    const [openSnackbar, setOpenSnackbar] = React.useState(false);
     const [successOpen, setSuccessOpen] = useState(false);
     const [accounts, setAccounts] = useState<Account[]>([]);
 
@@ -198,7 +200,7 @@ const Building = () => {
                 setSuccessOpen(true);
             })
             .catch(error => {
-                setErrorOpen(true);
+                setOpenSnackbar(true);
             });
         handleClose(event, reason);
     }
@@ -216,15 +218,16 @@ const Building = () => {
         window.location.reload();
     }
 
-    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setArea("");
-            setPredictedHotWaterConsumption("")
-            setOwnerId("");
-            setErrorOpen(false);
-            setConfirmOpen(false);
-        }
+
+    const handleCloseSnackbar = () => { 
+        setArea("");
+        setPredictedHotWaterConsumption("")
+        setOwnerId("");
+        setOpenSnackbar(false);
+        setConfirmOpen(false);
     };
+
+    setTimeout(handleCloseSnackbar, 10000);
 
     return (
         <div style={{
@@ -374,10 +377,10 @@ const Building = () => {
                 <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
             </Dialog>
 
-            <Dialog disableEscapeKeyDown open={errorOpen}>
-                <DialogTitle>{t('place.error')}</DialogTitle>
-                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={openSnackbar} onClose={handleCloseSnackbar}>
+                <SnackbarContent 
+                message={t('place.error')}/>
+            </Snackbar>
 
             <Box sx={{margin: '2vh'}}>
                 <TableContainer component={Paper}>
