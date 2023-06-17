@@ -6,7 +6,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
-import {Box, Button, Grid, Icon} from "@mui/material";
+import {Box, Button, Grid, Icon, Snackbar, SnackbarContent} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select, {SelectChangeEvent} from "@mui/material/Select";
@@ -93,10 +93,8 @@ const Registration = () => {
         setValidationInfo('');
     };
 
-    const handleConfirmClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setSuccessOpen(false);
-        }
+    const handleConfirmClose = () => {
+        setSuccessOpen(false);
     }
 
     const handleConfirmRegister = (event: React.SyntheticEvent<unknown>, reason?: string) => {
@@ -106,11 +104,9 @@ const Registration = () => {
         onSubmit();
     };
 
-    const handleAuthorizationErrorOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setAuthorizationErrorOpen(false);
-            handleConfirmClose(event, reason);
-        }
+    const handleAuthorizationErrorOpen = () => {
+        setAuthorizationErrorOpen(false);
+        handleConfirmClose();
     };
 
     const handleConfirm = () => {
@@ -130,10 +126,8 @@ const Registration = () => {
         navigate('/login');
     }
 
-    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setErrorOpen(false);
-        }
+    const handleErrorClose = () => {
+        setErrorOpen(false);
     };
 
     const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -261,6 +255,10 @@ const Registration = () => {
         }
     };
 
+    setTimeout(handleSuccessClose, 20000);
+    setTimeout(handleErrorClose, 20000);
+    setTimeout(handleAuthorizationErrorOpen, 20000);
+
     return (
         <ThemeProvider theme={theme}>
             <Grid container justifyContent="center" alignItems="center"
@@ -359,14 +357,17 @@ const Registration = () => {
                                             onClick={handleConfirmRegister}>{t('confirm.yes')}</Button>
                                 </DialogActions>
                             </Dialog>
-                            <Dialog disableEscapeKeyDown open={successOpen}>
-                                <DialogTitle>{t('register.success')}</DialogTitle>
-                                <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
-                            </Dialog>
-                            <Dialog disableEscapeKeyDown open={errorOpen}>
-                                <DialogTitle>{registerError}</DialogTitle>
-                                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
-                            </Dialog>
+                            
+                            <Snackbar open={successOpen} onClose={handleSuccessClose}>
+                                <SnackbarContent 
+                                message={t('register.success')}/>
+                            </Snackbar>
+                            
+                            <Snackbar open={errorOpen} onClose={handleErrorClose}>
+                                <SnackbarContent 
+                                message={registerError}/>
+                            </Snackbar>
+                            
                             <Box component="form" sx={{
                                 display: 'flex',
                                 flexWrap: 'wrap',
@@ -380,14 +381,15 @@ const Registration = () => {
                     </Box>
                 </Grid>
             </Grid>
-            <Dialog disableEscapeKeyDown open={successOpen}>
-                <DialogTitle>{t('register.success_two')}</DialogTitle>
-                <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
-            </Dialog>
-            <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
-                <DialogTitle>{t('register.user_exists')}</DialogTitle>
-                <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={successOpen} onClose={handleSuccessClose}>
+                <SnackbarContent 
+                message={t('register.success_two')}/>
+            </Snackbar>
+
+            <Snackbar open={authorizationErrorOpen} onClose={handleAuthorizationErrorOpen}>
+                <SnackbarContent 
+                message={t('register.user_exists')}/>
+            </Snackbar>
         </ThemeProvider>
     );
 }

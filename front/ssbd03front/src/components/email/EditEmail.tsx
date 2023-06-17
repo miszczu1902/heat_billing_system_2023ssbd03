@@ -6,7 +6,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import {TextField} from '@mui/material';
+import {SnackbarContent, Snackbar, TextField} from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import axios from 'axios';
@@ -112,18 +112,17 @@ const EditEmail = () => {
         }
     }
 
-    const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+    const handleSuccessClose = () => {
         setEmail("");
-        if (reason !== 'backdropClick') {
-            setSuccessOpen(false);
-        }
+        setSuccessOpen(false);
     }
 
-    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setErrorOpen(false);
-        }
+    const handleErrorClose = () => {
+        setErrorOpen(false);
     };
+
+    setTimeout(handleErrorClose, 20000);
+    setTimeout(handleSuccessClose, 20000);
 
     return (
         <div>
@@ -171,15 +170,15 @@ const EditEmail = () => {
                 </DialogActions>
             </Dialog>
 
-            <Dialog disableEscapeKeyDown open={successOpen}>
-                <DialogTitle>{t('email.success_title')}</DialogTitle>
-                <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={successOpen} onClose={handleSuccessClose}>
+                <SnackbarContent 
+                message={t('email.success_title')}/>
+            </Snackbar>
 
-            <Dialog disableEscapeKeyDown open={errorOpen}>
-                <DialogTitle>{t(errorOpenMessage)}</DialogTitle>
-                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={errorOpen} onClose={handleErrorClose}>
+                <SnackbarContent 
+                message={t('errorOpenMessage')}/>
+            </Snackbar>
         </div>
     );
 }

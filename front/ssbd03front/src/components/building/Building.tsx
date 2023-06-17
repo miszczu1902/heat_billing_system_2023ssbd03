@@ -211,10 +211,8 @@ const Building = () => {
         setOwnerId(event.target.value);
     };
 
-    const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setSuccessOpen(false);
-        }
+    const handleSuccessClose = () => {
+        setSuccessOpen(false);
         window.location.reload();
     }
 
@@ -227,7 +225,8 @@ const Building = () => {
         setConfirmOpen(false);
     };
 
-    setTimeout(handleCloseSnackbar, 10000);
+    setTimeout(handleSuccessClose, 20000);
+    setTimeout(handleCloseSnackbar, 20000);
 
     return (
         <div style={{
@@ -372,10 +371,10 @@ const Building = () => {
                 </DialogActions>
             </Dialog>
 
-            <Dialog disableEscapeKeyDown open={successOpen}>
-                <DialogTitle>{t('place.added_place')}</DialogTitle>
-                <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={successOpen} onClose={handleSuccessClose}>
+                <SnackbarContent 
+                message={t('place.added_place')}/>
+            </Snackbar>
 
             <Snackbar open={openSnackbar} onClose={handleCloseSnackbar}>
                 <SnackbarContent 

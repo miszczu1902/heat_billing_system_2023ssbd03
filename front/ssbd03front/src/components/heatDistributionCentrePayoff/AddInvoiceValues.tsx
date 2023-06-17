@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Box, Button, Dialog, DialogActions, DialogContentText, DialogTitle, Grid, TextField} from '@mui/material';
+import {Box, Button, Dialog, DialogActions, DialogContentText, DialogTitle, Grid, TextField, Snackbar, SnackbarContent} from '@mui/material';
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 import DialogContent from '@mui/material/DialogContent';
@@ -125,28 +125,24 @@ const AddInvoiceValues = () => {
         }
     };
 
+    setTimeout(handleConfirm, 20000);
+
     return (
         <div style={{height: '90vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0}}>
-            <Dialog disableEscapeKeyDown open={windowOpen}>
-                <DialogTitle>{t('invoice.already_added')}</DialogTitle>
-                <DialogActions>
-                    <Button onClick={handleConfirm}>OK</Button>
-                </DialogActions>
-            </Dialog>
+            <Snackbar open={windowOpen} onClose={handleConfirm}>
+                <SnackbarContent 
+                message={t('invoice.already_added')}/>
+            </Snackbar>
 
-            <Dialog disableEscapeKeyDown open={windowErrorOpen}>
-                <DialogTitle>{t('invoice.error')}</DialogTitle>
-                <DialogActions>
-                    <Button onClick={handleConfirm}>OK</Button>
-                </DialogActions>
-            </Dialog>
+            <Snackbar open={windowErrorOpen} onClose={handleConfirm}>
+                <SnackbarContent 
+                message={t('invoice.error')}/>
+            </Snackbar>
 
-            <Dialog disableEscapeKeyDown open={windowSuccessOpen}>
-                <DialogTitle>{t('invoice.successfully_added')}</DialogTitle>
-                <DialogActions>
-                    <Button onClick={handleConfirm}>OK</Button>
-                </DialogActions>
-            </Dialog>
+            <Snackbar open={windowSuccessOpen} onClose={handleConfirm}>
+                <SnackbarContent 
+                message={t('invoice.successfully_added')}/>
+            </Snackbar>
 
             <Grid container>
                 <Box sx={{justifyContent: 'center', flexGrow: 1}}>

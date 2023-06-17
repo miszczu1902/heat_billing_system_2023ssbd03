@@ -6,7 +6,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import {TextField} from '@mui/material';
+import {TextField, Snackbar, SnackbarContent} from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import axios from 'axios';
@@ -102,10 +102,8 @@ export default function EditUserPersonalData() {
         }
     };
 
-    const handleConfirmClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setConfirmOpen(false);
-        }
+    const handleConfirmClose = () => {
+        setConfirmOpen(false);
     }
 
     const handleConfirmConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
@@ -145,25 +143,23 @@ export default function EditUserPersonalData() {
         setConfirmOpen(true);
     }
 
-    const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setSuccessOpen(false);
-        }
+    const handleSuccessClose = () => {
+        setSuccessOpen(false);
         window.location.reload();
     }
 
-    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setErrorOpen(false);
-        }
+    const handleErrorClose = () => {
+        setErrorOpen(false);
     };
 
-    const handleAuthorizationErrorOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setAuthorizationErrorOpen(false);
-            handleConfirmClose(event, reason);
-        }
+    const handleAuthorizationErrorOpen = () => {
+        setAuthorizationErrorOpen(false);
+        handleConfirmClose();
     };
+
+    setTimeout(handleSuccessClose, 20000);
+    setTimeout(handleErrorClose, 20000);
+    setTimeout(handleAuthorizationErrorOpen, 20000);
 
     return (
         <div>
@@ -224,20 +220,20 @@ export default function EditUserPersonalData() {
                 </DialogActions>
             </Dialog>
 
-            <Dialog disableEscapeKeyDown open={successOpen}>
-                <DialogTitle>{t('personal_data.edit_success_one')}{username}{t('personal_data.edit_success_two')}</DialogTitle>
-                <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={successOpen} onClose={handleSuccessClose}>
+                <SnackbarContent 
+                message={t('personal_data.edit_success_one')+username+t('personal_data.edit_success_two')}/>
+            </Snackbar>
 
-            <Dialog disableEscapeKeyDown open={errorOpen}>
-                <DialogTitle>{t('personal_data.edit_error')}{username}</DialogTitle>
-                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={errorOpen} onClose={handleErrorClose}>
+                <SnackbarContent 
+                message={t('personal_data.edit_error')+username}/>
+            </Snackbar>
 
-            <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
-                <DialogTitle>{t('personal_data.authorization_error')}</DialogTitle>
-                <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={authorizationErrorOpen} onClose={handleAuthorizationErrorOpen}>
+                <SnackbarContent 
+                message={t('personal_data.authorization_error')}/>
+            </Snackbar>
         </div>
     );
 }

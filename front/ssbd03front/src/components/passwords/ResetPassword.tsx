@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
+import {TextField, Snackbar, SnackbarContent} from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -158,11 +158,12 @@ const ResetPassword = () => {
         navigate('/login');
     }
 
-    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setErrorOpen(false);
-        }
+    const handleErrorClose = () => {
+        setErrorOpen(false);
     };
+
+    setTimeout(handleSuccessClose, 20000);
+    setTimeout(handleErrorClose, 20000);
 
     return (
         <ThemeProvider theme={theme}>
@@ -211,6 +212,7 @@ const ResetPassword = () => {
                                     </div>
                                 </DialogActions>
                             </Dialog>
+
                             <Dialog disableEscapeKeyDown open={successOpen}>
                                 <DialogTitle>{t('edit_password.success_title')}</DialogTitle>
                                 <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
@@ -219,6 +221,16 @@ const ResetPassword = () => {
                                 <DialogTitle>{t(errorOpenMessage)}</DialogTitle>
                                 <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
                             </Dialog>
+
+                            <Snackbar open={successOpen} onClose={handleSuccessClose}>
+                                <SnackbarContent 
+                                    message={t('edit_password.success_title')}/>
+                            </Snackbar>
+
+                            <Snackbar open={errorOpen} onClose={handleErrorClose}>
+                                <SnackbarContent 
+                                    message={t(errorOpenMessage)}/>
+                            </Snackbar>
                         </Box>
                     </Box>
                 </Grid>

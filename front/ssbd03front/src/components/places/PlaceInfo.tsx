@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import React, {useEffect, useState} from 'react';
-import {Button, Dialog, DialogTitle, Grid, Icon} from '@mui/material';
+import {Button, Dialog, DialogTitle, Grid, Icon, Snackbar, SnackbarContent} from '@mui/material';
 import {ADMIN, API_URL, MANAGER} from "../../consts";
 import axios from 'axios';
 import Paper from "@mui/material/Paper";
@@ -52,12 +52,12 @@ const PlaceInfo = () => {
         setConfirmOpen(false);
     };
 
-    const handleAuthorizationErrorOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setAuthorizationErrorOpen(false);
-            handleConfirmCancel();
-        }
+    const handleAuthorizationErrorOpen = () => {
+        setAuthorizationErrorOpen(false);
+        handleConfirmCancel();
     };
+
+    setTimeout(handleAuthorizationErrorOpen, 20000);
 
 
     return (
@@ -195,10 +195,10 @@ const PlaceInfo = () => {
                 </Box>
                 {place?.hotWaterConnection && <Box sx={{margin: '2vh'}}><HotWaterEntriesList/></Box>}
             </Paper>
-            <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
-                <DialogTitle>{t('personal_data.authorization_error')}</DialogTitle>
-                <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={authorizationErrorOpen} onClose={handleAuthorizationErrorOpen}>
+                <SnackbarContent 
+                message={t('personal_data.authorization_error')}/>
+            </Snackbar>
         </div>
     );
 }

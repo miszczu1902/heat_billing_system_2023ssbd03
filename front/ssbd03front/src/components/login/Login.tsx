@@ -16,7 +16,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import DialogActions from "@mui/material/DialogActions";
 import {useNavigate} from "react-router-dom";
-import {Icon} from "@mui/material";
+import {Icon, Snackbar, SnackbarContent} from "@mui/material";
 import Logo from './../../assets/logo.svg';
 import {useTranslation} from "react-i18next";
 
@@ -152,17 +152,16 @@ const Login = () => {
         }
     }
 
-    const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setSuccessOpen(false);
-        }
+    const handleSuccessClose = () => {
+        setSuccessOpen(false);
     }
 
-    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setErrorOpen(false);
-        }
+    const handleErrorClose = () => {
+        setErrorOpen(false);
     };
+
+    setTimeout(handleSuccessClose, 20000);
+    setTimeout(handleErrorClose, 20000);
 
     return (
         <ThemeProvider theme={theme}>
@@ -221,15 +220,15 @@ const Login = () => {
                                                     disabled={!validData}>{t('confirm.ok')}</Button>
                                         </DialogActions>
                                     </Dialog>
-                                    <Dialog disableEscapeKeyDown open={successOpen}>
-                                        <DialogTitle>{t('login.success_title')}</DialogTitle>
-                                        <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
-                                    </Dialog>
-
-                                    <Dialog disableEscapeKeyDown open={errorOpen}>
-                                        <DialogTitle>{errorOpenMessage}</DialogTitle>
-                                        <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
-                                    </Dialog>
+                                
+                                    <Snackbar open={successOpen} onClose={handleSuccessClose}>
+                                        <SnackbarContent 
+                                            message={t('login.success_title')}/>
+                                    </Snackbar>
+                                    <Snackbar open={errorOpen} onClose={handleErrorClose}>
+                                        <SnackbarContent 
+                                            message={errorOpenMessage}/>
+                                    </Snackbar>
                                 </div>
                             </Box>
                         </Box>

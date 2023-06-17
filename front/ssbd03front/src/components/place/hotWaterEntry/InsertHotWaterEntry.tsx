@@ -10,7 +10,7 @@ import DialogContent from "@mui/material/DialogContent";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import {TextField} from "@mui/material";
+import {TextField, Snackbar, SnackbarContent} from "@mui/material";
 import DialogActions from "@mui/material/DialogActions";
 
 const InsertHotWaterEntry: React.FC<{placeId: any}> = ({placeId}) => {
@@ -99,19 +99,18 @@ const InsertHotWaterEntry: React.FC<{placeId: any}> = ({placeId}) => {
         }
     }
 
-    const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+    const handleSuccessClose = () => {
         setEntryValue("");
-        if (reason !== 'backdropClick') {
-            setSuccessOpen(false);
-        }
+        setSuccessOpen(false);
         window.location.reload();
     }
 
-    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setErrorOpen(false);
-        }
+    const handleErrorClose = () => {
+        setErrorOpen(false);
     };
+
+    setTimeout(handleSuccessClose, 10000);
+    setTimeout(handleErrorClose, 10000);
 
     return (
         <div>
@@ -159,15 +158,15 @@ const InsertHotWaterEntry: React.FC<{placeId: any}> = ({placeId}) => {
                 </DialogActions>
             </Dialog>
 
-            <Dialog disableEscapeKeyDown open={successOpen}>
-                <DialogTitle>{t('hot_water.added')}</DialogTitle>
-                <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={successOpen} onClose={handleSuccessClose}>
+                <SnackbarContent 
+                message={t('hot_water.added')}/>
+            </Snackbar>
 
-            <Dialog disableEscapeKeyDown open={errorOpen}>
-                <DialogTitle>{t(errorOpenMessage)}</DialogTitle>
-                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={errorOpen} onClose={handleErrorClose}>
+                <SnackbarContent 
+                message={t(errorOpenMessage)}/>
+            </Snackbar>
         </div>
     );
 }

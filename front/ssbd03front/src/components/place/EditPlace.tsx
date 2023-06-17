@@ -73,10 +73,8 @@ const EditPlace = () => {
         setConfirmOpen(false);
     };
 
-    const handleAuthorizationErrorOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setAuthorizationErrorOpen(false);
-        }
+    const handleAuthorizationErrorOpen = () => {
+        setAuthorizationErrorOpen(false);
     };
 
     const handleConfirmSave = () => {  
@@ -113,6 +111,7 @@ const EditPlace = () => {
     };
 
     setTimeout(handleCloseSnackbar, 10000);
+    setTimeout(handleAuthorizationErrorOpen, 20000);
     
 
 
@@ -165,11 +164,10 @@ const EditPlace = () => {
                 </DialogActions>
             </Dialog>
 
-
-            <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
-                <DialogTitle>{t('personal_data.authorization_error')}</DialogTitle>
-                <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={authorizationErrorOpen} onClose={handleAuthorizationErrorOpen}>
+                <SnackbarContent 
+                message={t('personal_data.authorization_error')}/>
+            </Snackbar>
 
             <Snackbar open={openSnackbar} onClose={handleCloseSnackbar}>
                 <SnackbarContent 

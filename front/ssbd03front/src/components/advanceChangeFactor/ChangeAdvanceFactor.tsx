@@ -6,7 +6,9 @@ import {ActualAdvanceChangeFactor} from "../../types/ActualAdvanceChangeFactor";
 import {
     Box,
     Paper,
-    Typography
+    Typography,
+    Snackbar,
+    SnackbarContent,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import IconViewList from "../icons/IconViewList";
@@ -127,21 +129,20 @@ const ChangeAdvanceFactor = () => {
         handleClose(event, reason);
     }
 
-    const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setSuccessOpen(false);
-        }
+    const handleSuccessClose = () => {
+        setSuccessOpen(false);
         fetchData();
         navigate(location.pathname);
     }
 
-    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setNewChangeFactor('');
-            setErrorOpen(false);
-            setConfirmOpen(false);
-        }
+    const handleErrorClose = () => {
+        setNewChangeFactor('');
+        setErrorOpen(false);
+        setConfirmOpen(false);
     };
+
+    setTimeout(handleSuccessClose, 20000);
+    setTimeout(handleErrorClose, 20000);
 
     return (<div style={{width: '100%', boxSizing: 'border-box', bottom: 0}}>
         <Box sx={{maxWidth: '600px', margin: '2vh'}}>
@@ -204,15 +205,16 @@ const ChangeAdvanceFactor = () => {
             </DialogActions>
         </Dialog>
 
-        <Dialog disableEscapeKeyDown open={successOpen}>
-            <DialogTitle>{t('annual_balance.success_modified')}</DialogTitle>
-            <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
-        </Dialog>
+       <Snackbar open={successOpen} onClose={handleSuccessClose}>
+            <SnackbarContent 
+            message={t('annual_balance.success_modified')}/>
+            </Snackbar>
 
-        <Dialog disableEscapeKeyDown open={errorOpen}>
-            <DialogTitle>{t('annual_balance.error')}</DialogTitle>
-            <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
-        </Dialog>
-    </div>)
+        <Snackbar open={errorOpen} onClose={handleErrorClose}>
+            <SnackbarContent 
+            message={t('annual_balance.error')}/>
+        </Snackbar>
+    </div>
+    )
 }
 export default ChangeAdvanceFactor;
