@@ -198,6 +198,7 @@ const Building = () => {
             })
             .then(response => {
                 setSuccessOpen(true);
+                fetchData();
             })
             .catch(error => {
                 setOpenSnackbar(true);
@@ -213,7 +214,9 @@ const Building = () => {
 
     const handleSuccessClose = () => {
         setSuccessOpen(false);
-        window.location.reload();
+        setArea("");
+        setPredictedHotWaterConsumption("")
+        setOwnerId("");
     }
 
 
