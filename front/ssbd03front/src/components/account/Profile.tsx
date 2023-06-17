@@ -12,7 +12,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import {Checkbox, FormControlLabel, Grid, Snackbar, SnackbarContent} from '@mui/material';
+import {Checkbox, FormControlLabel, Grid, Snackbar, Alert} from '@mui/material';
 import {useNavigate, useParams} from "react-router-dom";
 import {ADMIN, API_URL, MANAGER, OWNER} from "../../consts";
 import axios from 'axios';
@@ -190,15 +190,14 @@ export default function Profile() {
 
     const handleCloseSnackbar = () => { 
         setErrorOpenMessage("");
-            setOpenSnackbar(false);
-            setConfirmOpen(false);
-            setIsManager(false);
-            setIsOwner(false);
-            setIsAdmin(false);
-            setIsRemoveAccessOpen(false);
+        setOpenSnackbar(false);
+        setConfirmOpen(false);
+        setIsManager(false);
+        setIsOwner(false);
+        setIsAdmin(false);
+        setIsRemoveAccessOpen(false);
     };
 
-    setTimeout(handleCloseSnackbar, 10000);
 
     const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
         setLicense("");
@@ -624,9 +623,10 @@ export default function Profile() {
                                         <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
                                     </Dialog>
 
-                                    <Snackbar open={openSnackbar} onClose={handleCloseSnackbar}>
-                                        <SnackbarContent 
-                                        message={t(errorOpenMessage)}/>
+                                    <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                                        <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+                                        {t(errorOpenMessage)}
+                                        </Alert>
                                     </Snackbar>
                                 </div>
                             </>

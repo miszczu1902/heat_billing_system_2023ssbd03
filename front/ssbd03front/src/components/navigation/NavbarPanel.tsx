@@ -25,7 +25,7 @@ import {
     TableHead,
     TableRow,
     Snackbar,
-    SnackbarContent
+    Alert
 } from '@mui/material';
 import {useLocation, useNavigate} from "react-router-dom";
 import Logo from "../../assets/logo.svg";
@@ -235,8 +235,6 @@ const NavbarPanel = () => {
         setErrorOpen(false);
     };
 
-    setTimeout(handleErrorClose, 20000);
-
     const handleReportClick = () => {
         if (currentRole === GUEST) {
             axios.get(`${API_URL}/balances/unit-cost-report`, {})
@@ -426,15 +424,11 @@ const NavbarPanel = () => {
                         <Button onClick={handleCloseRole}>{t('confirm.ok')}</Button>
                     </DialogActions>
                 </Dialog>
-                
-                <Dialog disableEscapeKeyDown open={errorOpen}>
-                    <DialogTitle>{t(errorOpenMessage)}</DialogTitle>
-                    <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
-                </Dialog>
 
-                <Snackbar open={errorOpen} onClose={handleErrorClose}>
-                    <SnackbarContent 
-                    message={t(errorOpenMessage)}/>
+                <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleErrorClose}>
+                    <Alert onClose={handleErrorClose} severity="error" sx={{width: '100%'}}>
+                        {t(errorOpenMessage)}
+                    </Alert>
                 </Snackbar>
 
                 <Dialog open={openReport}>

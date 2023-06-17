@@ -17,7 +17,7 @@ import {
     TableRow,
     Typography,
     Snackbar,
-    SnackbarContent,
+    Alert,
 } from '@mui/material';
 import {useTranslation} from "react-i18next";
 import {useNavigate, useParams} from "react-router-dom";
@@ -224,10 +224,7 @@ const Building = () => {
         setOpenSnackbar(false);
         setConfirmOpen(false);
     };
-
-    setTimeout(handleSuccessClose, 20000);
-    setTimeout(handleCloseSnackbar, 20000);
-
+    
     return (
         <div style={{
             height: '90vh',
@@ -371,14 +368,16 @@ const Building = () => {
                 </DialogActions>
             </Dialog>
 
-            <Snackbar open={successOpen} onClose={handleSuccessClose}>
-                <SnackbarContent 
-                message={t('place.added_place')}/>
+            <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
+                <Alert onClose={handleSuccessClose} severity="success" sx={{width: '100%'}}>
+                    {t('place.added_place')}
+                </Alert>
             </Snackbar>
 
-            <Snackbar open={openSnackbar} onClose={handleCloseSnackbar}>
-                <SnackbarContent 
-                message={t('place.error')}/>
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                <Alert onClose={handleCloseSnackbar} severity="error" sx={{width: '100%'}}>
+                    {t('place.error')}
+                </Alert>
             </Snackbar>
 
             <Box sx={{margin: '2vh'}}>

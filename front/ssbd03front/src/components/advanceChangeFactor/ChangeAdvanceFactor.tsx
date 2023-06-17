@@ -8,7 +8,7 @@ import {
     Paper,
     Typography,
     Snackbar,
-    SnackbarContent,
+    Alert,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import IconViewList from "../icons/IconViewList";
@@ -141,9 +141,6 @@ const ChangeAdvanceFactor = () => {
         setConfirmOpen(false);
     };
 
-    setTimeout(handleSuccessClose, 20000);
-    setTimeout(handleErrorClose, 20000);
-
     return (<div style={{width: '100%', boxSizing: 'border-box', bottom: 0}}>
         <Box sx={{maxWidth: '600px', margin: '2vh'}}>
             <Paper elevation={3} style={{padding: '2vh'}}>
@@ -205,14 +202,16 @@ const ChangeAdvanceFactor = () => {
             </DialogActions>
         </Dialog>
 
-       <Snackbar open={successOpen} onClose={handleSuccessClose}>
-            <SnackbarContent 
-            message={t('annual_balance.success_modified')}/>
+       <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
+            <Alert onClose={handleSuccessClose} severity="success" sx={{width: '100%'}}>
+                {t('annual_balance.success_modified')}
+            </Alert>
             </Snackbar>
 
-        <Snackbar open={errorOpen} onClose={handleErrorClose}>
-            <SnackbarContent 
-            message={t('annual_balance.error')}/>
+        <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleErrorClose}>
+            <Alert onClose={handleErrorClose} severity="error" sx={{width: '100%'}}>
+                {t('annual_balance.error')}
+            </Alert>
         </Snackbar>
     </div>
     )

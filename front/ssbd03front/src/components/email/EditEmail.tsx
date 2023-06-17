@@ -6,7 +6,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import {SnackbarContent, Snackbar, TextField} from '@mui/material';
+import {Alert, Snackbar, TextField} from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import axios from 'axios';
@@ -120,10 +120,7 @@ const EditEmail = () => {
     const handleErrorClose = () => {
         setErrorOpen(false);
     };
-
-    setTimeout(handleErrorClose, 20000);
-    setTimeout(handleSuccessClose, 20000);
-
+    
     return (
         <div>
             <div>
@@ -170,14 +167,16 @@ const EditEmail = () => {
                 </DialogActions>
             </Dialog>
 
-            <Snackbar open={successOpen} onClose={handleSuccessClose}>
-                <SnackbarContent 
-                message={t('email.success_title')}/>
+            <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
+                <Alert onClose={handleSuccessClose} severity="success" sx={{width: '100%'}}>
+                    {t('email.success_title')}
+                </Alert>
             </Snackbar>
 
-            <Snackbar open={errorOpen} onClose={handleErrorClose}>
-                <SnackbarContent 
-                message={t('errorOpenMessage')}/>
+            <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleErrorClose}>
+                <Alert onClose={handleErrorClose} severity="error" sx={{width: '100%'}}>
+                {t('errorOpenMessage')}
+                </Alert>
             </Snackbar>
         </div>
     );

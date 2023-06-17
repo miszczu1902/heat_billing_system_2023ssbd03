@@ -1,7 +1,7 @@
 import validator from "validator";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { ButtonGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Snackbar, SnackbarContent } from '@mui/material';
+import { ButtonGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Snackbar, Alert } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import { API_URL } from '../../consts';
@@ -110,9 +110,6 @@ const EnterPredictedHotWaterConsumption = () => {
         setOpenSnackbar(false);
     };
 
-    setTimeout(handleAuthorizationErrorOpen, 20000);
-    setTimeout(handleCloseSnackbar, 20000);
-
     return (
         <div className="container">
             <div className="row">
@@ -164,14 +161,16 @@ const EnterPredictedHotWaterConsumption = () => {
         </DialogActions>
         </Dialog>
 
-        <Snackbar open={authorizationErrorOpen} onClose={handleAuthorizationErrorOpen}>
-                <SnackbarContent 
-                message={t('personal_data.authorization_error')}/>
+        <Snackbar open={authorizationErrorOpen} autoHideDuration={6000} onClose={handleAuthorizationErrorOpen}>
+            <Alert onClose={handleAuthorizationErrorOpen} severity="error">
+                {t('personal_data.authorization_error')}
+            </Alert>
         </Snackbar>
 
-        <Snackbar open={openSnackbar} onClose={handleCloseSnackbar}>
-                <SnackbarContent 
-                message={t('enterPredictedHotWaterConsumption.enter_predicted_hot_water_consumption_failed')}/>
+        <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+            <Alert onClose={handleCloseSnackbar} severity="error">
+                {t('enterPredictedHotWaterConsumption.enter_predicted_hot_water_consumption_failed')}
+            </Alert>
         </Snackbar>
       </div>
     );

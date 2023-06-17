@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Snackbar, SnackbarContent } from '@mui/material';
+import { Snackbar, Alert } from '@mui/material';
 import axios from 'axios';
 import {API_URL} from '../../consts';
 import {useParams} from "react-router-dom";
@@ -103,11 +103,6 @@ const EnableAccount = () => {
         handleConfirmClose();
     };
 
-    setTimeout(handleSuccessClose, 20000);
-    setTimeout(handleErrorClose, 20000);
-    setTimeout(handleUnblockedUserOpen, 20000);
-    setTimeout(handleAuthorizationErrorOpen, 20000);
-
     return (
         <div>
             <div>
@@ -121,24 +116,28 @@ const EnableAccount = () => {
                 </DialogActions>
             </Dialog>
 
-            <Snackbar open={successOpen} onClose={handleSuccessClose}>
-                <SnackbarContent 
-                message={t('enable_account.success_one')+username+t('enable_account.success_two')}/>
+            <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
+                <Alert onClose={handleSuccessClose} severity="success" sx={{width: '100%'}}>
+                    {t('enable_account.success_one')+username+t('enable_account.success_two')}
+                </Alert>
             </Snackbar>
 
-            <Snackbar open={errorOpen} onClose={handleErrorClose}>
-                <SnackbarContent 
-                message={t('enable_account.error')+username}/>
+            <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleErrorClose}>
+                <Alert onClose={handleErrorClose} severity="error" sx={{width: '100%'}}>
+                    {t('enable_account.error')+username}
+                </Alert>
             </Snackbar>
 
-            <Snackbar open={unblockedUserOpen} onClose={handleUnblockedUserOpen}>
-                <SnackbarContent 
-                message={t('enable_account.unblocked_user_one')+username+t('enable_account.unblocked_user_two')}/>
+            <Snackbar open={unblockedUserOpen} autoHideDuration={6000} onClose={handleUnblockedUserOpen}>
+                <Alert onClose={handleUnblockedUserOpen} severity="info" sx={{width: '100%'}}>
+                    {t('enable_account.unblocked_user_one')+username+t('enable_account.unblocked_user_two')}
+                </Alert>
             </Snackbar>
 
-            <Snackbar open={authorizationErrorOpen} onClose={handleAuthorizationErrorOpen}>
-                <SnackbarContent 
-                message={t('enable_account.authorization_error')}/>
+            <Snackbar open={authorizationErrorOpen} autoHideDuration={6000} onClose={handleAuthorizationErrorOpen}>
+                <Alert onClose={handleAuthorizationErrorOpen} severity="error" sx={{width: '100%'}}>
+                    {t('enable_account.authorization_error')}
+                </Alert>
             </Snackbar>
         </div>
     );

@@ -10,7 +10,7 @@ import DialogContent from "@mui/material/DialogContent";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import {TextField, Snackbar, SnackbarContent} from "@mui/material";
+import {TextField, Snackbar, Alert} from "@mui/material";
 import DialogActions from "@mui/material/DialogActions";
 
 const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}> = ({ hotWaterEntryId, placeId }) => {
@@ -170,14 +170,16 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
                 </DialogActions>
             </Dialog>
 
-            <Snackbar open={successOpen} onClose={handleSuccessClose}>
-                <SnackbarContent 
-                message={t('hot_water.success_title')}/>
+            <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
+                <Alert onClose={handleSuccessClose} severity="success" sx={{width: '100%'}}>
+                    {t('hot_water.success_title')}
+                </Alert>
             </Snackbar>
 
-            <Snackbar open={errorOpen} onClose={handleErrorClose}>
-                <SnackbarContent 
-                message={t(errorOpenMessage)}/>
+            <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleErrorClose}>
+                <Alert onClose={handleErrorClose} severity="error" sx={{width: '100%'}}>
+                {t(errorOpenMessage)}
+                </Alert>
             </Snackbar>
         </div>
     );

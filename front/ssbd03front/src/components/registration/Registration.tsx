@@ -6,7 +6,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import {createTheme, ThemeProvider} from "@mui/material/styles";
-import {Box, Button, Grid, Icon, Snackbar, SnackbarContent} from "@mui/material";
+import {Box, Button, Grid, Icon, Snackbar, Alert} from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import Select, {SelectChangeEvent} from "@mui/material/Select";
@@ -254,11 +254,6 @@ const Registration = () => {
             return true;
         }
     };
-
-    setTimeout(handleSuccessClose, 20000);
-    setTimeout(handleErrorClose, 20000);
-    setTimeout(handleAuthorizationErrorOpen, 20000);
-
     return (
         <ThemeProvider theme={theme}>
             <Grid container justifyContent="center" alignItems="center"
@@ -358,14 +353,16 @@ const Registration = () => {
                                 </DialogActions>
                             </Dialog>
                             
-                            <Snackbar open={successOpen} onClose={handleSuccessClose}>
-                                <SnackbarContent 
-                                message={t('register.success')}/>
+                            <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
+                                <Alert onClose={handleSuccessClose} severity="success" sx={{width: '100%'}}>
+                                    {t('register.success')}
+                                </Alert>
                             </Snackbar>
                             
-                            <Snackbar open={errorOpen} onClose={handleErrorClose}>
-                                <SnackbarContent 
-                                message={registerError}/>
+                            <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleErrorClose}>
+                                <Alert onClose={handleErrorClose} severity="error" sx={{width: '100%'}}>
+                                    {t('register.error')}
+                                </Alert>
                             </Snackbar>
                             
                             <Box component="form" sx={{
@@ -381,14 +378,16 @@ const Registration = () => {
                     </Box>
                 </Grid>
             </Grid>
-            <Snackbar open={successOpen} onClose={handleSuccessClose}>
-                <SnackbarContent 
-                message={t('register.success_two')}/>
+            <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
+                <Alert onClose={handleSuccessClose} severity="success" sx={{width: '100%'}}>
+                    {t('register.success')}
+                </Alert>
             </Snackbar>
 
-            <Snackbar open={authorizationErrorOpen} onClose={handleAuthorizationErrorOpen}>
-                <SnackbarContent 
-                message={t('register.user_exists')}/>
+            <Snackbar open={authorizationErrorOpen} autoHideDuration={6000} onClose={handleAuthorizationErrorOpen}>
+                <Alert onClose={handleAuthorizationErrorOpen} severity="error" sx={{width: '100%'}}>
+                    {t('register.user_exists')}
+                </Alert>
             </Snackbar>
         </ThemeProvider>
     );

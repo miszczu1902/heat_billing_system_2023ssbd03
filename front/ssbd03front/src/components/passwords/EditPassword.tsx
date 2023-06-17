@@ -6,7 +6,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import {TextField, Snackbar, SnackbarContent} from '@mui/material';
+import {TextField, Snackbar, Alert} from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import axios from 'axios';
@@ -209,10 +209,6 @@ const EditPassword = () => {
     const handleErrorClose = () => {
         setErrorOpen(false);
     };
-
-    setTimeout(handleSuccessClose, 20000);
-    setTimeout(handleErrorClose, 20000);
-
     return (
         <div>
             <div>
@@ -298,14 +294,16 @@ const EditPassword = () => {
                 <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
             </Dialog>
 
-            <Snackbar open={successOpen} onClose={handleSuccessClose}>
-                <SnackbarContent 
-                message={t('edit_password.success_title')}/>
+            <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
+                <Alert onClose={handleSuccessClose} severity="success" sx={{width: '100%'}}>
+                    {t('edit_password.success_title')}
+                </Alert>
             </Snackbar>
 
-            <Snackbar open={errorOpen} onClose={handleErrorClose}>
-                <SnackbarContent 
-                message={t(errorOpenMessage)}/>
+            <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleErrorClose}>
+                <Alert onClose={handleErrorClose} severity="error" sx={{width: '100%'}}>
+                    {t(errorOpenMessage)}
+                </Alert>
             </Snackbar>
         </div>
     );

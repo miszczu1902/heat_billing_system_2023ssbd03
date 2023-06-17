@@ -10,7 +10,7 @@ import DialogContent from "@mui/material/DialogContent";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import {TextField, Snackbar, SnackbarContent} from "@mui/material";
+import {TextField, Snackbar, Alert} from "@mui/material";
 import DialogActions from "@mui/material/DialogActions";
 
 const InsertHotWaterEntry: React.FC<{placeId: any}> = ({placeId}) => {
@@ -109,9 +109,6 @@ const InsertHotWaterEntry: React.FC<{placeId: any}> = ({placeId}) => {
         setErrorOpen(false);
     };
 
-    setTimeout(handleSuccessClose, 10000);
-    setTimeout(handleErrorClose, 10000);
-
     return (
         <div>
             <div>
@@ -158,14 +155,16 @@ const InsertHotWaterEntry: React.FC<{placeId: any}> = ({placeId}) => {
                 </DialogActions>
             </Dialog>
 
-            <Snackbar open={successOpen} onClose={handleSuccessClose}>
-                <SnackbarContent 
-                message={t('hot_water.added')}/>
+            <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
+                <Alert onClose={handleSuccessClose} severity="success" sx={{width: '100%'}}>
+                    {t('hot_water.added')}
+                </Alert>
             </Snackbar>
 
-            <Snackbar open={errorOpen} onClose={handleErrorClose}>
-                <SnackbarContent 
-                message={t(errorOpenMessage)}/>
+            <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleErrorClose}>
+                <Alert onClose={handleErrorClose} severity="error" sx={{width: '100%'}}>
+                    {t(errorOpenMessage)}
+                </Alert>
             </Snackbar>
         </div>
     );

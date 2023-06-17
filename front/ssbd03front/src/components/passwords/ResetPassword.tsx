@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
 import Button from '@mui/material/Button';
-import {TextField, Snackbar, SnackbarContent} from '@mui/material';
+import {TextField, Snackbar, Alert} from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -162,9 +162,6 @@ const ResetPassword = () => {
         setErrorOpen(false);
     };
 
-    setTimeout(handleSuccessClose, 20000);
-    setTimeout(handleErrorClose, 20000);
-
     return (
         <ThemeProvider theme={theme}>
             <Grid container justifyContent="center" alignItems="center"
@@ -222,14 +219,16 @@ const ResetPassword = () => {
                                 <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
                             </Dialog>
 
-                            <Snackbar open={successOpen} onClose={handleSuccessClose}>
-                                <SnackbarContent 
-                                    message={t('edit_password.success_title')}/>
+                            <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
+                                <Alert onClose={handleSuccessClose} severity="success" sx={{width: '100%'}}>
+                                    {t('edit_password.success_title')}
+                                </Alert>
                             </Snackbar>
 
-                            <Snackbar open={errorOpen} onClose={handleErrorClose}>
-                                <SnackbarContent 
-                                    message={t(errorOpenMessage)}/>
+                            <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleErrorClose}>
+                                <Alert onClose={handleErrorClose} severity="error" sx={{width: '100%'}}>
+                                    {t(errorOpenMessage)}
+                                </Alert>
                             </Snackbar>
                         </Box>
                     </Box>

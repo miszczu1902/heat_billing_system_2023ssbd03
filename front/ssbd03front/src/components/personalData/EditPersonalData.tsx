@@ -6,7 +6,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import {TextField, Snackbar, SnackbarContent} from '@mui/material';
+import {TextField, Snackbar, Alert} from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import axios from 'axios';
@@ -155,10 +155,6 @@ const EditPersonalData = () => {
         handleConfirmClose();
     };
 
-    setTimeout(handleSuccessClose, 20000);
-    setTimeout(handleErrorClose, 20000);
-    setTimeout(handleAuthorizationErrorOpen, 20000);
-
     return (
         <div>
             <div>
@@ -217,19 +213,22 @@ const EditPersonalData = () => {
                 </DialogActions>
             </Dialog>
 
-            <Snackbar open={successOpen} onClose={handleSuccessClose}>
-                <SnackbarContent 
-                message={t('personal_data.success')}/>
+            <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
+                <Alert onClose={handleSuccessClose} severity="success" sx={{width: '100%'}}>
+                    {t('personal_data.success')}
+                </Alert>
             </Snackbar>
 
-            <Snackbar open={errorOpen} onClose={handleErrorClose}>
-                <SnackbarContent 
-                message={t('personal_data.error')}/>
+            <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleErrorClose}>
+                <Alert onClose={handleErrorClose} severity="error" sx={{width: '100%'}}>
+                    {t('personal_data.error')}
+                </Alert>
             </Snackbar>
 
-            <Snackbar open={authorizationErrorOpen} onClose={handleAuthorizationErrorOpen}>
-                <SnackbarContent 
-                message={t('personal_data.authorization_error')}/>
+            <Snackbar open={authorizationErrorOpen} autoHideDuration={6000} onClose={handleAuthorizationErrorOpen}>
+                <Alert onClose={handleAuthorizationErrorOpen} severity="error" sx={{width: '100%'}}>
+                    {t('personal_data.authorization_error')}
+                </Alert>
             </Snackbar>
         </div>
     );

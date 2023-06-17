@@ -16,7 +16,7 @@ import axios from 'axios';
 import { API_URL } from '../../consts';
 import { BuildingFromList } from '../../types/buildingFromList';
 import validator from "validator";
-import { Snackbar, SnackbarContent } from '@mui/material';
+import { Snackbar, Alert } from '@mui/material';
 import RefreshIcon from "../icons/RefreshIcon";
 
 const BuildingsList = () => {
@@ -171,7 +171,6 @@ const BuildingsList = () => {
     const handleClose = () => {
         setOpen(false);
     };
-    setTimeout(handleClose, 10000);
 
     const handleSubmit = () => {
         const buildingDTO = {
@@ -433,9 +432,10 @@ const BuildingsList = () => {
                 </DialogActions>
             </Dialog>
 
-            <Snackbar open={open} onClose={handleClose}>
-                <SnackbarContent 
-                message={t('buildingFromList.add_building_error')}/>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                 {t('buildingFromList.add_building_error')}
+                </Alert>
             </Snackbar>
         </div>
     );

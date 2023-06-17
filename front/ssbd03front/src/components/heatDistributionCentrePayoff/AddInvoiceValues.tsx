@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Box, Button, Dialog, DialogActions, DialogContentText, DialogTitle, Grid, TextField, Snackbar, SnackbarContent} from '@mui/material';
+import {Box, Button, Dialog, DialogActions, DialogContentText, DialogTitle, Grid, TextField, Snackbar, Alert} from '@mui/material';
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 import DialogContent from '@mui/material/DialogContent';
@@ -125,23 +125,24 @@ const AddInvoiceValues = () => {
         }
     };
 
-    setTimeout(handleConfirm, 20000);
-
     return (
         <div style={{height: '90vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0}}>
-            <Snackbar open={windowOpen} onClose={handleConfirm}>
-                <SnackbarContent 
-                message={t('invoice.already_added')}/>
+            <Snackbar open={windowOpen} autoHideDuration={6000} onClose={handleConfirm}>
+                <Alert onClose={handleConfirm} severity="warning" sx={{width: '100%'}}>
+                    {t('invoice.already_added')}
+                </Alert>
             </Snackbar>
 
-            <Snackbar open={windowErrorOpen} onClose={handleConfirm}>
-                <SnackbarContent 
-                message={t('invoice.error')}/>
+            <Snackbar open={windowErrorOpen} autoHideDuration={6000} onClose={handleConfirm}>
+                <Alert onClose={handleConfirm} severity="error" sx={{width: '100%'}}>
+                    {t('invoice.error')}
+                </Alert>
             </Snackbar>
 
-            <Snackbar open={windowSuccessOpen} onClose={handleConfirm}>
-                <SnackbarContent 
-                message={t('invoice.successfully_added')}/>
+            <Snackbar open={windowSuccessOpen} autoHideDuration={6000} onClose={handleConfirm}>
+                <Alert onClose={handleConfirm} severity="success" sx={{width: '100%'}}>
+                    {t('invoice.successfully_added')}
+                </Alert>
             </Snackbar>
 
             <Grid container>

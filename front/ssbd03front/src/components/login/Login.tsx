@@ -16,7 +16,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import DialogActions from "@mui/material/DialogActions";
 import {useNavigate} from "react-router-dom";
-import {Icon, Snackbar, SnackbarContent} from "@mui/material";
+import {Icon, Snackbar, Alert} from "@mui/material";
 import Logo from './../../assets/logo.svg';
 import {useTranslation} from "react-i18next";
 
@@ -160,9 +160,6 @@ const Login = () => {
         setErrorOpen(false);
     };
 
-    setTimeout(handleSuccessClose, 20000);
-    setTimeout(handleErrorClose, 20000);
-
     return (
         <ThemeProvider theme={theme}>
             <Grid container justifyContent="center" alignItems="center"
@@ -221,13 +218,15 @@ const Login = () => {
                                         </DialogActions>
                                     </Dialog>
                                 
-                                    <Snackbar open={successOpen} onClose={handleSuccessClose}>
-                                        <SnackbarContent 
-                                            message={t('login.success_title')}/>
+                                    <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
+                                        <Alert onClose={handleSuccessClose} severity="success" sx={{width: '100%'}}>
+                                            {t('login.success_title')}
+                                        </Alert>
                                     </Snackbar>
-                                    <Snackbar open={errorOpen} onClose={handleErrorClose}>
-                                        <SnackbarContent 
-                                            message={errorOpenMessage}/>
+                                    <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleErrorClose}>
+                                        <Alert onClose={handleErrorClose} severity="error" sx={{width: '100%'}}>
+                                            {t('login.error_title')}
+                                        </Alert>
                                     </Snackbar>
                                 </div>
                             </Box>
