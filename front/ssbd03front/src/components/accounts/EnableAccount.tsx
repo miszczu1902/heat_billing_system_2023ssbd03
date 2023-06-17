@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
+import { Snackbar, SnackbarContent } from '@mui/material';
 import axios from 'axios';
 import {API_URL} from '../../consts';
 import {useParams} from "react-router-dom";
@@ -69,50 +70,43 @@ const EnableAccount = () => {
         setOpen(true);
     };
 
-    const handleConfirmClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setOpen(false);
-        }
+    const handleConfirmClose = () => {
+        setOpen(false);
     }
 
-    const handleConfirmConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setConfirmOpen(false);
-        }
+    const handleConfirmConfirm = () => {
+        setConfirmOpen(false);
         if (enableState) {
             setUnblockedUserOpen(true);
             return;
         }
         enable();
-        handleConfirmClose(event, reason);
+        handleConfirmClose();
     }
 
-    const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setSuccessOpen(false);
-        }
+    const handleSuccessClose = () => {
+        setSuccessOpen(false);
         window.location.reload();
     }
 
-    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setErrorOpen(false);
-        }
+    const handleErrorClose = () => {
+        setErrorOpen(false);
     };
 
-    const handleUnblockedUserOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setUnblockedUserOpen(false);
-            handleConfirmClose(event, reason);
-        }
+    const handleUnblockedUserOpen = () => {
+        setUnblockedUserOpen(false);
+        handleConfirmClose();
     };
 
-    const handleAuthorizationErrorOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setAuthorizationErrorOpen(false);
-            handleConfirmClose(event, reason);
-        }
+    const handleAuthorizationErrorOpen = () => {
+        setAuthorizationErrorOpen(false);
+        handleConfirmClose();
     };
+
+    setTimeout(handleSuccessClose, 20000);
+    setTimeout(handleErrorClose, 20000);
+    setTimeout(handleUnblockedUserOpen, 20000);
+    setTimeout(handleAuthorizationErrorOpen, 20000);
 
     return (
         <div>
@@ -127,25 +121,25 @@ const EnableAccount = () => {
                 </DialogActions>
             </Dialog>
 
-            <Dialog disableEscapeKeyDown open={successOpen}>
-                <DialogTitle>{t('enable_account.success_one')}{username}{t('enable_account.success_two')}</DialogTitle>
-                <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={successOpen} onClose={handleSuccessClose}>
+                <SnackbarContent 
+                message={t('enable_account.success_one')+username+t('enable_account.success_two')}/>
+            </Snackbar>
 
-            <Dialog disableEscapeKeyDown open={errorOpen}>
-                <DialogTitle>{t('enable_account.error')}{username}</DialogTitle>
-                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={errorOpen} onClose={handleErrorClose}>
+                <SnackbarContent 
+                message={t('enable_account.error')+username}/>
+            </Snackbar>
 
-            <Dialog disableEscapeKeyDown open={unblockedUserOpen}>
-                <DialogTitle>{t('enable_account.unblocked_user_one')}{username}{t('enable_account.unblocked_user_two')}</DialogTitle>
-                <Button onClick={handleUnblockedUserOpen}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={unblockedUserOpen} onClose={handleUnblockedUserOpen}>
+                <SnackbarContent 
+                message={t('enable_account.unblocked_user_one')+username+t('enable_account.unblocked_user_two')}/>
+            </Snackbar>
 
-            <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
-                <DialogTitle>{t('enable_account.authorization_error')}</DialogTitle>
-                <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={authorizationErrorOpen} onClose={handleAuthorizationErrorOpen}>
+                <SnackbarContent 
+                message={t('enable_account.authorization_error')}/>
+            </Snackbar>
         </div>
     );
 }
