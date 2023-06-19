@@ -94,7 +94,7 @@ public class AccountEndpoint {
     public Response changePhoneNumber(@Valid ChangePhoneNumberDTO changePhoneNumberDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
 
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -128,7 +128,7 @@ public class AccountEndpoint {
                                        @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
 
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -165,7 +165,7 @@ public class AccountEndpoint {
                                        @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
 
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -219,7 +219,7 @@ public class AccountEndpoint {
     public Response editPersonalData(@NotNull @Valid EditPersonalDataDTO editPersonalDataDTO,
                                      @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -256,7 +256,7 @@ public class AccountEndpoint {
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
     public Response changeLanguage(@NotNull @Valid ChangeLanguageDTO changeLanguageDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -318,7 +318,7 @@ public class AccountEndpoint {
                                          @PathParam("username") String username,
                                          @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -354,7 +354,7 @@ public class AccountEndpoint {
     @Path("/{username}/disable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response disableUserAccount(@PathParam("username") String username) {
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -382,7 +382,7 @@ public class AccountEndpoint {
     @Path("/{username}/enable")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response enableUserAccount(@PathParam("username") String username) {
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -413,7 +413,7 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.ADMIN)
     public Response addAccessLevelManager(@NotNull @Valid AddAccessLevelManagerDTO addAccessLevelManagerDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -452,7 +452,7 @@ public class AccountEndpoint {
     public Response addAccessLevelOwner(@NotNull @Valid AddAccessLevelOwnerDTO addAccessLevelOwnerDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
 
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -490,7 +490,7 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.ADMIN)
     public Response addAccessLevelAdmin(@NotNull @Valid AddAccessLevelAdminDTO addAccessLevelAdminDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -526,7 +526,7 @@ public class AccountEndpoint {
     @RolesAllowed(Roles.ADMIN)
     public Response revokeAccessLevel(@NotNull @Valid RevokeAccessLevelDTO revokeAccessLevelDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -605,7 +605,7 @@ public class AccountEndpoint {
                                     @PathParam("username") String username,
                                     @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -680,7 +680,7 @@ public class AccountEndpoint {
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
     public Response changeSelfEmail(@NotNull @Valid ChangeEmailDTO changeEmailDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {

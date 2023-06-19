@@ -11,13 +11,11 @@ import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.UnitWarmCostReportDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatingPlaceAndCommunalAreaAdvance;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterAdvance;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.BalanceService;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AdvanceMapper;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.BalanceMapper;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Path("/balances")
 @RequestScoped
@@ -25,12 +23,6 @@ public class BalanceEndpoint {
     @Inject
     private BalanceService balanceService;
 
-    @Inject
-    MessageSigner messageSigner;
-
-    protected static final Logger LOGGER = Logger.getGlobal();
-
-    //MOW 1
     @GET
     @Path("/unit-cost-report")
     @Produces(MediaType.APPLICATION_JSON)
@@ -42,7 +34,6 @@ public class BalanceEndpoint {
     }
 
 
-    //MOW 2
     @Path("/report/{reportId}")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
@@ -53,7 +44,6 @@ public class BalanceEndpoint {
                 balanceService.getYearReport(reportId))).build();
     }
 
-    //MOW 3
     @Path("/all-reports/{buildingId}")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
@@ -66,7 +56,6 @@ public class BalanceEndpoint {
                 .toList()).build();
     }
 
-    //MOW 9
     @Path("/self/all-reports")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
@@ -78,7 +67,6 @@ public class BalanceEndpoint {
                 .toList()).build();
     }
 
-    //MOW 7
     @Path("/self/{placeId}/advances-values/{year}")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
@@ -91,7 +79,6 @@ public class BalanceEndpoint {
                 .build();
     }
 
-    //MOW 7
     @Path("/{placeId}/advances-values/{year}")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
@@ -102,23 +89,5 @@ public class BalanceEndpoint {
         return Response.ok()
                 .entity(AdvanceMapper.createListOfAdvanceForMonthDTOFromListOfAdvances(hotWaterAdvancesValues, heatingPlaceAndCommunalAreaAdvancesValues))
                 .build();
-    }
-
-    //MOW8
-    @Path("self/cost-balance")
-    @Produces(MediaType.APPLICATION_JSON)
-    @GET
-    @RolesAllowed({Roles.OWNER})
-    public Response getSelfHeatingBalance() {
-        return Response.ok().entity(balanceService.getSelfHeatingBalance()).build();
-    }
-
-    //MOW 8
-    @Path("{user}/cost-balance")
-    @Produces(MediaType.APPLICATION_JSON)
-    @GET
-    @RolesAllowed({Roles.MANAGER})
-    public Response getUserHeatingBalance() {
-        return Response.ok().entity(balanceService.getUserHeatingBalance()).build();
     }
 }

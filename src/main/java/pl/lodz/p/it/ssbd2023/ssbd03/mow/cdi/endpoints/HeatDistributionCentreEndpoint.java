@@ -46,7 +46,6 @@ public class HeatDistributionCentreEndpoint {
 
     protected static final Logger LOGGER = Logger.getGlobal();
 
-    //MOW 4
     @Path("/parameters")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
@@ -58,7 +57,6 @@ public class HeatDistributionCentreEndpoint {
                         .toList()).build();
     }
 
-    //MOW 12
     @PATCH
     @EtagValidator
     @Path("/parameters/advance-change-factor/{buildingId}")
@@ -104,7 +102,6 @@ public class HeatDistributionCentreEndpoint {
                 .build();
     }
 
-    //MOW 13
     @Path("/parameters/insert-consumption")
     @Produces(MediaType.APPLICATION_JSON)
     @POST
@@ -114,7 +111,6 @@ public class HeatDistributionCentreEndpoint {
         return Response.status(204).build();
     }
 
-    //MOW 13
     @Path("/parameters/insert-consumption")
     @Produces(MediaType.APPLICATION_JSON)
     @PATCH
@@ -154,8 +150,6 @@ public class HeatDistributionCentreEndpoint {
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
-
-    //MOW 13
     @GET
     @Path("/hot-water-consumption/{hotWaterEntryId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -169,7 +163,6 @@ public class HeatDistributionCentreEndpoint {
                 .build();
     }
 
-    //MOW 13
     @GET
     @Path("/hot-water-consumption/owner/{hotWaterEntryId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -183,7 +176,6 @@ public class HeatDistributionCentreEndpoint {
                 .build();
     }
 
-    //MOW 13
     @GET
     @Path("/hot-water-consumption/place/{placeId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -196,7 +188,6 @@ public class HeatDistributionCentreEndpoint {
                 .build();
     }
 
-    //MOW 13
     @GET
     @Path("/hot-water-consumption/place/owner/{placeId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -209,13 +200,12 @@ public class HeatDistributionCentreEndpoint {
                 .build();
     }
 
-    //MOW 14,15,16
     @Path("/parameters/consumption-cost")
     @Produces(MediaType.APPLICATION_JSON)
     @POST
     @RolesAllowed({Roles.MANAGER})
     public Response addConsumptionFromInvoice(@NotNull @Valid AddConsumptionDTO addConsumptionDTO) {
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
         do {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);

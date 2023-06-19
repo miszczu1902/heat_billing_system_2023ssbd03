@@ -26,19 +26,10 @@ public class AdvanceServiceImpl extends AbstractService implements AdvanceServic
     private ManagerFacade managerFacade;
 
     @Inject
-    private BalanceFacade balanceFacade;
-
-    @Inject
     private HotWaterAdvanceFacade hotWaterAdvanceFacade;
 
     @Inject
-    private PastQuarterHotWaterPayoffFacade pastQuarterHotWaterPayoffFacade;
-
-    @Inject
     private HeatingPlaceAndCommunalAreaAdvanceFacade heatingPlaceAndCommunalAreaAdvanceFacade;
-
-    @Inject
-    private HeatDistributionCentrePayoffFacade heatDistributionCentrePayoffFacade;
 
     @Inject
     private BalanceService balanceService;

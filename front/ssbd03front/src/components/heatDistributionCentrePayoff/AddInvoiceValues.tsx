@@ -8,6 +8,7 @@ import List from '@mui/material/List';
 import axios from 'axios';
 import {API_URL} from '../../consts';
 import validator from "validator";
+import InvoiceIcon from '../icons/InvoiceIcon';
 
 const AddInvoiceValues = () => {
     const [windowOpen, setWindowOpen] = useState(false);
@@ -150,7 +151,7 @@ const AddInvoiceValues = () => {
                     <Button onClick={() => handleClickOpen()}
                             style={buttonStyle}
                             variant="text">
-                        {t('invoice.enter_data')}
+                        <InvoiceIcon/>
                     </Button>
                 </Box>
             </Grid>

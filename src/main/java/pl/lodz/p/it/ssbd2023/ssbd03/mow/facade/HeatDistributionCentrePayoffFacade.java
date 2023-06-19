@@ -11,7 +11,6 @@ import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatDistributionCentrePayoff;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.MonthPayoff;
 
 import java.time.LocalDate;
 import java.util.Collections;

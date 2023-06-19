@@ -26,13 +26,7 @@ import java.util.Objects;
 public class PlaceServiceImpl extends AbstractService implements PlaceService, SessionSynchronization {
 
     @Inject
-    private Internationalization internationalization;
-
-    @Inject
     private PlaceFacade placeFacade;
-
-    @Inject
-    private HttpServletRequest httpServletRequest;
 
     @Inject
     private MessageSigner messageSigner;
@@ -42,9 +36,6 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
 
     @Inject
     private AccountFacade accountFacade;
-
-    @Inject
-    private BalanceFacade balanceFacade;
 
     @Inject
     private HotWaterAdvanceFacade hotWaterAdvanceFacade;
@@ -125,12 +116,6 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
             place.getBuilding().setCommunalAreaAggregate(newCommunalAreaAggregate);
         }
         placeFacade.edit(place);
-    }
-
-    @Override
-    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    public void enterHotWaterConsumption(String placeId, LocalDate date, BigDecimal value) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

@@ -47,16 +47,6 @@ public class BalanceFacade extends AbstractFacade<AnnualBalance> {
         super.remove(entity);
     }
 
-    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    public MonthPayoff findByOwner() {
-        throw new UnsupportedOperationException();
-    }
-
-    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    public AnnualBalance findReportByOwner() {
-        throw new UnsupportedOperationException();
-    }
-
     @Override
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public AnnualBalance find(Object id) {
