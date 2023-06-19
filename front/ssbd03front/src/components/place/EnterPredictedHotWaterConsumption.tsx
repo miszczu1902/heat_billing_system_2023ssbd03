@@ -1,7 +1,7 @@
 import validator from "validator";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { ButtonGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Snackbar, SnackbarContent } from '@mui/material';
+import { ButtonGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Snackbar, Alert } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import { API_URL } from '../../consts';
@@ -101,18 +101,14 @@ const EnterPredictedHotWaterConsumption = () => {
         }
     }
 
-    const handleAuthorizationErrorOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setAuthorizationErrorOpen(false);
-            handleConfirmCancel();
-        }
+    const handleAuthorizationErrorOpen = () => {
+        setAuthorizationErrorOpen(false);
+        handleConfirmCancel();
     };
     
     const handleCloseSnackbar = () => { 
         setOpenSnackbar(false);
     };
-
-    setTimeout(handleCloseSnackbar, 10000);
 
     return (
         <div className="container">
@@ -136,7 +132,7 @@ const EnterPredictedHotWaterConsumption = () => {
             autoFocus
             margin="dense"
             id="name"
-            label={t('enterPredictedHotWaterConsumption.enter_predicted_hot_water_consumption_text_field_name')}
+            label={t('enterPredictedHotWaterConsumption.enter_predicted_hot_water_consumption_text_field_name')+"*"}
             fullWidth
             variant="standard"
             defaultValue={parseFloat(predictedHotWaterConsumption).toFixed(2)}
@@ -165,14 +161,16 @@ const EnterPredictedHotWaterConsumption = () => {
         </DialogActions>
         </Dialog>
 
-        <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
-                <DialogTitle>{t('personal_data.authorization_error')}</DialogTitle>
-                <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>
-        </Dialog>
+        <Snackbar open={authorizationErrorOpen} autoHideDuration={6000} onClose={handleAuthorizationErrorOpen}>
+            <Alert onClose={handleAuthorizationErrorOpen} severity="error">
+                {t('personal_data.authorization_error')}
+            </Alert>
+        </Snackbar>
 
-        <Snackbar open={openSnackbar} onClose={handleCloseSnackbar}>
-                <SnackbarContent 
-                message={t('enterPredictedHotWaterConsumption.enter_predicted_hot_water_consumption_failed')}/>
+        <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+            <Alert onClose={handleCloseSnackbar} severity="error">
+                {t('enterPredictedHotWaterConsumption.enter_predicted_hot_water_consumption_failed')}
+            </Alert>
         </Snackbar>
       </div>
     );

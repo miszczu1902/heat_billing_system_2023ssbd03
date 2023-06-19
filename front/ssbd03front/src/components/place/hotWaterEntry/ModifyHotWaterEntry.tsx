@@ -10,7 +10,7 @@ import DialogContent from "@mui/material/DialogContent";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import {TextField} from "@mui/material";
+import {TextField, Snackbar, Alert} from "@mui/material";
 import DialogActions from "@mui/material/DialogActions";
 
 const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}> = ({ hotWaterEntryId, placeId }) => {
@@ -114,18 +114,14 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
         }
     }
 
-    const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+    const handleSuccessClose = () => {
         setEntryValue("");
-        if (reason !== 'backdropClick') {
-            setSuccessOpen(false);
-        }
+        setSuccessOpen(false);
         window.location.reload();
     }
 
-    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setErrorOpen(false);
-        }
+    const handleErrorClose = () => {
+        setErrorOpen(false);
     };
 
     return (
@@ -143,7 +139,7 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
                                     <div className="form-group" onChange={handleNewEmail}>
                                         <TextField
                                             id="outlined-helperText"
-                                            label={t('hot_water.value') + " [m3]"}
+                                            label={t('hot_water.value') + " [m3]*"}
                                             defaultValue={entryValue}
                                             type="email"
                                             helperText={t('hot_water.entry_not_correct')}
@@ -174,15 +170,17 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
                 </DialogActions>
             </Dialog>
 
-            <Dialog disableEscapeKeyDown open={successOpen}>
-                <DialogTitle>{t('hot_water.success_title')}</DialogTitle>
-                <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
+                <Alert onClose={handleSuccessClose} severity="success" sx={{width: '100%'}}>
+                    {t('hot_water.success_title')}
+                </Alert>
+            </Snackbar>
 
-            <Dialog disableEscapeKeyDown open={errorOpen}>
-                <DialogTitle>{t(errorOpenMessage)}</DialogTitle>
-                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleErrorClose}>
+                <Alert onClose={handleErrorClose} severity="error" sx={{width: '100%'}}>
+                {t(errorOpenMessage)}
+                </Alert>
+            </Snackbar>
         </div>
     );
 }

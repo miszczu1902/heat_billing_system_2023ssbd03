@@ -15,7 +15,7 @@ import {
     Select,
     SelectChangeEvent,
     Snackbar,
-    SnackbarContent
+    Alert
 } from '@mui/material';
 import React, {useEffect, useState} from 'react';
 import axios from "axios";
@@ -110,8 +110,6 @@ const ChangePlaceOwner = () => {
         setOpenSnackbar(false);
     };
 
-    setTimeout(handleCloseSnackbar, 10000);
-
     return (
         <div className="container">
             <div className="row">
@@ -134,7 +132,7 @@ const ChangePlaceOwner = () => {
                         <ListItem>
                             <div className="form-group">
                                 <FormControl>
-                                    <InputLabel id="owner-select-label">{t('place.ownerId')}</InputLabel>
+                                    <InputLabel id="owner-select-label">{t('place.ownerId')+"*"}</InputLabel>
                                     <Select
                                         labelId="owner-select-label"
                                         id="owner-select"
@@ -172,9 +170,10 @@ const ChangePlaceOwner = () => {
                 </DialogActions>
             </Dialog>
 
-            <Snackbar open={openSnackbar} onClose={handleCloseSnackbar}>
-                <SnackbarContent
-                    message={t(message)}/>
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                <Alert onClose={handleCloseSnackbar} severity="error" sx={{width: '100%'}}>
+                    {t(message)}
+                </Alert>
             </Snackbar>
         </div>
     );

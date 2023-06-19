@@ -12,7 +12,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import {Checkbox, FormControlLabel, Grid} from '@mui/material';
+import {Checkbox, FormControlLabel, Grid, Snackbar, Alert} from '@mui/material';
 import {useNavigate, useParams} from "react-router-dom";
 import {ADMIN, API_URL, MANAGER, OWNER} from "../../consts";
 import axios from 'axios';
@@ -45,7 +45,7 @@ export default function Profile() {
     const [licenseValid, setLicenseValid] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [successOpen, setSuccessOpen] = useState(false);
-    const [errorOpen, setErrorOpen] = useState(false);
+    const [openSnackbar, setOpenSnackbar] = React.useState(false);
     const [errorOpenMessage, setErrorOpenMessage] = useState("");
     const [dataError, setDataError] = useState("");
     const [isAdmin, setIsAdmin] = useState(false);
@@ -102,7 +102,7 @@ export default function Profile() {
                 })
                 .catch(error => {
                     setErrorOpenMessage(error.response.data.message)
-                    setErrorOpen(true);
+                    setOpenSnackbar(true);
                 });
             handleClose(event, reason);
         }
@@ -126,7 +126,7 @@ export default function Profile() {
                 })
                 .catch(error => {
                     setErrorOpenMessage(error.response.data.message)
-                    setErrorOpen(true);
+                    setOpenSnackbar(true);
                 });
             handleClose(event, reason);
         }
@@ -149,7 +149,7 @@ export default function Profile() {
                 })
                 .catch(error => {
                     setErrorOpenMessage(error.response.data.message)
-                    setErrorOpen(true);
+                    setOpenSnackbar(true);
                 });
             handleClose(event, reason);
         }
@@ -173,7 +173,7 @@ export default function Profile() {
                 })
                 .catch(error => {
                     setErrorOpenMessage(error.response.data.message)
-                    setErrorOpen(true);
+                    setOpenSnackbar(true);
                 });
             handleClose(event, reason);
         }
@@ -188,17 +188,16 @@ export default function Profile() {
         }
     };
 
-    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setErrorOpenMessage("");
-            setErrorOpen(false);
-            setConfirmOpen(false);
-            setIsManager(false);
-            setIsOwner(false);
-            setIsAdmin(false);
-            setIsRemoveAccessOpen(false);
-        }
+    const handleCloseSnackbar = () => { 
+        setErrorOpenMessage("");
+        setOpenSnackbar(false);
+        setConfirmOpen(false);
+        setIsManager(false);
+        setIsOwner(false);
+        setIsAdmin(false);
+        setIsRemoveAccessOpen(false);
     };
+
 
     const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
         setLicense("");
@@ -624,10 +623,11 @@ export default function Profile() {
                                         <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
                                     </Dialog>
 
-                                    <Dialog disableEscapeKeyDown open={errorOpen}>
-                                        <DialogTitle>{t(errorOpenMessage)}</DialogTitle>
-                                        <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
-                                    </Dialog>
+                                    <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                                        <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+                                        {t(errorOpenMessage)}
+                                        </Alert>
+                                    </Snackbar>
                                 </div>
                             </>
                         )}

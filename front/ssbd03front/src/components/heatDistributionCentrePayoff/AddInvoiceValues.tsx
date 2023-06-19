@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Box, Button, Dialog, DialogActions, DialogContentText, DialogTitle, Grid, TextField} from '@mui/material';
+import {Box, Button, Dialog, DialogActions, DialogContentText, DialogTitle, Grid, TextField, Snackbar, Alert} from '@mui/material';
 import {useTranslation} from "react-i18next";
 import {useNavigate} from "react-router-dom";
 import DialogContent from '@mui/material/DialogContent';
@@ -127,26 +127,23 @@ const AddInvoiceValues = () => {
 
     return (
         <div style={{height: '90vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0}}>
-            <Dialog disableEscapeKeyDown open={windowOpen}>
-                <DialogTitle>{t('invoice.already_added')}</DialogTitle>
-                <DialogActions>
-                    <Button onClick={handleConfirm}>OK</Button>
-                </DialogActions>
-            </Dialog>
+            <Snackbar open={windowOpen} autoHideDuration={6000} onClose={handleConfirm}>
+                <Alert onClose={handleConfirm} severity="warning" sx={{width: '100%'}}>
+                    {t('invoice.already_added')}
+                </Alert>
+            </Snackbar>
 
-            <Dialog disableEscapeKeyDown open={windowErrorOpen}>
-                <DialogTitle>{t('invoice.error')}</DialogTitle>
-                <DialogActions>
-                    <Button onClick={handleConfirm}>OK</Button>
-                </DialogActions>
-            </Dialog>
+            <Snackbar open={windowErrorOpen} autoHideDuration={6000} onClose={handleConfirm}>
+                <Alert onClose={handleConfirm} severity="error" sx={{width: '100%'}}>
+                    {t('invoice.error')}
+                </Alert>
+            </Snackbar>
 
-            <Dialog disableEscapeKeyDown open={windowSuccessOpen}>
-                <DialogTitle>{t('invoice.successfully_added')}</DialogTitle>
-                <DialogActions>
-                    <Button onClick={handleConfirm}>OK</Button>
-                </DialogActions>
-            </Dialog>
+            <Snackbar open={windowSuccessOpen} autoHideDuration={6000} onClose={handleConfirm}>
+                <Alert onClose={handleConfirm} severity="success" sx={{width: '100%'}}>
+                    {t('invoice.successfully_added')}
+                </Alert>
+            </Snackbar>
 
             <Grid container>
                 <Box sx={{justifyContent: 'center', flexGrow: 1}}>

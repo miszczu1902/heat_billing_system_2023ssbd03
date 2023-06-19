@@ -6,7 +6,9 @@ import {ActualAdvanceChangeFactor} from "../../types/ActualAdvanceChangeFactor";
 import {
     Box,
     Paper,
-    Typography
+    Typography,
+    Snackbar,
+    Alert,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import IconViewList from "../icons/IconViewList";
@@ -127,20 +129,16 @@ const ChangeAdvanceFactor = () => {
         handleClose(event, reason);
     }
 
-    const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setSuccessOpen(false);
-        }
+    const handleSuccessClose = () => {
+        setSuccessOpen(false);
         fetchData();
         navigate(location.pathname);
     }
 
-    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setNewChangeFactor('');
-            setErrorOpen(false);
-            setConfirmOpen(false);
-        }
+    const handleErrorClose = () => {
+        setNewChangeFactor('');
+        setErrorOpen(false);
+        setConfirmOpen(false);
     };
 
     return (<div style={{width: '100%', boxSizing: 'border-box', bottom: 0}}>
@@ -169,10 +167,10 @@ const ChangeAdvanceFactor = () => {
                                 <div className="form-group" onChange={handleNewFactorArea}>
                                     <TextField
                                         id="outlined-helperText"
-                                        label={t('annual_balance.factor_info')}
+                                        label={t('annual_balance.change_factor')+"*"}
                                         defaultValue={advanceChangeFactor?.advanceChangeFactor}
                                         type="area"
-                                        helperText={t('annual_balance.change_factor')}
+                                        helperText={t('annual_balance.factor_info')}
                                         error={Boolean(factorError)}
                                     />
                                     <div className={`form-group ${factorError ? 'error' : ''}`}> {factorError}
@@ -204,15 +202,18 @@ const ChangeAdvanceFactor = () => {
             </DialogActions>
         </Dialog>
 
-        <Dialog disableEscapeKeyDown open={successOpen}>
-            <DialogTitle>{t('annual_balance.success_modified')}</DialogTitle>
-            <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
-        </Dialog>
+       <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
+            <Alert onClose={handleSuccessClose} severity="success" sx={{width: '100%'}}>
+                {t('annual_balance.success_modified')}
+            </Alert>
+            </Snackbar>
 
-        <Dialog disableEscapeKeyDown open={errorOpen}>
-            <DialogTitle>{t('annual_balance.error')}</DialogTitle>
-            <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
-        </Dialog>
-    </div>)
+        <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleErrorClose}>
+            <Alert onClose={handleErrorClose} severity="error" sx={{width: '100%'}}>
+                {t('annual_balance.error')}
+            </Alert>
+        </Snackbar>
+    </div>
+    )
 }
 export default ChangeAdvanceFactor;
