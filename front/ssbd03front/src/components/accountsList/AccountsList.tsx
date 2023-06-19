@@ -57,11 +57,15 @@ const AccountsList = () => {
     }
 
     return (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{display: 'flex',
+            flexDirection: 'column',
+            overflowY: 'auto',
+            overflow: 'hidden',
+            maxHeight: '90vh'}}>
             <Table aria-label='simple table'>
                 <TableHead>
                     <TableRow>
-                        <TableCell/>
+                        <TableCell><Button className="landing-page-button" onClick={handleClick}><RefreshIcon/></Button></TableCell>
                         <TableCell onClick={() => handleSort('username')}>
                             {t('login.username')}
                         </TableCell>
@@ -89,7 +93,6 @@ const AccountsList = () => {
                                 <TableCell>{t('account_list.unconfirmed')}</TableCell>}
                         </TableRow>
                     ))}
-                    <TableRow><Button className="landing-page-button" onClick={handleClick}><RefreshIcon/></Button></TableRow>
                 </TableBody>
             </Table>
         </TableContainer>

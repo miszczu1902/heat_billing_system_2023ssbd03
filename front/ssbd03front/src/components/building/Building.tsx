@@ -20,7 +20,7 @@ import {
     Alert,
 } from '@mui/material';
 import {useTranslation} from "react-i18next";
-import {useNavigate, useParams} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import axios from 'axios';
 import {API_URL, MANAGER} from '../../consts';
 import {BuildingFromList} from '../../types/buildingFromList';
@@ -38,9 +38,12 @@ import DialogActions from "@mui/material/DialogActions";
 import Switch from '@mui/material/Switch';
 import {Account} from "../../types/account";
 import ChangeAdvanceFactor from "../advanceChangeFactor/ChangeAdvanceFactor";
+import RefreshIcon from "../icons/RefreshIcon";
 
 const Building = () => {
     const {t, i18n} = useTranslation();
+    const location = useLocation();
+    const params = useParams();
     const navigate = useNavigate();
     const token = 'Bearer ' + localStorage.getItem("token");
     const role = localStorage.getItem("role");
@@ -220,14 +223,20 @@ const Building = () => {
     }
 
 
-    const handleCloseSnackbar = () => { 
+    const handleCloseSnackbar = () => {
         setArea("");
         setPredictedHotWaterConsumption("")
         setOwnerId("");
         setOpenSnackbar(false);
         setConfirmOpen(false);
     };
-    
+
+
+    const handleClick = () => {
+        fetchData();
+        navigate(location.pathname);
+    };
+
     return (
         <div style={{
             height: '90vh',
@@ -384,7 +393,7 @@ const Building = () => {
             </Snackbar>
 
             <Box sx={{margin: '2vh'}}>
-                <TableContainer component={Paper}>
+                <TableContainer component={Paper} sx={{display: 'flex', flexDirection: 'column', overflowY: 'auto'}}>
                     <Table aria-label='simple table'>
                         <TableHead>
                             <TableRow>
@@ -412,10 +421,14 @@ const Building = () => {
                                 <TableCell>
                                     {t('place.surname')}
                                 </TableCell>
-                                <TableCell></TableCell>
+                                <TableCell>
+                                    <Button className="landing-page-button"
+                                                   onClick={handleClick}>
+                                        <RefreshIcon/>
+                                    </Button></TableCell>
                             </TableRow>
                         </TableHead>
-                        <TableBody>
+                        <TableBody sx={{flexGrow: '1', minHeight: '0', overflowY: 'scroll'}}>
                             {places.map((place) => (
                                 <TableRow key={place.id}>
                                     <TableCell>{place.createdBy}</TableCell>

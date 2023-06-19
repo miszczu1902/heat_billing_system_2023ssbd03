@@ -45,7 +45,7 @@ const HotWaterEntriesList = () => {
     };
 
     return (
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{display: 'flex', justifyContent: 'center', maxHeight: '70vh', marginLeft: '2vh'}}>
             <Table aria-label='simple table'>
                 <TableHead>
                     <TableRow>
@@ -57,13 +57,18 @@ const HotWaterEntriesList = () => {
                             {t('hot_water.manager')}
                         </TableCell>
                         <TableCell>
+                            <Button className="landing-page-button"
+                                           onClick={handleClick}>
+                                <RefreshIcon/>
+                            </Button></TableCell>
+                        <TableCell>
                             {!hotWaterEntries.some(entry => {
                                 return entry.date.includes(formattedDate)
                             }) ? <InsertHotWaterEntry placeId={placeId}/> : <div/>}
                         </TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody sx={{flexGrow: '1', minHeight: '0', overflowY: 'scroll'}}>
                     {hotWaterEntries.map((hotWaterEntry) => (
                         <TableRow key={hotWaterEntry.id}>
                             <TableCell>{hotWaterEntry.date}</TableCell>
@@ -73,8 +78,6 @@ const HotWaterEntriesList = () => {
                                 && <ModifyHotWaterEntry hotWaterEntryId={hotWaterEntry.id} placeId={hotWaterEntry.placeId}/>}</TableCell>
                         </TableRow>
                     ))}
-                    <TableRow><Button className="landing-page-button"
-                                      onClick={handleClick}><RefreshIcon/></Button></TableRow>
                 </TableBody>
             </Table>
         </TableContainer>

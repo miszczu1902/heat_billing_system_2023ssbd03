@@ -1,5 +1,6 @@
 import Box from "@mui/material/Box";
 import React, {useEffect, useState} from 'react';
+import {Button, Dialog, DialogTitle, Grid, Icon} from '@mui/material';
 import {Snackbar, Alert} from '@mui/material';
 import {ADMIN, API_URL, MANAGER} from "../../consts";
 import axios from 'axios';
@@ -10,7 +11,6 @@ import {Place} from "../../types/placeInfo";
 import {useParams} from "react-router-dom";
 import EnterPredictedHotWaterConsumption from "../place/EnterPredictedHotWaterConsumption";
 import DoorIcon from "../icons/DoorIcon";
-import {Account} from "../../types/account";
 import EditPlace from "../place/EditPlace";
 import IconCheckboxMarked from "../icons/IconCheckboxMarked";
 import IconCloseBox from "../icons/IconCloseBox";
@@ -26,7 +26,7 @@ const PlaceInfo = () => {
     const placeId = useParams().placeId;
     const [authorizationErrorOpen, setAuthorizationErrorOpen] = useState(false);
     const [role, setRole] = useState(localStorage.getItem("role"));
-    const [confirmOpen, setConfirmOpen] = React.useState(false);
+    const [confirmOpen, setConfirmOpen] = useState(false);
 
     useEffect(() => {
         fetchData();
@@ -57,37 +57,31 @@ const PlaceInfo = () => {
         handleConfirmCancel();
     };
 
-    return (
-        <div style={{height: '90vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0}}>
-            <Paper elevation={3} style={{position: 'relative', overflow: 'auto', display: 'flex', alignItems: 'center', top: 0}}>
-                <Box component="form" sx={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '2vh'
-                }}>        <Typography sx={{ padding: '1vh' }} variant="h4">
-                            {t('place.title')}
-                        </Typography>
-                        <DoorIcon />
-                    </Box>
-                    <Box sx={{ my: 30, display: 'flex', flexDirection: 'column', alignItems: 'left', margin: '2vh'}}>
-                        {role === "MANAGER"? <EditPlace/> : <></>}
-                    </Box>
-                    <Box sx={{ my: 30, display: 'flex', flexDirection: 'column', alignItems: 'left', margin: '2vh' }}>
-                        {place !== null && (
-                            <>
-                                <Paper elevation={3} style={{ position: 'relative', overflow: 'auto' }}>
-                                    <Typography sx={{ padding: '1vh', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} variant="h4">
-                                        <b>{t('balances.personal_data')}:</b>
-                                    </Typography>
-                                    <Typography sx={{ marginLeft: '4vw', marginRight: '2vw', padding: '1vh', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} variant="h5">
-                                        <b>{t('place.firstName')}:</b> {place.firstName}
-                                    </Typography>
-                                    <Typography sx={{ marginLeft: '4vw', marginRight: '2vw', padding: '1vh', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} variant="h5">
-                                        <b>{t('place.surname')}:</b> {place.surname}
 
-                                    </Typography>
+    return (
+        <div style={{height: '80vh', overflow: 'hidden'}}>
+            <div style={{padding: '3vh', width: '100%', height: '5vh'}}>
+                <Box component="form">
+                    <Typography variant="h6" sx={{display: 'flex', justifyContent: 'center'}}>
+                        <span style={{marginRight: '5vh', marginTop: '1vh'}}><DoorIcon/></span>
+                        <span style={{marginRight: '5vh', marginTop: '1vh'}}>{t('place.title')}</span>
+                        <span >{role === MANAGER && <EditPlace/>}</span>
+                    </Typography>
+                </Box>
+            </div>
+            <div style={{display: 'flex', justifyContent: 'center', maxHeight: '88%'}}>
+                <Box sx={{display: 'flex', flexDirection: 'column', alignItems: 'left'}}>
+                    {place !== null && (
+                        <>
+                            <Paper elevation={3} style={{position: 'relative', overflow: 'auto'}}>
+                                <Typography sx={{
+                                    padding: '1vh',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between'
+                                }} variant="h6">
+                                    <b>{t('balances.personal_data')}:</b>
+                                </Typography>
                                 <Typography sx={{
                                     marginLeft: '4vw',
                                     marginRight: '2vw',
@@ -95,7 +89,28 @@ const PlaceInfo = () => {
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'space-between'
-                                }} variant="h5">
+                                }} variant="h6">
+                                    <b>{t('place.firstName')}:</b> {place.firstName}
+                                </Typography>
+                                <Typography sx={{
+                                    marginLeft: '4vw',
+                                    marginRight: '2vw',
+                                    padding: '1vh',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between'
+                                }} variant="h6">
+                                    <b>{t('place.surname')}:</b> {place.surname}
+
+                                </Typography>
+                                <Typography sx={{
+                                    marginLeft: '4vw',
+                                    marginRight: '2vw',
+                                    padding: '1vh',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between'
+                                }} variant="h6">
                                     <b>{t('place.username')}:</b> {place.username}
                                     {
                                         (currentRole === MANAGER) && <ChangePlaceOwner/>
@@ -110,7 +125,7 @@ const PlaceInfo = () => {
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'space-between'
-                                }} variant="h5">
+                                }} variant="h6">
                                     <b>{t('place.created_by')}:</b> {place.createdBy}
                                 </Typography>
                             </Paper>
@@ -122,7 +137,7 @@ const PlaceInfo = () => {
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'space-between'
-                                }} variant="h5">
+                                }} variant="h6">
                                     <b>{t('place.id')}:</b> {place.id}
                                 </Typography>
                             </Paper>
@@ -134,7 +149,7 @@ const PlaceInfo = () => {
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'space-between'
-                                }} variant="h5">
+                                }} variant="h6">
                                     <b>{t('place.placeNumber')}:</b> {place.placeNumber}
                                 </Typography>
                             </Paper>
@@ -146,7 +161,7 @@ const PlaceInfo = () => {
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'space-between'
-                                }} variant="h5">
+                                }} variant="h6">
                                     <b>{t('place.area')}:</b> {place.area} m²
                                 </Typography>
                             </Paper>
@@ -158,8 +173,9 @@ const PlaceInfo = () => {
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'space-between'
-                                }} variant="h5">
-                                    <b>{t('place.hotWaterConnection')}:</b> {place.hotWaterConnection ? <IconCheckboxMarked/> : <IconCloseBox/>}
+                                }} variant="h6">
+                                    <b>{t('place.hotWaterConnection')}:</b> {place.hotWaterConnection ?
+                                    <IconCheckboxMarked/> : <IconCloseBox/>}
                                 </Typography>
                             </Paper>
                             <Paper elevation={3} style={{marginTop: '0.5vh', position: 'relative', overflow: 'auto'}}>
@@ -170,8 +186,9 @@ const PlaceInfo = () => {
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'space-between'
-                                }} variant="h5">
-                                    <b>{t('place.centralHeatingConnection')}:</b> {place.centralHeatingConnection ? <IconCheckboxMarked/> : <IconCloseBox/>}
+                                }} variant="h6">
+                                    <b>{t('place.centralHeatingConnection')}:</b> {place.centralHeatingConnection ?
+                                    <IconCheckboxMarked/> : <IconCloseBox/>}
                                 </Typography>
                             </Paper>
                             <Paper elevation={3} style={{marginTop: '0.5vh', position: 'relative', overflow: 'auto'}}>
@@ -182,7 +199,7 @@ const PlaceInfo = () => {
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'space-between'
-                                }} variant="h5">
+                                }} variant="h6">
                                     <b>{t('place.predictedHotWaterConsumption')}:</b> {place.predictedHotWaterConsumption} m³
                                     <EnterPredictedHotWaterConsumption/>
                                 </Typography>
@@ -190,8 +207,15 @@ const PlaceInfo = () => {
                         </>
                     )}
                 </Box>
-                {place?.hotWaterConnection && <Box sx={{margin: '2vh'}}><HotWaterEntriesList/></Box>}
-            </Paper>
+                <div>
+                    {place?.hotWaterConnection &&
+                        <Box sx={{maxHeight: '30vh'}}>
+                            <HotWaterEntriesList/>
+                        </Box>}
+                </div>
+
+            </div>
+
             <Snackbar open={authorizationErrorOpen} autoHideDuration={6000} onClose={handleAuthorizationErrorOpen}>
                 <Alert onClose={handleAuthorizationErrorOpen} severity="error" sx={{ width: '100%' }}>
                     {t('personal_data.authorization_error')}

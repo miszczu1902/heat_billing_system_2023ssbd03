@@ -43,7 +43,7 @@ const AnnualBalancesSelf = () => {
             <Table aria-label='simple table'>
                 <TableHead>
                     <TableRow>
-                        <TableCell/>
+                        <TableCell><Button className="landing-page-button" onClick={handleClick}><RefreshIcon/></Button></TableCell>
                         <TableCell>
                             {t('balances.personal_data')}
                         </TableCell>
@@ -80,7 +80,6 @@ const AnnualBalancesSelf = () => {
                             <TableCell>{reports.postalCode}</TableCell>
                         </TableRow>
                     ))}
-                    <TableRow><Button className="landing-page-button" onClick={handleClick}><RefreshIcon/></Button></TableRow>
                 </TableBody>
             </Table>
         </TableContainer>

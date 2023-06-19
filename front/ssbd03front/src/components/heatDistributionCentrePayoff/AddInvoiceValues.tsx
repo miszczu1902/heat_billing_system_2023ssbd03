@@ -126,7 +126,7 @@ const AddInvoiceValues = () => {
     };
 
     return (
-        <div style={{height: '90vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0}}>
+        <div style={{overflow: 'hidden'}}>
             <Snackbar open={windowOpen} autoHideDuration={6000} onClose={handleConfirm}>
                 <Alert onClose={handleConfirm} severity="warning" sx={{width: '100%'}}>
                     {t('invoice.already_added')}

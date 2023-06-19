@@ -46,8 +46,9 @@ const AnnualBalance = () => {
     }, [URL]);
 
     return (
-        <div style={{display: 'flex'}}>
-            <Box sx={{margin: '2vh'}}>
+        <div style={{display: 'flex', marginTop: '5vh',
+            justifyContent: 'center'}}>
+            <Box sx={{marginLeft: '2vh', marginRight: '2vh'}}>
                 <Paper elevation={3} style={{padding: '2vh'}}>
                     <Typography variant="h5">
                         <b>{t('year_report.year')}: </b> {annualBalance?.year}
@@ -91,7 +92,7 @@ const AnnualBalance = () => {
                     </Typography>
                 </Paper>
             </Box>
-            <Box sx={{margin: '2vh'}}><AdvancesList/></Box>
+            <Box sx={{marginRight: '2vh'}}><AdvancesList/></Box>
         </div>);
 }
 export default AnnualBalance;
