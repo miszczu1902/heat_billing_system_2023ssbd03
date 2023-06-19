@@ -38,7 +38,6 @@ const HeatDistributionCentrePayoff = () => {
 
     return (
         <div style={{overflow: 'hidden'}}>
-            <AddInvoiceValues/>
             <TableContainer component={Paper} sx={{display: 'flex', justifyContent: 'center', maxHeight: '85vh'}}>
                 <Table aria-label='simple table'>
                     <TableHead>
@@ -63,6 +62,7 @@ const HeatDistributionCentrePayoff = () => {
                             <TableCell>
                                 {t('heatDistributionCentrePayoff.consumptionCost')}
                             </TableCell>
+                            <TableCell><AddInvoiceValues/></TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody sx={{flexGrow: '1', minHeight: '0', overflowY: 'scroll'}}>

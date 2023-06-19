@@ -6,13 +6,11 @@ import jakarta.ejb.Stateless;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 
 import java.time.LocalDateTime;
@@ -50,11 +48,6 @@ public class PlaceFacade extends AbstractFacade<Place> {
     @Override
     public void remove(Place entity) {
         super.remove(entity);
-    }
-
-    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    public Building findByPlaceNumber() {
-        throw new UnsupportedOperationException();
     }
 
     @PermitAll

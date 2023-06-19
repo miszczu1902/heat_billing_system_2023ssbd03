@@ -7,13 +7,11 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.SecurityContext;
-import jakarta.servlet.http.HttpServletRequest;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.Internationalization;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 
 import java.math.BigDecimal;
@@ -52,15 +50,6 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
     private BalanceService balanceService;
 
     @Inject
-    private HeatDistributionCentrePayoffFacade heatDistributionCentrePayoffFacade;
-
-    @Inject
-    private Internationalization internationalization;
-
-    @Inject
-    private HttpServletRequest httpServletRequest;
-
-    @Inject
     private MessageSigner messageSigner;
 
     @Inject
@@ -79,12 +68,6 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
     public Building getBuilding(String buildingId) {
         final Long id = Long.valueOf(buildingId);
         return buildingFacade.findById(id);
-    }
-
-    @Override
-    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    public void modifyBuilding(String buildingId) {
-        throw new UnsupportedOperationException();
     }
 
     @Override

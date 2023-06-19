@@ -33,38 +33,25 @@ public class OwnerFacade extends AbstractFacade<Owner> {
 
     @RolesAllowed(Roles.MANAGER)
     public Owner findOwnerByUsername(String username) {
-        {
-            TypedQuery<Owner> tq = em.createNamedQuery("Owner.findByUsername", Owner.class);
-            tq.setParameter("username", username);
-            if (tq.getResultList().isEmpty()) {
-                throw AppException.createAccountIsNotOwnerException();
-            }
-            return tq.getSingleResult();
+        TypedQuery<Owner> tq = em.createNamedQuery("Owner.findByUsername", Owner.class);
+        tq.setParameter("username", username);
+        if (tq.getResultList().isEmpty()) {
+            throw AppException.createAccountIsNotOwnerException();
         }
+        return tq.getSingleResult();
     }
-    @RolesAllowed(Roles.MANAGER)
-    public Owner findOwnerByPersonalData(String firstName,String surname) {
-        {
-            TypedQuery<Owner> tq = em.createNamedQuery("Owner.findOwnerByPersonalData", Owner.class);
-            tq.setParameter("firstName", firstName);
-            tq.setParameter("surname", surname);
-            if (tq.getResultList().isEmpty()) {
-                throw AppException.createAccountIsNotOwnerException();
-            }
-            return tq.getSingleResult();
-        }
-    }
-        @RolesAllowed({Roles.MANAGER})
-        public Owner findById (Long id){
-            TypedQuery<Owner> tq = em.createNamedQuery("Owner.findById", Owner.class);
-            tq.setParameter("id", id);
-            return tq.getSingleResult();
-        }
 
-        @RolesAllowed({Roles.MANAGER})
-        public List<Owner> getListOfOwners () {
-            TypedQuery<Owner> query = em.createNamedQuery("Owner.findAllOwners", Owner.class);
-            return Optional.of(query.getResultList()).orElse(Collections.emptyList());
-        }
+    @RolesAllowed({Roles.MANAGER})
+    public Owner findById(Long id) {
+        TypedQuery<Owner> tq = em.createNamedQuery("Owner.findById", Owner.class);
+        tq.setParameter("id", id);
+        return tq.getSingleResult();
+    }
+
+    @RolesAllowed({Roles.MANAGER})
+    public List<Owner> getListOfOwners() {
+        TypedQuery<Owner> query = em.createNamedQuery("Owner.findAllOwners", Owner.class);
+        return Optional.of(query.getResultList()).orElse(Collections.emptyList());
+    }
 
 }

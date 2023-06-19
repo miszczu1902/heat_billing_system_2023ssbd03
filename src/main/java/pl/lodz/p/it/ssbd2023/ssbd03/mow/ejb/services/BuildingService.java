@@ -18,8 +18,6 @@ public interface BuildingService extends CommonManagerLocalInterface {
 
     List<Building> getAllBuildings(int pageNumber, int pageSize);
 
-    void modifyBuilding(String buildingId);
-
     void addBuilding(Building building);
 
     void addPlaceToBuilding(BigDecimal area, Boolean hotWaterConnection, BigDecimal predictedHotWaterConsumption,

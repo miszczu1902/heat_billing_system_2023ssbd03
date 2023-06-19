@@ -32,7 +32,7 @@ public class MowSystemScheduler {
 
     @Schedule(dayOfMonth = "2", timezone = "Europe/Warsaw", persistent = false) //drugi dzien kazdego miesiaca o polnocy
     private void updateYearReports() {
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -58,7 +58,7 @@ public class MowSystemScheduler {
 
     @Schedule(month = "1", dayOfMonth = "1", timezone = "Europe/Warsaw", persistent = false) //pierwszy stycznia o północy
     private void createYearReports() {
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -84,7 +84,7 @@ public class MowSystemScheduler {
 
     @Schedule(dayOfMonth = "2", hour = "1", month = "1,4,7,10", timezone = "Europe/Warsaw", persistent = false)
     private void calculatePastQuarterHotWaterPayoff() {
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -110,7 +110,7 @@ public class MowSystemScheduler {
 
     @Schedule(dayOfMonth = "2", hour = "2", month = "1,4,7,10", timezone = "Europe/Warsaw", persistent = false)
     private void calculateHeatingPlaceAndCommunalAreaAdvance() {
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {

@@ -48,7 +48,6 @@ public class BuildingEndpoint {
 
     private int txRetries = Integer.parseInt(LoadConfig.loadPropertyFromConfig("tx.retries"));
 
-    //MOW 5
     @GET
     @Path("/building/{buildingId}/places")
     @Produces(MediaType.APPLICATION_JSON)
@@ -64,7 +63,6 @@ public class BuildingEndpoint {
                                 .toList()).build();
     }
 
-    //MOW
     @GET
     @Path("/building/{buildingId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -78,17 +76,6 @@ public class BuildingEndpoint {
                 .build();
     }
 
-    //MOW
-    @PATCH
-    @Path("/building/{buildingId}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    public Response modifyBuilding(@NotBlank @PathParam("buildingId") String buildingId) {
-        buildingService.modifyBuilding(buildingId);
-        return Response.status(200).build();
-    }
-
-    //MOW 19
     @POST
     @Path("/building")
     @Produces(MediaType.APPLICATION_JSON)
@@ -98,14 +85,13 @@ public class BuildingEndpoint {
         return Response.status(Response.Status.CREATED).build();
     }
 
-    //MOW 18
     @POST
     @Path("/place")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({Roles.MANAGER})
     public Response addPlaceToBuilding(@NotNull @Valid AddPlaceToBuildingDTO addPlaceToBuildingDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -134,7 +120,6 @@ public class BuildingEndpoint {
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
-    //MOW 6
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({Roles.MANAGER})

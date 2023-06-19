@@ -14,8 +14,6 @@ public interface BalanceService extends CommonManagerLocalInterface {
 
     BigDecimal getUnitWarmCostReportCentralHeating();
 
-    AnnualBalance getSelfReport(String placeId);
-
     AnnualBalance getYearReport(Long reportId);
 
     List<AnnualBalance> getAllReports(int pageNumber, int pageSize, Long buildingId);
@@ -29,10 +27,6 @@ public interface BalanceService extends CommonManagerLocalInterface {
     List<HeatingPlaceAndCommunalAreaAdvance> getSelfHeatingAdvanceValue(Long placeId, Integer year);
 
     List<HeatingPlaceAndCommunalAreaAdvance> getUserHeatingAdvanceValue(Long placeId, Integer year);
-
-    BigDecimal getUserHeatingBalance();
-
-    BigDecimal getSelfHeatingBalance();
 
     void createYearReports();
 

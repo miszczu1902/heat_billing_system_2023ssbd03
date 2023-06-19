@@ -1,11 +1,9 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.cdi.endpoints;
 
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.TransactionRolledbackException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,7 +14,6 @@ import jakarta.ws.rs.core.Response;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.EnterPredictedHotWaterConsumptionDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyPlaceOwnerDTO;
-import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyPlaceOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyPlaceDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.PlaceInfoDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
@@ -25,12 +22,9 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackE
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.PlaceService;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.EtagValidator;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.EtagValidator;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.PlaceMapper;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -47,7 +41,6 @@ public class PlaceEndpoint {
 
     private int txRetries = Integer.parseInt(LoadConfig.loadPropertyFromConfig("tx.retries"));
 
-    //MOW 10
     @GET
     @Path("/place/{placeId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -61,7 +54,6 @@ public class PlaceEndpoint {
                 .build();
     }
 
-    //MOW 20
     @PATCH
     @EtagValidator
     @Path("/owner/{placeId}")
@@ -70,7 +62,7 @@ public class PlaceEndpoint {
     public Response modifyPlaceOwner(@PathParam("placeId") Long placeId, @NotNull @Valid ModifyPlaceOwnerDTO modifyPlaceOwnerDTO, @Context HttpServletRequest request) {
         final String etag = request.getHeader("If-Match");
 
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -95,7 +87,6 @@ public class PlaceEndpoint {
         return Response.status(Response.Status.NO_CONTENT).build();
     }
 
-    //MOW 21
     @PATCH
     @EtagValidator
     @Path("/place/{placeId}")
@@ -110,7 +101,7 @@ public class PlaceEndpoint {
         final boolean isOwner = request.isUserInRole(Roles.OWNER);
         final boolean isManager = request.isUserInRole(Roles.MANAGER);
 
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -137,16 +128,6 @@ public class PlaceEndpoint {
         return Response.noContent().build();
     }
 
-    //MOW 16
-    @POST
-    @Path("/place/{placeId}/hot-water-watermeter")
-    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    public Response enterHotWaterConsumption(@NotBlank @PathParam("placeId") String placeId, BigDecimal value) {
-        placeService.enterHotWaterConsumption(placeId, LocalDate.now(), value);
-        return Response.status(200).build();
-    }
-
-    //MOW M17
     @PATCH
     @Path("/place/{placeId}/predicted-hot-water-consumption")
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
@@ -159,7 +140,7 @@ public class PlaceEndpoint {
         final boolean isOwner = request.isUserInRole(Roles.OWNER);
         final boolean isManager = request.isUserInRole(Roles.MANAGER);
 
-        int retryTXCounter = txRetries; //limit prób ponowienia transakcji
+        int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
         do {
@@ -186,7 +167,6 @@ public class PlaceEndpoint {
         return Response.noContent().build();
     }
 
-    //MOW 11
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/self")

@@ -67,12 +67,6 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
     }
 
     @Override
-    @RolesAllowed({Roles.OWNER})
-    public AnnualBalance getSelfReport(String placeId) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public AnnualBalance getYearReport(Long reportId) {
         final AnnualBalance annualBalance = balanceFacade.findBalanceById(reportId);
@@ -138,17 +132,6 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
         return balanceFacade.findAllHeatingPlaceAndCommunalAreaAdvancesForPlace(placeId, year);
     }
 
-    @Override
-    @RolesAllowed({Roles.MANAGER})
-    public BigDecimal getUserHeatingBalance() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    @RolesAllowed({Roles.OWNER})
-    public BigDecimal getSelfHeatingBalance() {
-        throw new UnsupportedOperationException();
-    }
 
     @Override
     @PermitAll
