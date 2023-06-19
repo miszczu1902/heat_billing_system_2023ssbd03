@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import React, {useEffect, useState} from 'react';
-import {Button, Dialog, DialogTitle, Grid, Icon} from '@mui/material';
+import {Snackbar, Alert} from '@mui/material';
 import {ADMIN, API_URL, MANAGER} from "../../consts";
 import axios from 'axios';
 import Paper from "@mui/material/Paper";
@@ -51,13 +51,10 @@ const PlaceInfo = () => {
         setConfirmOpen(false);
     };
 
-    const handleAuthorizationErrorOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setAuthorizationErrorOpen(false);
-            handleConfirmCancel();
-        }
+    const handleAuthorizationErrorOpen = () => {
+        setAuthorizationErrorOpen(false);
+        handleConfirmCancel();
     };
-
 
     return (
         <div style={{height: '80vh', overflow: 'hidden'}}>
@@ -104,6 +101,115 @@ const PlaceInfo = () => {
                                         <b>{t('place.surname')}:</b> {place.surname}
 
                                     </Typography>
+                                <Typography sx={{
+                                    marginLeft: '4vw',
+                                    marginRight: '2vw',
+                                    padding: '1vh',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between'
+                                }} variant="h5">
+                                    <b>{t('place.username')}:</b> {place.username}
+                                    {
+                                        (currentRole === MANAGER) && <ChangePlaceOwner/>
+                                    }
+                                </Typography>
+                            </Paper>
+                            <Paper elevation={3} style={{marginTop: '0.5vh', position: 'relative', overflow: 'auto'}}>
+                                <Typography sx={{
+                                    marginLeft: '2vw',
+                                    marginRight: '2vw',
+                                    padding: '1vh',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between'
+                                }} variant="h5">
+                                    <b>{t('place.created_by')}:</b> {place.createdBy}
+                                </Typography>
+                            </Paper>
+                            <Paper elevation={3} style={{marginTop: '0.5vh', position: 'relative', overflow: 'auto'}}>
+                                <Typography sx={{
+                                    marginLeft: '2vw',
+                                    marginRight: '2vw',
+                                    padding: '1vh',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between'
+                                }} variant="h5">
+                                    <b>{t('place.id')}:</b> {place.id}
+                                </Typography>
+                            </Paper>
+                            <Paper elevation={3} style={{marginTop: '0.5vh', position: 'relative', overflow: 'auto'}}>
+                                <Typography sx={{
+                                    marginLeft: '2vw',
+                                    marginRight: '2vw',
+                                    padding: '1vh',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between'
+                                }} variant="h5">
+                                    <b>{t('place.placeNumber')}:</b> {place.placeNumber}
+                                </Typography>
+                            </Paper>
+                            <Paper elevation={3} style={{marginTop: '0.5vh', position: 'relative', overflow: 'auto'}}>
+                                <Typography sx={{
+                                    marginLeft: '2vw',
+                                    marginRight: '2vw',
+                                    padding: '1vh',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between'
+                                }} variant="h5">
+                                    <b>{t('place.area')}:</b> {place.area} m²
+                                </Typography>
+                            </Paper>
+                            <Paper elevation={3} style={{marginTop: '0.5vh', position: 'relative', overflow: 'auto'}}>
+                                <Typography sx={{
+                                    marginLeft: '2vw',
+                                    marginRight: '2vw',
+                                    padding: '1vh',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between'
+                                }} variant="h5">
+                                    <b>{t('place.hotWaterConnection')}:</b> {place.hotWaterConnection ? <IconCheckboxMarked/> : <IconCloseBox/>}
+                                </Typography>
+                            </Paper>
+                            <Paper elevation={3} style={{marginTop: '0.5vh', position: 'relative', overflow: 'auto'}}>
+                                <Typography sx={{
+                                    marginLeft: '2vw',
+                                    marginRight: '2vw',
+                                    padding: '1vh',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between'
+                                }} variant="h5">
+                                    <b>{t('place.centralHeatingConnection')}:</b> {place.centralHeatingConnection ? <IconCheckboxMarked/> : <IconCloseBox/>}
+                                </Typography>
+                            </Paper>
+                            <Paper elevation={3} style={{marginTop: '0.5vh', position: 'relative', overflow: 'auto'}}>
+                                <Typography sx={{
+                                    marginLeft: '2vw',
+                                    marginRight: '2vw',
+                                    padding: '1vh',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between'
+                                }} variant="h5">
+                                    <b>{t('place.predictedHotWaterConsumption')}:</b> {place.predictedHotWaterConsumption} m³
+                                    <EnterPredictedHotWaterConsumption/>
+                                </Typography>
+                            </Paper>
+                        </>
+                    )}
+                </Box>
+                {place?.hotWaterConnection && <Box sx={{margin: '2vh'}}><HotWaterEntriesList/></Box>}
+            </Paper>
+            <Snackbar open={authorizationErrorOpen} autoHideDuration={6000} onClose={handleAuthorizationErrorOpen}>
+                <Alert onClose={handleAuthorizationErrorOpen} severity="error" sx={{ width: '100%' }}>
+                    {t('personal_data.authorization_error')}
+                </Alert>
+            </Snackbar>
                                     <Typography sx={{
                                         marginLeft: '4vw',
                                         marginRight: '2vw',

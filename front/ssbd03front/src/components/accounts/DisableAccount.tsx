@@ -4,6 +4,7 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
+import { Snackbar, Alert } from '@mui/material';
 import axios from 'axios';
 import {API_URL} from '../../consts';
 import {useParams} from "react-router-dom";
@@ -70,10 +71,8 @@ const DisableAccount = () => {
         setOpen(true);
     };
 
-    const handleConfirmClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setOpen(false);
-        }
+    const handleConfirmClose = () => {
+        setOpen(false);
     }
 
     const handleConfirmConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
@@ -85,35 +84,29 @@ const DisableAccount = () => {
             return;
         }
         disable();
-        handleConfirmClose(event, reason);
+        handleConfirmClose();
     }
 
-    const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setSuccessOpen(false);
-        }
+    const handleSuccessClose = () => {
+        setSuccessOpen(false);
         window.location.reload();
     }
 
-    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setErrorOpen(false);
-        }
+    const handleErrorClose = () => {
+        setErrorOpen(false);
     };
 
-    const handleBlockedUserOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setBlockedUserOpen(false);
-            handleConfirmClose(event, reason);
-        }
+    const handleBlockedUserOpen = () => {
+        setBlockedUserOpen(false);
+        handleConfirmClose();
     };
 
-    const handleAuthorizationErrorOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setAuthorizationErrorOpen(false);
-            handleConfirmClose(event, reason);
-        }
+    const handleAuthorizationErrorOpen = () => {
+        setAuthorizationErrorOpen(false);
+        handleConfirmClose();
     };
+
+
 
     return (
         <div>
@@ -128,25 +121,29 @@ const DisableAccount = () => {
                 </DialogActions>
             </Dialog>
 
-            <Dialog disableEscapeKeyDown open={successOpen}>
-                <DialogTitle>{t('disable_account.success_one')}{username}{t('disable_account.success_two')}</DialogTitle>
-                <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
+                <Alert onClose={handleSuccessClose} severity="success" sx={{width: '100%'}}>
+                    {t('disable_account.success_one')}{username}{t('disable_account.success_two')}
+                </Alert>
+            </Snackbar>
 
-            <Dialog disableEscapeKeyDown open={errorOpen}>
-                <DialogTitle>{t('disable_account.error')}{username}</DialogTitle>
-                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleErrorClose}>
+                <Alert onClose={handleErrorClose} severity="error" sx={{width: '100%'}}>
+                    {t('disable_account.error')}{username}
+                </Alert>
+            </Snackbar>
 
-            <Dialog disableEscapeKeyDown open={blockedUserOpen}>
-                <DialogTitle>{t('disable_account.blocked_user_one')}{username}{t('disable_account.blocked_user_two')}</DialogTitle>
-                <Button onClick={handleBlockedUserOpen}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={blockedUserOpen} autoHideDuration={6000} onClose={handleBlockedUserOpen}>
+                <Alert onClose={handleBlockedUserOpen} severity="info" sx={{width: '100%'}}>
+                    {t('disable_account.blocked_user_one')+username+t('disable_account.blocked_user_two')}
+                </Alert>
+            </Snackbar>
 
-            <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
-                <DialogTitle>{t('disable_account.authorization_error')}</DialogTitle>
-                <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={authorizationErrorOpen} autoHideDuration={6000} onClose={handleAuthorizationErrorOpen}>
+                <Alert onClose={handleAuthorizationErrorOpen} severity="error" sx={{width: '100%'}}>
+                    {t('disable_account.authorization_error')}
+                </Alert>
+            </Snackbar>
         </div>
     );
 }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
+import {TextField, Snackbar, Alert} from '@mui/material';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -158,10 +158,8 @@ const ResetPassword = () => {
         navigate('/login');
     }
 
-    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setErrorOpen(false);
-        }
+    const handleErrorClose = () => {
+        setErrorOpen(false);
     };
 
     return (
@@ -211,6 +209,7 @@ const ResetPassword = () => {
                                     </div>
                                 </DialogActions>
                             </Dialog>
+
                             <Dialog disableEscapeKeyDown open={successOpen}>
                                 <DialogTitle>{t('edit_password.success_title')}</DialogTitle>
                                 <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
@@ -219,6 +218,18 @@ const ResetPassword = () => {
                                 <DialogTitle>{t(errorOpenMessage)}</DialogTitle>
                                 <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
                             </Dialog>
+
+                            <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
+                                <Alert onClose={handleSuccessClose} severity="success" sx={{width: '100%'}}>
+                                    {t('edit_password.success_title')}
+                                </Alert>
+                            </Snackbar>
+
+                            <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleErrorClose}>
+                                <Alert onClose={handleErrorClose} severity="error" sx={{width: '100%'}}>
+                                    {t(errorOpenMessage)}
+                                </Alert>
+                            </Snackbar>
                         </Box>
                     </Box>
                 </Grid>

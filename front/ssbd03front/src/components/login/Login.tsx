@@ -16,7 +16,7 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import DialogActions from "@mui/material/DialogActions";
 import {useNavigate} from "react-router-dom";
-import {Icon} from "@mui/material";
+import {Icon, Snackbar, Alert} from "@mui/material";
 import Logo from './../../assets/logo.svg';
 import {useTranslation} from "react-i18next";
 
@@ -152,16 +152,12 @@ const Login = () => {
         }
     }
 
-    const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setSuccessOpen(false);
-        }
+    const handleSuccessClose = () => {
+        setSuccessOpen(false);
     }
 
-    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setErrorOpen(false);
-        }
+    const handleErrorClose = () => {
+        setErrorOpen(false);
     };
 
     return (
@@ -221,15 +217,17 @@ const Login = () => {
                                                     disabled={!validData}>{t('confirm.ok')}</Button>
                                         </DialogActions>
                                     </Dialog>
-                                    <Dialog disableEscapeKeyDown open={successOpen}>
-                                        <DialogTitle>{t('login.success_title')}</DialogTitle>
-                                        <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
-                                    </Dialog>
-
-                                    <Dialog disableEscapeKeyDown open={errorOpen}>
-                                        <DialogTitle>{errorOpenMessage}</DialogTitle>
-                                        <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
-                                    </Dialog>
+                                
+                                    <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
+                                        <Alert onClose={handleSuccessClose} severity="success" sx={{width: '100%'}}>
+                                            {t('login.success_title')}
+                                        </Alert>
+                                    </Snackbar>
+                                    <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleErrorClose}>
+                                        <Alert onClose={handleErrorClose} severity="error" sx={{width: '100%'}}>
+                                            {t('login.error_title')}
+                                        </Alert>
+                                    </Snackbar>
                                 </div>
                             </Box>
                         </Box>

@@ -15,7 +15,9 @@ import {
     TableContainer,
     TableHead,
     TableRow,
-    Typography
+    Typography,
+    Snackbar,
+    Alert,
 } from '@mui/material';
 import {useTranslation} from "react-i18next";
 import {useLocation, useNavigate, useParams} from "react-router-dom";
@@ -66,7 +68,7 @@ const Building = () => {
 
     const [dataError, setDataError] = useState("");
     const [confirmOpen, setConfirmOpen] = useState(false);
-    const [errorOpen, setErrorOpen] = useState(false);
+    const [openSnackbar, setOpenSnackbar] = React.useState(false);
     const [successOpen, setSuccessOpen] = useState(false);
     const [accounts, setAccounts] = useState<Account[]>([]);
 
@@ -199,9 +201,10 @@ const Building = () => {
             })
             .then(response => {
                 setSuccessOpen(true);
+                fetchData();
             })
             .catch(error => {
-                setErrorOpen(true);
+                setOpenSnackbar(true);
             });
         handleClose(event, reason);
     }
@@ -212,22 +215,22 @@ const Building = () => {
         setOwnerId(event.target.value);
     };
 
-    const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setSuccessOpen(false);
-        }
-        window.location.reload();
+    const handleSuccessClose = () => {
+        setSuccessOpen(false);
+        setArea("");
+        setPredictedHotWaterConsumption("")
+        setOwnerId("");
     }
 
-    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setArea("");
-            setPredictedHotWaterConsumption("")
-            setOwnerId("");
-            setErrorOpen(false);
-            setConfirmOpen(false);
-        }
+
+    const handleCloseSnackbar = () => {
+        setArea("");
+        setPredictedHotWaterConsumption("")
+        setOwnerId("");
+        setOpenSnackbar(false);
+        setConfirmOpen(false);
     };
+
 
     const handleClick = () => {
         fetchData();
@@ -295,7 +298,7 @@ const Building = () => {
                                     <div className="form-group" onChange={handleArea}>
                                         <TextField
                                             id="outlined-helperText"
-                                            label={t('place.area')}
+                                            label={t('place.area')+"*"}
                                             defaultValue={area}
                                             type="area"
                                             helperText={t('place.areaInfo')}
@@ -309,7 +312,7 @@ const Building = () => {
                                     <div className="form-group" onChange={handlePredictedHotWaterConsumption}>
                                         <TextField
                                             id="outlined-helperText"
-                                            label={t('place.predictedHotWaterConsumption')}
+                                            label={t('place.predictedHotWaterConsumption')+"*"}
                                             defaultValue={predictedHotWaterConsumption}
                                             type="predictedHotWaterConsumption"
                                             helperText={t('place.predictedHotWaterConsumptionInfo')}
@@ -323,7 +326,7 @@ const Building = () => {
                                 </ListItem>
                                 <ListItem>
                                     <div className="form-group">
-                                        <label htmlFor="hotWaterConnection">{t('place.hotWaterConnection')}</label>
+                                        <label htmlFor="hotWaterConnection">{t('place.hotWaterConnection')+"*"}</label>
                                         <Switch
                                             id="hotWaterConnection"
                                             checked={hotWaterConnection}
@@ -334,7 +337,7 @@ const Building = () => {
                                 <ListItem>
                                     <div className="form-group">
                                         <FormControl>
-                                            <InputLabel id="owner-select-label">{t('place.ownerId')}</InputLabel>
+                                            <InputLabel id="owner-select-label">{t('place.ownerId')+"*"}</InputLabel>
                                             <Select
                                                 labelId="owner-select-label"
                                                 id="owner-select"
@@ -377,15 +380,17 @@ const Building = () => {
                 </DialogActions>
             </Dialog>
 
-            <Dialog disableEscapeKeyDown open={successOpen}>
-                <DialogTitle>{t('place.added_place')}</DialogTitle>
-                <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
+                <Alert onClose={handleSuccessClose} severity="success" sx={{width: '100%'}}>
+                    {t('place.added_place')}
+                </Alert>
+            </Snackbar>
 
-            <Dialog disableEscapeKeyDown open={errorOpen}>
-                <DialogTitle>{t('place.error')}</DialogTitle>
-                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                <Alert onClose={handleCloseSnackbar} severity="error" sx={{width: '100%'}}>
+                    {t('place.error')}
+                </Alert>
+            </Snackbar>
 
             <Box sx={{margin: '2vh'}}>
                 <TableContainer component={Paper} sx={{display: 'flex', flexDirection: 'column', overflowY: 'auto'}}>

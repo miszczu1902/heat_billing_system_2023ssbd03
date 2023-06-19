@@ -6,7 +6,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import {TextField} from '@mui/material';
+import {TextField, Snackbar, Alert} from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import axios from 'axios';
@@ -111,18 +111,14 @@ const ChangePhoneNumber = () => {
         }
     }
 
-    const handleSuccessClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
+    const handleSuccessClose = () => {
         setPhoneNumber("");
-        if (reason !== 'backdropClick') {
-            setSuccessOpen(false);
-        }
+        setSuccessOpen(false);
         window.location.reload();
     }
 
-    const handleErrorClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setErrorOpen(false);
-        }
+    const handleErrorClose = () => {
+        setErrorOpen(false);
     };
 
     return (
@@ -171,15 +167,19 @@ const ChangePhoneNumber = () => {
                 </DialogActions>
             </Dialog>
 
-            <Dialog disableEscapeKeyDown open={successOpen}>
-                <DialogTitle>{t('change_phone_number.success')}</DialogTitle>
-                <Button onClick={handleSuccessClose}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={successOpen} autoHideDuration={6000} onClose={handleSuccessClose}>
+                <Alert onClose={handleSuccessClose} severity="success" sx={{width: '100%'}}>
+                    {t('change_phone_number.success')}
+                </Alert>
+            </Snackbar>
 
-            <Dialog disableEscapeKeyDown open={errorOpen}>
-                <DialogTitle>{t(errorOpenMessage)}</DialogTitle>
-                <Button onClick={handleErrorClose}>{t('confirm.ok')}</Button>
-            </Dialog>
+            <Snackbar open={errorOpen}autoHideDuration={6000} onClose={handleErrorClose}>
+                <Alert onClose={handleErrorClose} severity="error" sx={{width: '100%'}}>
+                    {errorOpenMessage}
+                </Alert>
+            </Snackbar>
+
+
         </div>
     );
 }

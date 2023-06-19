@@ -16,7 +16,7 @@ import axios from 'axios';
 import { API_URL } from '../../consts';
 import { BuildingFromList } from '../../types/buildingFromList';
 import validator from "validator";
-import { Snackbar, SnackbarContent } from '@mui/material';
+import { Snackbar, Alert } from '@mui/material';
 import RefreshIcon from "../icons/RefreshIcon";
 
 const BuildingsList = () => {
@@ -171,7 +171,6 @@ const BuildingsList = () => {
     const handleClose = () => {
         setOpen(false);
     };
-    setTimeout(handleClose, 10000);
 
     const handleSubmit = () => {
         const buildingDTO = {
@@ -331,7 +330,7 @@ const BuildingsList = () => {
                                     autoFocus
                                     margin="dense"
                                     id="totalArea"
-                                    label={t('buildingFromList.total_area')}
+                                    label={t('buildingFromList.total_area')+ "*"}
                                     type="text"
                                     sx={{ width: '50%' }}
                                     variant="standard"
@@ -355,7 +354,7 @@ const BuildingsList = () => {
                                             autoFocus
                                             margin="dense"
                                             id="street"
-                                            label={t('buildingFromList.street')}  
+                                            label={t('buildingFromList.street')+ "*"}  
                                             type="text"
                                             sx={{ width: '50%' }}
                                             variant="standard"
@@ -371,7 +370,7 @@ const BuildingsList = () => {
                                             autoFocus
                                             margin="dense"
                                             id="buildingNumber"
-                                            label={t('buildingFromList.building_number')}
+                                            label={t('buildingFromList.building_number')+ "*"}
                                             type="text"
                                             sx={{ width: '50%' }}
                                             variant="standard"
@@ -387,7 +386,7 @@ const BuildingsList = () => {
                                             autoFocus
                                             margin="dense"
                                             id="city"
-                                            label={t('buildingFromList.city')}
+                                            label={t('buildingFromList.city')+ "*"}
                                             type="text"
                                             sx={{ width: '50%' }}
                                             variant="standard"
@@ -403,7 +402,7 @@ const BuildingsList = () => {
                                             autoFocus
                                             margin="dense"
                                             id="postalCode"
-                                            label={t('buildingFromList.postal_code')}
+                                            label={t('buildingFromList.postal_code')+ "*"}
                                             type="text"
                                             sx={{ width: '50%' }}
                                             variant="standard"
@@ -432,9 +431,10 @@ const BuildingsList = () => {
                 </DialogActions>
             </Dialog>
 
-            <Snackbar open={open} onClose={handleClose}>
-                <SnackbarContent 
-                message={t('buildingFromList.add_building_error')}/>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                 {t('buildingFromList.add_building_error')}
+                </Alert>
             </Snackbar>
         </div>
     );

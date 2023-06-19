@@ -1,7 +1,7 @@
 import validator from "validator";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { ButtonGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Snackbar, SnackbarContent, Switch, FormGroup, FormControlLabel} from '@mui/material';
+import { ButtonGroup, Button, Dialog, DialogTitle, DialogContent, DialogContentText, TextField, DialogActions, Snackbar, Alert} from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import { API_URL } from '../../consts';
@@ -73,10 +73,8 @@ const EditPlace = () => {
         setConfirmOpen(false);
     };
 
-    const handleAuthorizationErrorOpen = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (reason !== 'backdropClick') {
-            setAuthorizationErrorOpen(false);
-        }
+    const handleAuthorizationErrorOpen = () => {
+        setAuthorizationErrorOpen(false);
     };
 
     const handleConfirmSave = () => {  
@@ -111,11 +109,6 @@ const EditPlace = () => {
     const handleCloseSnackbar = () => { 
         setOpenSnackbar(false);
     };
-
-    setTimeout(handleCloseSnackbar, 10000);
-    
-
-
     return (
         <div>
             <div className="row">
@@ -137,7 +130,7 @@ const EditPlace = () => {
                     autoFocus
                     margin="dense"
                     id="name"
-                    label={t('editPlace.edit_place_text_field_area')}
+                    label={t('editPlace.edit_place_text_field_area')+"*"}
                     fullWidth
                     variant="standard"
                     defaultValue={parseFloat(area).toFixed(2)}
@@ -165,15 +158,16 @@ const EditPlace = () => {
                 </DialogActions>
             </Dialog>
 
+            <Snackbar open={authorizationErrorOpen} autoHideDuration={6000} onClose={handleAuthorizationErrorOpen}>
+                <Alert onClose={handleAuthorizationErrorOpen} severity="error" sx={{ width: '100%' }}>
+                    {t('personal_data.authorization_error')}
+                </Alert>
+            </Snackbar>
 
-            <Dialog disableEscapeKeyDown open={authorizationErrorOpen}>
-                <DialogTitle>{t('personal_data.authorization_error')}</DialogTitle>
-                <Button onClick={handleAuthorizationErrorOpen}>{t('confirm.ok')}</Button>
-            </Dialog>
-
-            <Snackbar open={openSnackbar} onClose={handleCloseSnackbar}>
-                <SnackbarContent 
-                message={t('editPlace.edit_place_failed')}/>
+            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+                    {t('editPlace.edit_place_failed')}
+                </Alert>
             </Snackbar>
         </div>
     );
