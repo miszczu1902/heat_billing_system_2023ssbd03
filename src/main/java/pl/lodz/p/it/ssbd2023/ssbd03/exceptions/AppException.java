@@ -7,8 +7,8 @@ import lombok.Getter;
 import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.building.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.advanceFactor.AdvanceChangeFactorNotModified;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.advanceFactor.AdvanceChangeFactorWasInserted;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.advanceFactor.AdvanceChangeFactorNotModifiedException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.advanceFactor.AdvanceChangeFactorWasInsertedException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.SignerException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.VerifierException;
@@ -17,7 +17,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.heatDistributionCentre.NoHeatDist
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.personalData.PersonalDataConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.place.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoQueryResultException;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.query.NoResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.HotWaterEntryCouldNotBeInsertedException;
@@ -279,12 +278,12 @@ public static UserIsAlreadyOwnerOfThisPlaceException userIsAlreadyOwnerOfThisPla
         return new CanNotMakeSomeoneOwnerOfYourPlaceException(ERROR_CAN_NOT_MAKE_SOMEONE_OWNER_OF_YOUR_PLACE, Response.Status.FORBIDDEN);
     }
 
-    public static AdvanceChangeFactorNotModified createAdvanceChangeFactorNotModifiedException() {
-        return new AdvanceChangeFactorNotModified(ERROR_ADVANCE_CHANGE_FACTOR_NOT_MODIFIED, Response.Status.BAD_REQUEST);
+    public static AdvanceChangeFactorNotModifiedException createAdvanceChangeFactorNotModifiedException() {
+        return new AdvanceChangeFactorNotModifiedException(ERROR_ADVANCE_CHANGE_FACTOR_NOT_MODIFIED, Response.Status.BAD_REQUEST);
     }
 
-    public static AdvanceChangeFactorWasInserted createAdvanceChangeFactorWasInsertedException() {
-        return new AdvanceChangeFactorWasInserted(ERROR_ADVANCE_CHANGE_FACTOR_WAS_INSERTED, Response.Status.CONFLICT);
+    public static AdvanceChangeFactorWasInsertedException createAdvanceChangeFactorWasInsertedException() {
+        return new AdvanceChangeFactorWasInsertedException(ERROR_ADVANCE_CHANGE_FACTOR_WAS_INSERTED, Response.Status.CONFLICT);
     }
 
     public static HotWaterEntryCouldNotBeInsertedException createHotWaterEntryCouldNotBeInsertedException() {

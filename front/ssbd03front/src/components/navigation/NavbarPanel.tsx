@@ -202,6 +202,7 @@ const NavbarPanel = () => {
 
     const handleConfirm = () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("role");
         navigate("/login");
     };
 
