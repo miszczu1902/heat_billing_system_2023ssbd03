@@ -105,10 +105,6 @@ public class AppException extends WebApplicationException {
         return new AppException(Response.Status.INTERNAL_SERVER_ERROR, ERROR_UNKNOWN, cause);
     }
 
-    public static AppException createAppException(String key, Throwable cause) {
-        return new AppException(Response.Status.INTERNAL_SERVER_ERROR, key, cause);
-    }
-
     public static AppException createPersistenceException(Throwable cause) {
         return new AppException(Response.Status.INTERNAL_SERVER_ERROR, ERROR_GENERAL_PERSISTENCE, cause);
     }
