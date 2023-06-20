@@ -29,7 +29,7 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
     const [errorOpen, setErrorOpen] = useState(false);
     const [errorOpenMessage, setErrorOpenMessage] = useState("");
     const role = localStorage.getItem("role");
-    const URL = role === MANAGER ? `${API_URL}/heat-distribution-centre/hot-water-consumption/${hotWaterEntryId}` : `${API_URL}/heat-distribution-centre/hot-water-consumption/owner${hotWaterEntryId}`;
+    const URL = role === MANAGER ? `${API_URL}/heat-distribution-centre/hot-water-consumption/${hotWaterEntryId}` : `${API_URL}/heat-distribution-centre/hot-water-consumption/owner/${hotWaterEntryId}`;
 
     const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
