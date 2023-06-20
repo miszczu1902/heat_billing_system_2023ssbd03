@@ -51,7 +51,7 @@ public class BalanceEndpoint {
     public Response getOwnerUserReport(@PathParam("reportId") Long reportId) {
         return Response.ok().entity(
                 BalanceMapper.createYearReportDTOFromAnnualBalance(
-                        balanceService.getYearReport(reportId))).build();
+                        balanceService.getOwnerYearReport(reportId))).build();
     }
 
     @Path("/all-reports/{buildingId}")
