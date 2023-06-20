@@ -82,7 +82,7 @@ const BreadCrumb = () => {
                     {(location.pathname.includes("/manage") && !location.pathname.includes("/manager")) && <Link
                         underline="hover"
                         color="#ffffff"
-                        href={"/manage" + place}>
+                        href={"/manage"}>
                         {t('breadcrumb.manage')}</Link>}
                     {location.pathname.includes("/annual-reports/self") && <Link
                         underline="hover"

@@ -16,6 +16,8 @@ public interface BalanceService extends CommonManagerLocalInterface {
 
     AnnualBalance getYearReport(Long reportId);
 
+    AnnualBalance getOwnerYearReport(Long reportId);
+
     List<AnnualBalance> getAllReports(int pageNumber, int pageSize, Long buildingId);
 
     List<AnnualBalance> getSelfReports(int pageNumber, int pageSize);
