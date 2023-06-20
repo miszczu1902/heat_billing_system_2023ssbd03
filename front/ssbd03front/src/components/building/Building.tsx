@@ -59,7 +59,7 @@ const Building = () => {
 
     const [hotWaterConnection, setHotWaterConnection] = useState(false);
 
-    const [predictedHotWaterConsumption, setPredictedHotWaterConsumption] = useState("");
+    const [predictedHotWaterConsumption, setPredictedHotWaterConsumption] = useState("0");
     const [predictedHotWaterConsumptionError, setPredictedHotWaterConsumptionError] = useState("");
     const [predictedHotWaterConsumptionValid, setPredictedHotWaterConsumptionValid] = useState(false);
 
@@ -129,6 +129,13 @@ const Building = () => {
     const handleClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
         if (reason !== 'backdropClick') {
             setAddPlace(false);
+            setArea('');
+            setOwnerId('');
+            setPredictedHotWaterConsumption('0');
+            setAreaValid(false);
+            setOwnerIdValid(false);
+            setPredictedHotWaterConsumptionValid(false);
+            setHotWaterConnection(false);
         }
     };
 
@@ -165,7 +172,7 @@ const Building = () => {
     };
 
     const handleConfirm = () => {
-        if (areaValid && predictedHotWaterConsumptionValid && ownerId) {
+        if (areaValid && (predictedHotWaterConsumptionValid || !hotWaterConnection) && ownerIdValid) {
             setDataError("");
             setConfirmOpen(true);
         } else {
@@ -176,6 +183,13 @@ const Building = () => {
     const handleConfirmClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {
         if (reason !== 'backdropClick') {
             setConfirmOpen(false);
+            setArea('');
+            setOwnerId('');
+            setPredictedHotWaterConsumption('0');
+            setAreaValid(false);
+            setOwnerIdValid(false);
+            setPredictedHotWaterConsumptionValid(false);
+            setHotWaterConnection(false);
         }
     }
 
@@ -207,6 +221,13 @@ const Building = () => {
                 setOpenSnackbar(true);
             });
         handleClose(event, reason);
+        setArea('');
+        setOwnerId('');
+        setPredictedHotWaterConsumption('0');
+        setAreaValid(false);
+        setOwnerIdValid(false);
+        setPredictedHotWaterConsumptionValid(false);
+        setHotWaterConnection(false);
     }
 
 
@@ -309,31 +330,38 @@ const Building = () => {
                                     </div>
                                 </ListItem>
                                 <ListItem>
-                                    <div className="form-group" onChange={handlePredictedHotWaterConsumption}>
-                                        <TextField
-                                            id="outlined-helperText"
-                                            label={t('place.predictedHotWaterConsumption')+"*"}
-                                            defaultValue={predictedHotWaterConsumption}
-                                            type="predictedHotWaterConsumption"
-                                            helperText={t('place.predictedHotWaterConsumptionInfo')}
-                                            error={Boolean(predictedHotWaterConsumptionError)}
-                                        />
-                                        <div
-                                            className={`form-group ${predictedHotWaterConsumptionError ? 'error' : ''}`}>
-                                            {predictedHotWaterConsumptionError}
-                                        </div>
-                                    </div>
-                                </ListItem>
-                                <ListItem>
                                     <div className="form-group">
                                         <label htmlFor="hotWaterConnection">{t('place.hotWaterConnection')+"*"}</label>
                                         <Switch
                                             id="hotWaterConnection"
                                             checked={hotWaterConnection}
-                                            onChange={(e) => setHotWaterConnection(e.target.checked)}
+                                            onChange={(e) => {
+                                                setHotWaterConnection(e.target.checked);
+                                                if (!e.target.checked) {
+                                                    setPredictedHotWaterConsumptionValid(false);
+                                                    setPredictedHotWaterConsumptionError('');
+                                                }
+                                            }}
                                         />
                                     </div>
                                 </ListItem>
+                                {hotWaterConnection && (
+                                    <ListItem>
+                                        <div className="form-group" onChange={handlePredictedHotWaterConsumption}>
+                                            <TextField
+                                                id="outlined-helperText"
+                                                label={t('place.predictedHotWaterConsumption')+"*"}
+                                                defaultValue={predictedHotWaterConsumption}
+                                                type="predictedHotWaterConsumption"
+                                                helperText={t('place.predictedHotWaterConsumptionInfo')}
+                                                error={Boolean(predictedHotWaterConsumptionError)}
+                                            />
+                                            <div className={`form-group ${predictedHotWaterConsumptionError ? 'error' : ''}`}>
+                                                {predictedHotWaterConsumptionError}
+                                            </div>
+                                        </div>
+                                    </ListItem>
+                                )}
                                 <ListItem>
                                     <div className="form-group">
                                         <FormControl>
@@ -365,7 +393,7 @@ const Building = () => {
                 <DialogActions>
                     <Button onClick={handleClose}>{t('confirm.cancel')}</Button>
                     <Button onClick={handleConfirm}
-                            disabled={!(areaValid && predictedHotWaterConsumptionValid && ownerIdValid)}>
+                            disabled={!(areaValid && (predictedHotWaterConsumptionValid || !hotWaterConnection) && ownerIdValid)}>
                         {t('profile.add')}
                     </Button>
                 </DialogActions>
