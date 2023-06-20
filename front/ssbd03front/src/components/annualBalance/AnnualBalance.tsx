@@ -3,7 +3,7 @@ import {Box, Paper, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
-import {API_URL} from "../../consts";
+import {API_URL, MANAGER} from "../../consts";
 import axios from "axios";
 import {YearReport} from "../../types/YearReport";
 
@@ -14,7 +14,7 @@ const AnnualBalance = () => {
     const token = 'Bearer ' + localStorage.getItem("token");
     const [annualBalance, setAnnualBalance] = useState<YearReport>();
     const reportId = params.reportId;
-    const URL = `${API_URL}/balances/report/${reportId}`;
+    const URL = localStorage.getItem("role") === MANAGER ? `${API_URL}/balances/report/${reportId}` : `${API_URL}/balances/owner/report/${reportId}`;
     const [waterBalance, setWaterBalance] = useState('green');
     const [placeBalance, setPlaceBalance] = useState('green');
     const [communalBalance, setCommunalBalance] = useState('green');

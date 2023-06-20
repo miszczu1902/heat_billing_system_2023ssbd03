@@ -74,7 +74,6 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_HOT_WATER_ENTRY_NOT_INSERTED = "exception.hot_water_entry.not_inserted";
     protected final static String ERROR_HOT_WATER_ENTRY_NOT_MODIFIED = "exception.hot_water_entry.not_modified";
     protected final static String ERROR_MANAGER_COULD_NOT_EDIT_OWNED_PLACE = "exception.error.manager_could_not_edit_owned_place";
-    protected final static String TOO_BIG_PLACE_AREA = "exception.error.too_big_place_area";
     protected final static String NO_PLACE_FOUND = "exception.error.no_place_found";
     protected final static String NO_BUILDING_FOUND = "exception.error.no_building_found";
     protected final static String TOTAL_AREA_IS_ZERO = "exception.error.total_area_is_zero";
@@ -104,10 +103,6 @@ public class AppException extends WebApplicationException {
 
     public static AppException createAppException(Throwable cause) {
         return new AppException(Response.Status.INTERNAL_SERVER_ERROR, ERROR_UNKNOWN, cause);
-    }
-
-    public static AppException createAppException(String key, Throwable cause) {
-        return new AppException(Response.Status.INTERNAL_SERVER_ERROR, key, cause);
     }
 
     public static AppException createPersistenceException(Throwable cause) {
@@ -249,9 +244,10 @@ public class AppException extends WebApplicationException {
         return new ConsumptionAddException(ERROR_ADDING_HEAT_VALUES, Response.Status.CONFLICT);
     }
 
-public static UserIsAlreadyOwnerOfThisPlaceException userIsAlreadyOwnerOfThisPlaceException() {
+    public static UserIsAlreadyOwnerOfThisPlaceException userIsAlreadyOwnerOfThisPlaceException() {
         return new UserIsAlreadyOwnerOfThisPlaceException(USER_IS_ALREADY_OWNER_OF_THIS_PLACE, Response.Status.CONFLICT);
     }
+
     public static NoHeatDistributionCentreException createNoHeatDistributionCentreException() {
         return new NoHeatDistributionCentreException(ERROR_NO_HEAT_DISTRIBUTION_CENTRE, Response.Status.NOT_FOUND);
     }
@@ -271,9 +267,11 @@ public static UserIsAlreadyOwnerOfThisPlaceException userIsAlreadyOwnerOfThisPla
     public static AddingPlaceToTheSameAccountException addingPlaceToTheSameAccountException() {
         return new AddingPlaceToTheSameAccountException(AppException.ERROR_ADDING_PLACE_TO_THE_SAME_ADMIN_MANAGER, Response.Status.FORBIDDEN);
     }
+
     public static CanNotMakeYourselfOwnerOfThePlaceException canNotMakeYourselfOwnerOfThePlaceException() {
         return new CanNotMakeYourselfOwnerOfThePlaceException(ERROR_CAN_NOT_MAKE_YOURSELF_OWNER, Response.Status.FORBIDDEN);
     }
+
     public static CanNotMakeSomeoneOwnerOfYourPlaceException canNotMakeSomeoneOwnerOfYourPlaceException() {
         return new CanNotMakeSomeoneOwnerOfYourPlaceException(ERROR_CAN_NOT_MAKE_SOMEONE_OWNER_OF_YOUR_PLACE, Response.Status.FORBIDDEN);
     }
@@ -310,7 +308,7 @@ public static UserIsAlreadyOwnerOfThisPlaceException userIsAlreadyOwnerOfThisPla
         return new TotalHotWaterUsageIsZeroException(TOTAL_HOT_WATER_USAGE_IS_ZERO, Response.Status.NOT_FOUND);
     }
 
-    public static ManagerCouldNotEditOwnedPlaceException  createManagerCouldNotEditOwnedPlaceException() {
+    public static ManagerCouldNotEditOwnedPlaceException createManagerCouldNotEditOwnedPlaceException() {
         return new ManagerCouldNotEditOwnedPlaceException(ERROR_MANAGER_COULD_NOT_EDIT_OWNED_PLACE, Response.Status.FORBIDDEN);
     }
 }

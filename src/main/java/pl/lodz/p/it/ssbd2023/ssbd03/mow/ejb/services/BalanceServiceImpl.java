@@ -67,17 +67,19 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
     }
 
     @Override
-    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    @RolesAllowed(Roles.MANAGER)
     public AnnualBalance getYearReport(Long reportId) {
+        return balanceFacade.findBalanceById(reportId);
+    }
+
+    @Override
+    @RolesAllowed(Roles.OWNER)
+    public AnnualBalance getOwnerYearReport(Long reportId) {
         final AnnualBalance annualBalance = balanceFacade.findBalanceById(reportId);
-
-        if (securityContext.isCallerInRole(Roles.OWNER)) {
-            final String username = securityContext.getCallerPrincipal().getName();
-            if (!annualBalance.getPlace().getOwner().getAccount().getUsername().equals(username)) {
-                throw AppException.createNotOwnerOfPlaceException();
-            }
+        final String username = securityContext.getCallerPrincipal().getName();
+        if (!annualBalance.getPlace().getOwner().getAccount().getUsername().equals(username)) {
+            throw AppException.createNotOwnerOfPlaceException();
         }
-
         return annualBalance;
     }
 

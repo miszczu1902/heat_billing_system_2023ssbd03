@@ -37,11 +37,21 @@ public class BalanceEndpoint {
     @Path("/report/{reportId}")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    @RolesAllowed(Roles.MANAGER)
     public Response getUserReport(@PathParam("reportId") Long reportId) {
         return Response.ok().entity(
                 BalanceMapper.createYearReportDTOFromAnnualBalance(
                 balanceService.getYearReport(reportId))).build();
+    }
+
+    @Path("/owner/report/{reportId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    @RolesAllowed(Roles.OWNER)
+    public Response getOwnerUserReport(@PathParam("reportId") Long reportId) {
+        return Response.ok().entity(
+                BalanceMapper.createYearReportDTOFromAnnualBalance(
+                        balanceService.getOwnerYearReport(reportId))).build();
     }
 
     @Path("/all-reports/{buildingId}")
