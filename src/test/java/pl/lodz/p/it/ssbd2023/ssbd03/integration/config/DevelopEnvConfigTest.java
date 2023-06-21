@@ -49,8 +49,8 @@ DevelopEnvConfigTest {
             .withLogConsumer(new Slf4jLogConsumer(logger))
             .withExposedPorts(8080)
             .withCopyFileToContainer(
-                    MountableFile.forHostPath(Paths.get("target/ssbd03-0.3.0.war").toAbsolutePath()),
-                    "/opt/payara/deployments/ssbd03-0.3.0.war")
+                    MountableFile.forHostPath(Paths.get("target/ssbd03-1.0.0.war").toAbsolutePath()),
+                    "/opt/payara/deployments/ssbd03-1.0.0.war")
             .dependsOn(POSTGRES)
             .waitingFor(Wait.forLogMessage(".*was successfully deployed in.*", 1));
 
