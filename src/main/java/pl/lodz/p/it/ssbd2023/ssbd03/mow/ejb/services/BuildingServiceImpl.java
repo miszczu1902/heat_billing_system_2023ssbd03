@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Stateful
@@ -83,9 +84,14 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
 
-        final Owner owner = ownerFacade.findById(ownerId);
+        final Optional<Owner> owner = account.getAccessLevels().stream()
+                .filter(accessLevel -> accessLevel instanceof Owner)
+                .map(accessLevel -> (Owner) accessLevel)
+                .findFirst();
 
-        if (owner.getId().equals(account.getId())) {
+        final Owner placeOwner = ownerFacade.findById(ownerId);
+
+        if (owner.isPresent() && placeOwner.getId().equals(owner.get().getId())) {
             throw AppException.addingPlaceToTheSameAccountException();
         }
 
@@ -109,7 +115,7 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
         }
 
         final Short placeNumber = (short) (building.getPlaces().size() + 1);
-        final Place place = new Place(placeNumber, area, hotWaterConnection, true, predictedHotWaterConsumption, building, owner);
+        final Place place = new Place(placeNumber, area, hotWaterConnection, true, predictedHotWaterConsumption, building, placeOwner);
         placeFacade.create(place);
 
         building.setCommunalAreaAggregate(newCommunalAreaAgregate);

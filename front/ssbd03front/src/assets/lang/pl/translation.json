@@ -192,7 +192,8 @@
     "revoked_level": "Poziom dostępu został odebrany",
     "manager_form": "Podaj numer licencji zarządcy",
     "owner_form": "Podaj numer telefonu do właściciela",
-    "revoke": "Odbierz poziom dostępu"
+    "revoke": "Odbierz poziom dostępu",
+    "error": "Wystąpił bład aktualizacji poziomu dostępu"
   },
   "page_not_found": {
     "title": "Strony nie znalezniono"

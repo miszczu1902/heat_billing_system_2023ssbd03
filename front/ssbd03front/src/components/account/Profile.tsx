@@ -414,7 +414,7 @@ export default function Profile() {
                                                 variant="h5"><b>{t('account_list.active_status')}:</b> {account.isActive ? t('account_list.active') : t('account_list.inactive')}
                                     </Typography>
                                 </Paper>
-                                {!account.isUserManager && (
+                                {role?.includes(ADMIN) && (
                                     <Paper elevation={3} style={{position: 'relative'}}>
                                         <div style={{
                                             position: 'absolute',
@@ -625,7 +625,7 @@ export default function Profile() {
 
                                     <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
                                         <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
-                                        {t(errorOpenMessage)}
+                                            {errorOpenMessage ? t(errorOpenMessage) : t('profile.error')}
                                         </Alert>
                                     </Snackbar>
                                 </div>

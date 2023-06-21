@@ -192,7 +192,8 @@
     "revoked_level": "Access level revoked",
     "manager_form": "Enter license number in the form",
     "owner_form": "Enter phone number in the form",
-    "revoke": "Revoke access level"
+    "revoke": "Revoke access level",
+    "error": "An error occurred while updating the access level"
   },
   "page_not_found": {
     "title": "Page not found"
