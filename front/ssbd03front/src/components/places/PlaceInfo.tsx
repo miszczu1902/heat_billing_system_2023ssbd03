@@ -201,7 +201,8 @@ const PlaceInfo = () => {
                                     justifyContent: 'space-between'
                                 }} variant="h6">
                                     <b>{t('place.predictedHotWaterConsumption')}:</b> {place.predictedHotWaterConsumption} m³
-                                    <EnterPredictedHotWaterConsumption/>
+                                    {place.hotWaterConnection ?
+                                    <EnterPredictedHotWaterConsumption/> : <></>}
                                 </Typography>
                             </Paper>
                         </>
