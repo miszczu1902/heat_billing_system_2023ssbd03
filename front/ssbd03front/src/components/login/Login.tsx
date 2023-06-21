@@ -129,7 +129,7 @@ const Login = () => {
     };
 
     const handleConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (validData) {
+        if (validData && loginPassword.toString().length !== 0) {
             const resetPasswordDTO = {
                 username: loginPassword.toString(),
             }
@@ -145,7 +145,7 @@ const Login = () => {
 
                 })
                 .catch(error => {
-                        setErrorOpenMessage(t("exception.account.account_is_blocked"))
+                        setErrorOpenMessage(t(error.response.data.message))
                         setErrorOpen(true);
                     });
             handleClose(event, reason);
@@ -225,7 +225,7 @@ const Login = () => {
                                     </Snackbar>
                                     <Snackbar open={errorOpen} autoHideDuration={6000} onClose={handleErrorClose}>
                                         <Alert onClose={handleErrorClose} severity="error" sx={{width: '100%'}}>
-                                            {t('login.error_title')}
+                                            {t(errorOpenMessage)}
                                         </Alert>
                                     </Snackbar>
                                 </div>
