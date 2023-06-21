@@ -406,7 +406,7 @@ export default function Profile() {
                                         <DisableAccount/>}
                                     </div>
                                     <Typography sx={{padding: '1vh'}}
-                                                variant="h5"><b>{t('enable_account.state')}:</b> {account.isEnable ? t('enable_account.stateEnable') : t('disable_account.stateDisable')}
+                                                variant="h5"><b>{t('enable_account.state')}:</b> {account.isEnable ? t('disable_account.stateEnable') : t('enable_account.stateDisable')}
                                     </Typography>
                                 </Paper>
                                 <Paper elevation={3} style={{position: 'relative'}}>
