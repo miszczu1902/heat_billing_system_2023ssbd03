@@ -129,7 +129,7 @@ const Login = () => {
     };
 
     const handleConfirm = (event: React.SyntheticEvent<unknown>, reason?: string) => {
-        if (validData) {
+        if (validData && loginPassword.toString().length !== 0) {
             const resetPasswordDTO = {
                 username: loginPassword.toString(),
             }
