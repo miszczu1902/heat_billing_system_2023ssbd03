@@ -208,6 +208,8 @@
     "token_not_valid_message": "Your session expired, you need to authenticate again"
   },
   "exception": {
+    "hot_water_entry.not_inserted":  "Hot water entry not inserted",
+    "hot_water_entry.not_modified":  "Hot water entry not modified",
     "error": {
       "unknown": "ERROR_UNKNOWN",
       "general_persistence": "ERROR_GENERAL_PERSISTENCE",
@@ -218,7 +220,8 @@
       "no_place_found": "No location found in the system",
       "no_building_found": "No building found in the system",
       "total_area_is_zero": "The total area of the buildings is equal to 0",
-      "total_hot_water_usage_is_zero": "The total hot water usage in the buildings is equal to 0"
+      "total_hot_water_usage_is_zero": "The total hot water usage in the buildings is equal to 0",
+      "manager_could_not_insert_entry": "Manager could not insert entry to own place"
     },
     "password": {
       "not_same_message": "Passwords are not the same",

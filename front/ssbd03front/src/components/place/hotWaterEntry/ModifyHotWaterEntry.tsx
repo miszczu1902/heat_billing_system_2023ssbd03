@@ -97,7 +97,7 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
                     setSuccessOpen(true);
                 })
                 .catch(error => {
-                    setErrorOpenMessage(t('hot_water.failure_title'))
+                    setErrorOpenMessage(t(error.response.data.message))
                     setErrorOpen(true);
                 });
         };

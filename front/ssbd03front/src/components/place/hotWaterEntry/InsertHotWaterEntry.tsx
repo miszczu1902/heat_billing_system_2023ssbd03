@@ -82,7 +82,7 @@ const InsertHotWaterEntry: React.FC<{placeId: any}> = ({placeId}) => {
                     setSuccessOpen(true);
                 })
                 .catch(error => {
-                    setErrorOpenMessage(t('hot_water.failure_title'))
+                    setErrorOpenMessage(t(error.response.data.message))
                     setErrorOpen(true);
                 });
         };
