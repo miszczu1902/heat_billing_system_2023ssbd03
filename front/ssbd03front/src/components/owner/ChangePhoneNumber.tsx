@@ -175,7 +175,7 @@ const ChangePhoneNumber = () => {
 
             <Snackbar open={errorOpen}autoHideDuration={6000} onClose={handleErrorClose}>
                 <Alert onClose={handleErrorClose} severity="error" sx={{width: '100%'}}>
-                    {errorOpenMessage}
+                    {t(errorOpenMessage)}
                 </Alert>
             </Snackbar>
 

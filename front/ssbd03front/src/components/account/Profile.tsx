@@ -625,7 +625,7 @@ export default function Profile() {
 
                                     <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
                                         <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
-                                        {t(errorOpenMessage)}
+                                            {errorOpenMessage ? t(errorOpenMessage) : t('profile.error')}
                                         </Alert>
                                     </Snackbar>
                                 </div>
