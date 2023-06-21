@@ -160,9 +160,13 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
         final BigDecimal costPerSquerMeter = calculateCostPerSquerMeterFromPastQuarterAdvancesForNewLocal();
 
         final HeatingPlaceAndCommunalAreaAdvance heatingPlaceAndCommunalAreaAdvance = heatingPlaceAndCommunalAreaAdvanceFacade.findTheNewestAdvanceChangeFactor(place.getBuilding().getId());
+        BigDecimal advanceChangeFactor = new BigDecimal(1);
+        if (heatingPlaceAndCommunalAreaAdvance != null) {
+            advanceChangeFactor = heatingPlaceAndCommunalAreaAdvance.getAdvanceChangeFactor();
+        }
         final BigDecimal placeHeatingAdvance = costPerSquerMeter
                 .multiply(place.getArea())
-                .multiply(heatingPlaceAndCommunalAreaAdvance.getAdvanceChangeFactor());
+                .multiply(advanceChangeFactor);
         final BigDecimal communalAreaAdvance = place.getBuilding().getCommunalAreaAggregate()
                 .divide(BigDecimal.valueOf(placeFacade.findPlacesByBuildingId(place.getBuilding().getId()).size()), 2, RoundingMode.HALF_UP);
 

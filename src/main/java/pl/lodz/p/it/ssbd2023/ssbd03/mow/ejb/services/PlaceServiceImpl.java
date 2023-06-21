@@ -191,6 +191,11 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
     public List<Place> getSelfAllPlaces(int pageNumber, int pageSize) {
         final String username = securityContext.getCallerPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
-        return placeFacade.findByOwner(account, pageNumber, pageSize);
+        final Owner owner = account.getAccessLevels().stream()
+                .filter(accessLevel -> accessLevel instanceof Owner && accessLevel.getIsActive())
+                .map(accessLevel -> (Owner) accessLevel)
+                .findAny()
+                .orElseThrow(AppException::createAccountIsNotOwnerException);
+        return placeFacade.findByOwner(owner.getId(), pageNumber, pageSize);
     }
 }
