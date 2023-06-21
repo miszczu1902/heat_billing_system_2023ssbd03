@@ -1,14 +1,17 @@
 import React, {useEffect, useState} from 'react';
-import {Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
+import {Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow} from '@mui/material';
 import {useTranslation} from "react-i18next";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate, useParams} from "react-router-dom";
 import axios from 'axios';
 import {API_URL} from '../../consts';
 import {Place} from '../../types/placesList';
 import IconButton from "@mui/material/IconButton";
 import IconViewList from "../icons/IconViewList";
+import RefreshIcon from "../icons/RefreshIcon";
 
 const PlacesList = () => {
+    const location = useLocation();
+    const params = useParams();
     const {t, i18n} = useTranslation();
     const navigate = useNavigate();
     const token = 'Bearer ' + localStorage.getItem("token");
@@ -32,6 +35,11 @@ const PlacesList = () => {
     const goToPlace = (placeId: string) => {
         navigate('/places/place/' + placeId);
     }
+
+    const handleClick = () => {
+        fetchData();
+        navigate(location.pathname);
+    };
 
     return (
         <div style={{height: '90vh', width: '100vw', boxSizing: 'border-box', left: 0, right: 0, bottom: 0}}>
@@ -66,7 +74,12 @@ const PlacesList = () => {
                             <TableCell>
                                 {t('buildingFromList.street')}
                             </TableCell>
-                            <TableCell></TableCell>
+                            <TableCell>
+                                <Button className="landing-page-button"
+                                        onClick={handleClick}>
+                                    <RefreshIcon/>
+                                </Button>
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>

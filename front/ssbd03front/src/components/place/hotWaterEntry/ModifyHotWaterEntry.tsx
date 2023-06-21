@@ -30,6 +30,7 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
     const [errorOpenMessage, setErrorOpenMessage] = useState("");
     const role = localStorage.getItem("role");
     const URL = role === MANAGER ? `${API_URL}/heat-distribution-centre/hot-water-consumption/${hotWaterEntryId}` : `${API_URL}/heat-distribution-centre/hot-water-consumption/owner/${hotWaterEntryId}`;
+    const modifyURL = localStorage.getItem("role") === MANAGER ? `${API_URL}/heat-distribution-centre/parameters/insert-consumption` : `${API_URL}/heat-distribution-centre/parameters/owner/insert-consumption`
 
     const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -85,7 +86,7 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
             version: parseInt(version)
         }
         const fetchData = async () => {
-            await axios.patch(`${API_URL}/heat-distribution-centre/parameters/insert-consumption`,
+            await axios.patch(modifyURL,
                 modifyHotWaterEntry, {
                     headers: {
                         'Authorization': token,

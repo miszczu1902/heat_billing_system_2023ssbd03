@@ -19,7 +19,11 @@ public interface HeatDistributionCentreService extends CommonManagerLocalInterfa
 
     void insertConsumption(BigDecimal consumptionValue, Long placeId);
 
+    void insertConsumptionByOwner(BigDecimal consumptionValue, Long placeId);
+
     void modifyConsumption(BigDecimal consumptionValue, Long placeId, Long version, String etag);
+
+    void modifyConsumptionByOwner(BigDecimal consumptionValue, Long placeId, Long version, String etag);
 
     void addConsumptionFromInvoice(BigDecimal consumption, BigDecimal consumptionCost, BigDecimal heatingAreaFactor);
 
