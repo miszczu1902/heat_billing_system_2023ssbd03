@@ -112,9 +112,6 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
             if (place == null || !place.getHotWaterConnection()) {
                 throw AppException.createHotWaterEntryCouldNotBeInsertedException();
             }
-            if (place.getOwner().getAccount().getUsername().equals(username)) {
-                throw AppException.createManagerWhoIsOwnerOfPlaceCouldNotInsertHotWaterEntryException();
-            }
 
             final List<HotWaterEntry> hotWaterEntries = getHotWaterEntriesForPlaceWithoutActualEntry(placeId);
             if (!hotWaterEntries.isEmpty()) {
@@ -125,7 +122,12 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
             }
 
             HotWaterEntry hotWaterEntry = new HotWaterEntry(LocalDate.now(), consumptionValue, place);
-            accessLevelFacade.findManagerByUsername((username)).ifPresent(hotWaterEntry::setManager);
+            accessLevelFacade.findManagerByUsername((username)).ifPresent(manager -> {
+                if (place.getOwner().getAccount().getUsername().equals(username)) {
+                    throw AppException.createManagerWhoIsOwnerOfPlaceCouldNotInsertHotWaterEntryException();
+                }
+                hotWaterEntry.setManager(manager);
+            });
 
             hotWaterEntryFacade.create(hotWaterEntry);
         } else {
@@ -151,12 +153,12 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
             }
 
             final String username = securityContext.getCallerPrincipal().getName();
-
-            if (hotWaterEntry.getPlace().getOwner().getAccount().getUsername().equals(username)) {
-                throw AppException.createManagerWhoIsOwnerOfPlaceCouldNotInsertHotWaterEntryException();
-            }
-
-            accessLevelFacade.findManagerByUsername((username)).ifPresent(hotWaterEntry::setManager);
+            accessLevelFacade.findManagerByUsername((username)).ifPresent(manager -> {
+                if (hotWaterEntry.getPlace().getOwner().getAccount().getUsername().equals(username)) {
+                    throw AppException.createManagerWhoIsOwnerOfPlaceCouldNotInsertHotWaterEntryException();
+                }
+                hotWaterEntry.setManager(manager);
+            });
             hotWaterEntry.setEntryValue(consumptionValue);
             hotWaterEntry.setDate(LocalDate.now());
             hotWaterEntryFacade.edit(hotWaterEntry);
