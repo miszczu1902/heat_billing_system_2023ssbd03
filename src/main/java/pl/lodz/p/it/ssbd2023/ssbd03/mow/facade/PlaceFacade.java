@@ -70,9 +70,9 @@ public class PlaceFacade extends AbstractFacade<Place> {
     }
 
     @RolesAllowed(Roles.OWNER)
-    public List<Place> findByOwner(Account account, int pageNumber, int pageSize) {
+    public List<Place> findByOwner(Long id, int pageNumber, int pageSize) {
         TypedQuery<Place> tq = em.createNamedQuery("Place.findPlacesByOwner", Place.class);
-        tq.setParameter("id", account.getId());
+        tq.setParameter("id", id);
         if (pageNumber != 0) {
             tq.setFirstResult((pageNumber - 1) * pageSize);
             tq.setMaxResults(pageSize);

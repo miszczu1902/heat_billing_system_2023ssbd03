@@ -143,6 +143,8 @@
     "label_rows_per_page": "Wierszy na stronę"
   },
   "enable_account": {
+    "state" : "Status",
+    "stateDisable": "Zablokowany",
     "enable": "Odblokuj",
     "enable_confirm": "Czy na pewno chcesz odblokować użytkownika ",
     "success_one": "Użytkownik ",
@@ -152,6 +154,8 @@
     "unblocked_user_two": " jest już odblokowany"
   },
   "disable_account": {
+    "state" : "Status",
+    "stateEnable": "Odblokowany",
     "disable": "Zablokuj",
     "disable_confirm": "Czy na pewno chcesz zablokować użytkownika ",
     "success_one": "Użytkownik ",
