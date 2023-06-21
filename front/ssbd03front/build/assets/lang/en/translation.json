@@ -1,0 +1,167 @@
+{
+  "navbar":
+  {
+    "register": "Register",
+    "login": "Login",
+    "log_out": "Log out",
+    "account_list": "Account list",
+    "languages":
+    {
+      "title": "Change language",
+      "default": "Language",
+      "pl": "Polish",
+      "en": "English"
+    }
+  },
+  "confirm":
+  {
+    "yes": "Yes",
+    "no": "No",
+    "cancel": "Cancel",
+    "ok": "Ok"
+  },
+  "edit_password":
+  {
+    "old_and_new_password_same_error": "The old and new passwords cannot be the same",
+    "new_and_repeated_new_password_not_same_error": "The new and repeated new passwords must be the same",
+    "old_password_error_one": "Password must contain at least 8 characters, one uppercase and one lowercase letter, ",
+    "old_password_error_two": "number and one of the special characters: @$!%*?&",
+    "data_error": "Please enter the correct data",
+    "help_text_old_password": "Enter the old password",
+    "help_text_new_password": "Enter the new password",
+    "label_text_new_password": "Repeated new password",
+    "help_text_repeated_password": "Repeat new password",
+    "change_title": "Complete the password change form",
+    "success_title": "Password has been changed",
+    "confirm_title": "Are you sure you want to change your password?"
+  },
+  "login":
+  {
+    "title": "Login",
+    "username": "Username",
+    "enter_username": "Enter username",
+    "password": "Password",
+    "enter_password": "Enter password",
+    "password_reminder": "Password reminder",
+    "password_forgot": "I forgot my password",
+    "login_error_one": "The login must consist of 6-16 characters and consist of letters and numbers",
+    "login_error_two": "The password must consist of 8-32 characters, one capital letter, a special character",
+    "login_password_error_one": "The login can only contain letters, numbers, and the underscore ",
+    "login_password_error_two": "must be between 8 and 16 characters long.",
+    "success_title": "An email with a hyperlink to the password change form has been sent to the email address assigned to this account."
+  },
+  "change_phone_number":
+  {
+    "error": "The phone number must contain 9 digits.",
+    "data_error": "The phone number must contain 9 digits.",
+    "title": "Change phone number",
+    "form_title": "Fill out the phone number change form",
+    "new_number": "New phone number",
+    "new_number_help_text": "Enter a new phone number",
+    "confirm_changes": "Are you sure you want to change your phone number?",
+    "success": "The phone number has been changed"
+  },
+  "personal_data":
+  {
+    "name_error": "The name can only contain letters and must be up to 32 characters long",
+    "surname_error": "Surname can only contain letters and must be up to 32 characters long",
+    "data_error": "Please enter the correct details",
+    "edit_data": "Edit data",
+    "dialog_title": "Fill out the personal data editing form",
+    "name": "Name",
+    "name_helper_text": "Please enter a name of up to 32 characters",
+    "surname": "Surname",
+    "confirm": "Are you sure you want to change the user's personal information?",
+    "success": "Personal details have been changed",
+    "error": "An error occurred while changing personal information",
+    "edit_title": "Fill out the user's personal data editing form ",
+    "confirm_edit": "Are you sure you want to change the user's personal information ",
+    "edit_success_one": "User's personal data ",
+    "edit_success_two": " were changed",
+    "edit_error": "An error occurred while changing the user's personal information "
+  },
+  "activate_from_email":
+  {
+    "success": "Account activated"
+  },
+  "reset_password":
+  {
+    "error_token": "No valid password reset token, redirecting...",
+    "password_change": "Password change",
+    "change_password": "Change passwords",
+    "new_password": "A new password"
+  },
+  "register":
+  {
+    "first_name_error": "The maximum name length is 32 characters",
+    "surname_error": "The maximum name length is 32 characters",
+    "email_error": "Email invalid",
+    "username_valid_info": "The username can contain: uppercase, lowercase, number and _",
+    "passworde_valid_info": "The password must contain: uppercase, lowercase, number, special character and be 8 characters long",
+    "passworde_error": "The passwords don't match",
+    "phone_number_error": "Phone number incorrect",
+    "language_error": "Incorrect language",
+    "register_error_login": "The login must consist of 6-16 characters and consist of letters and numbers",
+    "register_error_password": "The password must consist of 8-32 characters, one capital letter, a special character",
+    "set_name": "Enter your name",
+    "set_surname": "Enter your name",
+    "email": "Email",
+    "set_email": "Enter email",
+    "set_username": "Enter your username",
+    "password_confirm": "Confirm password",
+    "phone_number": "Phone number",
+    "set_phone_number": "Enter phone number",
+    "language": "Language",
+    "register_confim": "Are you sure you want to register?",
+    "success": "Account registered",
+    "success_two": "Account registered. A message with an activation link has been sent to the e-mail address provided",
+    "log_in": "Already have an account? Log in"
+  },
+  "account_list":
+  {
+    "active_status": "Active status",
+    "confirmation_status": "Confirmation status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "confirmed": "Confirmed",
+    "unconfirmed": "Unconfirmed",
+    "label_rows_per_page": "Rows per page"
+  },
+  "enable_account":
+  {
+    "state" : "State",
+    "stateDisable": "Disabled",
+    "enable": "Enable",
+    "enable_confirm": "Are you sure you want to unblock the user ",
+    "success_one": "Username ",
+    "success_two": " has been unblocked",
+    "error": "An error occurred while unblocking the user ",
+    "unblocked_user_one": "User ",
+    "unblocked_user_two": " is already unblocked"
+  },
+  "disable_account":
+  {
+    "state" : "State",
+    "stateEnable": "Enabled",
+    "disable": "Disable",
+    "disable_confirm": "Are you sure you want to block the user ",
+    "success_one": "Username ",
+    "success_two": " has been blocked",
+    "error": "An error occurred while blocking the user ",
+    "blocked_user_one": "User ",
+    "blocked_user_two": " is already blocked"
+  },
+  "landing_page":
+  {
+    "title": "Project Team 3 SSBD 2023",
+    "subtitle": "Heat accounting system for premises in many buildings."
+  },
+  "profile":
+  {
+    "title": "Account info",
+    "phone_number_error" : "The phone number must contain 9 digits.",
+    "license_error" : "The license must consist of 20 characters.",
+    "license" : "License",
+    "access_levels" : "Access levels"
+  }
+}

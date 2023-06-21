@@ -1,0 +1,167 @@
+{
+  "navbar":
+  {
+    "register": "Zarejestruj się",
+    "login": "Zaloguj się",
+    "log_out": "Wyloguj się",
+    "account_list": "Lista kont",
+    "languages":
+    {
+      "title": "Zmień język",
+      "default": "Język",
+      "pl": "Polski",
+      "en": "Angielski"
+    }
+  },
+  "confirm":
+  {
+    "yes": "Tak",
+    "no": "Nie",
+    "cancel": "Anuluj",
+    "ok": "Ok"
+  },
+  "edit_password":
+  {
+    "old_and_new_password_same_error": "Stare i nowe hasło nie mogą być takie same",
+    "new_and_repeated_new_password_not_same_error": "Nowe i powtórzone nowe hasło muszą być takie same",
+    "old_password_error_one": "Hasło musi zawierać conajmniej 8 znaków, jedną wielką i małą literę, ",
+    "old_password_error_two": "cyfrę i jeden ze znaków specjalnych: @$!%*?&",
+    "data_error": "Wprowadź poprawne dane",
+    "help_text_old_password": "Wprowadź stare hasło",
+    "help_text_new_password": "Wprowadź nowe hasło",
+    "label_text_new_password": "Powtórzone nowe hasło",
+    "help_text_repeated_password": "Powtórz nowe hasło",
+    "change_title": "Wypełnij formularz zmiany hasła",
+    "success_title": "Hasło zostało zmienione",
+    "confirm_title": "Czy na pewno chcesz zmienić swoje hasło?"
+  },
+  "login":
+  {
+    "title": "Logowanie",
+    "username": "Nazwa użytkownika",
+    "enter_username": "Wprowadź nazwę użytkownika",
+    "password": "Hasło",
+    "enter_password": "Wprowadź hasło",
+    "password_reminder": "Przypomnienie hasła",
+    "password_forgot": "Zapomniałem hasła",
+    "login_error_one": "Login musi składać się z 6-16 znaków i składać się z liter i cyfr",
+    "login_error_two": "Hasło musi składać się z 8-32 znaków, jednej dużej litery, znak specjalny",
+    "login_password_error_one": "Login może zawierać tylko litery, cyfry, znak podkreślenia oraz ",
+    "login_password_error_two": "musi mieć długość od 8 do 16 znaków.",
+    "success_title": "Na adres email przypisany do tego konta została wysłana wiadomość z hiperłączem do formularza zmiany hasła."
+  },
+  "change_phone_number":
+  {
+    "error": "Numer telefonu musi zawierać 9 cyfr.",
+    "data_error": "Numer telefonu musi zawierać 9 cyfr.",
+    "title": "Zmień numer telefonu",
+    "form_title": "Wypełnij formularz zmiany numeru telefonu",
+    "new_number": "Nowy numer telefonu",
+    "new_number_help_text": "Wprowadź nowy numer telefonu",
+    "confirm_changes": "Czy na pewno chcesz zmienić swój numer telefonu",
+    "success": "Numer telefonu został zmieniony"
+  },
+  "personal_data":
+  {
+    "name_error": "Imię może zawierać tylko litery i musi mieć długość do 32 znaków",
+    "surname_error": "Nazwisko może zawierać tylko litery i musi mieć długość do 32 znaków",
+    "data_error": "Wprowadź poprawne dane",
+    "edit_data": "Edytuj dane",
+    "dialog_title": "Wypełnij formularz edycji danych osobowych",
+    "name": "Imię",
+    "name_helper_text": "Wprowadź imię o maksymalniej ilości znaków 32",
+    "surname": "Nazwisko",
+    "confirm": "Czy na pewno chcesz zmienić dane osobowe użytkownika?",
+    "success": "Dane osobowe zostały zmienione",
+    "error": "Wystąpił błąd podczas zmiany danych osobowych",
+    "edit_title": "Wypełnij formularz edycji danych osobowych użytkownika ",
+    "confirm_edit": "Czy na pewno chcesz zmienić dane osobowe użytkownika ",
+    "edit_success_one": "Dane osobowe użytkownika ",
+    "edit_success_two": " zostały zmienione",
+    "edit_error": "Wystąpił błąd podczas zmiany danych osobowych użytkownika "
+  },
+  "activate_from_email":
+  {
+    "success": "Konto aktywowane"
+  },
+  "reset_password":
+  {
+    "error_token": "Brak ważnego tokenu do resetu hasła, trwa przekierowanie...",
+    "password_change": "Zmiana hasła",
+    "change_password": "Zmień hasła",
+    "new_password": "Nowe hasło"
+  },
+  "register":
+  {
+    "first_name_error": "Maksymalna długość imienia to 32 znaki",
+    "surname_error": "Maksymalna długość nazwiska to 32 znaki",
+    "email_error": "Email niepoprawny",
+    "username_valid_info": "Nazwa użytkownika może zaweriać: dużą, małą literę, cyfrę oraz znak _",
+    "passworde_valid_info": "Hasło musi zawierać: dużą, małą literę, cyfrę, znak specjalny oraz mieć długość 8 znaków",
+    "passworde_error": "Hasła się nie zgadzają",
+    "phone_number_error": "Numer telefonu niepoprawny",
+    "language_error": "Język niepoprawny",
+    "register_error_login": "Login musi składać się z 6-16 znaków i składać się z liter i cyfr",
+    "register_error_password": "Hasło musi składać się z 8-32 znaków, jednej dużej litery, znak specjalny",
+    "set_name": "Podaj imię",
+    "set_surname": "Podaj nazwisko",
+    "email": "Email",
+    "set_email": "Wprowadź email",
+    "set_username": "Wprowadź nazwę użytkownika",
+    "password_confirm": "Potwierdź hasło",
+    "phone_number": "Numer telefonu",
+    "set_phone_number": "Podaj numer telefonu",
+    "language": "Język",
+    "register_confim": "Czy na pewno chcesz się zarejestrować?",
+    "success": "Konto zarejestrowane",
+    "success_two": "Konto zarejestrowane. Na podany adres email została wysłana wiadomość z linkiem aktywacyjnym",
+    "log_in": "Masz już konto? Zaloguj się"
+  },
+  "account_list":
+  {
+    "active_status": "Stan aktywny",
+    "confirmation_status": "Stan potwierdzenia",
+    "active": "Aktywny",
+    "inactive": "Nieaktywny",
+    "confirmed": "Potwierdzony",
+    "unconfirmed": "Niepotwierdzony",
+    "label_rows_per_page": "Wierszy na stronę"
+  },
+  "enable_account":
+  {
+    "state" : "Status",
+    "stateDisable": "Zablokowany",
+    "enable": "Odblokuj",
+    "enable_confirm": "Czy na pewno chcesz odblokować użytkownika ",
+    "success_one": "Użytkownik ",
+    "success_two": " został odblokowany",
+    "error": "Wystąpił błąd podczas odblokowania użytkownika ",
+    "unblocked_user_one": "Użytkownik ",
+    "unblocked_user_two": " jest już odblokowany"
+  },
+  "disable_account":
+  {
+    "state" : "Status",
+    "stateEnable": "Odblokowany",
+    "disable": "Zablokuj",
+    "disable_confirm": "Czy na pewno chcesz zablokować użytkownika ",
+    "success_one": "Użytkownik ",
+    "success_two": " został zablokowany",
+    "error": "Wystąpił błąd podczas zablokowania użytkownika ",
+    "blocked_user_one": "Użytkownik ",
+    "blocked_user_two": " jest już zablokowany"
+  },
+  "landing_page":
+  {
+    "title": "Projekt zespołu 3 SSBD 2023",
+    "subtitle": "System rozliczania ciepła w lokalach w wielu budynkach."
+  },
+  "profile":
+  {
+    "title": "Informacje o koncie",
+    "phone_number_error" : "Numer telefonu musi zawierać 9 cyfr.",
+    "license_error" : "Licencja musi skladać się z 20 znaków.",
+    "license" : "Licencja",
+    "access_levels" : "Poziom dostępu"
+  }
+}
