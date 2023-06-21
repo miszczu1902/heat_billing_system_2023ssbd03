@@ -340,6 +340,7 @@ const Building = () => {
                                                 if (!e.target.checked) {
                                                     setPredictedHotWaterConsumptionValid(false);
                                                     setPredictedHotWaterConsumptionError('');
+                                                    setPredictedHotWaterConsumption('0');
                                                 }
                                             }}
                                         />
@@ -463,10 +464,10 @@ const Building = () => {
                                     <TableCell>{place.placeNumber}</TableCell>
                                     <TableCell>{place.area}</TableCell>
                                     <TableCell>
-                                        {place.centralHeatingConnection ? t('place.yes') : t('place.no')}
+                                        {place.hotWaterConnection ? t('place.yes') : t('place.no')}
                                     </TableCell>
                                     <TableCell>
-                                        {place.hotWaterConnection ? t('place.yes') : t('place.no')}
+                                        {place.centralHeatingConnection ? t('place.yes') : t('place.no')}
                                     </TableCell>
                                     <TableCell>{place.predictedHotWaterConsumption}</TableCell>
                                     <TableCell>{place.firstName}</TableCell>
