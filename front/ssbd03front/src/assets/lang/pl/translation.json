@@ -249,6 +249,7 @@
       "account_is_not_activated": "To konto nie jest aktywowane",
       "account_is_blocked": "To konto jest zablokowane",
       "revoke_access_level_to_the_same_admin_account": "Nie możesz odebrać sobie uprawnień",
+      "etag_verifier": "Nie można zweryfikować eTag",
       "etag_signer": "Nie można podpisać eTag",
       "not_valid_token": "Nie można zweryfikować żetonu."
     },
