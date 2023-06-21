@@ -104,7 +104,8 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
 
         final BigDecimal sum = place.getBuilding().getPlaces().stream()
                 .map(Place::getArea)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .subtract(place.getArea());
 
         final BigDecimal newCommunalAreaAggregate = place.getBuilding().getTotalArea().subtract(sum).subtract(area);
         final int comparisonResult = newCommunalAreaAggregate.compareTo(place.getBuilding().getTotalArea().multiply(BigDecimal.valueOf(0.1)));
