@@ -29,7 +29,8 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
     const [errorOpen, setErrorOpen] = useState(false);
     const [errorOpenMessage, setErrorOpenMessage] = useState("");
     const role = localStorage.getItem("role");
-    const URL = role === MANAGER ? `${API_URL}/heat-distribution-centre/hot-water-consumption/${hotWaterEntryId}` : `${API_URL}/heat-distribution-centre/hot-water-consumption/owner${hotWaterEntryId}`;
+    const URL = role === MANAGER ? `${API_URL}/heat-distribution-centre/hot-water-consumption/${hotWaterEntryId}` : `${API_URL}/heat-distribution-centre/hot-water-consumption/owner/${hotWaterEntryId}`;
+    const modifyURL = localStorage.getItem("role") === MANAGER ? `${API_URL}/heat-distribution-centre/parameters/insert-consumption` : `${API_URL}/heat-distribution-centre/parameters/owner/insert-consumption`
 
     const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -85,7 +86,7 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
             version: parseInt(version)
         }
         const fetchData = async () => {
-            await axios.patch(`${API_URL}/heat-distribution-centre/parameters/insert-consumption`,
+            await axios.patch(modifyURL,
                 modifyHotWaterEntry, {
                     headers: {
                         'Authorization': token,
@@ -97,7 +98,7 @@ const ModifyHotWaterEntry: React.FC<{ hotWaterEntryId: number, placeId: number}>
                     setSuccessOpen(true);
                 })
                 .catch(error => {
-                    setErrorOpenMessage(t('hot_water.failure_title'))
+                    setErrorOpenMessage(t(error.response.data.message))
                     setErrorOpen(true);
                 });
         };

@@ -21,6 +21,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.role.NotAllowedActionException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.HotWaterEntryCouldNotBeInsertedException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.HotWaterEntryCouldNotBeModifiedException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.ManagerWhoIsOwnerOfPlaceCouldNotInsertHotWaterEntryException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.TotalHotWaterUsageIsZeroException;
 
 @ApplicationException(rollback = true)
@@ -74,6 +75,7 @@ public class AppException extends WebApplicationException {
     protected final static String ERROR_HOT_WATER_ENTRY_NOT_INSERTED = "exception.hot_water_entry.not_inserted";
     protected final static String ERROR_HOT_WATER_ENTRY_NOT_MODIFIED = "exception.hot_water_entry.not_modified";
     protected final static String ERROR_MANAGER_COULD_NOT_EDIT_OWNED_PLACE = "exception.error.manager_could_not_edit_owned_place";
+    protected final static String ERROR_MANAGER_COULD_INSERT_ENTRY_TO_OWN_PLACE = "exception.error.manager_could_not_insert_entry";
     protected final static String NO_PLACE_FOUND = "exception.error.no_place_found";
     protected final static String NO_BUILDING_FOUND = "exception.error.no_building_found";
     protected final static String TOTAL_AREA_IS_ZERO = "exception.error.total_area_is_zero";
@@ -310,6 +312,10 @@ public class AppException extends WebApplicationException {
 
     public static ManagerCouldNotEditOwnedPlaceException createManagerCouldNotEditOwnedPlaceException() {
         return new ManagerCouldNotEditOwnedPlaceException(ERROR_MANAGER_COULD_NOT_EDIT_OWNED_PLACE, Response.Status.FORBIDDEN);
+    }
+
+    public static ManagerWhoIsOwnerOfPlaceCouldNotInsertHotWaterEntryException createManagerWhoIsOwnerOfPlaceCouldNotInsertHotWaterEntryException() {
+        return new ManagerWhoIsOwnerOfPlaceCouldNotInsertHotWaterEntryException(ERROR_MANAGER_COULD_INSERT_ENTRY_TO_OWN_PLACE, Response.Status.FORBIDDEN);
     }
 }
 

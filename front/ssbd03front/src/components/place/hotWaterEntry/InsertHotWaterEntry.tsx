@@ -2,7 +2,7 @@ import {useTranslation} from "react-i18next";
 import {useState} from "react";
 import * as React from "react";
 import axios from "axios";
-import {API_URL} from "../../../consts";
+import {API_URL, MANAGER} from "../../../consts";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -28,6 +28,7 @@ const InsertHotWaterEntry: React.FC<{placeId: any}> = ({placeId}) => {
     const [successOpen, setSuccessOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
     const [errorOpenMessage, setErrorOpenMessage] = useState("");
+    const URL = localStorage.getItem("role") === MANAGER ? `${API_URL}/heat-distribution-centre/parameters/insert-consumption` : `${API_URL}/heat-distribution-centre/parameters/owner/insert-consumption`
 
     const handleSumbit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -70,7 +71,7 @@ const InsertHotWaterEntry: React.FC<{placeId: any}> = ({placeId}) => {
             placeId: placeId
         }
         const fetchData = async () => {
-            await axios.post(`${API_URL}/heat-distribution-centre/parameters/insert-consumption`,
+            await axios.post(URL,
                 insertHotWaterEntry, {
                     headers: {
                         'Authorization': token,
@@ -82,7 +83,7 @@ const InsertHotWaterEntry: React.FC<{placeId: any}> = ({placeId}) => {
                     setSuccessOpen(true);
                 })
                 .catch(error => {
-                    setErrorOpenMessage(t('hot_water.failure_title'))
+                    setErrorOpenMessage(t(error.response.data.message))
                     setErrorOpen(true);
                 });
         };

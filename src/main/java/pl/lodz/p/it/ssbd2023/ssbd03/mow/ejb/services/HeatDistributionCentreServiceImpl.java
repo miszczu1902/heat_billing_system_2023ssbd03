@@ -21,6 +21,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
+import java.util.Optional;
 
 import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
@@ -102,7 +103,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     }
 
     @Override
-    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
+    @RolesAllowed(Roles.MANAGER)
     public void insertConsumption(BigDecimal consumptionValue, Long placeId) {
         if (hotWaterEntryFacade.getEntryWithCheckingIfHotWaterEntryCouldBeInsertedOrOverwritten(placeId, false) == null) {
             final String username = securityContext.getCallerPrincipal().getName();
@@ -121,10 +122,12 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
             }
 
             HotWaterEntry hotWaterEntry = new HotWaterEntry(LocalDate.now(), consumptionValue, place);
-            if (securityContext.isCallerInRole(Roles.MANAGER)) {
-                final Manager manager = accessLevelFacade.findManagerByUsername(username);
+            accessLevelFacade.findManagerByUsername((username)).ifPresent(manager -> {
+                if (place.getOwner().getAccount().getUsername().equals(username)) {
+                    throw AppException.createManagerWhoIsOwnerOfPlaceCouldNotInsertHotWaterEntryException();
+                }
                 hotWaterEntry.setManager(manager);
-            }
+            });
 
             hotWaterEntryFacade.create(hotWaterEntry);
         } else {
@@ -133,7 +136,37 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     }
 
     @Override
-    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
+    @RolesAllowed(Roles.OWNER)
+    public void insertConsumptionByOwner(BigDecimal consumptionValue, Long placeId) {
+        if (hotWaterEntryFacade.getEntryWithCheckingIfHotWaterEntryCouldBeInsertedOrOverwritten(placeId, false) == null) {
+            final String username = securityContext.getCallerPrincipal().getName();
+            final Place place = placeFacade.findPlaceById(placeId);
+
+            if (place == null || !place.getHotWaterConnection()) {
+                throw AppException.createHotWaterEntryCouldNotBeInsertedException();
+            }
+
+            if (!place.getOwner().getAccount().getUsername().equals(username)) {
+                throw AppException.createNotOwnerOfPlaceException();
+            }
+
+            final List<HotWaterEntry> hotWaterEntries = getHotWaterEntriesForPlaceWithoutActualEntry(placeId);
+            if (!hotWaterEntries.isEmpty()) {
+                final HotWaterEntry newestHotWaterEntry = hotWaterEntries.get(0);
+                if (consumptionValue.compareTo(newestHotWaterEntry.getEntryValue()) < 0) {
+                    throw AppException.createHotWaterEntryCouldNotBeInsertedException();
+                }
+            }
+
+            HotWaterEntry hotWaterEntry = new HotWaterEntry(LocalDate.now(), consumptionValue, place);
+            hotWaterEntryFacade.create(hotWaterEntry);
+        } else {
+            throw AppException.createHotWaterEntryCouldNotBeInsertedException();
+        }
+    }
+
+    @Override
+    @RolesAllowed(Roles.MANAGER)
     public void modifyConsumption(BigDecimal consumptionValue, Long placeId, Long version, String etag) {
         HotWaterEntry hotWaterEntry = hotWaterEntryFacade.getEntryWithCheckingIfHotWaterEntryCouldBeInsertedOrOverwritten(placeId, true);
         if (hotWaterEntry != null) {
@@ -149,9 +182,41 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
                 throw AppException.createHotWaterEntryCouldNotBeInsertedException();
             }
 
-            if (securityContext.isCallerInRole(Roles.MANAGER)) {
-                final String username = securityContext.getCallerPrincipal().getName();
-                hotWaterEntry.setManager(accessLevelFacade.findManagerByUsername(username));
+            final String username = securityContext.getCallerPrincipal().getName();
+            accessLevelFacade.findManagerByUsername((username)).ifPresent(manager -> {
+                if (hotWaterEntry.getPlace().getOwner().getAccount().getUsername().equals(username)) {
+                    throw AppException.createManagerWhoIsOwnerOfPlaceCouldNotInsertHotWaterEntryException();
+                }
+                hotWaterEntry.setManager(manager);
+            });
+            hotWaterEntry.setEntryValue(consumptionValue);
+            hotWaterEntry.setDate(LocalDate.now());
+            hotWaterEntryFacade.edit(hotWaterEntry);
+        } else {
+            throw AppException.createHotWaterEntryCouldNotBeModifiedException();
+        }
+    }
+
+    @Override
+    @RolesAllowed(Roles.OWNER)
+    public void modifyConsumptionByOwner(BigDecimal consumptionValue, Long placeId, Long version, String etag) {
+        HotWaterEntry hotWaterEntry = hotWaterEntryFacade.getEntryWithCheckingIfHotWaterEntryCouldBeInsertedOrOverwritten(placeId, true);
+        if (hotWaterEntry != null) {
+            if (!etag.equals(messageSigner.sign(hotWaterEntry))) {
+                throw AppException.createVerifierException();
+            }
+            if (!hotWaterEntry.getVersion().equals(version)) {
+                throw AppException.createOptimisticLockAppException();
+            }
+
+            final HotWaterEntry newestHotWaterEntry = hotWaterEntryFacade.getHotWaterEntriesByPlaceId(placeId).get(0);
+            if (consumptionValue.compareTo(newestHotWaterEntry.getEntryValue()) < 0) {
+                throw AppException.createHotWaterEntryCouldNotBeInsertedException();
+            }
+
+            final String username = securityContext.getCallerPrincipal().getName();
+            if (!placeFacade.findPlaceById(placeId).getOwner().getAccount().getUsername().equals(username)) {
+                throw AppException.createNotOwnerOfPlaceException();
             }
             hotWaterEntry.setEntryValue(consumptionValue);
             hotWaterEntry.setDate(LocalDate.now());
@@ -245,10 +310,10 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @RolesAllowed(Roles.OWNER)
     public HotWaterEntry getHotWaterEntryForOwner(Long hotWaterEntryId) {
         final HotWaterEntry hotWaterEntry = hotWaterEntryFacade.find(hotWaterEntryId);
-            final String username = securityContext.getCallerPrincipal().getName();
-            Place place = hotWaterEntry.getPlace();
-            if (place != null && !place.getOwner().getAccount().getUsername().equals(username)) {
-                throw AppException.createNotOwnerOfPlaceException();
+        final String username = securityContext.getCallerPrincipal().getName();
+        Place place = hotWaterEntry.getPlace();
+        if (place != null && !place.getOwner().getAccount().getUsername().equals(username)) {
+            throw AppException.createNotOwnerOfPlaceException();
         }
 
         return hotWaterEntry;
@@ -268,12 +333,12 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
     @RolesAllowed(Roles.OWNER)
     public List<HotWaterEntry> getHotWaterEntriesForPlaceForOwner(Long placeId) {
-            final String username = securityContext.getCallerPrincipal().getName();
-            final Place place = placeFacade.findPlaceById(placeId);
+        final String username = securityContext.getCallerPrincipal().getName();
+        final Place place = placeFacade.findPlaceById(placeId);
 
-            if (place != null && !place.getOwner().getAccount().getUsername().equals(username)) {
-                throw AppException.createNotOwnerOfPlaceException();
-            }
+        if (place != null && !place.getOwner().getAccount().getUsername().equals(username)) {
+            throw AppException.createNotOwnerOfPlaceException();
+        }
         return hotWaterEntryFacade.getHotWaterEntriesByPlaceId(placeId);
     }
 

@@ -13,6 +13,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
 
+import java.util.Optional;
+
 @Stateless
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class AccessLevelFacade extends AbstractFacade<AccessLevelMapping> {
@@ -28,11 +30,21 @@ public class AccessLevelFacade extends AbstractFacade<AccessLevelMapping> {
         return this.em;
     }
 
-    @RolesAllowed(Roles.MANAGER)
-    public Manager findManagerByUsername(String username) {
-        TypedQuery<Account> tq = em.createNamedQuery("AccessLevelMapping.findByUsername", Account.class);
-        tq.setParameter("username", username);
-            return (Manager) tq.getSingleResult().getAccessLevels().stream()
-                    .filter(accessLevel -> accessLevel instanceof Manager).toList().get(0);
+    @RolesAllowed({Roles.MANAGER, Roles.OWNER})
+    public Optional<Manager> findManagerByUsername(String username) {
+        if (username != null) {
+            TypedQuery<Account> tq = em.createNamedQuery("AccessLevelMapping.findByUsername", Account.class);
+            tq.setParameter("username", username);
+            Account singleResult = tq.getSingleResult();
+            if (!singleResult.getAccessLevels().isEmpty() && !singleResult.getAccessLevels().stream()
+                    .filter(role -> role instanceof Manager).toList().isEmpty()) {
+                return Optional.of((Manager) singleResult.getAccessLevels().stream()
+                        .filter(accessLevel -> accessLevel instanceof Manager).toList().get(0));
+            } else {
+                return Optional.empty();
+            }
+        } else {
+            return Optional.empty();
+        }
     }
 }

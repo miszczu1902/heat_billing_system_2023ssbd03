@@ -105,9 +105,18 @@ public class HeatDistributionCentreEndpoint {
     @Path("/parameters/insert-consumption")
     @Produces(MediaType.APPLICATION_JSON)
     @POST
-    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
+    @RolesAllowed(Roles.MANAGER)
     public Response insertConsumption(@Valid InsertHotWaterEntryDTO hotWaterEntryDTO) {
         heatDistributionCentreService.insertConsumption(hotWaterEntryDTO.getHotWaterConsumption(), hotWaterEntryDTO.getPlaceId());
+        return Response.status(204).build();
+    }
+
+    @Path("/parameters/owner/insert-consumption")
+    @Produces(MediaType.APPLICATION_JSON)
+    @POST
+    @RolesAllowed(Roles.OWNER)
+    public Response insertConsumptionByOwner(@Valid InsertHotWaterEntryDTO hotWaterEntryDTO) {
+        heatDistributionCentreService.insertConsumptionByOwner(hotWaterEntryDTO.getHotWaterConsumption(), hotWaterEntryDTO.getPlaceId());
         return Response.status(204).build();
     }
 
@@ -115,7 +124,7 @@ public class HeatDistributionCentreEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @PATCH
     @EtagValidator
-    @RolesAllowed({Roles.OWNER, Roles.MANAGER})
+    @RolesAllowed(Roles.MANAGER)
     public Response modifyConsumption(@NotNull @Valid ModifyHotWaterEntryDTO hotWaterEntryDTO, @Context HttpServletRequest request) {
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;
@@ -143,6 +152,45 @@ public class HeatDistributionCentreEndpoint {
             throw AppException.createTransactionRollbackException();
         }
         heatDistributionCentreService.modifyConsumption(
+                hotWaterEntryDTO.getHotWaterConsumption(),
+                hotWaterEntryDTO.getPlaceId(),
+                hotWaterEntryDTO.getVersion(),
+                etag);
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @Path("/parameters/owner/insert-consumption")
+    @Produces(MediaType.APPLICATION_JSON)
+    @PATCH
+    @EtagValidator
+    @RolesAllowed(Roles.OWNER)
+    public Response modifyConsumptionByOwner(@NotNull @Valid ModifyHotWaterEntryDTO hotWaterEntryDTO, @Context HttpServletRequest request) {
+        int retryTXCounter = txRetries;
+        boolean rollbackTX = false;
+        final String etag = request.getHeader("If-Match");
+        do {
+            LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
+            try {
+                heatDistributionCentreService.modifyConsumptionByOwner(
+                        hotWaterEntryDTO.getHotWaterConsumption(),
+                        hotWaterEntryDTO.getPlaceId(),
+                        hotWaterEntryDTO.getVersion(),
+                        etag);
+                rollbackTX = heatDistributionCentreService.isLastTransactionRollback();
+                if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
+                else return Response.status(Response.Status.NO_CONTENT).build();
+            } catch (TransactionRollbackException | OptimisticLockAppException ex) {
+                rollbackTX = true;
+                if (retryTXCounter < 2) {
+                    throw ex;
+                }
+            }
+        } while (rollbackTX && --retryTXCounter > 0);
+
+        if (rollbackTX && retryTXCounter == 0) {
+            throw AppException.createTransactionRollbackException();
+        }
+        heatDistributionCentreService.modifyConsumptionByOwner(
                 hotWaterEntryDTO.getHotWaterConsumption(),
                 hotWaterEntryDTO.getPlaceId(),
                 hotWaterEntryDTO.getVersion(),

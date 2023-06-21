@@ -212,6 +212,8 @@
     "token_not_valid_message": "Twoja sesja wygasła, musisz się ponownie uwierzytelnić"
   },
   "exception": {
+    "hot_water_entry.not_inserted":  "Nie udało się wprowadzić wpisu",
+    "hot_water_entry.not_modified":  "Nie udało się zmodyfikować wpisu",
     "error": {
       "unknown": "BŁĄD_NIEZNANY",
       "general_persistence": "BŁĄD_PERSISTENCJI",
@@ -222,7 +224,8 @@
       "no_place_found": "Nie znaleziono lokalu w systemie",
       "no_building_found": "Nie znaleziono budynku w systemie",
       "total_area_is_zero": "Całkowita powierzchnia budynków jest równa 0",
-      "total_hot_water_usage_is_zero": "Całkowite zużycie ciepłej wody w budynkach jest równe 0"
+      "total_hot_water_usage_is_zero": "Całkowite zużycie ciepłej wody w budynkach jest równe 0",
+      "manager_could_not_insert_entry": "Zarządca nie może wprowadzić wpisu do swojego lokalu"
     },
     "password": {
       "not_same_message": "Hasła nie są identyczne",
@@ -365,7 +368,7 @@
     "enter_predicted_hot_water_consumption_text_field_name" : "Przewidywane zużycie ciepłej wody [m3]",
     "enter_predicted_hot_water_consumption_error" : "Wartość musi być w formacie X.XX oraz przed kropką może znajdować się maksymalnie 8 cyfr",
     "enter_predicted_hot_water_consumption_confirm" : "Czy na pewno wprowadziłeś poprawne dane? Tej operacji nie można cofnąć",
-    "enter_predicted_hot_water_consumption_failed" : "Wystąpił błąd podczas wprowadzania danych przedwidywanego zużycia ciepłej wody"
+    "enter_predicted_hot_water_consumption_failed" : "Wystąpił błąd podczas wprowadzania danych przewidywanego zużycia ciepłej wody"
   },
   "annual_balance" : {
     "water": "Wartość zaliczki dla ciepłej wody",
