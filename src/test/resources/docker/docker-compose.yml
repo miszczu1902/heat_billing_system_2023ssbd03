@@ -2,6 +2,7 @@ version: '3.9'
 
 services:
   nginx:
+    container_name: nginx
     image: nginx:latest
     ports:
       - "80:80"
@@ -15,7 +16,10 @@ services:
       - appserver
 
   appserver:
-    image: payara/server-full:6.2023.3-jdk17
+    container_name: appserver
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
     ports:
       - "8080:8080"
       - "4848:4848"
@@ -27,6 +31,7 @@ services:
         condition: service_healthy
 
   database:
+    container_name: database
     image: postgres
     restart: always
     environment:
@@ -38,7 +43,7 @@ services:
     volumes:
       - ./create_db_users.sh:/docker-entrypoint-initdb.d/create_db_users.sh
       - ./init.sql:/init.sql
-      - ./createDB.sql:/init.sql
+      - ./createDB.sql:/createDB.sql
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 30s

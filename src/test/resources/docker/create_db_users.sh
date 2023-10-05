@@ -3,5 +3,5 @@ psql -c "CREATE USER ssbd03admin WITH ENCRYPTED PASSWORD '9LUoYTSMH';ALTER USER 
 psql -c "CREATE USER ssbd03auth WITH ENCRYPTED PASSWORD 'KHgXydJUv';ALTER USER ssbd03auth WITH SUPERUSER;"
 psql -c "CREATE USER ssbd03mok WITH ENCRYPTED PASSWORD 'CHqZxv5R1';ALTER USER ssbd03mok WITH SUPERUSER"
 psql -c "CREATE USER ssbd03mow WITH ENCRYPTED PASSWORD 'obSjEBGaX';ALTER USER ssbd03mow WITH SUPERUSER;"
-psql -f /init.sql
-psql -f /createDB.sql
+psql -d ssbd03 -f /createDB.sql
+psql -d ssbd03 -f /init.sql
