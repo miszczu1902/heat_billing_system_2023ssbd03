@@ -28,9 +28,9 @@ services:
       dockerfile: ./docker/Dockerfile
     ports:
       - "8080:8080"
-#      - "4848:4848"
-#      - "9009:9009"
-      - "9990:9990"
+      - "4848:4848"
+      - "9009:9009"
+#      - "9990:9990"
     environment:
       - JVM_ARGS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9009
 #    healthcheck:
