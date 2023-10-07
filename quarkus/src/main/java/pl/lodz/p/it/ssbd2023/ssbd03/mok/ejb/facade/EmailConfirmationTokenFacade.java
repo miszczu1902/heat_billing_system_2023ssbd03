@@ -1,15 +1,16 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade;
 
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Boundary;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import io.quarkus.hibernate.orm.PersistenceUnit;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.EmailConfirmationToken;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.EmailConfirmationToken;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -21,8 +22,9 @@ import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 @Boundary
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class EmailConfirmationTokenFacade extends AbstractFacade<EmailConfirmationToken> {
-    @PersistenceContext(unitName = "ssbd03mokPU")
-    private EntityManager em;
+    @Inject
+    @PersistenceUnit("ssbd03mokPU")
+    EntityManager em;
 
     @Override
     protected EntityManager getEntityManager() {

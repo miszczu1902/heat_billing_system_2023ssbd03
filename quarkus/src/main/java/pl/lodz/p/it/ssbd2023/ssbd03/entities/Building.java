@@ -3,7 +3,10 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AbstractEntity;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
+import org.hibernate.annotations.NamedNativeQueries;
+import org.hibernate.annotations.NamedNativeQuery;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -13,16 +16,16 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "building",
         indexes = {
                 @Index(name = "building_address_id", columnList = "address_id"),
                 @Index(name = "building_heat_distribution_centre_id", columnList = "heat_distribution_centre_id")
         })
-@NamedQueries({
-        @NamedQuery(name = "Building.findAll", query = "SELECT k FROM Building k"),
-        @NamedQuery(name = "Building.findById", query = "SELECT k FROM Building k WHERE k.id = :id")
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "Building.findAll", query = "SELECT k FROM Building k"),
+        @NamedNativeQuery(name = "Building.findById", query = "SELECT k FROM Building k WHERE k.id = :id")
 })
 public class Building extends AbstractEntity implements Serializable, Signable {
     @Id

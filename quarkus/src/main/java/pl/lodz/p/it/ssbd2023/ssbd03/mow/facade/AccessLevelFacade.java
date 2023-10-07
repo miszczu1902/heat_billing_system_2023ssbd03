@@ -1,25 +1,26 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.facade;
 
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Boundary;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import io.quarkus.hibernate.orm.PersistenceUnit;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AccessLevelMapping;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Account;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Manager;
 
 import java.util.Optional;
 
 @Boundary
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class AccessLevelFacade extends AbstractFacade<AccessLevelMapping> {
-    @PersistenceContext(unitName = "ssbd03mowPU")
-    private EntityManager em;
+    @Inject
+    @PersistenceUnit("ssbd03mowPU") EntityManager em;
 
     public AccessLevelFacade() {
         super(AccessLevelMapping.class);

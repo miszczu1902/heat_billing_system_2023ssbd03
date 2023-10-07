@@ -1,10 +1,12 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.entities;
+package pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
+import org.hibernate.annotations.NamedNativeQueries;
+import org.hibernate.annotations.NamedNativeQuery;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -19,12 +21,12 @@ import java.util.Objects;
                 @Index(name = "unique_phone_number", columnList = "phone_number", unique = true)
         }
 )
-@NamedQueries({
-        @NamedQuery(name = "Owner.findByPhoneNumberAndWithoutUsername", query = "SELECT d FROM Owner d WHERE d.phoneNumber = :phoneNumber AND d.account.username != :username"),
-        @NamedQuery(name = "Owner.findByPhoneNumber", query = "SELECT d FROM Owner d WHERE d.phoneNumber = :phoneNumber"),
-        @NamedQuery(name = "Owner.findById", query = "SELECT k FROM Owner k WHERE k.id = :id"),
-        @NamedQuery(name = "Owner.findAllOwners", query = "SELECT k FROM Owner k"),
-        @NamedQuery(name = "Owner.findByUsername", query = "SELECT d FROM Owner d WHERE d.account.username = :username")
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "Owner.findByPhoneNumberAndWithoutUsername", query = "SELECT d FROM Owner d WHERE d.phoneNumber = :phoneNumber AND d.account.username != :username"),
+        @NamedNativeQuery(name = "Owner.findByPhoneNumber", query = "SELECT d FROM Owner d WHERE d.phoneNumber = :phoneNumber"),
+        @NamedNativeQuery(name = "Owner.findById", query = "SELECT k FROM Owner k WHERE k.id = :id"),
+        @NamedNativeQuery(name = "Owner.findAllOwners", query = "SELECT k FROM Owner k"),
+        @NamedNativeQuery(name = "Owner.findByUsername", query = "SELECT d FROM Owner d WHERE d.account.username = :username")
 })
 public class Owner extends AccessLevelMapping implements Serializable, Signable {
     @Column(name = "phone_number", nullable = false, length = 9)

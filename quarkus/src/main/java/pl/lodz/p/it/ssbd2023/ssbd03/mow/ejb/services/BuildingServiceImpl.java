@@ -11,6 +11,8 @@ import jakarta.ws.rs.core.Context;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Account;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;

@@ -3,13 +3,14 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AbstractEntity;
 
 import java.io.Serializable;
 
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "address")
 public class Address extends AbstractEntity implements Serializable {

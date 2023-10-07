@@ -2,11 +2,11 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services;
 
 import jakarta.ejb.Local;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.CommonManagerLocalInterface;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Account;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Admin;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Manager;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Owner;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.PersonalData;
 
 import java.util.List;
 

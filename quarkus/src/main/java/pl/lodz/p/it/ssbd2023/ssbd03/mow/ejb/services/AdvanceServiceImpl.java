@@ -7,6 +7,7 @@ import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.*;
 
 import java.math.BigDecimal;

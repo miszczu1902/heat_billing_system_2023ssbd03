@@ -1,10 +1,12 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.entities;
+package pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.NamedNativeQueries;
+import org.hibernate.annotations.NamedNativeQuery;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -22,10 +24,10 @@ import java.util.Objects;
                 @UniqueConstraint(
                         name = "access_level_account_unique_constraint", columnNames = {"account_id", "access_level"})
         })
-@NamedQueries({
-        @NamedQuery(name = "AccessLevelMapping.findByUsername",
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "AccessLevelMapping.findByUsername",
                 query = "SELECT k.account FROM AccessLevelMapping k WHERE k.account.username = :username"),
-        @NamedQuery(name = "AccessLevelMapping.findAccessLevelForAccountByUsername",
+        @NamedNativeQuery(name = "AccessLevelMapping.findAccessLevelForAccountByUsername",
                 query = "SELECT k.account FROM AccessLevelMapping k WHERE k.account.username = :username AND k.accessLevel = :accessLevel"),
 
 })

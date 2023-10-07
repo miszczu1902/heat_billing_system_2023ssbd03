@@ -12,29 +12,29 @@
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
             <property name="hibernate.transaction.jta.platform"
                       value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
-<!--            <property name="javax.persistence.schema-generation.database.action" value="none"/>-->
             <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
             <property name="jakarta.persistence.sql-load-script-source" value="init.sql"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.discriminator.ignore_explicit_for_joined" value="true" />
         </properties>
     </persistence-unit>
 
     <persistence-unit name="ssbd03mokPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 <!--        <jta-data-source>java:app/jdbc/ssbd03mok</jta-data-source>-->
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Account</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.AccountConfirmationToken</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.EmailConfirmationToken</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.ResetPasswordToken</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.AbstractEntity</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Account</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.LoginData</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Account</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AccountConfirmationToken</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.EmailConfirmationToken</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.ResetPasswordToken</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AccessLevelMapping</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AbstractEntity</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Account</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Admin</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.LoginData</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Manager</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Owner</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.PersonalData</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
@@ -43,13 +43,14 @@
                       value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.discriminator.ignore_explicit_for_joined" value="true" />
         </properties>
     </persistence-unit>
 
     <persistence-unit name="ssbd03mowPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 <!--        <jta-data-source>java:app/jdbc/ssbd03mow</jta-data-source>-->
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.AbstractEntity</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AbstractEntity</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Advance</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.AnnualBalance</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Building</class>
@@ -61,15 +62,15 @@
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.MonthPayoff</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.PastQuarterHotWaterPayoff</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Place</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Admin</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Address</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Account</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.AccessLevelMapping</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Manager</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Owner</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Admin</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.LoginData</class>
-        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.PersonalData</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Account</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AccessLevelMapping</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Manager</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Owner</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Admin</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.LoginData</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.PersonalData</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
@@ -78,6 +79,7 @@
                       value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.discriminator.ignore_explicit_for_joined" value="true" />
         </properties>
     </persistence-unit>
 

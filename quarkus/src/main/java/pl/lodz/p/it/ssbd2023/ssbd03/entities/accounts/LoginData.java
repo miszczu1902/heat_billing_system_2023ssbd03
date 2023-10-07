@@ -1,13 +1,12 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.entities;
+package pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.NamedNativeQueries;
+import org.hibernate.annotations.NamedNativeQuery;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -16,10 +15,11 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@NamedQueries({
-        @NamedQuery(name = "LoginData.findById", query = "SELECT d FROM LoginData d WHERE d.id = :id")
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "LoginData.findById", query = "SELECT d FROM LoginData d WHERE d.id = :id")
 })
 @Table(name = "login_data")
+@EqualsAndHashCode(callSuper = true)
 public class LoginData extends AbstractEntity implements Serializable {
     @Id
     @OneToOne

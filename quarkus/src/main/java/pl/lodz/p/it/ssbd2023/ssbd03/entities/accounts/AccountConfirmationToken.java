@@ -1,10 +1,12 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.entities;
+package pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.NamedNativeQueries;
+import org.hibernate.annotations.NamedNativeQuery;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,12 +17,12 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "account_confirmation_token")
-@NamedQueries({
-        @NamedQuery(name = "AccountConfirmationToken.getActivationTokenByTokenValue",
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "AccountConfirmationToken.getActivationTokenByTokenValue",
                 query = "SELECT t FROM AccountConfirmationToken t WHERE tokenValue = :tokenValue"),
-        @NamedQuery(name = "AccountConfirmationToken.findAllUnconfirmedAccounts",
+        @NamedNativeQuery(name = "AccountConfirmationToken.findAllUnconfirmedAccounts",
                 query = "SELECT t FROM AccountConfirmationToken t WHERE t.account.isActive IS FALSE AND t.account.registerDate <= :date"),
-        @NamedQuery(name = "AccountConfirmationToken.findAllAccountsToSendReminder",
+        @NamedNativeQuery(name = "AccountConfirmationToken.findAllAccountsToSendReminder",
                 query = "SELECT t FROM AccountConfirmationToken t WHERE t.isReminderSent IS FALSE AND t.account.isActive IS FALSE AND t.account.registerDate <= :date")
 })
 public class AccountConfirmationToken extends AbstractEntity implements Serializable {

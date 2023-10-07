@@ -2,7 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.util.mappers;
 
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateOwnerDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.*;
 
 public class AccountMapper {
     public static Account createOwnerDTOToAccount(CreateOwnerDTO createOwnerDTO) {

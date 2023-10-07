@@ -5,7 +5,7 @@ import java.util.List;
 
 import jakarta.ejb.Local;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.CommonManagerLocalInterface;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Building;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 

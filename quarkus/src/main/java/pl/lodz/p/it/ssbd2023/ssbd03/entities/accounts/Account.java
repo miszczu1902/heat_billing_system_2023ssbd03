@@ -1,10 +1,12 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.entities;
+package pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
+import org.hibernate.annotations.NamedNativeQueries;
+import org.hibernate.annotations.NamedNativeQuery;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,17 +22,17 @@ import java.util.Objects;
                 @Index(name = "unique_email", columnList = "email", unique = true),
                 @Index(name = "unique_username", columnList = "username", unique = true)
         })
-@NamedQueries({
-        @NamedQuery(name = "Account.findByUsername", query = "SELECT k FROM Account k WHERE k.username = :username"),
-        @NamedQuery(name = "Account.getListOfAccountsByUsernameAndEnableStatus", query = "SELECT k FROM Account k WHERE k.isEnable = :isEnable ORDER BY k.username"),
-        @NamedQuery(name = "Account.getListOfAccountsByUsername",
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "Account.findByUsername", query = "SELECT k FROM Account k WHERE k.username = :username"),
+        @NamedNativeQuery(name = "Account.getListOfAccountsByUsernameAndEnableStatus", query = "SELECT k FROM Account k WHERE k.isEnable = :isEnable ORDER BY k.username"),
+        @NamedNativeQuery(name = "Account.getListOfAccountsByUsername",
                 query = "SELECT k FROM Account k ORDER BY k.username"),
-        @NamedQuery(name = "Account.getListOfAccountsByEmail",
+        @NamedNativeQuery(name = "Account.getListOfAccountsByEmail",
                 query = "SELECT k FROM Account k ORDER BY k.email"),
-        @NamedQuery(name = "Account.findAllBlockedAccounts", query = "SELECT a " +
+        @NamedNativeQuery(name = "Account.findAllBlockedAccounts", query = "SELECT a " +
                 "FROM Account a WHERE a.isEnable IS FALSE AND a.loginData.lastInvalidLoginDate <= :date AND a.loginData.invalidLoginCounter = 3"),
-        @NamedQuery(name = "Account.findByEmail", query = "SELECT d FROM Account d WHERE d.email = :email"),
-        @NamedQuery(name = "Account.getListOfAccountsByEmailAndEnableStatus", query = "SELECT d FROM Account d WHERE d.isEnable = :isEnable ORDER BY d.email")
+        @NamedNativeQuery(name = "Account.findByEmail", query = "SELECT d FROM Account d WHERE d.email = :email"),
+        @NamedNativeQuery(name = "Account.getListOfAccountsByEmailAndEnableStatus", query = "SELECT d FROM Account d WHERE d.isEnable = :isEnable ORDER BY d.email")
 })
 public class Account extends AbstractEntity implements Signable {
     @Id

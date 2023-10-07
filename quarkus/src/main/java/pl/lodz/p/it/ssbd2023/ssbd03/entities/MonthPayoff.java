@@ -3,6 +3,10 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
+import org.hibernate.annotations.NamedNativeQueries;
+import org.hibernate.annotations.NamedNativeQuery;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AbstractEntity;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Owner;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -11,15 +15,15 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "month_pay_off",
         indexes = {
                 @Index(name = "month_pay_off_place_id", columnList = "place_id"),
                 @Index(name = "month_pay_off_owner_id", columnList = "owner_id")
         })
-@NamedQueries({
-        @NamedQuery(name = "MonthPayoff.findWaterHeatingUnitCost", query = "SELECT k FROM MonthPayoff k WHERE k.waterHeatingUnitCost != 0 ORDER BY k.payoffDate DESC")
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "MonthPayoff.findWaterHeatingUnitCost", query = "SELECT k FROM MonthPayoff k WHERE k.waterHeatingUnitCost != 0 ORDER BY k.payoffDate DESC")
 })
 public class MonthPayoff extends AbstractEntity implements Serializable {
     @Id

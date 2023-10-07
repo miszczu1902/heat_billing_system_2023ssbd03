@@ -2,11 +2,12 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mow.facade;
 
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Boundary;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import io.quarkus.hibernate.orm.PersistenceUnit;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
@@ -18,8 +19,9 @@ import java.util.List;
 @Boundary
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class BalanceFacade extends AbstractFacade<AnnualBalance> {
-    @PersistenceContext(unitName = "ssbd03mowPU")
-    private EntityManager em;
+    @Inject
+    @PersistenceUnit("ssbd03mowPU")
+    EntityManager em;
 
     public BalanceFacade() {
         super(AnnualBalance.class);
@@ -62,7 +64,7 @@ public class BalanceFacade extends AbstractFacade<AnnualBalance> {
 
     @RolesAllowed({Roles.MANAGER})
     public List<AnnualBalance> getListOfAnnualBalancesFromBuilding(int pageNumber, int pageSize, List<Place> placeList) {
-       final List<Long> idList = new ArrayList<>();
+        final List<Long> idList = new ArrayList<>();
         for (Place place : placeList) {
             idList.add(place.getId());
         }

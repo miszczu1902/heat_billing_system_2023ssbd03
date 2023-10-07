@@ -3,7 +3,11 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AbstractEntity;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
+import org.hibernate.annotations.NamedNativeQueries;
+import org.hibernate.annotations.NamedNativeQuery;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -12,19 +16,19 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "hot_water_entry",
         indexes = {
                 @Index(name = "hot_water_entry_place_id", columnList = "place_id"),
                 @Index(name = "hot_water_entry_manager_id", columnList = "manager_id")
         })
-@NamedQueries({
-        @NamedQuery(name = "HotWaterEntry.checkIfHotWaterEntryCouldBeInserted",
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "HotWaterEntry.checkIfHotWaterEntryCouldBeInserted",
                 query = "SELECT e FROM HotWaterEntry e WHERE e.place.id = :placeId AND YEAR(e.date) = :year AND MONTH(e.date) = :month AND e.place.hotWaterConnection IS TRUE"),
-        @NamedQuery(name = "HotWaterEntry.checkIfHotWaterEntryCouldBeOverwritten",
+        @NamedNativeQuery(name = "HotWaterEntry.checkIfHotWaterEntryCouldBeOverwritten",
                 query = "SELECT e FROM HotWaterEntry e WHERE e.place.id = :placeId AND YEAR(e.date) = :year AND MONTH(e.date) = :month AND e.manager IS NULL AND e.place.hotWaterConnection IS TRUE"),
-        @NamedQuery(name = "HotWaterEntry.getListOfHotWaterEntriesForPlace", query = "SELECT k FROM HotWaterEntry k WHERE k.place.id = :id  ORDER BY k.date DESC")
+        @NamedNativeQuery(name = "HotWaterEntry.getListOfHotWaterEntriesForPlace", query = "SELECT k FROM HotWaterEntry k WHERE k.place.id = :id  ORDER BY k.date DESC")
 })
 public class HotWaterEntry extends AbstractEntity implements Serializable, Signable {
     @Id

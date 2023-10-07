@@ -1,11 +1,12 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.facade;
 
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Boundary;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import io.quarkus.hibernate.orm.PersistenceUnit;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
@@ -18,8 +19,9 @@ import java.time.LocalDate;
 @Boundary
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class HotWaterEntryFacade extends AbstractFacade<HotWaterEntry> {
-    @PersistenceContext(unitName = "ssbd03mowPU")
-    private EntityManager em;
+    @Inject
+    @PersistenceUnit("ssbd03mowPU")
+    EntityManager em;
 
     public HotWaterEntryFacade() {
         super(HotWaterEntry.class);
@@ -76,11 +78,11 @@ public class HotWaterEntryFacade extends AbstractFacade<HotWaterEntry> {
         tq.setParameter("placeId", placeId);
 
         final List<HotWaterEntry> resultList = tq.getResultList();
-        return resultList.isEmpty() ? null :resultList.get(0);
+        return resultList.isEmpty() ? null : resultList.get(0);
     }
 
     @RolesAllowed({Roles.OWNER, Roles.MANAGER})
-    public List<HotWaterEntry> getHotWaterEntriesByPlaceId(Long placeId){
+    public List<HotWaterEntry> getHotWaterEntriesByPlaceId(Long placeId) {
         TypedQuery<HotWaterEntry> tq = em.createNamedQuery("HotWaterEntry.getListOfHotWaterEntriesForPlace", HotWaterEntry.class);
         tq.setParameter("id", placeId);
         return tq.getResultList();

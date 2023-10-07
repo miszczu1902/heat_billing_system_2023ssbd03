@@ -4,8 +4,8 @@ import jakarta.enterprise.inject.spi.CDI;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.security.enterprise.SecurityContext;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.AbstractEntity;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.Account;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AbstractEntity;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccessLevelMappingFacade;
 
 import java.security.Principal;

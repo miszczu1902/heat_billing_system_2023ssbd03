@@ -3,6 +3,10 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
+import org.hibernate.annotations.NamedNativeQueries;
+import org.hibernate.annotations.NamedNativeQuery;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AbstractEntity;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Manager;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -11,19 +15,19 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "heat_distribution_centre_pay_off",
         indexes = {
                 @Index(name = "heat_distribution_centre_pay_off_heat_distribution_centre_id", columnList = "heat_distribution_centre_id"),
                 @Index(name = "heat_distribution_centre_pay_off_manager_id", columnList = "manager_id")
         })
-@NamedQueries({
-        @NamedQuery(name = "HeatDistributionCentrePayoff.getPayoffByDate",
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "HeatDistributionCentrePayoff.getPayoffByDate",
                 query = "SELECT k FROM HeatDistributionCentrePayoff k WHERE YEAR(k.date) = :year AND MONTH(k.date)= :month"),
-        @NamedQuery(name = "HeatDistributionCentrePayoff.findAllHeatDistributionCentrePayoff",
+        @NamedNativeQuery(name = "HeatDistributionCentrePayoff.findAllHeatDistributionCentrePayoff",
                 query = "SELECT k FROM HeatDistributionCentrePayoff k ORDER BY k.date DESC"),
-        @NamedQuery(name = "HeatDistributionCentrePayoff.getLatestHeatDistributionCentrePayoff",
+        @NamedNativeQuery(name = "HeatDistributionCentrePayoff.getLatestHeatDistributionCentrePayoff",
                 query = "SELECT k FROM HeatDistributionCentrePayoff k ORDER BY k.creationDateTime DESC")
 })
 public class HeatDistributionCentrePayoff extends AbstractEntity implements Serializable {

@@ -1,4 +1,4 @@
-package pl.lodz.p.it.ssbd2023.ssbd03.entities;
+package pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.NamedNativeQueries;
+import org.hibernate.annotations.NamedNativeQuery;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -19,10 +21,10 @@ import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "email_confirmation_token")
-@NamedQueries({
-        @NamedQuery(name = "EmailConfirmationToken.getActivationTokenByTokenValue",
+@NamedNativeQueries({
+        @NamedNativeQuery(name = "EmailConfirmationToken.getActivationTokenByTokenValue",
                 query = "SELECT t FROM EmailConfirmationToken t WHERE tokenValue = :tokenValue"),
-        @NamedQuery(
+        @NamedNativeQuery(
                 name = "EmailConfirmationToken.findAllUnconfirmedEmails",
                 query = "SELECT token FROM EmailConfirmationToken token WHERE token.expirationDate < :currentTime"
         )
