@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.NamedNativeQueries;
-import org.hibernate.annotations.NamedNativeQuery;
+
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -18,10 +17,10 @@ import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "reset_password_token")
-@NamedNativeQueries({
-        @NamedNativeQuery(name = "ResetPasswordToken.getResetPasswordTokenByTokenValue",
+@NamedQueries({
+        @NamedQuery(name = "ResetPasswordToken.getResetPasswordTokenByTokenValue",
                 query = "SELECT t FROM ResetPasswordToken t WHERE tokenValue = :tokenValue"),
-        @NamedNativeQuery(
+        @NamedQuery(
                 name = "ResetPasswordToken.getOlderResetPasswordToken",
                 query = "SELECT token FROM ResetPasswordToken token WHERE token.expirationDate < :currentTime"
         )

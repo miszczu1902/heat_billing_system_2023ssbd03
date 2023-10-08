@@ -6,8 +6,7 @@ import lombok.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AbstractEntity;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
-import org.hibernate.annotations.NamedNativeQueries;
-import org.hibernate.annotations.NamedNativeQuery;
+
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -28,16 +27,16 @@ import java.util.List;
                 @UniqueConstraint(
                         name = "place_number_building_id_unique_constraint", columnNames = {"place_number", "building_id"})
         })
-@NamedNativeQueries({
-        @NamedNativeQuery(name = "Place.findPlacesByBuildingId", query = "SELECT k FROM Place k WHERE k.building.id = :id"),
-        @NamedNativeQuery(name = "Place.findById", query = "SELECT k FROM Place k WHERE k.id = :id"),
-        @NamedNativeQuery(name = "Place.findPlacesByOwner", query = "SELECT k FROM Place k WHERE k.owner.id = :id"),
-        @NamedNativeQuery(name = "Place.findPlaceByUsernameAndCheckIfHeIsOwnerOfPlace",
+@NamedQueries({
+        @NamedQuery(name = "Place.findPlacesByBuildingId", query = "SELECT k FROM Place k WHERE k.building.id = :id"),
+        @NamedQuery(name = "Place.findById", query = "SELECT k FROM Place k WHERE k.id = :id"),
+        @NamedQuery(name = "Place.findPlacesByOwner", query = "SELECT k FROM Place k WHERE k.owner.id = :id"),
+        @NamedQuery(name = "Place.findPlaceByUsernameAndCheckIfHeIsOwnerOfPlace",
                 query = "SELECT k FROM Place k WHERE k.id = :placeId AND k.owner.account.username = :username"),
-        @NamedNativeQuery(name = "Place.findAllPlaces", query = "SELECT k FROM Place k"),
-        @NamedNativeQuery(name = "Place.findAllPlacesByBuildingIdAndNewerThanDate",
+        @NamedQuery(name = "Place.findAllPlaces", query = "SELECT k FROM Place k"),
+        @NamedQuery(name = "Place.findAllPlacesByBuildingIdAndNewerThanDate",
                 query = "SELECT k FROM Place k WHERE k.building.id = :buildingId AND k.creationDateTime >= :date"),
-        @NamedNativeQuery(name = "Place.findAllPlacesAddedBeforeDate",
+        @NamedQuery(name = "Place.findAllPlacesAddedBeforeDate",
                 query = "SELECT k FROM Place k WHERE k.creationDateTime < :date"),
 })
 public class Place extends AbstractEntity implements Serializable, Signable {

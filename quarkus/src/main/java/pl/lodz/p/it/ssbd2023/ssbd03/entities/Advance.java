@@ -2,8 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.NamedNativeQueries;
-import org.hibernate.annotations.NamedNativeQuery;
+
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AbstractEntity;
 
 import java.time.LocalDate;
@@ -18,9 +17,9 @@ import java.time.LocalDate;
         indexes = {
                 @Index(name = "advance_place_id", columnList = "place_id")
         })
-@NamedNativeQueries({
-        @NamedNativeQuery(name = "Advance.findAllHotWaterAdvancesForPlace", query = "SELECT a FROM HotWaterAdvance a WHERE a.place.id = :placeId AND YEAR(a.date) = :year ORDER BY a.date DESC"),
-        @NamedNativeQuery(name = "Advance.findAllHeatingPlaceAndCommunalAreaAdvancesForPlace", query = "SELECT a FROM HeatingPlaceAndCommunalAreaAdvance a WHERE a.place.id = :placeId AND YEAR(a.date) = :year ORDER BY a.date DESC")
+@NamedQueries({
+        @NamedQuery(name = "Advance.findAllHotWaterAdvancesForPlace", query = "SELECT a FROM HotWaterAdvance a WHERE a.place.id = :placeId AND YEAR(a.date) = :year ORDER BY a.date DESC"),
+        @NamedQuery(name = "Advance.findAllHeatingPlaceAndCommunalAreaAdvancesForPlace", query = "SELECT a FROM HeatingPlaceAndCommunalAreaAdvance a WHERE a.place.id = :placeId AND YEAR(a.date) = :year ORDER BY a.date DESC")
 })
 public abstract class Advance extends AbstractEntity {
     @Id

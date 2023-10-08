@@ -6,7 +6,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.Boundary;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
-import io.quarkus.hibernate.orm.PersistenceUnit;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
@@ -16,8 +16,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.LoginData;
 @Boundary
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class LoginDataFacade extends AbstractFacade<LoginData> {
-    @Inject
-    @PersistenceUnit("ssbd03mokPU")
+    
+    @PersistenceContext(unitName = "ssbd03mokPU")
     EntityManager em;
 
     public LoginDataFacade() {

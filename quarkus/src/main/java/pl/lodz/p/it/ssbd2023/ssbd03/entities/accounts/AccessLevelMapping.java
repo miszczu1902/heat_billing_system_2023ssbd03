@@ -5,8 +5,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.NamedNativeQueries;
-import org.hibernate.annotations.NamedNativeQuery;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -24,10 +22,10 @@ import java.util.Objects;
                 @UniqueConstraint(
                         name = "access_level_account_unique_constraint", columnNames = {"account_id", "access_level"})
         })
-@NamedNativeQueries({
-        @NamedNativeQuery(name = "AccessLevelMapping.findByUsername",
+@NamedQueries({
+        @NamedQuery(name = "AccessLevelMapping.findByUsername",
                 query = "SELECT k.account FROM AccessLevelMapping k WHERE k.account.username = :username"),
-        @NamedNativeQuery(name = "AccessLevelMapping.findAccessLevelForAccountByUsername",
+        @NamedQuery(name = "AccessLevelMapping.findAccessLevelForAccountByUsername",
                 query = "SELECT k.account FROM AccessLevelMapping k WHERE k.account.username = :username AND k.accessLevel = :accessLevel"),
 
 })

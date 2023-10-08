@@ -1,6 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.config;
 
-import io.quarkus.hibernate.orm.PersistenceUnit;
+import jakarta.persistence.PersistenceContext;
 import jakarta.annotation.sql.DataSourceDefinition;
 import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Boundary;
@@ -54,7 +54,7 @@ import java.sql.Connection;
 
 @Boundary
 public class JDBCConfig {
-    @Inject
-    @PersistenceUnit("ssbd03adminPU")
+//    @Inject
+    @PersistenceContext(unitName = "ssbd03adminPU")
     EntityManager em;
 }

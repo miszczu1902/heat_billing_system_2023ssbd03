@@ -7,8 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
-import org.hibernate.annotations.NamedNativeQueries;
-import org.hibernate.annotations.NamedNativeQuery;
+
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -18,8 +17,8 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "personal_data")
-@NamedNativeQueries({
-        @NamedNativeQuery(name = "PersonalData.findByUsername", query = "SELECT k FROM PersonalData k WHERE k.id.username = :username")
+@NamedQueries({
+        @NamedQuery(name = "PersonalData.findByUsername", query = "SELECT k FROM PersonalData k WHERE k.id.username = :username")
 })
 public class PersonalData extends AbstractEntity implements Serializable, Signable {
     @Id

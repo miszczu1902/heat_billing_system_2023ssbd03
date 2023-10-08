@@ -7,7 +7,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.Boundary;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
-import io.quarkus.hibernate.orm.PersistenceUnit;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
@@ -23,8 +23,8 @@ import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 @Boundary
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class AccountConfirmationTokenFacade extends AbstractFacade<AccountConfirmationToken> {
-    @Inject
-    @PersistenceUnit("ssbd03mokPU") EntityManager em;
+    
+    @PersistenceContext(unitName = "ssbd03mokPU") EntityManager em;
 
     @Override
     protected EntityManager getEntityManager() {

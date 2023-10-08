@@ -7,8 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.NamedNativeQueries;
-import org.hibernate.annotations.NamedNativeQuery;
+
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -21,10 +20,10 @@ import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "email_confirmation_token")
-@NamedNativeQueries({
-        @NamedNativeQuery(name = "EmailConfirmationToken.getActivationTokenByTokenValue",
+@NamedQueries({
+        @NamedQuery(name = "EmailConfirmationToken.getActivationTokenByTokenValue",
                 query = "SELECT t FROM EmailConfirmationToken t WHERE tokenValue = :tokenValue"),
-        @NamedNativeQuery(
+        @NamedQuery(
                 name = "EmailConfirmationToken.findAllUnconfirmedEmails",
                 query = "SELECT token FROM EmailConfirmationToken token WHERE token.expirationDate < :currentTime"
         )

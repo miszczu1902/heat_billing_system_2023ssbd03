@@ -7,7 +7,7 @@ import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
-import io.quarkus.hibernate.orm.PersistenceUnit;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
@@ -16,8 +16,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Owner;
 @Boundary
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class OwnerFacade extends AbstractFacade<Owner> {
-    @Inject
-    @PersistenceUnit("ssbd03mokPU")
+    
+    @PersistenceContext(unitName = "ssbd03mokPU")
     EntityManager em;
 
     public OwnerFacade() {

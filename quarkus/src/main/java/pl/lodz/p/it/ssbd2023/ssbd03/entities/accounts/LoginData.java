@@ -5,8 +5,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
-import org.hibernate.annotations.NamedNativeQueries;
-import org.hibernate.annotations.NamedNativeQuery;
+
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,8 +14,8 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@NamedNativeQueries({
-        @NamedNativeQuery(name = "LoginData.findById", query = "SELECT d FROM LoginData d WHERE d.id = :id")
+@NamedQueries({
+        @NamedQuery(name = "LoginData.findById", query = "SELECT d FROM LoginData d WHERE d.id = :id")
 })
 @Table(name = "login_data")
 @EqualsAndHashCode(callSuper = true)

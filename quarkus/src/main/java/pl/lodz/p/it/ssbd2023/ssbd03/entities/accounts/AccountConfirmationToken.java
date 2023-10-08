@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.NamedNativeQueries;
-import org.hibernate.annotations.NamedNativeQuery;
+
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -17,12 +16,12 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "account_confirmation_token")
-@NamedNativeQueries({
-        @NamedNativeQuery(name = "AccountConfirmationToken.getActivationTokenByTokenValue",
+@NamedQueries({
+        @NamedQuery(name = "AccountConfirmationToken.getActivationTokenByTokenValue",
                 query = "SELECT t FROM AccountConfirmationToken t WHERE tokenValue = :tokenValue"),
-        @NamedNativeQuery(name = "AccountConfirmationToken.findAllUnconfirmedAccounts",
+        @NamedQuery(name = "AccountConfirmationToken.findAllUnconfirmedAccounts",
                 query = "SELECT t FROM AccountConfirmationToken t WHERE t.account.isActive IS FALSE AND t.account.registerDate <= :date"),
-        @NamedNativeQuery(name = "AccountConfirmationToken.findAllAccountsToSendReminder",
+        @NamedQuery(name = "AccountConfirmationToken.findAllAccountsToSendReminder",
                 query = "SELECT t FROM AccountConfirmationToken t WHERE t.isReminderSent IS FALSE AND t.account.isActive IS FALSE AND t.account.registerDate <= :date")
 })
 public class AccountConfirmationToken extends AbstractEntity implements Serializable {

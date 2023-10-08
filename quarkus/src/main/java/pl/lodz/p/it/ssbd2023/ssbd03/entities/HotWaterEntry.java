@@ -6,8 +6,7 @@ import lombok.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AbstractEntity;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Manager;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
-import org.hibernate.annotations.NamedNativeQueries;
-import org.hibernate.annotations.NamedNativeQuery;
+
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -23,12 +22,12 @@ import java.time.LocalDate;
                 @Index(name = "hot_water_entry_place_id", columnList = "place_id"),
                 @Index(name = "hot_water_entry_manager_id", columnList = "manager_id")
         })
-@NamedNativeQueries({
-        @NamedNativeQuery(name = "HotWaterEntry.checkIfHotWaterEntryCouldBeInserted",
+@NamedQueries({
+        @NamedQuery(name = "HotWaterEntry.checkIfHotWaterEntryCouldBeInserted",
                 query = "SELECT e FROM HotWaterEntry e WHERE e.place.id = :placeId AND YEAR(e.date) = :year AND MONTH(e.date) = :month AND e.place.hotWaterConnection IS TRUE"),
-        @NamedNativeQuery(name = "HotWaterEntry.checkIfHotWaterEntryCouldBeOverwritten",
+        @NamedQuery(name = "HotWaterEntry.checkIfHotWaterEntryCouldBeOverwritten",
                 query = "SELECT e FROM HotWaterEntry e WHERE e.place.id = :placeId AND YEAR(e.date) = :year AND MONTH(e.date) = :month AND e.manager IS NULL AND e.place.hotWaterConnection IS TRUE"),
-        @NamedNativeQuery(name = "HotWaterEntry.getListOfHotWaterEntriesForPlace", query = "SELECT k FROM HotWaterEntry k WHERE k.place.id = :id  ORDER BY k.date DESC")
+        @NamedQuery(name = "HotWaterEntry.getListOfHotWaterEntriesForPlace", query = "SELECT k FROM HotWaterEntry k WHERE k.place.id = :id  ORDER BY k.date DESC")
 })
 public class HotWaterEntry extends AbstractEntity implements Serializable, Signable {
     @Id

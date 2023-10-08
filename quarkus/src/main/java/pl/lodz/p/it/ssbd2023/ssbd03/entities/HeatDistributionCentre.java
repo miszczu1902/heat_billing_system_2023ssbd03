@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.NamedNativeQueries;
-import org.hibernate.annotations.NamedNativeQuery;
+
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AbstractEntity;
 
 import java.io.Serializable;
@@ -19,9 +18,9 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "heat_distribution_centre")
-@NamedNativeQueries({
-        @NamedNativeQuery(name = "HeatDistributionCentre.getListOfHeatDistributionCentre", query = "SELECT k FROM HeatDistributionCentre k "),
-        @NamedNativeQuery(name = "HeatDistributionCentre.findById", query = "SELECT k from HeatDistributionCentre k where k.id = :id")
+@NamedQueries({
+        @NamedQuery(name = "HeatDistributionCentre.getListOfHeatDistributionCentre", query = "SELECT k FROM HeatDistributionCentre k "),
+        @NamedQuery(name = "HeatDistributionCentre.findById", query = "SELECT k from HeatDistributionCentre k where k.id = :id")
 })
 public class HeatDistributionCentre extends AbstractEntity implements Serializable {
     @Id

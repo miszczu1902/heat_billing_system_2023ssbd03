@@ -4,8 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import lombok.*;
-import org.hibernate.annotations.NamedNativeQueries;
-import org.hibernate.annotations.NamedNativeQuery;
+
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AbstractEntity;
 
 import java.io.Serializable;
@@ -20,11 +19,11 @@ import java.math.BigDecimal;
         indexes = {
                 @Index(name = "annual_balance_place_id", columnList = "place_id")
         })
-@NamedNativeQueries({
-        @NamedNativeQuery(name = "AnnualBalance.findAllBalancesByPlacesId", query = "SELECT k FROM AnnualBalance k WHERE k.place.id IN :ids"),
-        @NamedNativeQuery(name = "AnnualBalance.findAllBalancesByOwnerUsername", query = "SELECT k FROM AnnualBalance k WHERE k.place.owner.account.username = :username"),
-        @NamedNativeQuery(name = "AnnualBalance.findAllBalancesByYear", query = "SELECT k FROM AnnualBalance k WHERE k.year = :year"),
-        @NamedNativeQuery(name = "AnnualBalance.findBalanceById", query = "SELECT k FROM AnnualBalance k WHERE k.id = :id")
+@NamedQueries({
+        @NamedQuery(name = "AnnualBalance.findAllBalancesByPlacesId", query = "SELECT k FROM AnnualBalance k WHERE k.place.id IN :ids"),
+        @NamedQuery(name = "AnnualBalance.findAllBalancesByOwnerUsername", query = "SELECT k FROM AnnualBalance k WHERE k.place.owner.account.username = :username"),
+        @NamedQuery(name = "AnnualBalance.findAllBalancesByYear", query = "SELECT k FROM AnnualBalance k WHERE k.year = :year"),
+        @NamedQuery(name = "AnnualBalance.findBalanceById", query = "SELECT k FROM AnnualBalance k WHERE k.id = :id")
 })
 public class AnnualBalance extends AbstractEntity implements Serializable {
     @Id

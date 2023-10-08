@@ -7,7 +7,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.Boundary;
 import jakarta.ejb.TransactionAttribute;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
-import io.quarkus.hibernate.orm.PersistenceUnit;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
@@ -18,8 +18,8 @@ import java.util.List;
 @Boundary
 @TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class MonthPayoffFacade extends AbstractFacade<MonthPayoff> {
-    @Inject
-    @PersistenceUnit("ssbd03mowPU")
+    
+    @PersistenceContext(unitName = "ssbd03mowPU")
     EntityManager em;
 
     public MonthPayoffFacade() {

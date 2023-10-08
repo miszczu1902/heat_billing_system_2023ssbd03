@@ -6,8 +6,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
-import org.hibernate.annotations.NamedNativeQueries;
-import org.hibernate.annotations.NamedNativeQuery;
+
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -19,12 +18,12 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "heating_place_and_communal_area_advance")
-@NamedNativeQueries({
-        @NamedNativeQuery(name = "HeatingPlaceAndCommunalAreaAdvance.getAllHeatingPlaceAndCommunalAreaAdvances",
+@NamedQueries({
+        @NamedQuery(name = "HeatingPlaceAndCommunalAreaAdvance.getAllHeatingPlaceAndCommunalAreaAdvances",
                 query = "SELECT a FROM HeatingPlaceAndCommunalAreaAdvance a WHERE a.place.building.id = :buildingId AND a.place.centralHeatingConnection IS TRUE AND a.date >= :date ORDER BY a.date DESC"),
-        @NamedNativeQuery(name = "HeatingPlaceAndCommunalAreaAdvance.findTheNewestAdvanceChangeFactor", query = "SELECT k FROM HeatingPlaceAndCommunalAreaAdvance k WHERE k.place.building.id = :buildingId  ORDER BY k.date DESC"),
-        @NamedNativeQuery(name = "HeatingPlaceAndCommunalAreaAdvance.findTheNewestAdvanceChangeFactorByPlaceId", query = "SELECT k FROM HeatingPlaceAndCommunalAreaAdvance k WHERE k.place.id = :placeId  ORDER BY k.date DESC"),
-        @NamedNativeQuery(name = "HeatingPlaceAndCommunalAreaAdvance.findLastAdvances", query = "SELECT k FROM HeatingPlaceAndCommunalAreaAdvance k WHERE YEAR(k.date) = :year AND MONTH(k.date)= :month")
+        @NamedQuery(name = "HeatingPlaceAndCommunalAreaAdvance.findTheNewestAdvanceChangeFactor", query = "SELECT k FROM HeatingPlaceAndCommunalAreaAdvance k WHERE k.place.building.id = :buildingId  ORDER BY k.date DESC"),
+        @NamedQuery(name = "HeatingPlaceAndCommunalAreaAdvance.findTheNewestAdvanceChangeFactorByPlaceId", query = "SELECT k FROM HeatingPlaceAndCommunalAreaAdvance k WHERE k.place.id = :placeId  ORDER BY k.date DESC"),
+        @NamedQuery(name = "HeatingPlaceAndCommunalAreaAdvance.findLastAdvances", query = "SELECT k FROM HeatingPlaceAndCommunalAreaAdvance k WHERE YEAR(k.date) = :year AND MONTH(k.date)= :month")
 })
 public class HeatingPlaceAndCommunalAreaAdvance extends Advance implements Serializable, Signable {
 
