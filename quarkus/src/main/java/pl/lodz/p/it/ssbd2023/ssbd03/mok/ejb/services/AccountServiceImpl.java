@@ -10,6 +10,7 @@ import jakarta.security.enterprise.SecurityContext;
 import jakarta.security.enterprise.credential.Password;
 import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
+import jakarta.security.enterprise.identitystore.IdentityStore;
 import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.core.Context;
@@ -62,7 +63,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Inject JwtGenerator jwtGenerator;
 
-    @Context IdentityStoreHandler identityStoreHandler;
+    @Inject IdentityStore identityStoreHandler;
 
     @Context SecurityContext securityContext;
 

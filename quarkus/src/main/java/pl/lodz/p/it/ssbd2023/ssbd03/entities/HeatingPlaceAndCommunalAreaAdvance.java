@@ -20,7 +20,7 @@ import java.time.LocalDate;
 @Table(name = "heating_place_and_communal_area_advance")
 @NamedQueries({
         @NamedQuery(name = "HeatingPlaceAndCommunalAreaAdvance.getAllHeatingPlaceAndCommunalAreaAdvances",
-                query = "SELECT a FROM HeatingPlaceAndCommunalAreaAdvance a WHERE a.place.building.id = :buildingId AND a.place.centralHeatingConnection IS TRUE AND a.date >= :date ORDER BY a.date DESC"),
+                query = "SELECT a FROM HeatingPlaceAndCommunalAreaAdvance a WHERE a.place.building.id = :buildingId AND a.place.centralHeatingConnection = true AND a.date >= :date ORDER BY a.date DESC"),
         @NamedQuery(name = "HeatingPlaceAndCommunalAreaAdvance.findTheNewestAdvanceChangeFactor", query = "SELECT k FROM HeatingPlaceAndCommunalAreaAdvance k WHERE k.place.building.id = :buildingId  ORDER BY k.date DESC"),
         @NamedQuery(name = "HeatingPlaceAndCommunalAreaAdvance.findTheNewestAdvanceChangeFactorByPlaceId", query = "SELECT k FROM HeatingPlaceAndCommunalAreaAdvance k WHERE k.place.id = :placeId  ORDER BY k.date DESC"),
         @NamedQuery(name = "HeatingPlaceAndCommunalAreaAdvance.findLastAdvances", query = "SELECT k FROM HeatingPlaceAndCommunalAreaAdvance k WHERE YEAR(k.date) = :year AND MONTH(k.date)= :month")

@@ -20,9 +20,9 @@ import java.util.Objects;
         @NamedQuery(name = "AccountConfirmationToken.getActivationTokenByTokenValue",
                 query = "SELECT t FROM AccountConfirmationToken t WHERE tokenValue = :tokenValue"),
         @NamedQuery(name = "AccountConfirmationToken.findAllUnconfirmedAccounts",
-                query = "SELECT t FROM AccountConfirmationToken t WHERE t.account.isActive IS FALSE AND t.account.registerDate <= :date"),
+                query = "SELECT t FROM AccountConfirmationToken t WHERE t.account.isActive = false AND t.account.registerDate <= :date"),
         @NamedQuery(name = "AccountConfirmationToken.findAllAccountsToSendReminder",
-                query = "SELECT t FROM AccountConfirmationToken t WHERE t.isReminderSent IS FALSE AND t.account.isActive IS FALSE AND t.account.registerDate <= :date")
+                query = "SELECT t FROM AccountConfirmationToken t WHERE t.isReminderSent = false AND t.account.isActive = false AND t.account.registerDate <= :date")
 })
 public class AccountConfirmationToken extends AbstractEntity implements Serializable {
     @Id

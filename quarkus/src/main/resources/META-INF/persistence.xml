@@ -17,6 +17,7 @@
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.discriminator.ignore_explicit_for_joined" value="true" />
+            <property name="hibernate.max_fetch_depth" value="25"/>
         </properties>
     </persistence-unit>
 
@@ -44,6 +45,7 @@
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.discriminator.ignore_explicit_for_joined" value="true" />
+            <property name="hibernate.max_fetch_depth" value="25"/>
         </properties>
     </persistence-unit>
 
@@ -80,6 +82,7 @@
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.discriminator.ignore_explicit_for_joined" value="true" />
+            <property name="hibernate.max_fetch_depth" value="25"/>
         </properties>
     </persistence-unit>
 
