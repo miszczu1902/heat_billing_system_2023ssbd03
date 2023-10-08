@@ -20,15 +20,20 @@ import java.util.List;
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class AdvanceServiceImpl extends AbstractService implements AdvanceService {
 
-    @Inject PlaceFacade placeFacade;
+    @Inject
+    PlaceFacade placeFacade;
 
-    @Inject ManagerFacade managerFacade;
+    @Inject
+    ManagerFacade managerFacade;
 
-    @Inject HotWaterAdvanceFacade hotWaterAdvanceFacade;
+    @Inject
+    HotWaterAdvanceFacade hotWaterAdvanceFacade;
 
-    @Inject HeatingPlaceAndCommunalAreaAdvanceFacade heatingPlaceAndCommunalAreaAdvanceFacade;
+    @Inject
+    HeatingPlaceAndCommunalAreaAdvanceFacade heatingPlaceAndCommunalAreaAdvanceFacade;
 
-    @Inject BalanceService balanceService;
+    @Inject
+    BalanceService balanceService;
 
     @Override
     @PermitAll
@@ -105,7 +110,7 @@ public class AdvanceServiceImpl extends AbstractService implements AdvanceServic
     }
 
     @PermitAll
-    private BigDecimal calculateCostPerSquerMeterFromPastQuarterAdvances() {
+    BigDecimal calculateCostPerSquerMeterFromPastQuarterAdvances() {
         final List<HeatingPlaceAndCommunalAreaAdvance> heatingPlaceAndCommunalAreaAdvances = heatingPlaceAndCommunalAreaAdvanceFacade.findLastAdvances()
                 .stream()
                 .toList();

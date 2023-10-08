@@ -126,7 +126,7 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
     }
 
     @RolesAllowed({Roles.MANAGER})
-    private void calculateHotWaterAdvanceForNewPlace(Place place) {
+ void calculateHotWaterAdvanceForNewPlace(Place place) {
         final BigDecimal averageValue = place.getPredictedHotWaterConsumption().divide(BigDecimal.valueOf(30), 2, BigDecimal.ROUND_HALF_UP);
         final HeatingPlaceAndCommunalAreaAdvance heatingPlaceAndCommunalAreaAdvance = heatingPlaceAndCommunalAreaAdvanceFacade.findTheNewestAdvanceChangeFactor(place.getBuilding().getId());
         final BigDecimal pricePerCubicMeter = balanceService.getUnitWarmCostReportHotWater();
@@ -155,7 +155,7 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
     }
 
     @RolesAllowed({Roles.MANAGER})
-    private void calculateHeatingPlaceAndCommunalAreaAdvanceForNewPlace(Place place) {
+ void calculateHeatingPlaceAndCommunalAreaAdvanceForNewPlace(Place place) {
         final BigDecimal costPerSquerMeter = calculateCostPerSquerMeterFromPastQuarterAdvancesForNewLocal();
 
         final HeatingPlaceAndCommunalAreaAdvance heatingPlaceAndCommunalAreaAdvance = heatingPlaceAndCommunalAreaAdvanceFacade.findTheNewestAdvanceChangeFactor(place.getBuilding().getId());
@@ -185,7 +185,7 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
     }
 
     @RolesAllowed({Roles.MANAGER})
-    private BigDecimal calculateCostPerSquerMeterFromPastQuarterAdvancesForNewLocal() {
+ BigDecimal calculateCostPerSquerMeterFromPastQuarterAdvancesForNewLocal() {
         final List<HeatingPlaceAndCommunalAreaAdvance> heatingPlaceAndCommunalAreaAdvances = heatingPlaceAndCommunalAreaAdvanceFacade.findLastAdvances()
                 .stream()
                 .toList();

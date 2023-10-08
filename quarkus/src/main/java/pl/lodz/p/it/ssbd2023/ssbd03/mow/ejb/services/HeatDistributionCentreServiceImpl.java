@@ -333,7 +333,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     }
 
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    private List<HotWaterEntry> getHotWaterEntriesForPlaceWithoutActualEntry(Long placeId) {
+ List<HotWaterEntry> getHotWaterEntriesForPlaceWithoutActualEntry(Long placeId) {
         final List<HotWaterEntry> hotWaterEntries = hotWaterEntryFacade.getHotWaterEntriesByPlaceId(placeId);
         final LocalDate now = LocalDate.now();
         hotWaterEntries.removeIf(entry -> entry.getDate().getYear() == now.getYear() && entry.getDate().getMonthValue() == now.getMonthValue());

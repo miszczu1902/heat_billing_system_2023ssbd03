@@ -26,21 +26,29 @@ import java.util.Objects;
 @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class PlaceServiceImpl extends AbstractService implements PlaceService, SessionSynchronization {
 
-    @Inject PlaceFacade placeFacade;
+    @Inject
+    PlaceFacade placeFacade;
 
-    @Inject MessageSigner messageSigner;
+    @Inject
+    MessageSigner messageSigner;
 
-    @Inject OwnerFacade ownerFacade;
+    @Inject
+    OwnerFacade ownerFacade;
 
-    @Inject AccountFacade accountFacade;
+    @Inject
+    AccountFacade accountFacade;
 
-    @Inject HotWaterAdvanceFacade hotWaterAdvanceFacade;
+    @Inject
+    HotWaterAdvanceFacade hotWaterAdvanceFacade;
 
-    @Inject HeatingPlaceAndCommunalAreaAdvanceFacade heatingPlaceAndCommunalAreaAdvanceFacade;
+    @Inject
+    HeatingPlaceAndCommunalAreaAdvanceFacade heatingPlaceAndCommunalAreaAdvanceFacade;
 
-    @Context SecurityContext securityContext;
+    @Context
+    SecurityContext securityContext;
 
-    @Inject BalanceService balanceService;
+    @Inject
+    BalanceService balanceService;
 
     @Override
     @RolesAllowed(Roles.MANAGER)
@@ -147,7 +155,7 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService, S
     }
 
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
-    private void changeHotWaterAdvanceForNewPlace(Place place) {
+    void changeHotWaterAdvanceForNewPlace(Place place) {
         final BigDecimal averageValue = place.getPredictedHotWaterConsumption().divide(BigDecimal.valueOf(30), 2, BigDecimal.ROUND_HALF_UP);
         final HeatingPlaceAndCommunalAreaAdvance heatingPlaceAndCommunalAreaAdvance = heatingPlaceAndCommunalAreaAdvanceFacade.findTheNewestAdvanceChangeFactor(place.getBuilding().getId());
         final BigDecimal pricePerCubicMeter = balanceService.getUnitWarmCostReportHotWater();

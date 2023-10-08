@@ -660,14 +660,14 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    private void setUserEnableFlag(String username, boolean flag) {
+ void setUserEnableFlag(String username, boolean flag) {
         final Account editableAccount = accountFacade.findByUsername(username);
         editableAccount.setIsEnable(flag);
         accountFacade.edit(editableAccount);
     }
 
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
-    private void editUserEnableFlag(String username, boolean flag) {
+ void editUserEnableFlag(String username, boolean flag) {
         final String editor = securityContext.getCallerPrincipal().getName();
         final Account editorAccount = accountFacade.findByUsername(editor);
         final Account editableAccount = accountFacade.findByUsername(username);
@@ -692,7 +692,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    private void editPersonalData(String username, String firstName, String surname, String etag, Long version) {
+ void editPersonalData(String username, String firstName, String surname, String etag, Long version) {
         PersonalData personalData = personalDataFacade.findByUsername(username);
 
         if (!etag.equals(messageSigner.sign(personalData))) {
@@ -708,7 +708,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    private void changeEmail(String newEmail, Account account) {
+ void changeEmail(String newEmail, Account account) {
         if (newEmail.equals(account.getEmail())) {
             throw AppException.createCurrentEmailException();
         }
@@ -722,7 +722,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     }
 
     @RolesAllowed({Roles.GUEST, Roles.ADMIN})
-    private void changePassword(Account account, String newPassword) {
+ void changePassword(Account account, String newPassword) {
         if (!account.getIsActive()) {
             throw AppException.createAccountIsNotActivatedException();
         }
