@@ -12,7 +12,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Admin;
 
 @Boundary
-@TransactionAttribute(TransactionAttributeType.MANDATORY)
+//@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class AdminFacade extends AbstractFacade<Admin> {
     
     @PersistenceContext(unitName = "ssbd03mokPU")

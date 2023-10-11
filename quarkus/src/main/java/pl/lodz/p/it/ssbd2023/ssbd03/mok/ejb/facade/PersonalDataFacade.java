@@ -17,7 +17,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.PersonalDataFacadeExceptionInte
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 
 @Boundary
-@TransactionAttribute(TransactionAttributeType.MANDATORY)
+//@TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors({TrackerInterceptor.class, BasicFacadeExceptionInterceptor.class,
         PersonalDataFacadeExceptionInterceptor.class})
 public class PersonalDataFacade extends AbstractFacade<PersonalData> {

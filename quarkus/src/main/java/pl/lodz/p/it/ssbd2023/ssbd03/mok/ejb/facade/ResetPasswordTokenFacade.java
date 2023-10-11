@@ -22,7 +22,7 @@ import java.util.Optional;
 import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
 @Boundary
-@TransactionAttribute(TransactionAttributeType.MANDATORY)
+//@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class ResetPasswordTokenFacade extends AbstractFacade<ResetPasswordToken> {
     
     @PersistenceContext(unitName = "ssbd03mokPU") EntityManager em;

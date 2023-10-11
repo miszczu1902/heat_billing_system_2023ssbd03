@@ -27,7 +27,7 @@ import java.util.List;
 import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
 @ApplicationScoped
-@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+//@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class HeatDistributionCentreServiceImpl extends AbstractService implements HeatDistributionCentreService, SessionSynchronization {
     @Inject HeatDistributionCentrePayoffFacade heatDistributionCentrePayoffFacade;
 

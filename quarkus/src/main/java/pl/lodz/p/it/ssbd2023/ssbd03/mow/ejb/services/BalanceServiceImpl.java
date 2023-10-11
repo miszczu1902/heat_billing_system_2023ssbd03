@@ -26,7 +26,7 @@ import java.util.Optional;
 import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
 @ApplicationScoped
-@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+//@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class BalanceServiceImpl extends AbstractService implements BalanceService {
     @Inject BalanceFacade balanceFacade;
 

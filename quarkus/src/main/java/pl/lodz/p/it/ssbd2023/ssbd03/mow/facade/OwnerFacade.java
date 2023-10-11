@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Boundary
-@TransactionAttribute(TransactionAttributeType.MANDATORY)
+//@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class OwnerFacade extends AbstractFacade<Owner> {
     
     @PersistenceContext(unitName = "ssbd03mowPU")

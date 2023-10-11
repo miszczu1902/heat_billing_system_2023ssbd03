@@ -13,7 +13,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AccessLevelMapping;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Account;
 
 @Boundary
-@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
+//@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 public class AccessLevelMappingFacade extends AbstractFacade<AccessLevelMapping> {
     
     @PersistenceContext(unitName = "ssbd03mokPU")

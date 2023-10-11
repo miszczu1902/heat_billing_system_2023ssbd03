@@ -15,7 +15,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatDistributionCentre;
 import java.util.List;
 
 @Boundary
-@TransactionAttribute(TransactionAttributeType.MANDATORY)
+//@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class HeatDistributionCentreFacade extends AbstractFacade<HeatDistributionCentre> {
     
     @PersistenceContext(unitName = "ssbd03mowPU")

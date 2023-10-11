@@ -11,7 +11,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.PastQuarterHotWaterPayoff;
 
 @Boundary
-@TransactionAttribute(TransactionAttributeType.MANDATORY)
+//@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class PastQuarterHotWaterPayoffFacade extends AbstractFacade<PastQuarterHotWaterPayoff> {
     
     @PersistenceContext(unitName = "ssbd03mowPU")

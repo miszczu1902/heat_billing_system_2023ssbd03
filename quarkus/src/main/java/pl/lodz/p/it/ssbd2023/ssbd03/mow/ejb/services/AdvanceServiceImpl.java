@@ -17,7 +17,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @ApplicationScoped
-@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+//@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class AdvanceServiceImpl extends AbstractService implements AdvanceService {
 
     @Inject

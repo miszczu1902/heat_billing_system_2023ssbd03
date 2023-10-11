@@ -15,28 +15,34 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@DatabaseIdentityStoreDefinition(
-        dataSourceLookup = "java:app/jdbc/ssbd03auth",
-        callerQuery = "SELECT password from glassfish_auth_view WHERE username = ?",
-        groupsQuery = "SELECT access_level from glassfish_auth_view WHERE username = ?",
-        hashAlgorithm = BcryptHashGenerator.class
-)
+//@DatabaseIdentityStoreDefinition(
+//        dataSourceLookup = "java:app/jdbc/ssbd03auth",
+//        callerQuery = "SELECT password from glassfish_auth_view WHERE username = ?",
+//        groupsQuery = "SELECT access_level from glassfish_auth_view WHERE username = ?",
+//        hashAlgorithm = BcryptHashGenerator.class
+//)
 @ApplicationScoped
 public class AuthIdentityStore implements IdentityStore {
 
-    @Inject AccessLevelMappingFacade accessLevelMappingFacade;
+    @Inject
+    AccessLevelMappingFacade accessLevelMappingFacade;
+
+    @Inject
+    BcryptHashGenerator bcryptHashGenerator;
 
     @Override
     public CredentialValidationResult validate(Credential credential) {
-        if (credential instanceof UsernamePasswordCredential) {
-            final String username = ((UsernamePasswordCredential) credential).getCaller();
+        if (credential instanceof UsernamePasswordCredential user) {
+            final String username = user.getCaller();
             final Account account = accessLevelMappingFacade.findByUsernameForEntityListener(username);
-            return account != null && (account.getIsActive() && account.getIsEnable())
+            return account != null
+                    && (account.getIsActive() && account.getIsEnable())
+                    && bcryptHashGenerator.encryptAndVerify(user.getPassword().getValue(), account.getPassword())
                     ? new CredentialValidationResult(
-                            account.getUsername(),
-                            account.getAccessLevels()
-                                    .stream()
-                                    .map(AccessLevelMapping::getAccessLevel).collect(Collectors.toSet()))
+                    account.getUsername(),
+                    account.getAccessLevels()
+                            .stream()
+                            .map(AccessLevelMapping::getAccessLevel).collect(Collectors.toSet()))
                     : CredentialValidationResult.INVALID_RESULT;
         }
 

@@ -22,7 +22,7 @@ import java.util.List;
 @Startup
 @Singleton
 @RunAs(Roles.ADMIN)
-@TransactionAttribute(TransactionAttributeType.REQUIRED)
+//@TransactionAttribute(TransactionAttributeType.REQUIRED)
 @Interceptors(TrackerInterceptor.class)
 public class MokSystemScheduler {
     @Inject AccountConfirmationTokenFacade accountConfirmationTokenFacade;

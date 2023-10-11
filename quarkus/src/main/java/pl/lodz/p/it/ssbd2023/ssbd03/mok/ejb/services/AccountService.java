@@ -22,55 +22,99 @@ public interface AccountService extends CommonManagerLocalInterface {
 
     String refreshToken(String token);
 
-    String updateLoginData(String username, boolean flag);
+    String updateLoginData(String username, boolean flag, String ipAddr);
 
-    void changePhoneNumber(String newPhoneNumber, String etag, Long version);
+    void changePhoneNumber(String changingUsername, String newPhoneNumber, String etag, Long version);
 
-    void adminLoggedInEmail(String email, String language);
+    void adminLoggedInEmail(String email, String ipAddr, String language);
 
-    void changeSelfEmail(String newEmail, String etag, Long version);
+    void changeSelfEmail(String username, String newEmail, String etag, Long version);
 
-    void changeUserEmail(String newEmail, String username, String etag, Long version);
+    void changeUserEmail(String changingUsername, String newEmail, String username, String etag, Long version);
 
     void confirmNewEmailAccountFromActivationLink(String confirmationToken);
 
     Account getAccount(String username);
 
-    Account getSelfAccount();
+    Account getSelfAccount(String username);
 
-    Owner getOwner();
+    Owner getOwner(String username);
 
-    Manager getManager();
+    Manager getManager(String username);
 
-    Admin getAdmin();
+    Admin getAdmin(String username);
 
     PersonalData getUserPersonalData(String username);
 
-    PersonalData getSelfPersonalData();
+    PersonalData getSelfPersonalData(String username);
 
-    void editSelfPersonalData(String firstName, String surname, String etag, Long version);
+    void editSelfPersonalData(
+            String username,
+            String firstName,
+            String surname,
+            String etag,
+            Long version
+    );
 
-    void editUserPersonalData(String username, String firstName, String surname, String etag, Long version);
+    void editUserPersonalData(
+            String editorUsername,
+            String username,
+            String firstName,
+            String surname,
+            String etag,
+            Long version
+    );
 
-    void changeLanguage(String language, String etag, Long version);
+    void changeLanguage(String username, String language, String etag, Long version);
 
-    void changeSelfPassword(String oldPassword, String newPassword, String newRepeatedPassword, String etag, Long version);
+    void changeSelfPassword(
+            String username,
+            String oldPassword,
+            String newPassword,
+            String newRepeatedPassword,
+            String etag,
+            Long version
+    );
 
-    void changeUserPassword(String username, String newPassword, String newRepeatedPassword, String etag, Long version);
+    void changeUserPassword(
+            String username,
+            String newPassword,
+            String newRepeatedPassword,
+            String etag,
+            Long version
+    );
 
     void resetPassword(String username);
 
-    void disableUserAccount(String username);
+    void disableUserAccount(String editor, String username);
 
-    void enableUserAccount(String username);
+    void enableUserAccount(String editor, String username);
 
-    void addAccessLevelManager(String username, String license, String etag, Long version);
+    void addAccessLevelManager(
+            String adminUsername,
+            String username,
+            String license,
+            String etag,
+            Long version
+    );
 
-    void addAccessLevelOwner(String username, String phoneNumber, String etag, Long version);
+    void addAccessLevelOwner(
+            String adminUsername,
+            String username,
+            String phoneNumber,
+            String etag,
+            Long version
+    );
 
-    void addAccessLevelAdmin(String username, String etag, Long version);
+    void addAccessLevelAdmin(String adminUsername, String username, String etag, Long version);
 
-    void revokeAccessLevel(String username, String accessLevel, String etag, Long version);
+    void revokeAccessLevel(
+            String adminUsername,
+            String username,
+            String accessLevel,
+            String etag,
+            Long version
+    );
 
     List<Account> getListOfAccounts(String sortBy, int pageNumber, int pageSize, Boolean isEnable);
 }

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Boundary
-@TransactionAttribute(TransactionAttributeType.MANDATORY)
+//@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class BalanceFacade extends AbstractFacade<AnnualBalance> {
     
     @PersistenceContext(unitName = "ssbd03mowPU")

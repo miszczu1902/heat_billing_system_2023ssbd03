@@ -17,7 +17,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Manager;
 import java.util.Optional;
 
 @Boundary
-@TransactionAttribute(TransactionAttributeType.MANDATORY)
+//@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class AccessLevelFacade extends AbstractFacade<AccessLevelMapping> {
     
     @PersistenceContext(unitName = "ssbd03mowPU") EntityManager em;

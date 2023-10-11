@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Boundary
-@TransactionAttribute(TransactionAttributeType.MANDATORY)
+//@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class PlaceFacade extends AbstractFacade<Place> {
     
     @PersistenceContext(unitName = "ssbd03mowPU")

@@ -1,6 +1,7 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.mail;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.RequestScoped;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Boundary;
 import jakarta.inject.Inject;
 import jakarta.mail.*;
@@ -12,7 +13,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 
 import java.util.Properties;
 
-@Boundary
+//@Boundary
+@RequestScoped
 public class MailSender {
 
     @Inject Internationalization internationalization;

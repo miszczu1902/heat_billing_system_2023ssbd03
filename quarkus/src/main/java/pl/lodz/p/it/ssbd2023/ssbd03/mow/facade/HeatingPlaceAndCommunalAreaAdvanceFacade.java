@@ -17,7 +17,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Boundary
-@TransactionAttribute(TransactionAttributeType.MANDATORY)
+//@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class HeatingPlaceAndCommunalAreaAdvanceFacade extends AbstractFacade<HeatingPlaceAndCommunalAreaAdvance> {
     
     @PersistenceContext(unitName = "ssbd03mowPU")

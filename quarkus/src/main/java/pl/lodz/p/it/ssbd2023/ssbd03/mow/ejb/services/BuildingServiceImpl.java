@@ -27,7 +27,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+//@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class BuildingServiceImpl extends AbstractService implements BuildingService, SessionSynchronization {
     @Inject BuildingFacade buildingFacade;
 

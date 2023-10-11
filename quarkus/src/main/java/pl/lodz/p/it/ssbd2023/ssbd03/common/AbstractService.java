@@ -24,7 +24,7 @@ public abstract class AbstractService {
 
     private boolean lastTransactionRollback;
 
-    @TransactionAttribute(NOT_SUPPORTED)
+    //@TransactionAttribute(NOT_SUPPORTED)
     public boolean isLastTransactionRollback() {
         return lastTransactionRollback;
     }

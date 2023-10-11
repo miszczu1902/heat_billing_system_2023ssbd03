@@ -14,7 +14,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Owner;
 
 @Boundary
-@TransactionAttribute(TransactionAttributeType.MANDATORY)
+//@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class OwnerFacade extends AbstractFacade<Owner> {
     
     @PersistenceContext(unitName = "ssbd03mokPU")

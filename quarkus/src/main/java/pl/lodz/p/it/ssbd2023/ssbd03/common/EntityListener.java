@@ -1,6 +1,8 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.common;
 
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.spi.CDI;
+import jakarta.inject.Inject;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.security.enterprise.SecurityContext;
@@ -13,11 +15,13 @@ import java.time.LocalDateTime;
 
 import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
+@ApplicationScoped
 public class EntityListener {
+    @Inject AccessLevelMappingFacade accessLevelMappingFacade;
+
     @PrePersist
     public void initCreatedBy(AbstractEntity entity) {
         final Principal principal = CDI.current().select(SecurityContext.class).get().getCallerPrincipal();
-        final AccessLevelMappingFacade accessLevelMappingFacade = CDI.current().select(AccessLevelMappingFacade.class).get();
         final String username = principal.getName();
         final Account account = accessLevelMappingFacade.findByUsernameForEntityListener(username);
         entity.setCreatedBy(account);
@@ -27,7 +31,6 @@ public class EntityListener {
     @PreUpdate
     public void initLastModifiedBy(AbstractEntity entity) {
         final Principal principal = CDI.current().select(SecurityContext.class).get().getCallerPrincipal();
-        final AccessLevelMappingFacade accessLevelMappingFacade = CDI.current().select(AccessLevelMappingFacade.class).get();
         final String username = principal.getName();
         final Account account = accessLevelMappingFacade.findByUsernameForEntityListener(username);
         entity.setLastModifiedBy(account);

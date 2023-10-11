@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Objects;
 
 @ApplicationScoped
-@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+//@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class PlaceServiceImpl extends AbstractService implements PlaceService, SessionSynchronization {
 
     @Inject

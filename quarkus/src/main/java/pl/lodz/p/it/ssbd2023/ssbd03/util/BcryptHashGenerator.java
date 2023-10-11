@@ -23,4 +23,8 @@ public class BcryptHashGenerator implements PasswordHash {
     public boolean verify(char[] chars, String hashedPassword) {
         return BCrypt.checkpw(new String(chars), hashedPassword);
     }
+
+    public boolean encryptAndVerify(char[] chars, String hashedPassword) {
+        return verify(chars, generate(chars));
+    }
 }

@@ -14,7 +14,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.LoginData;
 
 @Boundary
-@TransactionAttribute(TransactionAttributeType.MANDATORY)
+//@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class LoginDataFacade extends AbstractFacade<LoginData> {
     
     @PersistenceContext(unitName = "ssbd03mokPU")

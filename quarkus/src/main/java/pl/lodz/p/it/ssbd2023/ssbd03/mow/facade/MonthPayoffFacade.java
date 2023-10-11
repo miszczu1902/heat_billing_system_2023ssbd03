@@ -16,7 +16,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.MonthPayoff;
 import java.util.List;
 
 @Boundary
-@TransactionAttribute(TransactionAttributeType.MANDATORY)
+//@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class MonthPayoffFacade extends AbstractFacade<MonthPayoff> {
     
     @PersistenceContext(unitName = "ssbd03mowPU")

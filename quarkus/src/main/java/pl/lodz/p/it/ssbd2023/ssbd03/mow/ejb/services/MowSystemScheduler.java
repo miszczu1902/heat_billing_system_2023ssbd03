@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 @Startup
 @Singleton
 @RunAs(Roles.MANAGER)
-@TransactionAttribute(TransactionAttributeType.REQUIRED)
+//@TransactionAttribute(TransactionAttributeType.REQUIRED)
 @Interceptors(TrackerInterceptor.class)
 public class MowSystemScheduler {
     protected static final Logger LOGGER = Logger.getGlobal();
