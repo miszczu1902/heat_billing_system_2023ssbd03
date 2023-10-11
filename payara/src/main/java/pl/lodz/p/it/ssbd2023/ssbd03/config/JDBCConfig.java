@@ -8,7 +8,7 @@ import jakarta.persistence.PersistenceContext;
 import java.sql.Connection;
 
 @DataSourceDefinition(
-        name = "java:app/jdbc/ssbd03admin",
+        name = "java:jboss/jdbc/ssbd03admin",
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd03admin",
         password = "9LUoYTSMH",
@@ -22,7 +22,7 @@ import java.sql.Connection;
         isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
 
 @DataSourceDefinition(
-        name = "java:app/jdbc/ssbd03auth",
+        name = "java:jboss/jdbc/ssbd03auth",
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd03auth",
         password = "KHgXydJUv",
@@ -32,7 +32,7 @@ import java.sql.Connection;
         isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
 
 @DataSourceDefinition(
-        name = "java:app/jdbc/ssbd03mok",
+        name = "java:jboss/jdbc/ssbd03mok",
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd03mok",
         password = "CHqZxv5R1",
@@ -42,7 +42,7 @@ import java.sql.Connection;
         isolationLevel = Connection.TRANSACTION_READ_COMMITTED)
 
 @DataSourceDefinition(
-        name = "java:app/jdbc/ssbd03mow",
+        name = "java:jboss/jdbc/ssbd03mow",
         className = "org.postgresql.ds.PGSimpleDataSource",
         user = "ssbd03mow",
         password = "obSjEBGaX",

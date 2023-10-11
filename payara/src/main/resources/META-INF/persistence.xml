@@ -5,13 +5,13 @@
              version="3.0">
     <persistence-unit name="ssbd03adminPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <jta-data-source>java:app/jdbc/ssbd03admin</jta-data-source>
+        <jta-data-source>java:jboss/jdbc/ssbd03admin</jta-data-source>
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect"/>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
             <property name="hibernate.transaction.jta.platform"
-                      value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
+                      value="org.hibernate.service.jta.platform.internal.JbossAppServerJtaPlatform"/>
 <!--            <property name="javax.persistence.schema-generation.database.action" value="none"/>-->
             <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create"/>
             <property name="jakarta.persistence.sql-load-script-source" value="init.sql"/>
@@ -22,7 +22,7 @@
 
     <persistence-unit name="ssbd03mokPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <jta-data-source>java:app/jdbc/ssbd03mok</jta-data-source>
+        <jta-data-source>java:jboss/jdbc/ssbd03mok</jta-data-source>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Account</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.AccountConfirmationToken</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.EmailConfirmationToken</class>
@@ -40,7 +40,7 @@
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect"/>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
             <property name="hibernate.transaction.jta.platform"
-                      value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
+                      value="org.hibernate.service.jta.platform.internal.JbossAppServerJtaPlatform"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
         </properties>
@@ -48,7 +48,7 @@
 
     <persistence-unit name="ssbd03mowPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <jta-data-source>java:app/jdbc/ssbd03mow</jta-data-source>
+        <jta-data-source>java:jboss/jdbc/ssbd03mow</jta-data-source>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.AbstractEntity</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Advance</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.AnnualBalance</class>
@@ -75,7 +75,7 @@
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL10Dialect"/>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
             <property name="hibernate.transaction.jta.platform"
-                      value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
+                      value="org.hibernate.service.jta.platform.internal.JbossAppServerJtaPlatform"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
         </properties>
