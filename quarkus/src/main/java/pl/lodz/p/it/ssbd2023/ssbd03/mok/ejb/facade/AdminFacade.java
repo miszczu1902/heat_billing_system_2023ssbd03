@@ -2,8 +2,11 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Boundary;
+import jakarta.transaction.Transactional;
 import jakarta.ejb.TransactionAttribute;
+import jakarta.transaction.Transactional;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -11,8 +14,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Admin;
 
-@Boundary
-//@TransactionAttribute(TransactionAttributeType.MANDATORY)
+@Boundary@Transactional(value = Transactional.TxType.MANDATORY, rollbackOn = AppException.class)
+ //@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class AdminFacade extends AbstractFacade<Admin> {
     
     @PersistenceContext(unitName = "ssbd03mokPU")

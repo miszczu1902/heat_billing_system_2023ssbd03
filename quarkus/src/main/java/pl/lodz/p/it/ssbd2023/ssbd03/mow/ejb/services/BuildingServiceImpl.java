@@ -3,10 +3,13 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.SessionSynchronization;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 import jakarta.ejb.TransactionAttribute;
+import jakarta.transaction.Transactional;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.SecurityContext;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Context;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
@@ -27,27 +30,38 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
+@Transactional(value = Transactional.TxType.REQUIRES_NEW, rollbackOn = AppException.class)
 //@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-public class BuildingServiceImpl extends AbstractService implements BuildingService, SessionSynchronization {
-    @Inject BuildingFacade buildingFacade;
+public class BuildingServiceImpl extends AbstractService implements BuildingService {
+    @Inject
+    BuildingFacade buildingFacade;
 
-    @Inject PlaceFacade placeFacade;
+    @Inject
+    PlaceFacade placeFacade;
 
-    @Inject AccountFacade accountFacade;
+    @Inject
+    AccountFacade accountFacade;
 
-    @Inject BalanceFacade balanceFacade;
+    @Inject
+    BalanceFacade balanceFacade;
 
-    @Inject OwnerFacade ownerFacade;
+    @Inject
+    OwnerFacade ownerFacade;
 
-    @Inject HotWaterAdvanceFacade hotWaterAdvanceFacade;
+    @Inject
+    HotWaterAdvanceFacade hotWaterAdvanceFacade;
 
-    @Inject HeatingPlaceAndCommunalAreaAdvanceFacade heatingPlaceAndCommunalAreaAdvanceFacade;
+    @Inject
+    HeatingPlaceAndCommunalAreaAdvanceFacade heatingPlaceAndCommunalAreaAdvanceFacade;
 
-    @Inject BalanceService balanceService;
+    @Inject
+    BalanceService balanceService;
 
-    @Inject MessageSigner messageSigner;
+    @Inject
+    MessageSigner messageSigner;
 
-    @Context SecurityContext securityContext;
+    @Context
+    SecurityContext securityContext;
 
     @Override
     @RolesAllowed(Roles.MANAGER)
@@ -126,7 +140,7 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
     }
 
     @RolesAllowed({Roles.MANAGER})
- void calculateHotWaterAdvanceForNewPlace(Place place) {
+    void calculateHotWaterAdvanceForNewPlace(Place place) {
         final BigDecimal averageValue = place.getPredictedHotWaterConsumption().divide(BigDecimal.valueOf(30), 2, BigDecimal.ROUND_HALF_UP);
         final HeatingPlaceAndCommunalAreaAdvance heatingPlaceAndCommunalAreaAdvance = heatingPlaceAndCommunalAreaAdvanceFacade.findTheNewestAdvanceChangeFactor(place.getBuilding().getId());
         final BigDecimal pricePerCubicMeter = balanceService.getUnitWarmCostReportHotWater();
@@ -155,7 +169,7 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
     }
 
     @RolesAllowed({Roles.MANAGER})
- void calculateHeatingPlaceAndCommunalAreaAdvanceForNewPlace(Place place) {
+    void calculateHeatingPlaceAndCommunalAreaAdvanceForNewPlace(Place place) {
         final BigDecimal costPerSquerMeter = calculateCostPerSquerMeterFromPastQuarterAdvancesForNewLocal();
 
         final HeatingPlaceAndCommunalAreaAdvance heatingPlaceAndCommunalAreaAdvance = heatingPlaceAndCommunalAreaAdvanceFacade.findTheNewestAdvanceChangeFactor(place.getBuilding().getId());
@@ -174,8 +188,7 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
 
         if (month == 1 || month == 4 || month == 7 || month == 10) {
             count = 3;
-        }
-        else if (month == 2 || month == 5 || month == 8 || month == 11) {
+        } else if (month == 2 || month == 5 || month == 8 || month == 11) {
             count = 2;
         }
         for (int i = 1; i < count; i++) {
@@ -185,7 +198,7 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
     }
 
     @RolesAllowed({Roles.MANAGER})
- BigDecimal calculateCostPerSquerMeterFromPastQuarterAdvancesForNewLocal() {
+    BigDecimal calculateCostPerSquerMeterFromPastQuarterAdvancesForNewLocal() {
         final List<HeatingPlaceAndCommunalAreaAdvance> heatingPlaceAndCommunalAreaAdvances = heatingPlaceAndCommunalAreaAdvanceFacade.findLastAdvances()
                 .stream()
                 .toList();

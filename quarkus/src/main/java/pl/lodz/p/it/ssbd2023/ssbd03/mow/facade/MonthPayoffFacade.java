@@ -4,7 +4,9 @@ import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Boundary;
+import jakarta.transaction.Transactional;
 import jakarta.ejb.TransactionAttribute;
+import jakarta.transaction.Transactional;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -15,8 +17,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.MonthPayoff;
 
 import java.util.List;
 
-@Boundary
-//@TransactionAttribute(TransactionAttributeType.MANDATORY)
+@Boundary@Transactional(Transactional.TxType.MANDATORY)
+ //@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class MonthPayoffFacade extends AbstractFacade<MonthPayoff> {
     
     @PersistenceContext(unitName = "ssbd03mowPU")

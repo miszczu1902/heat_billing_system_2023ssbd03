@@ -2,12 +2,15 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services;
 
 import jakarta.annotation.security.PermitAll;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 import jakarta.ejb.TransactionAttribute;
+import jakarta.transaction.Transactional;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Manager;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.facade.*;
 
 import java.math.BigDecimal;
@@ -16,8 +19,8 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-@ApplicationScoped
-//@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@ApplicationScoped@Transactional(value = Transactional.TxType.REQUIRES_NEW, rollbackOn = AppException.class)
+ //@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class AdvanceServiceImpl extends AbstractService implements AdvanceService {
 
     @Inject

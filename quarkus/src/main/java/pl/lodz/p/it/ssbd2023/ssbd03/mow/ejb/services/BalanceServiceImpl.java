@@ -3,7 +3,9 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 import jakarta.ejb.TransactionAttribute;
+import jakarta.transaction.Transactional;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.SecurityContext;
@@ -25,8 +27,8 @@ import java.util.Optional;
 
 import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
-@ApplicationScoped
-//@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@ApplicationScoped@Transactional(value = Transactional.TxType.REQUIRES_NEW, rollbackOn = AppException.class)
+ //@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class BalanceServiceImpl extends AbstractService implements BalanceService {
     @Inject BalanceFacade balanceFacade;
 

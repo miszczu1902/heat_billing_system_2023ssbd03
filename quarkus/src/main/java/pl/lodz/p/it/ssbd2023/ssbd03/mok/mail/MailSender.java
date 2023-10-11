@@ -1,7 +1,9 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.mail;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.transaction.Transactional;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Boundary;
 import jakarta.inject.Inject;
 import jakarta.mail.*;
@@ -14,7 +16,9 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import java.util.Properties;
 
 //@Boundary
-@RequestScoped
+//@RequestScoped
+//@Transactional(rollbackOn = AppException.class)
+@ApplicationScoped
 public class MailSender {
 
     @Inject Internationalization internationalization;

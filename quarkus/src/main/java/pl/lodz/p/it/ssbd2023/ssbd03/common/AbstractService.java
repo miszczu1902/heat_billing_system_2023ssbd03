@@ -2,8 +2,11 @@ package pl.lodz.p.it.ssbd2023.ssbd03.common;
 
 import jakarta.annotation.Resource;
 import jakarta.ejb.SessionContext;
+import jakarta.transaction.Transactional;
 import jakarta.ejb.TransactionAttribute;
+import jakarta.transaction.Transactional;
 import jakarta.interceptor.Interceptors;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.BasicServiceExceptionInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 
@@ -25,6 +28,7 @@ public abstract class AbstractService {
     private boolean lastTransactionRollback;
 
     //@TransactionAttribute(NOT_SUPPORTED)
+    @Transactional(value = Transactional.TxType.NOT_SUPPORTED, rollbackOn = AppException.class)
     public boolean isLastTransactionRollback() {
         return lastTransactionRollback;
     }

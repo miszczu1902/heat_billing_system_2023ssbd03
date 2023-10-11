@@ -5,6 +5,7 @@ import jakarta.ejb.*;
 import jakarta.inject.Singleton;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
+import jakarta.transaction.Transactional;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
 
 @Startup
 @Singleton
-@RunAs(Roles.MANAGER)
+@RunAs(Roles.MANAGER)@Transactional(value = Transactional.TxType.REQUIRED, rollbackOn = AppException.class)
 //@TransactionAttribute(TransactionAttributeType.REQUIRED)
 @Interceptors(TrackerInterceptor.class)
 public class MowSystemScheduler {

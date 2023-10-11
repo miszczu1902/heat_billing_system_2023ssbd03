@@ -2,8 +2,11 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Boundary;
+import jakarta.transaction.Transactional;
 import jakarta.ejb.TransactionAttribute;
+import jakarta.transaction.Transactional;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
@@ -16,8 +19,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.BasicFacadeExceptionInterceptor
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.PersonalDataFacadeExceptionInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 
-@Boundary
-//@TransactionAttribute(TransactionAttributeType.MANDATORY)
+@Boundary@Transactional(value = Transactional.TxType.MANDATORY, rollbackOn = AppException.class)
+ //@TransactionAttribute(TransactionAttributeType.MANDATORY)
 @Interceptors({TrackerInterceptor.class, BasicFacadeExceptionInterceptor.class,
         PersonalDataFacadeExceptionInterceptor.class})
 public class PersonalDataFacade extends AbstractFacade<PersonalData> {

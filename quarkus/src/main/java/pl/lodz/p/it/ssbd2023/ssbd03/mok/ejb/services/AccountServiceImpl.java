@@ -4,7 +4,9 @@ import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.SessionSynchronization;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 import jakarta.ejb.TransactionAttribute;
+import jakarta.transaction.Transactional;
 import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.credential.Password;
@@ -33,9 +35,9 @@ import java.util.Set;
 
 import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
-@ApplicationScoped
-//@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-public class AccountServiceImpl extends AbstractService implements AccountService, SessionSynchronization {
+@ApplicationScoped@Transactional(Transactional.TxType.REQUIRES_NEW)
+ //@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+public class AccountServiceImpl extends AbstractService implements AccountService {
     @Inject
     PersonalDataFacade personalDataFacade;
 

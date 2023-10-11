@@ -5,6 +5,7 @@ import jakarta.ejb.*;
 import jakarta.inject.Singleton;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
+import jakarta.transaction.Transactional;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AccountConfirmationToken;
@@ -21,7 +22,7 @@ import java.util.List;
 
 @Startup
 @Singleton
-@RunAs(Roles.ADMIN)
+@RunAs(Roles.ADMIN)@Transactional(Transactional.TxType.REQUIRED)
 //@TransactionAttribute(TransactionAttributeType.REQUIRED)
 @Interceptors(TrackerInterceptor.class)
 public class MokSystemScheduler {

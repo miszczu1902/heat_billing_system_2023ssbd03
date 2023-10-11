@@ -24,7 +24,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.HotWaterEntryCouldNotB
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.ManagerWhoIsOwnerOfPlaceCouldNotInsertHotWaterEntryException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.TotalHotWaterUsageIsZeroException;
 
-@ApplicationException(rollback = true)
+//@ApplicationException(rollback = true)
 public class AppException extends WebApplicationException {
     protected final static String ERROR_UNKNOWN = "exception.error.unknown";
     protected final static String ERROR_GENERAL_PERSISTENCE = "exception.error.general_persistence";
