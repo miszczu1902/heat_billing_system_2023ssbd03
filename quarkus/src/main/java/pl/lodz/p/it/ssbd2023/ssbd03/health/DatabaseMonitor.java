@@ -16,10 +16,11 @@ import java.net.Socket;
 public class DatabaseMonitor implements HealthCheck {
     @Inject
     @ConfigProperty(name = "db.hostname", defaultValue = "databaseRent")
-    private String dbHost;
+    String dbHost;
+
     @Inject
     @ConfigProperty(name = "db.dbPort", defaultValue = "5432")
-    private int dbPort;
+    int dbPort;
 
     @Override
     public HealthCheckResponse call() {

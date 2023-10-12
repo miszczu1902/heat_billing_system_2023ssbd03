@@ -1,6 +1,5 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.cdi.endpoints;
 
-import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
@@ -13,7 +12,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.*;
@@ -22,7 +21,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services.AccountService;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.EtagValidator;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AccountMapper;
@@ -33,12 +31,13 @@ import java.util.logging.Logger;
 
 @Path("/accounts")
 @RequestScoped
-@Authenticated
 public class AccountEndpoint {
     @Inject
     AccountService accountService;
 
-    private int txRetries = Integer.parseInt(LoadConfig.loadPropertyFromConfig("tx.retries"));
+    @Inject
+    @ConfigProperty(name = "tx.retries", defaultValue = "3")
+    int txRetries;
 
     protected static final Logger LOGGER = Logger.getGlobal();
 
@@ -47,9 +46,6 @@ public class AccountEndpoint {
 
     @Context
     SecurityIdentity securityContext;
-
-    @Inject
-    JsonWebToken jsonWebToken;
 
 //    @Inject
 //    RoutingContext context;
@@ -80,15 +76,12 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/login")
     @RolesAllowed(Roles.GUEST)
-//    @PermitAll
     public Response authenticate(@Valid LoginDTO loginDTO) {
         try {
             final String token = accountService.authenticate(loginDTO.getUsername(), loginDTO.getPassword());
-//            final String language = accountService.updateLoginData(loginDTO.getUsername(), true, context.request().authority().host());
             final String language = accountService.updateLoginData(loginDTO.getUsername(), true, "192.168.0.1");
             return Response.ok().header("Bearer", token).header("Language", language).build();
         } catch (Exception ex) {
-//            accountService.updateLoginData(loginDTO.getUsername(), false, context.request().authority().host());
             accountService.updateLoginData(loginDTO.getUsername(), false, "192.168.0.1");
             throw AppException.invalidCredentialsException();
         }
@@ -99,7 +92,7 @@ public class AccountEndpoint {
     @Path("/self/refresh-token")
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
     public Response refreshToken(RefreshTokenDTO refreshTokenDTO) {
-        final String token = accountService.refreshToken(jsonWebToken.getRawToken());
+        final String token = accountService.refreshToken(refreshTokenDTO.getToken());
         return Response.ok().header("Bearer", token).build();
     }
 

@@ -18,15 +18,15 @@ public class HealthMonitor implements HealthCheck {
 
     @Inject
     @ConfigProperty(name = "user.hostname", defaultValue = "localhost")
-    private String userServiceHost;
+    String userServiceHost;
 
     @Inject
     @ConfigProperty(name = "user.port", defaultValue = "8080")
-    private int userServicePort;
+    int userServicePort;
 
     @Inject
     @ConfigProperty(name = "user.path", defaultValue = "/api/health-check")
-    private String userServicePath;
+    String userServicePath;
 
     @Override
     @PermitAll

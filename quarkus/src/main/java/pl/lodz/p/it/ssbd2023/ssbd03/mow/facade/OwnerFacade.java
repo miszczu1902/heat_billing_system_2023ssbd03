@@ -1,12 +1,8 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.facade;
 
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Boundary;
 import jakarta.transaction.Transactional;
-import jakarta.ejb.TransactionAttribute;
-import jakarta.transaction.Transactional;
-import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -19,10 +15,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@Boundary@Transactional(Transactional.TxType.MANDATORY)
- //@TransactionAttribute(TransactionAttributeType.MANDATORY)
+@Boundary
+@Transactional(value = Transactional.TxType.MANDATORY, rollbackOn = AppException.class)
 public class OwnerFacade extends AbstractFacade<Owner> {
-    
+
     @PersistenceContext(unitName = "ssbd03mowPU")
     EntityManager em;
 

@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.REQUIRES_NEW, rollbackOn = AppException.class)
-//@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class BuildingServiceImpl extends AbstractService implements BuildingService {
     @Inject
     BuildingFacade buildingFacade;

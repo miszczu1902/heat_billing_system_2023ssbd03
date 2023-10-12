@@ -11,6 +11,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.EnterPredictedHotWaterConsumptionDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.ModifyPlaceOwnerDTO;
@@ -36,9 +37,11 @@ public class PlaceEndpoint {
     @Inject
     MessageSigner messageSigner;
 
-    protected static final Logger LOGGER = Logger.getGlobal();
+    @Inject
+    @ConfigProperty(name = "tx.retries", defaultValue = "3")
+    int txRetries;
 
-    private int txRetries = Integer.parseInt(LoadConfig.loadPropertyFromConfig("tx.retries"));
+    protected static final Logger LOGGER = Logger.getGlobal();
 
     @GET
     @Path("/place/{placeId}")

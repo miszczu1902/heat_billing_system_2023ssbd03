@@ -12,7 +12,6 @@ import java.util.function.Supplier;
 
 @ApplicationScoped
 public class RolesAugmentor implements SecurityIdentityAugmentor {
-
     @Override
     public Uni<SecurityIdentity> augment(SecurityIdentity identity, AuthenticationRequestContext context) {
         return Uni.createFrom().item(build(identity));

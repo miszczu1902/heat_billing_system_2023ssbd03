@@ -1,14 +1,17 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.exceptions;
 
-import jakarta.ejb.ApplicationException;
+
 import jakarta.ws.rs.WebApplicationException;
 import jakarta.ws.rs.core.Response;
 import lombok.Getter;
 import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.account.*;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.building.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.advanceFactor.AdvanceChangeFactorNotModifiedException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.advanceFactor.AdvanceChangeFactorWasInsertedException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.building.AddingPlaceToTheSameAccountException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.building.LackOfSpaceInTheBuildingException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.building.NoBuildingFoundException;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.building.TotalAreaIsZeroException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.SignerException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.etag.VerifierException;
@@ -24,7 +27,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.HotWaterEntryCouldNotB
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.ManagerWhoIsOwnerOfPlaceCouldNotInsertHotWaterEntryException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.waterEntry.TotalHotWaterUsageIsZeroException;
 
-//@ApplicationException(rollback = true)
+
+@Getter
 public class AppException extends WebApplicationException {
     protected final static String ERROR_UNKNOWN = "exception.error.unknown";
     protected final static String ERROR_GENERAL_PERSISTENCE = "exception.error.general_persistence";
@@ -81,7 +85,6 @@ public class AppException extends WebApplicationException {
     protected final static String TOTAL_AREA_IS_ZERO = "exception.error.total_area_is_zero";
     protected final static String TOTAL_HOT_WATER_USAGE_IS_ZERO = "exception.error.total_hot_water_usage_is_zero";
 
-    @Getter
     private Throwable cause;
 
     protected AppException(Response.Status status, String key, Throwable cause) {

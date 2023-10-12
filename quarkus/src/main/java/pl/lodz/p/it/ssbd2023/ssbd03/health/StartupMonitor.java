@@ -8,10 +8,8 @@ import org.eclipse.microprofile.health.HealthCheckResponse;
 @Startup
 @ApplicationScoped
 public class StartupMonitor implements HealthCheck {
-
     @Override
     public HealthCheckResponse call() {
         return HealthCheckResponse.named("Aplikacja SSBD03 2023 uruchomiona!").up().build();
     }
-
 }

@@ -1,13 +1,10 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade;
 
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.inject.Inject;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Boundary;
 import jakarta.transaction.Transactional;
-import jakarta.ejb.TransactionAttribute;
-import jakarta.transaction.Transactional;
-import jakarta.ejb.TransactionAttributeType;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -23,7 +20,6 @@ import java.util.Optional;
 import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
 @Boundary@Transactional(value = Transactional.TxType.MANDATORY, rollbackOn = AppException.class)
- //@TransactionAttribute(TransactionAttributeType.MANDATORY)
 public class EmailConfirmationTokenFacade extends AbstractFacade<EmailConfirmationToken> {
     
     @PersistenceContext(unitName = "ssbd03mokPU")

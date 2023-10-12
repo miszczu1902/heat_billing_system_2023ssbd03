@@ -6,14 +6,18 @@ import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.MACVerifier;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import java.text.ParseException;
 
 @ApplicationScoped
 public class MessageVerifier {
-    private final String secretKey = LoadConfig.loadPropertyFromConfig("ETag.secretKey");
     private JWSVerifier jwsVerifier;
+
+    @Inject
+    @ConfigProperty(name = "ETag.secretKey")
+    String secretKey;
 
     @PostConstruct
     public void init() {

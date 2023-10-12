@@ -2,27 +2,18 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mok.mail;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.transaction.Transactional;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.Boundary;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import jakarta.inject.Inject;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Internationalization;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 
 import java.util.Properties;
 
-//@Boundary
-//@RequestScoped
-//@Transactional(rollbackOn = AppException.class)
 @ApplicationScoped
 public class MailSender {
-
-    @Inject Internationalization internationalization;
-
     private static final String MAIL_SUBJECT_CONFIRMATION_LINK = "Confirm your new email";
     private static final String CHANGED_PASSWORD_BY_ADMIN_CONTENT_MESSAGE = """
             Administrator changed your password.
@@ -36,22 +27,60 @@ public class MailSender {
     private final Properties properties = new Properties();
     private Session session;
 
+    @Inject
+    Internationalization internationalization;
+
+    @Inject
+    @ConfigProperty(name = "mail.smtp.host")
+    String mailSmtpHost;
+
+    @Inject
+    @ConfigProperty(name = "mail.smtp.host")
+    String mailSmtpPort;
+
+    @Inject
+    @ConfigProperty(name = "mail.smtp.starttls.enable")
+    String tlsEnable;
+
+    @Inject
+    @ConfigProperty(name = "mail.smtp.auth")
+    String smtpAuth;
+
+    @Inject
+    @ConfigProperty(name = "activation.url")
+    String url;
+
+    @Inject
+    @ConfigProperty(name = "mail.activation.url")
+    String mailUrl;
+
+    @Inject
+    @ConfigProperty(name = "reset.password.url")
+    String resetUrl;
+
+    @Inject
+    @ConfigProperty(name = "mail.login")
+    String login;
+
+    @Inject
+    @ConfigProperty(name = "mail.password")
+    String password;
+
+
     @PostConstruct
     public void init() {
-        properties.put("mail.smtp.host", LoadConfig.loadPropertyFromConfig("mail.smtp.host"));
-        properties.put("mail.smtp.port", LoadConfig.loadPropertyFromConfig("mail.smtp.port"));
-        properties.put("mail.smtp.starttls.enable", LoadConfig.loadPropertyFromConfig("mail.smtp.starttls.enable"));
-        properties.put("mail.smtp.auth", LoadConfig.loadPropertyFromConfig("mail.smtp.auth"));
-        properties.put("activation.url", LoadConfig.loadPropertyFromConfig("activation.url"));
-        properties.put("mail.activation.url", LoadConfig.loadPropertyFromConfig("mail.activation.url"));
-        properties.put("reset.password.url", LoadConfig.loadPropertyFromConfig("reset.password.url"));
+        properties.put("mail.smtp.host", mailSmtpHost);
+        properties.put("mail.smtp.port", mailSmtpPort);
+        properties.put("mail.smtp.starttls.enable", tlsEnable);
+        properties.put("mail.smtp.auth", smtpAuth);
+        properties.put("activation.url", url);
+        properties.put("mail.activation.url", mailUrl);
+        properties.put("reset.password.url", resetUrl);
 
         session = Session.getInstance(properties, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(
-                        LoadConfig.loadPropertyFromConfig("mail.login"),
-                        LoadConfig.loadPropertyFromConfig("mail.password"));
+                return new PasswordAuthentication(login, password);
             }
         });
     }
@@ -116,7 +145,7 @@ public class MailSender {
     private void sendEmail(String to, String subject, String content) {
         try {
             MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(LoadConfig.loadPropertyFromConfig("mail.login")));
+            message.setFrom(new InternetAddress(login));
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject(subject);
             message.setText(content);

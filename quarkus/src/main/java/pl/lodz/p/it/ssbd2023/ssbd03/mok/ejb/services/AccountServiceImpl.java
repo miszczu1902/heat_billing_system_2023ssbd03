@@ -2,7 +2,6 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.transaction.Transactional;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.credential.Password;

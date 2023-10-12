@@ -11,6 +11,7 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AccountConfirmationToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.EmailConfirmationToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.ResetPasswordToken;
+import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountConfirmationTokenFacade;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.AccountFacade;
@@ -22,19 +23,24 @@ import java.util.List;
 
 @Startup
 @Singleton
-@RunAs(Roles.ADMIN)@Transactional(Transactional.TxType.REQUIRED)
-//@TransactionAttribute(TransactionAttributeType.REQUIRED)
+@RunAs(Roles.ADMIN)
+@Transactional(value = Transactional.TxType.REQUIRED, rollbackOn = AppException.class)
 @Interceptors(TrackerInterceptor.class)
 public class MokSystemScheduler {
-    @Inject AccountConfirmationTokenFacade accountConfirmationTokenFacade;
+    @Inject
+    AccountConfirmationTokenFacade accountConfirmationTokenFacade;
 
-    @Inject EmailConfirmationTokenFacade emailConfirmationTokenFacade;
+    @Inject
+    EmailConfirmationTokenFacade emailConfirmationTokenFacade;
 
-    @Inject ResetPasswordTokenFacade resetPasswordTokenFacade;
+    @Inject
+    ResetPasswordTokenFacade resetPasswordTokenFacade;
 
-    @Inject AccountFacade accountFacade;
+    @Inject
+    AccountFacade accountFacade;
 
-    @Inject MailSender mailSender;
+    @Inject
+    MailSender mailSender;
 
     @Schedule(hour = "*", minute = "*/1", persistent = false)
     private void cleanUnconfirmedAccounts() {
@@ -85,7 +91,7 @@ public class MokSystemScheduler {
                 account.setIsEnable(true);
                 account.getLoginData().setInvalidLoginCounter(0);
                 accountFacade.edit(account);
-                mailSender.sendInformationAccountEnabled(account.getEmail(),account.getLanguage_());
+                mailSender.sendInformationAccountEnabled(account.getEmail(), account.getLanguage_());
             });
         }
     }

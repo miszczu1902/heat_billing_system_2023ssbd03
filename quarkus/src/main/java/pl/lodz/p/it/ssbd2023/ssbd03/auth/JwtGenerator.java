@@ -23,10 +23,6 @@ public class JwtGenerator {
     String issuer;
 
     @Inject
-    @ConfigProperty(name = "secret")
-    String secret;
-
-    @Inject
     JsonWebToken jsonWebToken;
 
 
@@ -44,18 +40,4 @@ public class JwtGenerator {
     public String refreshTokenJWT() {
         return generateJwtToken(jsonWebToken.getSubject(), jsonWebToken.getGroups());
     }
-
-    //        try {
-//            Set<String> roles = new HashSet<>();
-//            final Claims claims = parseJWT(token).getBody();
-//            final String rolesString = claims.get("role", String.class);
-//            final String[] rolesArray = rolesString.split(",");
-//            for (String role : rolesArray) {
-//                roles.add(role.trim());
-//            }
-//            final String username = claims.get("sub", String.class);
-//            return generateJWT(username, roles);
-//        } catch (SignatureException | MalformedJwtException e) {
-//            throw AppException.tokenIsNotValidException();
-//        }
 }

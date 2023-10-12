@@ -5,7 +5,6 @@ import jakarta.inject.Inject;
 import jakarta.security.enterprise.credential.Credential;
 import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
-import jakarta.security.enterprise.identitystore.DatabaseIdentityStoreDefinition;
 import jakarta.security.enterprise.identitystore.IdentityStore;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AccessLevelMapping;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Account;
@@ -15,15 +14,8 @@ import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-//@DatabaseIdentityStoreDefinition(
-//        dataSourceLookup = "java:app/jdbc/ssbd03auth",
-//        callerQuery = "SELECT password from glassfish_auth_view WHERE username = ?",
-//        groupsQuery = "SELECT access_level from glassfish_auth_view WHERE username = ?",
-//        hashAlgorithm = BcryptHashGenerator.class
-//)
 @ApplicationScoped
 public class AuthIdentityStore implements IdentityStore {
-
     @Inject
     AccessLevelMappingFacade accessLevelMappingFacade;
 

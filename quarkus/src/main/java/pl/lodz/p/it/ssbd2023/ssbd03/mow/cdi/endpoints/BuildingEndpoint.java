@@ -11,6 +11,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.AddPlaceToBuildingDTO;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.CreateBuildingDTO;
@@ -44,7 +45,9 @@ public class BuildingEndpoint {
 
     protected static final Logger LOGGER = Logger.getGlobal();
 
-    private int txRetries = Integer.parseInt(LoadConfig.loadPropertyFromConfig("tx.retries"));
+    @Inject
+    @ConfigProperty(name = "tx.retries", defaultValue = "3")
+    int txRetries;
 
     @GET
     @Path("/building/{buildingId}/places")

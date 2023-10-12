@@ -29,7 +29,6 @@ import java.util.List;
 import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
 @ApplicationScoped@Transactional(value = Transactional.TxType.REQUIRES_NEW, rollbackOn = AppException.class)
- //@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
 public class HeatDistributionCentreServiceImpl extends AbstractService implements HeatDistributionCentreService {
     @Inject HeatDistributionCentrePayoffFacade heatDistributionCentrePayoffFacade;
 

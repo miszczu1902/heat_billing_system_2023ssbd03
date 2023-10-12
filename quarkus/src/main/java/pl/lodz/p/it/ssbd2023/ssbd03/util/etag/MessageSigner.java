@@ -4,14 +4,18 @@ import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 
 @ApplicationScoped
 public class MessageSigner {
-
-    private final String secretKey = LoadConfig.loadPropertyFromConfig("ETag.secretKey");
     private JWSSigner jwsSigner;
+
+    @Inject
+    @ConfigProperty(name = "ETag.secretKey")
+    String secretKey;
 
     @PostConstruct
     public void init() {

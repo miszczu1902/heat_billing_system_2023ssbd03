@@ -1,27 +1,26 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.auth;
 
-import jakarta.annotation.PostConstruct;
+import jakarta.inject.Inject;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Boundary;
 import org.apache.commons.lang3.RandomStringUtils;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 
-import java.util.Properties;
 
 @Boundary
 public class TokenGenerator {
-    private final Properties properties = new Properties();
+    @Inject
+    @ConfigProperty(name = "confirmation.token.length")
+    Integer confirmationTokenLength;
 
-    @PostConstruct
-    public void init() {
-        properties.put("confirmation.token.length", LoadConfig.loadPropertyFromConfig("confirmation.token.length"));
-        properties.put("reset.password.token.length", LoadConfig.loadPropertyFromConfig("reset.password.token.length"));
-    }
+    @Inject
+    @ConfigProperty(name = "reset.password.token.length")
+    Integer resetPasswordTokenLength;
 
     public String createAccountConfirmationToken() {
-        return RandomStringUtils.randomAlphanumeric(Integer.parseInt(properties.getProperty("confirmation.token.length")));
+        return RandomStringUtils.randomAlphanumeric(confirmationTokenLength);
     }
 
     public String createResetPasswordToken() {
-        return RandomStringUtils.randomAlphanumeric(Integer.parseInt(properties.getProperty("reset.password.token.length")));
+        return RandomStringUtils.randomAlphanumeric(resetPasswordTokenLength);
     }
 }

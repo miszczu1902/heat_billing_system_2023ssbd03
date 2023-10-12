@@ -6,12 +6,12 @@ import jakarta.inject.Singleton;
 import jakarta.inject.Inject;
 import jakarta.interceptor.Interceptors;
 import jakarta.transaction.Transactional;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,12 +19,13 @@ import java.util.logging.Logger;
 @Startup
 @Singleton
 @RunAs(Roles.MANAGER)@Transactional(value = Transactional.TxType.REQUIRED, rollbackOn = AppException.class)
-//@TransactionAttribute(TransactionAttributeType.REQUIRED)
 @Interceptors(TrackerInterceptor.class)
 public class MowSystemScheduler {
     protected static final Logger LOGGER = Logger.getGlobal();
 
-    private final int txRetries = Integer.parseInt(LoadConfig.loadPropertyFromConfig("tx.retries"));
+    @Inject
+    @ConfigProperty(name = "tx.retries", defaultValue = "3")
+    int txRetries;
 
     @Inject AdvanceService advanceService;
 
