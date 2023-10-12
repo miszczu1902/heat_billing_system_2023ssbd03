@@ -13,7 +13,7 @@ import org.eclipse.microprofile.health.Liveness;
 public class MemoryMonitor implements HealthCheck {
     @Inject
     @ConfigProperty(name = "memory.threshold", defaultValue = "0.9")
-    private double memoryThreshold;
+    double memoryThreshold;
 
     @Override
     public HealthCheckResponse call() {

@@ -2,8 +2,6 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mok.cdi.endpoints;
 
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
-import io.vertx.ext.web.RoutingContext;
-import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -15,7 +13,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import jakarta.ws.rs.core.SecurityContext;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.*;
@@ -49,6 +47,9 @@ public class AccountEndpoint {
 
     @Context
     SecurityIdentity securityContext;
+
+    @Inject
+    JsonWebToken jsonWebToken;
 
 //    @Inject
 //    RoutingContext context;
@@ -98,7 +99,7 @@ public class AccountEndpoint {
     @Path("/self/refresh-token")
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
     public Response refreshToken(RefreshTokenDTO refreshTokenDTO) {
-        final String token = accountService.refreshToken(refreshTokenDTO.getToken());
+        final String token = accountService.refreshToken(jsonWebToken.getRawToken());
         return Response.ok().header("Bearer", token).build();
     }
 

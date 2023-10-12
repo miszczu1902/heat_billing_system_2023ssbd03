@@ -1,70 +1,51 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.auth;
 
+import io.smallrye.jwt.algorithm.SignatureAlgorithm;
 import io.smallrye.jwt.build.Jwt;
-import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Boundary;
-import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 
-import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
-import static java.lang.Long.parseLong;
-
 @Boundary
+@Transactional
 public class JwtGenerator {
-    private final long timeout = parseLong(LoadConfig.loadPropertyFromConfig("timeout"));
-    private final String secret = LoadConfig.loadPropertyFromConfig("secret");
+    @Inject
+    @ConfigProperty(name = "timeout", defaultValue = "1800000")
+    long timeout;
+
+    @Inject
+    @ConfigProperty(name = "smallrye.jwt.new-token.issuer", defaultValue = "ssbd03")
+    String issuer;
+
+    @Inject
+    @ConfigProperty(name = "secret")
+    String secret;
+
+    @Inject
+    JsonWebToken jsonWebToken;
+
 
     public String generateJwtToken(String subject, Set<String> roles) {
-        return Jwt.issuer("quarkus-example")
+        return Jwt.issuer(issuer)
                 .upn(subject)
                 .groups(roles)
                 .issuedAt(new Date().getTime())
-                .claim("role", String.join(",", roles))
                 .expiresAt(new Date(System.currentTimeMillis() + timeout).getTime())
-                .signWithSecret(secret);
+                .jws()
+                .algorithm(SignatureAlgorithm.RS256)
+                .sign();
     }
 
-        public String refreshTokenJWT(String token) {
-        return generateJwtToken("mariasilva", Set.of(Roles.OWNER));
-//        try {
-//            Set<String> roles = new HashSet<>();
-//            final Claims claims = parseJWT(token).getBody();
-//            final String rolesString = claims.get("role", String.class);
-//            final String[] rolesArray = rolesString.split(",");
-//            for (String role : rolesArray) {
-//                roles.add(role.trim());
-//            }
-//            final String username = claims.get("sub", String.class);
-//            return generateJWT(username, roles);
-//        } catch (SignatureException | MalformedJwtException e) {
-//            throw AppException.tokenIsNotValidException();
-//        }
+    public String refreshTokenJWT() {
+        return generateJwtToken(jsonWebToken.getSubject(), jsonWebToken.getGroups());
     }
-//    private final long timeout = parseLong(LoadConfig.loadPropertyFromConfig("timeout"));
-//    private final String secret = LoadConfig.loadPropertyFromConfig("secret");
-//
-//    public String generateJWT(String login, Set<String> roles) {
-//        return Jwts.builder()
-//                .signWith(SignatureAlgorithm.HS256, secret)
-//                .setSubject(login)
-//                .setIssuedAt(new Date())
-//                .claim("role", String.join(",", roles))
-//                .setExpiration(new Date(System.currentTimeMillis() + timeout))
-//                .compact();
-//    }
-//
-//    public Jws<Claims> parseJWT(String jwt) {
-//        return Jwts.parser()
-//                .setSigningKey(secret)
-//                .parseClaimsJws(jwt);
-//    }
-//
-//    public String refreshTokenJWT(String token) {
-//        try {
+
+    //        try {
 //            Set<String> roles = new HashSet<>();
 //            final Claims claims = parseJWT(token).getBody();
 //            final String rolesString = claims.get("role", String.class);
@@ -77,5 +58,4 @@ public class JwtGenerator {
 //        } catch (SignatureException | MalformedJwtException e) {
 //            throw AppException.tokenIsNotValidException();
 //        }
-//    }
 }

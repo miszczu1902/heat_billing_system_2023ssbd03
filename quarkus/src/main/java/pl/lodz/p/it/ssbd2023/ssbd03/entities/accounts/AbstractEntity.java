@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @MappedSuperclass
-//@EntityListeners(value = EntityListener.class)
+@EntityListeners(value = EntityListener.class)
 public abstract class AbstractEntity {
     @Version
     private Long version;

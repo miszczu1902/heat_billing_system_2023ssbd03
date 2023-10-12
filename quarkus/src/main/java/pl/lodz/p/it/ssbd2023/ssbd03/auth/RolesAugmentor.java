@@ -21,7 +21,7 @@ public class RolesAugmentor implements SecurityIdentityAugmentor {
     private Supplier<SecurityIdentity> build(SecurityIdentity identity) {
         if (identity.isAnonymous()) {
             QuarkusSecurityIdentity.Builder builder = QuarkusSecurityIdentity.builder(identity);
-            builder.addRole("GUEST");
+            builder.addRole(Roles.GUEST);
             return builder::build;
         } else {
             return () -> identity;

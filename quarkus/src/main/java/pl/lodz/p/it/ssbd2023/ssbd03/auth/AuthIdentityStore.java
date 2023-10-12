@@ -35,14 +35,13 @@ public class AuthIdentityStore implements IdentityStore {
         if (credential instanceof UsernamePasswordCredential user) {
             final String username = user.getCaller();
             final Account account = accessLevelMappingFacade.findByUsernameForEntityListener(username);
-            return account != null
-                    && (account.getIsActive() && account.getIsEnable())
-                    && bcryptHashGenerator.encryptAndVerify(user.getPassword().getValue(), account.getPassword())
-                    ? new CredentialValidationResult(
+            CredentialValidationResult credentialValidationResult = new CredentialValidationResult(
                     account.getUsername(),
                     account.getAccessLevels()
                             .stream()
-                            .map(AccessLevelMapping::getAccessLevel).collect(Collectors.toSet()))
+                            .map(AccessLevelMapping::getAccessLevel).collect(Collectors.toSet()));
+            return (account.getIsActive() && account.getIsEnable()) && bcryptHashGenerator.verify(user.getPassword().getValue(), account.getPassword())
+                    ? credentialValidationResult
                     : CredentialValidationResult.INVALID_RESULT;
         }
 

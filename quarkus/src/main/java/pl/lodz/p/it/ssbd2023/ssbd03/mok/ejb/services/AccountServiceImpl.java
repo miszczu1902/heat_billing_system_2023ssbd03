@@ -1,13 +1,9 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services;
 
-import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.ejb.SessionSynchronization;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.security.enterprise.identitystore.IdentityStoreHandler;
 import jakarta.transaction.Transactional;
-import jakarta.ejb.TransactionAttribute;
-import jakarta.transaction.Transactional;
-import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.credential.Password;
 import jakarta.security.enterprise.credential.UsernamePasswordCredential;
@@ -35,8 +31,8 @@ import java.util.Set;
 
 import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
-@ApplicationScoped@Transactional(Transactional.TxType.REQUIRES_NEW)
- //@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+@ApplicationScoped
+@Transactional(value = Transactional.TxType.REQUIRES_NEW, rollbackOn = AppException.class)
 public class AccountServiceImpl extends AbstractService implements AccountService {
     @Inject
     PersonalDataFacade personalDataFacade;
@@ -154,21 +150,20 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
 
     @Override
     @RolesAllowed(Roles.GUEST)
-//    @PermitAll
     public String authenticate(String username, String password) {
         final UsernamePasswordCredential usernamePasswordCredential = new UsernamePasswordCredential(username, new Password(password));
         final CredentialValidationResult credentialValidationResult = identityStoreHandler.validate(usernamePasswordCredential);
-//        if (credentialValidationResult.getStatus().equals(CredentialValidationResult.Status.VALID)) {
-        final Set<String> roles = credentialValidationResult.getCallerGroups();
-        return jwtGenerator.generateJwtToken(username, roles);
-//        }
-//        throw AppException.invalidCredentialsException();
+        if (credentialValidationResult.getStatus().equals(CredentialValidationResult.Status.VALID)) {
+            final Set<String> roles = credentialValidationResult.getCallerGroups();
+            return jwtGenerator.generateJwtToken(username, roles);
+        }
+        throw AppException.invalidCredentialsException();
     }
 
     @Override
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
     public String refreshToken(String token) {
-        return jwtGenerator.refreshTokenJWT(token);
+        return jwtGenerator.refreshTokenJWT();
     }
 
     @Override

@@ -2,6 +2,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.util;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.security.enterprise.identitystore.PasswordHash;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Map;
@@ -21,10 +22,7 @@ public class BcryptHashGenerator implements PasswordHash {
 
     @Override
     public boolean verify(char[] chars, String hashedPassword) {
+        String s = new String(chars);
         return BCrypt.checkpw(new String(chars), hashedPassword);
-    }
-
-    public boolean encryptAndVerify(char[] chars, String hashedPassword) {
-        return verify(chars, generate(chars));
     }
 }
