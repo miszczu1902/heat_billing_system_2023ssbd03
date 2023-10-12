@@ -2,13 +2,14 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.transaction.Transactional;
 import jakarta.inject.Inject;
-import jakarta.security.enterprise.SecurityContext;
-import jakarta.ws.rs.core.Context;
+import jakarta.transaction.Transactional;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
-import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatingPlaceAndCommunalAreaAdvance;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterAdvance;
+import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Account;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Owner;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
@@ -42,8 +43,8 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService {
     @Inject
     HeatingPlaceAndCommunalAreaAdvanceFacade heatingPlaceAndCommunalAreaAdvanceFacade;
 
-    @Context
-    SecurityContext securityContext;
+    @Inject
+    JsonWebToken securityContext;
 
     @Inject
     BalanceService balanceService;
@@ -52,7 +53,7 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService {
     @RolesAllowed(Roles.MANAGER)
     public void modifyPlaceOwner(Long placeId, String username, String etag, Long version) {
         final Owner owner = ownerFacade.findOwnerByUsername(username);
-        final String ManagerUsername = securityContext.getCallerPrincipal().getName();
+        final String ManagerUsername = securityContext.getSubject();
 
         if (!owner.getAccount().getIsActive()) {
             throw AppException.createAccountIsNotActivatedException();
@@ -190,7 +191,7 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService {
     @Override
     @RolesAllowed(Roles.OWNER)
     public List<Place> getSelfAllPlaces(int pageNumber, int pageSize) {
-        final String username = securityContext.getCallerPrincipal().getName();
+        final String username = securityContext.getSubject();
         final Account account = accountFacade.findByUsername(username);
         final Owner owner = account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Owner && accessLevel.getIsActive())

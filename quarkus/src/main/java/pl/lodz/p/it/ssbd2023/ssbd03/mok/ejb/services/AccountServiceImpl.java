@@ -2,12 +2,12 @@ package pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.services;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.transaction.Transactional;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.credential.Password;
 import jakarta.security.enterprise.credential.UsernamePasswordCredential;
 import jakarta.security.enterprise.identitystore.CredentialValidationResult;
 import jakarta.security.enterprise.identitystore.IdentityStore;
+import jakarta.transaction.Transactional;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.JwtGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.auth.TokenGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
@@ -124,7 +124,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
                 }
                 loginData.setInvalidLoginCounter(0);
                 loginData.setLastValidLogicAddress(ipAddr);
-                loginData.setLastValidLoginDate(LocalDateTime.now(ZoneId.of(LoadConfig.loadPropertyFromConfig("zone"))));
+                loginData.setLastValidLoginDate(LocalDateTime.now(TIME_ZONE));
             } else {
                 loginData.setInvalidLoginCounter(loginData.getInvalidLoginCounter() + 1);
                 loginData.setLastInvalidLogicAddress(ipAddr);

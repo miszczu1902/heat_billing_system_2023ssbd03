@@ -1,16 +1,10 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services;
 
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.ejb.SessionSynchronization;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.transaction.Transactional;
-import jakarta.ejb.TransactionAttribute;
-import jakarta.transaction.Transactional;
-import jakarta.ejb.TransactionAttributeType;
 import jakarta.inject.Inject;
-import jakarta.security.enterprise.SecurityContext;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.core.Context;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
@@ -59,8 +53,8 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
     @Inject
     MessageSigner messageSigner;
 
-    @Context
-    SecurityContext securityContext;
+    @Inject
+    JsonWebToken securityContext;
 
     @Override
     @RolesAllowed(Roles.MANAGER)
@@ -87,7 +81,7 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
     @RolesAllowed({Roles.MANAGER})
     public void addPlaceToBuilding(BigDecimal area, Boolean hotWaterConnection, BigDecimal predictedHotWaterConsumption,
                                    Long buildingId, Long ownerId, String etag, Long version) {
-        final String username = securityContext.getCallerPrincipal().getName();
+        final String username = securityContext.getSubject();
         final Account account = accountFacade.findByUsername(username);
 
         final Optional<Owner> owner = account.getAccessLevels().stream()
