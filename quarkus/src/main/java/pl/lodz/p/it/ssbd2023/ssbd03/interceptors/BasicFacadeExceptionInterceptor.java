@@ -9,6 +9,7 @@ import jakarta.persistence.PersistenceException;
 import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 
+@InterceptionBinding
 public class BasicFacadeExceptionInterceptor {
     @AroundInvoke
     public Object intercept(InvocationContext ictx) throws Exception {

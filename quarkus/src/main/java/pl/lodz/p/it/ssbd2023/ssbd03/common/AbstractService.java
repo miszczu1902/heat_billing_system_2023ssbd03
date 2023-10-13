@@ -3,20 +3,18 @@ package pl.lodz.p.it.ssbd2023.ssbd03.common;
 import jakarta.annotation.Resource;
 import jakarta.ejb.SessionContext;
 import jakarta.transaction.Transactional;
-import jakarta.ejb.TransactionAttribute;
-import jakarta.transaction.Transactional;
 import jakarta.interceptor.Interceptors;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.BasicServiceExceptionInterceptor;
+import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.InterceptionBinding;
 import pl.lodz.p.it.ssbd2023.ssbd03.interceptors.TrackerInterceptor;
 
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static jakarta.ejb.TransactionAttributeType.NOT_SUPPORTED;
-
 @Interceptors({TrackerInterceptor.class, BasicServiceExceptionInterceptor.class})
+@InterceptionBinding
 public abstract class AbstractService {
     @Resource
     SessionContext sctx;

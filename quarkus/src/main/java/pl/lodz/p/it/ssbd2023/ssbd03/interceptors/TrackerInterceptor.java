@@ -1,16 +1,20 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.interceptors;
 
-import jakarta.annotation.Resource;
-import jakarta.ejb.SessionContext;
+import io.quarkus.security.identity.SecurityIdentity;
+import jakarta.inject.Inject;
 import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@Interceptor
+@InterceptionBinding
 public class TrackerInterceptor {
-    @Resource
-    private SessionContext sctx;
+    @Inject
+    SecurityIdentity securityIdentity;
+
     private static final Logger logger = Logger.getLogger(TrackerInterceptor.class.getName());
 
     @AroundInvoke
@@ -21,7 +25,7 @@ public class TrackerInterceptor {
         try {
             try {
                 message.append(ictx.getMethod().toString());
-                message.append(" użytkownik: ").append(sctx.getCallerPrincipal().getName());
+                message.append(" użytkownik: ").append(securityIdentity.getPrincipal().getName());
                 message.append(" wartości parametrów: ");
                 if (null != ictx.getParameters()) {
                     for (Object param : ictx.getParameters()) {

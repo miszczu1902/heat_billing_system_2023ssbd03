@@ -8,6 +8,7 @@ import jakarta.interceptor.InvocationContext;
 import jakarta.persistence.NoResultException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 
+@InterceptionBinding
 public class BasicServiceExceptionInterceptor {
     @AroundInvoke
     public Object intercept(InvocationContext ictx) throws Exception {
