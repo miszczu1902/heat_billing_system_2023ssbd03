@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.Signable;
 
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +73,7 @@ public class Account extends AbstractEntity implements Signable {
     private List<AccessLevelMapping> accessLevels = new ArrayList<>();
 
     @Setter
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "id", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
+    @OneToOne(mappedBy = "id", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
     private PersonalData personalData;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "id", cascade = CascadeType.ALL)

@@ -12,32 +12,31 @@ services:
       - ./secrets/certs:/etc/ssl/certs
       - ./secrets/private:/etc/ssl/private
       - ./secrets/snippets:/etc/nginx/snippets
-#    healthcheck:
-#      test: [ "CMD", "curl", "-f", "http://appserver:8080/api/health-check" ]
-#      interval: 30s
-#      timeout: 10s
-#      retries: 5
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://appserver:8080/api/health-check" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     depends_on:
       appserver:
-        condition: service_started
+        condition: service_healthy
 
   appserver:
     container_name: appserver
     build:
-      context: ../..
-      dockerfile: Dockerfile
+      context: ./..
+      dockerfile: docker/Dockerfile
     ports:
       - "8080:8080"
       - "4848:4848"
       - "9009:9009"
-#      - "9990:9990"
     environment:
       - JVM_ARGS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9009
-#    healthcheck:
-#      test: [ "CMD", "curl", "-f", "http://127.0.0.1:8080/api/health-check" ]
-#      interval: 30s
-#      timeout: 10s
-#      retries: 5
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://127.0.0.1:8080/api/health-check" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
     depends_on:
       database:
         condition: service_healthy
@@ -61,3 +60,24 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+
+#  database:
+#    container_name: database
+#    image: mariadb
+#    restart: unless-stopped
+#    environment:
+#      MYSQL_DATABASE: ssbd03
+#      MYSQL_USER: ssbd03
+#      MYSQL_PASSWORD: ssbd03
+#      MYSQL_ROOT_PASSWORD: ssbd03
+#    ports:
+#      - "3306:3306"
+#    volumes:
+#      - ./create_db_users.sh:/docker-entrypoint-initdb.d/create_db_users.sh
+#      - ./init.sql:/init.sql
+#      - ./createDB.sql:/createDB.sql
+#    healthcheck:
+#      test: [ "CMD", "mysqladmin", "ping", "-ptua03" ]
+#      interval: 5s
+#      timeout: 30s
+#      retries: 5

@@ -87,10 +87,6 @@
             <artifactId>quarkus-junit5</artifactId>
             <scope>test</scope>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>io.quarkus</groupId>-->
-<!--            <artifactId>quarkus-security</artifactId>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-jwt</artifactId>
@@ -99,18 +95,6 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-jwt-build</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>jakarta.enterprise</groupId>-->
-<!--            <artifactId>jakarta.enterprise.cdi-api</artifactId>-->
-<!--            <version>4.0.1</version>-->
-<!--            <optional>false</optional>-->
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <groupId>*</groupId>-->
-<!--                    <artifactId>*</artifactId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>jakarta.mail</artifactId>
