@@ -6,6 +6,7 @@ import jakarta.interceptor.InvocationContext;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.OptimisticLockException;
 import jakarta.persistence.PersistenceException;
+import jakarta.transaction.TransactionalException;
 import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 
@@ -19,7 +20,7 @@ public class BasicFacadeExceptionInterceptor {
             throw AppException.createOptimisticLockAppException();
         } catch (NoResultException nre) {
             throw AppException.createNoResultException(nre.getCause());
-        } catch (EJBTransactionRolledbackException e) {
+        } catch (EJBTransactionRolledbackException | TransactionalException e) {
             throw AppException.createTransactionRollbackException();
         } catch (PersistenceException | java.sql.SQLException pe) {
             if (pe.getCause() instanceof ConstraintViolationException)
