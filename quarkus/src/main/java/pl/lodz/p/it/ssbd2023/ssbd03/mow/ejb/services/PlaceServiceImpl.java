@@ -1,10 +1,10 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services;
 
+import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatingPlaceAndCommunalAreaAdvance;
@@ -44,7 +44,7 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService {
     HeatingPlaceAndCommunalAreaAdvanceFacade heatingPlaceAndCommunalAreaAdvanceFacade;
 
     @Inject
-    JsonWebToken securityContext;
+    SecurityIdentity securityIdentity;
 
     @Inject
     BalanceService balanceService;
@@ -53,7 +53,7 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService {
     @RolesAllowed(Roles.MANAGER)
     public void modifyPlaceOwner(Long placeId, String username, String etag, Long version) {
         final Owner owner = ownerFacade.findOwnerByUsername(username);
-        final String ManagerUsername = securityContext.getSubject();
+        final String ManagerUsername = securityIdentity.getPrincipal().getName();
 
         if (!owner.getAccount().getIsActive()) {
             throw AppException.createAccountIsNotActivatedException();
@@ -191,7 +191,7 @@ public class PlaceServiceImpl extends AbstractService implements PlaceService {
     @Override
     @RolesAllowed(Roles.OWNER)
     public List<Place> getSelfAllPlaces(int pageNumber, int pageSize) {
-        final String username = securityContext.getSubject();
+        final String username = securityIdentity.getPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
         final Owner owner = account.getAccessLevels().stream()
                 .filter(accessLevel -> accessLevel instanceof Owner && accessLevel.getIsActive())

@@ -1,10 +1,10 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services;
 
+import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
@@ -54,7 +54,7 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
     MessageSigner messageSigner;
 
     @Inject
-    JsonWebToken securityContext;
+    SecurityIdentity securityIdentity;
 
     @Override
     @RolesAllowed(Roles.MANAGER)
@@ -81,7 +81,7 @@ public class BuildingServiceImpl extends AbstractService implements BuildingServ
     @RolesAllowed({Roles.MANAGER})
     public void addPlaceToBuilding(BigDecimal area, Boolean hotWaterConnection, BigDecimal predictedHotWaterConsumption,
                                    Long buildingId, Long ownerId, String etag, Long version) {
-        final String username = securityContext.getSubject();
+        final String username = securityIdentity.getPrincipal().getName();
         final Account account = accountFacade.findByUsername(username);
 
         final Optional<Owner> owner = account.getAccessLevels().stream()

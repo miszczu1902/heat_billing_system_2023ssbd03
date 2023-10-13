@@ -1,11 +1,11 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services;
 
+import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.entities.*;
@@ -42,7 +42,7 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
     MonthPayoffFacade monthPayoffFacade;
 
     @Inject
-    JsonWebToken securityContext;
+    SecurityIdentity securityIdentity;
 
     @Override
     @PermitAll
@@ -75,7 +75,7 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
     @RolesAllowed(Roles.OWNER)
     public AnnualBalance getOwnerYearReport(Long reportId) {
         final AnnualBalance annualBalance = balanceFacade.findBalanceById(reportId);
-        final String username = securityContext.getSubject();
+        final String username = securityIdentity.getPrincipal().getName();
         if (!annualBalance.getPlace().getOwner().getAccount().getUsername().equals(username)) {
             throw AppException.createNotOwnerOfPlaceException();
         }
@@ -91,14 +91,14 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
     @Override
     @RolesAllowed({Roles.OWNER})
     public List<AnnualBalance> getSelfReports(int pageNumber, int pageSize) {
-        final String username = securityContext.getSubject();
+        final String username = securityIdentity.getPrincipal().getName();
         return balanceFacade.getListOfAnnualBalancesForOwner(pageNumber, pageSize, username);
     }
 
     @Override
     @RolesAllowed({Roles.OWNER})
     public List<HotWaterAdvance> getSelfWaterAdvanceValue(Long placeId, Integer year) {
-        final String username = securityContext.getSubject();
+        final String username = securityIdentity.getPrincipal().getName();
         final Place place = placeFacade.findPlaceById(placeId);
 
         if (!place.getOwner().getAccount().getUsername().equals(username)) {
@@ -117,7 +117,7 @@ public class BalanceServiceImpl extends AbstractService implements BalanceServic
     @Override
     @RolesAllowed({Roles.OWNER})
     public List<HeatingPlaceAndCommunalAreaAdvance> getSelfHeatingAdvanceValue(Long placeId, Integer year) {
-        final String username = securityContext.getSubject();
+        final String username = securityIdentity.getPrincipal().getName();
         final Place place = placeFacade.findPlaceById(placeId);
 
         if (!place.getOwner().getAccount().getUsername().equals(username)) {

@@ -1,11 +1,10 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services;
 
+import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.security.enterprise.SecurityContext;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.core.Context;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.common.AbstractService;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
@@ -25,29 +24,41 @@ import java.util.List;
 
 import static pl.lodz.p.it.ssbd2023.ssbd03.config.ApplicationConfig.TIME_ZONE;
 
-@ApplicationScoped@Transactional(value = Transactional.TxType.REQUIRES_NEW, rollbackOn = AppException.class)
+@ApplicationScoped
+@Transactional(value = Transactional.TxType.REQUIRES_NEW, rollbackOn = AppException.class)
 public class HeatDistributionCentreServiceImpl extends AbstractService implements HeatDistributionCentreService {
-    @Inject HeatDistributionCentrePayoffFacade heatDistributionCentrePayoffFacade;
+    @Inject
+    HeatDistributionCentrePayoffFacade heatDistributionCentrePayoffFacade;
 
-    @Inject JsonWebToken securityContext;
+    @Inject
+    SecurityIdentity securityIdentity;
 
-    @Inject HotWaterEntryFacade hotWaterEntryFacade;
+    @Inject
+    HotWaterEntryFacade hotWaterEntryFacade;
 
-    @Inject PlaceFacade placeFacade;
+    @Inject
+    PlaceFacade placeFacade;
 
-    @Inject BuildingFacade buildingFacade;
+    @Inject
+    BuildingFacade buildingFacade;
 
-    @Inject MonthPayoffFacade monthPayoffFacade;
+    @Inject
+    MonthPayoffFacade monthPayoffFacade;
 
-    @Inject MessageSigner messageSigner;
+    @Inject
+    MessageSigner messageSigner;
 
-    @Inject HeatDistributionCentreFacade heatDistributionCentreFacade;
+    @Inject
+    HeatDistributionCentreFacade heatDistributionCentreFacade;
 
-    @Inject HeatingPlaceAndCommunalAreaAdvanceFacade heatingPlaceAndCommunalAreaAdvanceFacade;
+    @Inject
+    HeatingPlaceAndCommunalAreaAdvanceFacade heatingPlaceAndCommunalAreaAdvanceFacade;
 
-    @Inject AccessLevelFacade accessLevelFacade;
+    @Inject
+    AccessLevelFacade accessLevelFacade;
 
-    @Inject ManagerFacade managerFacade;
+    @Inject
+    ManagerFacade managerFacade;
 
     @Override
     @RolesAllowed({Roles.MANAGER})
@@ -94,7 +105,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @RolesAllowed(Roles.MANAGER)
     public void insertConsumption(BigDecimal consumptionValue, Long placeId) {
         if (hotWaterEntryFacade.getEntryWithCheckingIfHotWaterEntryCouldBeInsertedOrOverwritten(placeId, false) == null) {
-            final String username = securityContext.getSubject();
+            final String username = securityIdentity.getPrincipal().getName();
             final Place place = placeFacade.findPlaceById(placeId);
 
             if (place == null || !place.getHotWaterConnection()) {
@@ -127,7 +138,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @RolesAllowed(Roles.OWNER)
     public void insertConsumptionByOwner(BigDecimal consumptionValue, Long placeId) {
         if (hotWaterEntryFacade.getEntryWithCheckingIfHotWaterEntryCouldBeInsertedOrOverwritten(placeId, false) == null) {
-            final String username = securityContext.getSubject();
+            final String username = securityIdentity.getPrincipal().getName();
             final Place place = placeFacade.findPlaceById(placeId);
 
             if (place == null || !place.getHotWaterConnection()) {
@@ -170,7 +181,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
                 throw AppException.createHotWaterEntryCouldNotBeInsertedException();
             }
 
-            final String username = securityContext.getSubject();
+            final String username = securityIdentity.getPrincipal().getName();
             accessLevelFacade.findManagerByUsername((username)).ifPresent(manager -> {
                 if (hotWaterEntry.getPlace().getOwner().getAccount().getUsername().equals(username)) {
                     throw AppException.createManagerWhoIsOwnerOfPlaceCouldNotInsertHotWaterEntryException();
@@ -202,7 +213,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
                 throw AppException.createHotWaterEntryCouldNotBeInsertedException();
             }
 
-            final String username = securityContext.getSubject();
+            final String username = securityIdentity.getPrincipal().getName();
             if (!placeFacade.findPlaceById(placeId).getOwner().getAccount().getUsername().equals(username)) {
                 throw AppException.createNotOwnerOfPlaceException();
             }
@@ -217,7 +228,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @Override
     @RolesAllowed({Roles.MANAGER})
     public void addConsumptionFromInvoice(BigDecimal consumption, BigDecimal consumptionCost, BigDecimal heatingAreaFactor) {
-        final Manager manager = managerFacade.findManagerByUsername(securityContext.getSubject());
+        final Manager manager = managerFacade.findManagerByUsername(securityIdentity.getPrincipal().getName());
 
         if (!heatDistributionCentrePayoffFacade.checkIfRecordForThisMonthNotExists()) {
             throw AppException.createConsumptionAddException();
@@ -298,7 +309,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     @RolesAllowed(Roles.OWNER)
     public HotWaterEntry getHotWaterEntryForOwner(Long hotWaterEntryId) {
         final HotWaterEntry hotWaterEntry = hotWaterEntryFacade.find(hotWaterEntryId);
-        final String username = securityContext.getSubject();
+        final String username = securityIdentity.getPrincipal().getName();
         Place place = hotWaterEntry.getPlace();
         if (place != null && !place.getOwner().getAccount().getUsername().equals(username)) {
             throw AppException.createNotOwnerOfPlaceException();
@@ -321,7 +332,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
 
     @RolesAllowed(Roles.OWNER)
     public List<HotWaterEntry> getHotWaterEntriesForPlaceForOwner(Long placeId) {
-        final String username = securityContext.getSubject();
+        final String username = securityIdentity.getPrincipal().getName();
         final Place place = placeFacade.findPlaceById(placeId);
 
         if (place != null && !place.getOwner().getAccount().getUsername().equals(username)) {
@@ -331,7 +342,7 @@ public class HeatDistributionCentreServiceImpl extends AbstractService implement
     }
 
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
- List<HotWaterEntry> getHotWaterEntriesForPlaceWithoutActualEntry(Long placeId) {
+    List<HotWaterEntry> getHotWaterEntriesForPlaceWithoutActualEntry(Long placeId) {
         final List<HotWaterEntry> hotWaterEntries = hotWaterEntryFacade.getHotWaterEntriesByPlaceId(placeId);
         final LocalDate now = LocalDate.now();
         hotWaterEntries.removeIf(entry -> entry.getDate().getYear() == now.getYear() && entry.getDate().getMonthValue() == now.getMonthValue());

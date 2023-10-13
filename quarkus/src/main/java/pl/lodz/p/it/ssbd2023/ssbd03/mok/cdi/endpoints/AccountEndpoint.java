@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mok.cdi.endpoints;
 
+import io.quarkus.security.identity.SecurityIdentity;
 import io.vertx.ext.web.RoutingContext;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
@@ -46,7 +47,7 @@ public class AccountEndpoint {
     MessageSigner messageSigner;
 
     @Inject
-    JsonWebToken securityContext;
+    SecurityIdentity securityIdentity;
 
     @Inject
     RoutingContext routingContext;
@@ -113,7 +114,7 @@ public class AccountEndpoint {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
                 accountService.changePhoneNumber(
-                        securityContext.getSubject(),
+                        securityIdentity.getPrincipal().getName(),
                         changePhoneNumberDTO.getPhoneNumber(),
                         etag,
                         changePhoneNumberDTO.getVersion()
@@ -133,7 +134,7 @@ public class AccountEndpoint {
             throw AppException.createTransactionRollbackException();
         }
         accountService.changePhoneNumber(
-                securityContext.getSubject(),
+                securityIdentity.getPrincipal().getName(),
                 changePhoneNumberDTO.getPhoneNumber(),
                 etag,
                 changePhoneNumberDTO.getVersion()
@@ -157,7 +158,7 @@ public class AccountEndpoint {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
                 accountService.changeSelfPassword(
-                        securityContext.getSubject(),
+                        securityIdentity.getPrincipal().getName(),
                         changeSelfPasswordDTO.getOldPassword(),
                         changeSelfPasswordDTO.getNewPassword(),
                         changeSelfPasswordDTO.getRepeatedNewPassword(),
@@ -178,7 +179,7 @@ public class AccountEndpoint {
             throw AppException.createTransactionRollbackException();
         }
         accountService.changeSelfPassword(
-                securityContext.getSubject(),
+                securityIdentity.getPrincipal().getName(),
                 changeSelfPasswordDTO.getOldPassword(),
                 changeSelfPasswordDTO.getNewPassword(),
                 changeSelfPasswordDTO.getRepeatedNewPassword(),
@@ -259,7 +260,7 @@ public class AccountEndpoint {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
                 accountService.editSelfPersonalData(
-                        securityContext.getSubject(),
+                        securityIdentity.getPrincipal().getName(),
                         editPersonalDataDTO.getFirstName(),
                         editPersonalDataDTO.getSurname(),
                         etag,
@@ -280,7 +281,7 @@ public class AccountEndpoint {
             throw AppException.createTransactionRollbackException();
         }
         accountService.editSelfPersonalData(
-                securityContext.getSubject(),
+                securityIdentity.getPrincipal().getName(),
                 editPersonalDataDTO.getFirstName(),
                 editPersonalDataDTO.getSurname(),
                 etag,
@@ -302,7 +303,7 @@ public class AccountEndpoint {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
                 accountService.changeLanguage(
-                        securityContext.getSubject(),
+                        securityIdentity.getPrincipal().getName(),
                         changeLanguageDTO.getLanguage(),
                         etag,
                         changeLanguageDTO.getVersion()
@@ -322,7 +323,7 @@ public class AccountEndpoint {
             throw AppException.createTransactionRollbackException();
         }
         accountService.changeLanguage(
-                securityContext.getSubject(),
+                securityIdentity.getPrincipal().getName(),
                 changeLanguageDTO.getLanguage(),
                 etag,
                 changeLanguageDTO.getVersion()
@@ -335,7 +336,7 @@ public class AccountEndpoint {
     @Path("/self/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
     public Response getSelfPersonalData() {
-        PersonalData personalData = accountService.getSelfPersonalData(securityContext.getSubject());
+        PersonalData personalData = accountService.getSelfPersonalData(securityIdentity.getPrincipal().getName());
         PersonalDataDTO personalDataDTO = new PersonalDataDTO(personalData.getId().getId(), personalData.getVersion(),
                 personalData.getFirstName(), personalData.getSurname());
         return Response.status(Response.Status.OK)
@@ -374,7 +375,7 @@ public class AccountEndpoint {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
                 accountService.editUserPersonalData(
-                        securityContext.getSubject(),
+                        securityIdentity.getPrincipal().getName(),
                         username,
                         editPersonalDataDTO.getFirstName(),
                         editPersonalDataDTO.getSurname(),
@@ -397,7 +398,7 @@ public class AccountEndpoint {
         }
 
         accountService.editUserPersonalData(
-                securityContext.getSubject(),
+                securityIdentity.getPrincipal().getName(),
                 username,
                 editPersonalDataDTO.getFirstName(),
                 editPersonalDataDTO.getSurname(),
@@ -417,7 +418,7 @@ public class AccountEndpoint {
         do {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
-                accountService.disableUserAccount(securityContext.getSubject(), username);
+                accountService.disableUserAccount(securityIdentity.getPrincipal().getName(), username);
                 rollbackTX = accountService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
             } catch (OptimisticLockAppException | TransactionRollbackException ex) {
@@ -432,7 +433,7 @@ public class AccountEndpoint {
             throw AppException.createTransactionRollbackException();
         }
 
-        accountService.disableUserAccount(securityContext.getSubject(), username);
+        accountService.disableUserAccount(securityIdentity.getPrincipal().getName(), username);
 
         return Response.status(Response.Status.NO_CONTENT).build();
     }
@@ -447,7 +448,7 @@ public class AccountEndpoint {
         do {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
-                accountService.enableUserAccount(securityContext.getSubject(), username);
+                accountService.enableUserAccount(securityIdentity.getPrincipal().getName(), username);
                 rollbackTX = accountService.isLastTransactionRollback();
                 if (rollbackTX) LOGGER.info("*** *** Odwolanie transakcji");
             } catch (OptimisticLockAppException | TransactionRollbackException ex) {
@@ -462,7 +463,7 @@ public class AccountEndpoint {
             throw AppException.createTransactionRollbackException();
         }
 
-        accountService.enableUserAccount(securityContext.getSubject(), username);
+        accountService.enableUserAccount(securityIdentity.getPrincipal().getName(), username);
 
         return Response.status(Response.Status.NO_CONTENT).build();
     }
@@ -481,7 +482,7 @@ public class AccountEndpoint {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
                 accountService.addAccessLevelManager(
-                        securityContext.getSubject(),
+                        securityIdentity.getPrincipal().getName(),
                         addAccessLevelManagerDTO.getUsername(),
                         addAccessLevelManagerDTO.getLicense(),
                         etag,
@@ -502,7 +503,7 @@ public class AccountEndpoint {
             throw AppException.createTransactionRollbackException();
         }
         accountService.addAccessLevelManager(
-                securityContext.getSubject(),
+                securityIdentity.getPrincipal().getName(),
                 addAccessLevelManagerDTO.getUsername(),
                 addAccessLevelManagerDTO.getLicense(),
                 etag,
@@ -527,7 +528,7 @@ public class AccountEndpoint {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
                 accountService.addAccessLevelOwner(
-                        securityContext.getSubject(),
+                        securityIdentity.getPrincipal().getName(),
                         addAccessLevelOwnerDTO.getUsername(),
                         addAccessLevelOwnerDTO.getPhoneNumber(),
                         etag,
@@ -548,7 +549,7 @@ public class AccountEndpoint {
             throw AppException.createTransactionRollbackException();
         }
         accountService.addAccessLevelOwner(
-                securityContext.getSubject(),
+                securityIdentity.getPrincipal().getName(),
                 addAccessLevelOwnerDTO.getUsername(),
                 addAccessLevelOwnerDTO.getPhoneNumber(),
                 etag,
@@ -572,7 +573,7 @@ public class AccountEndpoint {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
                 accountService.addAccessLevelAdmin(
-                        securityContext.getSubject(),
+                        securityIdentity.getPrincipal().getName(),
                         addAccessLevelAdminDTO.getUsername(),
                         etag,
                         addAccessLevelAdminDTO.getVersion()
@@ -592,7 +593,7 @@ public class AccountEndpoint {
             throw AppException.createTransactionRollbackException();
         }
         accountService.addAccessLevelAdmin(
-                securityContext.getSubject(),
+                securityIdentity.getPrincipal().getName(),
                 addAccessLevelAdminDTO.getUsername(),
                 etag,
                 addAccessLevelAdminDTO.getVersion()
@@ -615,7 +616,7 @@ public class AccountEndpoint {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
                 accountService.revokeAccessLevel(
-                        securityContext.getSubject(),
+                        securityIdentity.getPrincipal().getName(),
                         revokeAccessLevelDTO.getUsername(),
                         revokeAccessLevelDTO.getAccessLevel(),
                         etag,
@@ -639,7 +640,7 @@ public class AccountEndpoint {
         }
 
         accountService.revokeAccessLevel(
-                securityContext.getSubject(),
+                securityIdentity.getPrincipal().getName(),
                 revokeAccessLevelDTO.getUsername(),
                 revokeAccessLevelDTO.getAccessLevel(),
                 etag,
@@ -681,7 +682,7 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
     public Response getSelfAccount() {
-        final Account account = accountService.getSelfAccount(securityContext.getSubject());
+        final Account account = accountService.getSelfAccount(securityIdentity.getPrincipal().getName());
         final AccountInfoDTO accountInfoDTO = AccountMapper.createAccountInfoDTOEntity(account);
         return Response.ok()
                 .entity(accountInfoDTO)
@@ -705,7 +706,7 @@ public class AccountEndpoint {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
                 accountService.changeUserEmail(
-                        securityContext.getSubject(),
+                        securityIdentity.getPrincipal().getName(),
                         changeEmailDTO.getNewEmail(),
                         username,
                         etag,
@@ -727,7 +728,7 @@ public class AccountEndpoint {
             throw AppException.createTransactionRollbackException();
         }
         accountService.changeUserEmail(
-                securityContext.getSubject(),
+                securityIdentity.getPrincipal().getName(),
                 changeEmailDTO.getNewEmail(),
                 username,
                 etag,
@@ -742,7 +743,7 @@ public class AccountEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.OWNER)
     public Response getMyOwnerAccount() {
-        final Owner owner = accountService.getOwner(securityContext.getSubject());
+        final Owner owner = accountService.getOwner(securityIdentity.getPrincipal().getName());
         final OwnerDTO ownerDTO = AccountMapper.createOwnerDTOEntity(owner,
                 accountService.getUserPersonalData(owner.getAccount().getUsername()));
         final OwnerETagDTO ownerETagDTO = new OwnerETagDTO(owner.getId(), owner.getVersion(), owner.getPhoneNumber());
@@ -757,7 +758,7 @@ public class AccountEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.MANAGER)
     public Response getMyManagerAccount() {
-        final Manager manager = accountService.getManager(securityContext.getSubject());
+        final Manager manager = accountService.getManager(securityIdentity.getPrincipal().getName());
         final ManagerDTO managerDTO = AccountMapper.createManagerDTOEntity(manager,
                 accountService.getUserPersonalData(manager.getAccount().getUsername()));
         return Response.ok()
@@ -771,7 +772,7 @@ public class AccountEndpoint {
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.ADMIN)
     public Response getMyAdminAccount() {
-        final Admin admin = accountService.getAdmin(securityContext.getSubject());
+        final Admin admin = accountService.getAdmin(securityIdentity.getPrincipal().getName());
         final AdminDTO adminDTO = AccountMapper.createAdminDTOEntity(admin,
                 accountService.getUserPersonalData(admin.getAccount().getUsername()));
         return Response.ok()
@@ -794,7 +795,7 @@ public class AccountEndpoint {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
                 accountService.changeSelfEmail(
-                        securityContext.getSubject(),
+                        securityIdentity.getPrincipal().getName(),
                         changeEmailDTO.getNewEmail(),
                         etag,
                         changeEmailDTO.getVersion()
@@ -814,7 +815,7 @@ public class AccountEndpoint {
             throw AppException.createTransactionRollbackException();
         }
         accountService.changeSelfEmail(
-                securityContext.getSubject(),
+                securityIdentity.getPrincipal().getName(),
                 changeEmailDTO.getNewEmail(),
                 etag,
                 changeEmailDTO.getVersion()
