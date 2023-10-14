@@ -73,7 +73,7 @@ public class Account extends AbstractEntity implements Signable {
     private List<AccessLevelMapping> accessLevels = new ArrayList<>();
 
     @Setter
-    @OneToOne(mappedBy = "id", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "id", cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.REMOVE})
     private PersonalData personalData;
 
     @OneToOne(fetch = FetchType.LAZY, mappedBy = "id", cascade = CascadeType.ALL)

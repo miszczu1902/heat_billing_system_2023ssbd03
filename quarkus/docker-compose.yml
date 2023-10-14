@@ -24,14 +24,15 @@ services:
   appserver:
     container_name: appserver
     build:
-      context: ./..
-      dockerfile: docker/Dockerfile
+      context: .
+      dockerfile: src/main/docker/Dockerfile.jvm
     ports:
       - "8080:8080"
       - "4848:4848"
       - "9009:9009"
     environment:
       - JVM_ARGS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9009
+      - DB_URL=jdbc:mariadb://database:3306/ssbd03
 #    healthcheck:
 #      test: [ "CMD", "curl", "-f", "http://127.0.0.1:8080/api/health-check" ]
 #      interval: 30s
@@ -73,9 +74,8 @@ services:
     ports:
       - "3306:3306"
     volumes:
-#      - ./create_db_users.sh:/docker-entrypoint-initdb.d/create_db_users.sh
-      - ./createDB.sql:/docker-entrypoint-initdb.d/createDB.sql
-#      - ./createDB.sql:/createDB.sql
+      - ./env/createDB.sql:/docker-entrypoint-initdb.d/createDB.sql
+      - ./mariadb/mysql:/var/lib/mysql:rw
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-pssbd03" ]
       interval: 5s

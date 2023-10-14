@@ -18,11 +18,9 @@ import pl.lodz.p.it.ssbd2023.ssbd03.mok.ejb.facade.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.mok.mail.MailSender;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.BcryptHashGenerator;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.Internationalization;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -128,7 +126,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
             } else {
                 loginData.setInvalidLoginCounter(loginData.getInvalidLoginCounter() + 1);
                 loginData.setLastInvalidLogicAddress(ipAddr);
-                loginData.setLastInvalidLoginDate(LocalDateTime.now(ZoneId.of(LoadConfig.loadPropertyFromConfig("zone"))));
+                loginData.setLastInvalidLoginDate(LocalDateTime.now(TIME_ZONE));
                 if (loginData.getInvalidLoginCounter() == 3) {
                     account.setIsEnable(false);
                     mailSender.sendInformationAccountDisabled(account.getEmail(), account.getLanguage_());
@@ -283,8 +281,7 @@ public class AccountServiceImpl extends AbstractService implements AccountServic
     @Override
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
     public Account getSelfAccount(final String username) {
-        ;
-        return accountFacade.findByUsername(username);
+        return personalDataFacade.findByUsername(username).getId();
     }
 
     @Override

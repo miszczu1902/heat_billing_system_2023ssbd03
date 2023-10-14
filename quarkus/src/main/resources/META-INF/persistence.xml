@@ -12,12 +12,12 @@
             <property name="hibernate.connection.driver_class" value="org.mariadb.jdbc.Driver"/>
             <property name="hibernate.transaction.jta.platform"
                       value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
-            <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
+<!--            <property name="jakarta.persistence.schema-generation.database.action" value="none"/>-->
 <!--            <property name="jakarta.persistence.sql-load-script-source" value="init.sql"/>-->
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.discriminator.ignore_explicit_for_joined" value="true" />
-            <property name="hibernate.max_fetch_depth" value="25"/>
+<!--            <property name="hibernate.max_fetch_depth" value="25"/>-->
         </properties>
     </persistence-unit>
 
@@ -45,7 +45,7 @@
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.discriminator.ignore_explicit_for_joined" value="true" />
-            <property name="hibernate.max_fetch_depth" value="25"/>
+<!--            <property name="hibernate.max_fetch_depth" value="25"/>-->
         </properties>
     </persistence-unit>
 
@@ -82,7 +82,7 @@
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.discriminator.ignore_explicit_for_joined" value="true" />
-            <property name="hibernate.max_fetch_depth" value="25"/>
+<!--            <property name="hibernate.max_fetch_depth" value="25"/>-->
         </properties>
     </persistence-unit>
 

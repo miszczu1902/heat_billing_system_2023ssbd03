@@ -14,7 +14,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.jwt.JsonWebToken;
 import pl.lodz.p.it.ssbd2023.ssbd03.config.Roles;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.request.*;
 import pl.lodz.p.it.ssbd2023.ssbd03.dto.response.*;
@@ -682,7 +681,9 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER, Roles.OWNER})
     public Response getSelfAccount() {
-        final Account account = accountService.getSelfAccount(securityIdentity.getPrincipal().getName());
+        Account account = accountService.getSelfAccount(securityIdentity.getPrincipal().getName());
+        final PersonalData personalData = accountService.getUserPersonalData(securityIdentity.getPrincipal().getName());
+        account.setPersonalData(personalData);
         final AccountInfoDTO accountInfoDTO = AccountMapper.createAccountInfoDTOEntity(account);
         return Response.ok()
                 .entity(accountInfoDTO)

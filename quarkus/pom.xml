@@ -9,7 +9,7 @@
   <developers>
     <developer>
       <id>236607</id>
-      <name>Rados�aw Moskal</name>
+      <name>Rados?aw Moskal</name>
     </developer>
     <developer>
       <id>236605</id>
@@ -17,7 +17,7 @@
     </developer>
     <developer>
       <id>236574</id>
-      <name>Hubert Kr�likowski</name>
+      <name>Hubert Kr?likowski</name>
     </developer>
     <developer>
       <id>236710</id>
@@ -60,10 +60,6 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-hibernate-orm</artifactId>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>io.quarkus</groupId>-->
-<!--      <artifactId>quarkus-jdbc-postgresql</artifactId>-->
-<!--    </dependency>-->
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-jdbc-mariadb</artifactId>
@@ -79,6 +75,10 @@
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-resteasy</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-container-image-docker</artifactId>
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -135,11 +135,6 @@
       <artifactId>mariadb-java-client</artifactId>
       <version>3.1.4</version>
     </dependency>
-<!--    <dependency>-->
-<!--      <groupId>org.postgresql</groupId>-->
-<!--      <artifactId>postgresql</artifactId>-->
-<!--      <version>42.5.4</version>-->
-<!--    </dependency>-->
     <dependency>
       <groupId>org.mindrot</groupId>
       <artifactId>jbcrypt</artifactId>
