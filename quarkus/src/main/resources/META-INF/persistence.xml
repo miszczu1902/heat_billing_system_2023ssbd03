@@ -5,25 +5,22 @@
              version="3.0">
     <persistence-unit name="ssbd03adminPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-<!--        <jta-data-source>java:app/jdbc/ssbd03admin</jta-data-source>-->
         <exclude-unlisted-classes>false</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MariaDBDialect"/>
             <property name="hibernate.connection.driver_class" value="org.mariadb.jdbc.Driver"/>
             <property name="hibernate.transaction.jta.platform"
                       value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
-<!--            <property name="jakarta.persistence.schema-generation.database.action" value="none"/>-->
-<!--            <property name="jakarta.persistence.sql-load-script-source" value="init.sql"/>-->
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.discriminator.ignore_explicit_for_joined" value="true" />
-<!--            <property name="hibernate.max_fetch_depth" value="25"/>-->
+            <property name="hibernate.max_fetch_depth" value="1"/>
+
         </properties>
     </persistence-unit>
 
     <persistence-unit name="ssbd03mokPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-<!--        <jta-data-source>java:app/jdbc/ssbd03mok</jta-data-source>-->
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Account</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AccountConfirmationToken</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.EmailConfirmationToken</class>
@@ -45,13 +42,12 @@
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.discriminator.ignore_explicit_for_joined" value="true" />
-<!--            <property name="hibernate.max_fetch_depth" value="25"/>-->
+            <property name="hibernate.max_fetch_depth" value="1"/>
         </properties>
     </persistence-unit>
 
     <persistence-unit name="ssbd03mowPU" transaction-type="JTA">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-<!--        <jta-data-source>java:app/jdbc/ssbd03mow</jta-data-source>-->
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AbstractEntity</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Advance</class>
         <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.AnnualBalance</class>
@@ -82,7 +78,7 @@
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.discriminator.ignore_explicit_for_joined" value="true" />
-<!--            <property name="hibernate.max_fetch_depth" value="25"/>-->
+            <property name="hibernate.max_fetch_depth" value="1"/>
         </properties>
     </persistence-unit>
 

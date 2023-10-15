@@ -10,7 +10,7 @@
     <developers>
         <developer>
             <id>236607</id>
-            <name>Radoslaw Moskal</name>
+            <name>Rados?aw Moskal</name>
         </developer>
         <developer>
             <id>236605</id>
@@ -18,7 +18,7 @@
         </developer>
         <developer>
             <id>236574</id>
-            <name>Hubert Krolikowski</name>
+            <name>Hubert Kr?likowski</name>
         </developer>
         <developer>
             <id>236710</id>
@@ -155,6 +155,12 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
+            <version>1.18.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <version>1.18.0</version>
             <scope>test</scope>
         </dependency>
