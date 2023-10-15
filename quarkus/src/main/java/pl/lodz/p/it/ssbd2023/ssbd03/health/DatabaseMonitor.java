@@ -15,11 +15,11 @@ import java.net.Socket;
 @ApplicationScoped
 public class DatabaseMonitor implements HealthCheck {
     @Inject
-    @ConfigProperty(name = "db.hostname", defaultValue = "databaseRent")
+    @ConfigProperty(name = "db.hostname", defaultValue = "dabase")
     String dbHost;
 
     @Inject
-    @ConfigProperty(name = "db.dbPort", defaultValue = "5432")
+    @ConfigProperty(name = "db.dbPort", defaultValue = "3306")
     int dbPort;
 
     @Override

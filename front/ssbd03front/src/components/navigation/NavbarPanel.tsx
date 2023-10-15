@@ -91,14 +91,14 @@ const NavbarPanel = () => {
     useEffect(() => {
         if (localStorage.getItem("token") != null) {
             const data = decode(token);
-            const decodedRole = JSON.parse(JSON.stringify(data)).role;
-            const roles = decodedRole.split(',').sort();
+            const decodedRole = JSON.parse(JSON.stringify(data)).groups;
+            const roles = decodedRole.split().sort();
             setRoles(roles);
             if (currentRole === GUEST) {
                 setCurrentRole(roles[0]);
                 localStorage.setItem("role", roles[0]);
             }
-            setUsername(JSON.parse(JSON.stringify(data)).sub);
+            setUsername(JSON.parse(JSON.stringify(data)).upn);
         } else {
             setRoles([GUEST]);
             setCurrentRole(GUEST);
