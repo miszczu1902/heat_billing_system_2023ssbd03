@@ -1,7 +1,9 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.interceptors;
 
+import jakarta.annotation.Priority;
 import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.OptimisticLockException;
@@ -10,7 +12,9 @@ import jakarta.transaction.TransactionalException;
 import org.hibernate.exception.ConstraintViolationException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 
+@Interceptor
 @InterceptionBinding
+@Priority(-1)
 public class BasicFacadeExceptionInterceptor {
     @AroundInvoke
     public Object intercept(InvocationContext ictx) throws Exception {

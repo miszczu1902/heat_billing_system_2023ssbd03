@@ -1,5 +1,6 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.exceptions.mappers;
 
+import io.quarkus.security.ForbiddenException;
 import jakarta.ejb.AccessLocalException;
 import jakarta.ejb.EJBAccessException;
 import jakarta.ws.rs.core.MediaType;
@@ -21,7 +22,7 @@ public class ExceptionJsonMapper implements ExceptionMapper<Throwable> {
         try {
             try {
                 throw exception;
-            } catch (EJBAccessException | AccessLocalException fe) {
+            } catch (EJBAccessException | AccessLocalException | ForbiddenException fe) {
                 throw AppException.createNotAllowedActionException();
             } catch (AppException ae) {
                 throw ae;
