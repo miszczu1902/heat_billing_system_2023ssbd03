@@ -2,4 +2,6 @@
 cd front/ssbd03front &&
 npm install &&
 npm run build &&
-docker-compose -f ../../quarkus/docker-compose.yml up
+cd ../../quarkus &&
+mvn clean package -DskipTests=true &&
+docker-compose up
