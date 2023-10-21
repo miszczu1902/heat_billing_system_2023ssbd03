@@ -21,3 +21,16 @@ The Heat Billing System is designed to efficiently calculate heat consumption in
 - Bartosz Miszczak
 - Radosław Moskal
 - Bartosz Zuchora
+
+# How to run project
+
+### Requirments
+ - Docker
+ - docker-compose
+ - node.js
+
+### Bash
+```shell script
+./build-ssbd.sh
+```
+

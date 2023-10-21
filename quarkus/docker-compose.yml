@@ -14,6 +14,7 @@ services:
       - ./env/secrets/certs:/etc/ssl/certs
       - ./env/secrets/private:/etc/ssl/private
       - ./env/secrets/snippets:/etc/nginx/snippets
+      - ../front/ssbd03front/build:/usr/share/html
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://appserver:8080/api/health-check" ]
       interval: 30s
@@ -45,7 +46,7 @@ services:
 
   database:
     container_name: database
-    image: mariadb
+    image: mariadb:11.1.2
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: ssbd03
