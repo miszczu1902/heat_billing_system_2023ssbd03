@@ -1,4 +1,6 @@
-# ssbd03
+# Heat Billing System - TUA 2023
+
+Aby uruchomić projekt 
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 

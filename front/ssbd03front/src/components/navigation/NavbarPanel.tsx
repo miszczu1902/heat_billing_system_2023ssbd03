@@ -60,39 +60,9 @@ const NavbarPanel = () => {
 
     useEffect(() => {
         if (localStorage.getItem("token") != null) {
-            const dataToken = decode(token);
-            const currentTimestamp = Math.floor(new Date().getTime() / 1000);
-            if (JSON.parse(JSON.stringify(dataToken)).exp < currentTimestamp) {
-                setWindowOpen(true);
-            }
-            let data = JSON.stringify({
-                "token": localStorage.getItem("token"),
-            });
-            let config = {
-                method: 'post',
-                maxBodyLength: Infinity,
-                url: API_URL + '/accounts/self/refresh-token',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': token
-                },
-                data: data
-            };
-            axios.request(config)
-                .then((response) => {
-                    localStorage.setItem("token", response.headers["bearer"]);
-                })
-                .catch((error) => {
-                    setWindowOpen(true);
-                });
-        }
-    });
-
-    useEffect(() => {
-        if (localStorage.getItem("token") != null) {
             const data = decode(token);
             const decodedRole = JSON.parse(JSON.stringify(data)).groups;
-            const roles = decodedRole.split().sort();
+            const roles = decodedRole.sort();
             setRoles(roles);
             if (currentRole === GUEST) {
                 setCurrentRole(roles[0]);

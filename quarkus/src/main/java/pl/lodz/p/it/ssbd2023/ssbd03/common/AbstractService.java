@@ -34,13 +34,6 @@ public abstract class AbstractService implements Synchronization {
         return lastTransactionRollback;
     }
 
-//    public void afterBegin() {
-//        transactionId = Long.toString(System.currentTimeMillis())
-//                + ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
-//        LOGGER.log(Level.INFO, "Transakcja TXid={0} rozpoczęta w {1}, tożsamość: {2}",
-//                new Object[]{transactionId, this.getClass().getName(), sctx.getCallerPrincipal().getName()});
-//    }
-
     @Override
     public void beforeCompletion() {
         transactionId = UUID.randomUUID().toString();

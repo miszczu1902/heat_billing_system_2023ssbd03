@@ -15,7 +15,7 @@ import java.net.Socket;
 @ApplicationScoped
 public class DatabaseMonitor implements HealthCheck {
     @Inject
-    @ConfigProperty(name = "db.hostname", defaultValue = "dabase")
+    @ConfigProperty(name = "db.hostname", defaultValue = "database")
     String dbHost;
 
     @Inject
