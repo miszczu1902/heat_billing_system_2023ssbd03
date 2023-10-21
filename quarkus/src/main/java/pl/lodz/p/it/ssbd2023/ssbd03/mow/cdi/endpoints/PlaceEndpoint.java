@@ -1,14 +1,14 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.cdi.endpoints;
 
+import io.quarkus.security.identity.SecurityIdentity;
+import io.vertx.ext.web.RoutingContext;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -21,7 +21,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.entities.Place;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.PlaceService;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.EtagValidator;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.PlaceMapper;
@@ -32,7 +31,8 @@ import java.util.logging.Logger;
 @Path("/places")
 @RequestScoped
 public class PlaceEndpoint {
-    @Inject PlaceService placeService;
+    @Inject
+    PlaceService placeService;
 
     @Inject
     MessageSigner messageSigner;
@@ -40,6 +40,12 @@ public class PlaceEndpoint {
     @Inject
     @ConfigProperty(name = "tx.retries", defaultValue = "3")
     int txRetries;
+
+    @Inject
+    RoutingContext routingContext;
+
+    @Inject
+    SecurityIdentity securityIdentity;
 
     protected static final Logger LOGGER = Logger.getGlobal();
 
@@ -61,8 +67,8 @@ public class PlaceEndpoint {
     @Path("/owner/{placeId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.MANAGER)
-    public Response modifyPlaceOwner(@PathParam("placeId") Long placeId, @NotNull @Valid ModifyPlaceOwnerDTO modifyPlaceOwnerDTO, @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
+    public Response modifyPlaceOwner(@PathParam("placeId") Long placeId, @NotNull @Valid ModifyPlaceOwnerDTO modifyPlaceOwnerDTO) {
+        final String etag = routingContext.request().getHeader("If-Match");
 
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;
@@ -95,13 +101,12 @@ public class PlaceEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.MANAGER)
     public Response modifyPlace(@NotBlank @PathParam("placeId") String placeId,
-                                @NotNull @Valid ModifyPlaceDTO modifyPlaceDTO,
-                                @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
+                                @NotNull @Valid ModifyPlaceDTO modifyPlaceDTO) {
+        final String etag = routingContext.request().getHeader("If-Match");
 
-        final String user = request.getUserPrincipal().getName();
-        final boolean isOwner = request.isUserInRole(Roles.OWNER);
-        final boolean isManager = request.isUserInRole(Roles.MANAGER);
+        final String user = securityIdentity.getPrincipal().getName();
+        final boolean isOwner = securityIdentity.hasRole(Roles.OWNER);
+        final boolean isManager = securityIdentity.hasRole(Roles.MANAGER);
 
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;
@@ -125,7 +130,7 @@ public class PlaceEndpoint {
         if (rollbackTX && retryTXCounter == 0) {
             throw AppException.createTransactionRollbackException();
         }
-        placeService.modifyPlace(placeId ,modifyPlaceDTO.getArea(), etag, modifyPlaceDTO.getVersion(),
+        placeService.modifyPlace(placeId, modifyPlaceDTO.getArea(), etag, modifyPlaceDTO.getVersion(),
                 user, isOwner, isManager);
         return Response.noContent().build();
     }
@@ -134,13 +139,13 @@ public class PlaceEndpoint {
     @Path("/place/{placeId}/predicted-hot-water-consumption")
     @RolesAllowed({Roles.MANAGER, Roles.OWNER})
     public Response enterPredictedHotWaterConsumption(@NotBlank @PathParam("placeId") String placeId,
-                                                      @NotNull @Valid EnterPredictedHotWaterConsumptionDTO enterPredictedHotWaterConsumptionDTO,
-                                                      @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
+                                                      @NotNull @Valid EnterPredictedHotWaterConsumptionDTO enterPredictedHotWaterConsumptionDTO
+    ) {
+        final String etag = routingContext.request().getHeader("If-Match");
 
-        final String user = request.getUserPrincipal().getName();
-        final boolean isOwner = request.isUserInRole(Roles.OWNER);
-        final boolean isManager = request.isUserInRole(Roles.MANAGER);
+        final String user = securityIdentity.getPrincipal().getName();
+        final boolean isOwner = securityIdentity.hasRole(Roles.OWNER);
+        final boolean isManager = securityIdentity.hasRole(Roles.MANAGER);
 
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;

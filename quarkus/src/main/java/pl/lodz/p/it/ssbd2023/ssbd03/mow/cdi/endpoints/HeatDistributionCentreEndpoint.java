@@ -1,14 +1,13 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.cdi.endpoints;
 
+import io.vertx.ext.web.RoutingContext;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -23,7 +22,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.HeatDistributionCentreService;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.EtagValidator;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AdvanceMapper;
@@ -46,6 +44,9 @@ public class HeatDistributionCentreEndpoint {
     @Inject
     MessageSigner messageSigner;
 
+    @Inject
+    RoutingContext routingContext;
+
     protected static final Logger LOGGER = Logger.getGlobal();
 
     @Path("/parameters")
@@ -64,8 +65,8 @@ public class HeatDistributionCentreEndpoint {
     @Path("/parameters/advance-change-factor/{buildingId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.MANAGER)
-    public Response insertAdvanceChangeFactor(@PathParam("buildingId") Long buildingId, @Valid InsertAdvanceChangeFactorDTO insertAdvanceChangeFactorDTO, @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
+    public Response insertAdvanceChangeFactor(@PathParam("buildingId") Long buildingId, @Valid InsertAdvanceChangeFactorDTO insertAdvanceChangeFactorDTO) {
+        final String etag = routingContext.request().getHeader("If-Match");
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
@@ -127,10 +128,10 @@ public class HeatDistributionCentreEndpoint {
     @PATCH
     @EtagValidator
     @RolesAllowed(Roles.MANAGER)
-    public Response modifyConsumption(@NotNull @Valid ModifyHotWaterEntryDTO hotWaterEntryDTO, @Context HttpServletRequest request) {
+    public Response modifyConsumption(@NotNull @Valid ModifyHotWaterEntryDTO hotWaterEntryDTO) {
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;
-        final String etag = request.getHeader("If-Match");
+        final String etag = routingContext.request().getHeader("If-Match");
         do {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {
@@ -166,10 +167,10 @@ public class HeatDistributionCentreEndpoint {
     @PATCH
     @EtagValidator
     @RolesAllowed(Roles.OWNER)
-    public Response modifyConsumptionByOwner(@NotNull @Valid ModifyHotWaterEntryDTO hotWaterEntryDTO, @Context HttpServletRequest request) {
+    public Response modifyConsumptionByOwner(@NotNull @Valid ModifyHotWaterEntryDTO hotWaterEntryDTO) {
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;
-        final String etag = request.getHeader("If-Match");
+        final String etag = routingContext.request().getHeader("If-Match");
         do {
             LOGGER.log(Level.INFO, "*** Powtarzanie transakcji, krok: {0}", retryTXCounter);
             try {

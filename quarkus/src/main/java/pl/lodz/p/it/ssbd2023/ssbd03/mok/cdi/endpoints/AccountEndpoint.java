@@ -5,12 +5,10 @@ import io.vertx.ext.web.RoutingContext;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -102,9 +100,8 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/self/phone-number")
     @RolesAllowed(Roles.OWNER)
-    public Response changePhoneNumber(@Valid ChangePhoneNumberDTO changePhoneNumberDTO,
-                                      @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
+    public Response changePhoneNumber(@Valid ChangePhoneNumberDTO changePhoneNumberDTO) {
+        final String etag = routingContext.request().getHeader("If-Match");
 
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;
@@ -146,9 +143,8 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/self/password")
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
-    public Response changeSelfPassword(@NotNull @Valid ChangeSelfPasswordDTO changeSelfPasswordDTO,
-                                       @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
+    public Response changeSelfPassword(@NotNull @Valid ChangeSelfPasswordDTO changeSelfPasswordDTO) {
+        final String etag = routingContext.request().getHeader("If-Match");
 
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;
@@ -194,9 +190,8 @@ public class AccountEndpoint {
     @Path("/{username}/password")
     @RolesAllowed({Roles.ADMIN})
     public Response changeUserPassword(@NotNull @Valid ChangeUserPasswordDTO changeUserPasswordDTO,
-                                       @NotBlank @PathParam("username") String username,
-                                       @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
+                                       @NotBlank @PathParam("username") String username) {
+        final String etag = routingContext.request().getHeader("If-Match");
 
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;
@@ -249,9 +244,8 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/self/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public Response editPersonalData(@NotNull @Valid EditPersonalDataDTO editPersonalDataDTO,
-                                     @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
+    public Response editPersonalData(@NotNull @Valid EditPersonalDataDTO editPersonalDataDTO) {
+        final String etag = routingContext.request().getHeader("If-Match");
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
@@ -293,8 +287,8 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/self/language")
     @RolesAllowed({Roles.ADMIN, Roles.OWNER, Roles.MANAGER})
-    public Response changeLanguage(@NotNull @Valid ChangeLanguageDTO changeLanguageDTO, @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
+    public Response changeLanguage(@NotNull @Valid ChangeLanguageDTO changeLanguageDTO) {
+        final String etag = routingContext.request().getHeader("If-Match");
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
@@ -364,9 +358,8 @@ public class AccountEndpoint {
     @Path("/{username}/personal-data")
     @RolesAllowed({Roles.ADMIN, Roles.MANAGER})
     public Response editUserPersonalData(@NotNull @Valid EditPersonalDataDTO editPersonalDataDTO,
-                                         @PathParam("username") String username,
-                                         @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
+                                         @PathParam("username") String username) {
+        final String etag = routingContext.request().getHeader("If-Match");
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
@@ -472,8 +465,8 @@ public class AccountEndpoint {
     @Path("/add-access-level-manager")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.ADMIN)
-    public Response addAccessLevelManager(@NotNull @Valid AddAccessLevelManagerDTO addAccessLevelManagerDTO, @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
+    public Response addAccessLevelManager(@NotNull @Valid AddAccessLevelManagerDTO addAccessLevelManagerDTO) {
+        final String etag = routingContext.request().getHeader("If-Match");
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
@@ -517,8 +510,8 @@ public class AccountEndpoint {
     @Path("/add-access-level-owner")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.ADMIN)
-    public Response addAccessLevelOwner(@NotNull @Valid AddAccessLevelOwnerDTO addAccessLevelOwnerDTO, @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
+    public Response addAccessLevelOwner(@NotNull @Valid AddAccessLevelOwnerDTO addAccessLevelOwnerDTO) {
+        final String etag = routingContext.request().getHeader("If-Match");
 
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;
@@ -563,8 +556,8 @@ public class AccountEndpoint {
     @Path("/add-access-level-admin")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.ADMIN)
-    public Response addAccessLevelAdmin(@NotNull @Valid AddAccessLevelAdminDTO addAccessLevelAdminDTO, @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
+    public Response addAccessLevelAdmin(@NotNull @Valid AddAccessLevelAdminDTO addAccessLevelAdminDTO) {
+        final String etag = routingContext.request().getHeader("If-Match");
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
@@ -606,8 +599,8 @@ public class AccountEndpoint {
     @Path("/revoke-access-level")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed(Roles.ADMIN)
-    public Response revokeAccessLevel(@NotNull @Valid RevokeAccessLevelDTO revokeAccessLevelDTO, @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
+    public Response revokeAccessLevel(@NotNull @Valid RevokeAccessLevelDTO revokeAccessLevelDTO) {
+        final String etag = routingContext.request().getHeader("If-Match");
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
@@ -697,9 +690,8 @@ public class AccountEndpoint {
     @Path("/{username}/email")
     @RolesAllowed({Roles.MANAGER, Roles.ADMIN})
     public Response changeUserEmail(@NotNull @Valid ChangeEmailDTO changeEmailDTO,
-                                    @PathParam("username") String username,
-                                    @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
+                                    @PathParam("username") String username) {
+        final String etag = routingContext.request().getHeader("If-Match");
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
@@ -787,8 +779,8 @@ public class AccountEndpoint {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/self/email")
     @RolesAllowed({Roles.OWNER, Roles.MANAGER, Roles.ADMIN})
-    public Response changeSelfEmail(@NotNull @Valid ChangeEmailDTO changeEmailDTO, @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
+    public Response changeSelfEmail(@NotNull @Valid ChangeEmailDTO changeEmailDTO) {
+        final String etag = routingContext.request().getHeader("If-Match");
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 

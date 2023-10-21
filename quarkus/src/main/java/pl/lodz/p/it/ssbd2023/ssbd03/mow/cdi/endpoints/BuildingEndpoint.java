@@ -1,14 +1,13 @@
 package pl.lodz.p.it.ssbd2023.ssbd03.mow.cdi.endpoints;
 
+import io.vertx.ext.web.RoutingContext;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -21,7 +20,6 @@ import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.AppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.database.OptimisticLockAppException;
 import pl.lodz.p.it.ssbd2023.ssbd03.exceptions.transactions.TransactionRollbackException;
 import pl.lodz.p.it.ssbd2023.ssbd03.mow.ejb.services.BuildingService;
-import pl.lodz.p.it.ssbd2023.ssbd03.util.LoadConfig;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.etag.MessageSigner;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.AccountMapper;
 import pl.lodz.p.it.ssbd2023.ssbd03.util.mappers.BuildingMapper;
@@ -42,6 +40,9 @@ public class BuildingEndpoint {
 
     @Inject
     MessageSigner messageSigner;
+
+    @Inject
+    RoutingContext routingContext;
 
     protected static final Logger LOGGER = Logger.getGlobal();
 
@@ -90,8 +91,8 @@ public class BuildingEndpoint {
     @Path("/place")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({Roles.MANAGER})
-    public Response addPlaceToBuilding(@NotNull @Valid AddPlaceToBuildingDTO addPlaceToBuildingDTO, @Context HttpServletRequest request) {
-        final String etag = request.getHeader("If-Match");
+    public Response addPlaceToBuilding(@NotNull @Valid AddPlaceToBuildingDTO addPlaceToBuildingDTO) {
+        final String etag = routingContext.request().getHeader("If-Match");
         int retryTXCounter = txRetries;
         boolean rollbackTX = false;
 
