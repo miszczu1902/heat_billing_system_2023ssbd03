@@ -118,7 +118,7 @@ const EditUserEmail = () => {
     const handleSuccessClose = () => {
         setEmail("");
         setSuccessOpen(false);
-        window.location.reload();
+        //window.location.reload()();
     }
 
     const handleErrorClose = () => {

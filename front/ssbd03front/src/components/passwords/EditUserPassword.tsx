@@ -159,7 +159,7 @@ const EditPassword = () => {
         setNewPassword("");
         setRepeatedNewPassword("");
         setSuccessOpen(false);
-        window.location.reload();
+        //window.location.reload()();
     }
 
     const handleErrorClose = () => {

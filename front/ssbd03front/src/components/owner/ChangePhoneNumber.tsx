@@ -114,7 +114,7 @@ const ChangePhoneNumber = () => {
     const handleSuccessClose = () => {
         setPhoneNumber("");
         setSuccessOpen(false);
-        window.location.reload();
+        //window.location.reload()();
     }
 
     const handleErrorClose = () => {

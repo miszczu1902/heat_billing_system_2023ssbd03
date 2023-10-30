@@ -103,7 +103,7 @@ const InsertHotWaterEntry: React.FC<{placeId: any}> = ({placeId}) => {
     const handleSuccessClose = () => {
         setEntryValue("");
         setSuccessOpen(false);
-        window.location.reload();
+        //window.location.reload()();
     }
 
     const handleErrorClose = () => {

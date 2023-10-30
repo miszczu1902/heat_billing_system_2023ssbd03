@@ -161,7 +161,7 @@ const NavbarPanel = () => {
         const selectedRole = localStorage.getItem("selectedRole");
         if (selectedRole) {
             localStorage.setItem("role", selectedRole);
-            window.location.reload();
+            //window.location.reload()();
         }
     };
 

@@ -89,7 +89,7 @@ const DisableAccount = () => {
 
     const handleSuccessClose = () => {
         setSuccessOpen(false);
-        window.location.reload();
+        //window.location.reload()();
     }
 
     const handleErrorClose = () => {

@@ -145,7 +145,7 @@ export default function EditUserPersonalData() {
 
     const handleSuccessClose = () => {
         setSuccessOpen(false);
-        window.location.reload();
+        //window.location.reload()();
     }
 
     const handleErrorClose = () => {

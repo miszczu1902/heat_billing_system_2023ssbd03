@@ -67,7 +67,7 @@ const EditEmail = () => {
         if (reason !== 'backdropClick') {
             setOpen(false);
         }
-        window.location.reload();
+        //window.location.reload()();
     };
 
     const handleConfirmClose = (event: React.SyntheticEvent<unknown>, reason?: string) => {

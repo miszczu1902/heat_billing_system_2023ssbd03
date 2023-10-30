@@ -211,7 +211,7 @@ export default function Profile() {
         if (reason !== 'backdropClick') {
             setSuccessOpen(false);
         }
-        window.location.reload();
+        //window.location.reload()();
     }
 
     const handleConfirm = () => {
