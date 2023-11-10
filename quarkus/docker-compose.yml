@@ -35,6 +35,12 @@ services:
       - int_ssbd03
     environment:
       - DB_URL=jdbc:mariadb://database:3306/ssbd03
+      - DB_USER=ssbd03
+      - DB_PASSWORD=ssbd03
+      - DB_ADMIN_PASSWORD=9LUoYTSMH
+      - DB_MOK_PASSWORD=CHqZxv5R1
+      - DB_MOW_PASSWORD=obSjEBGaX
+      - DB_AUTH_PASSWORD=KHgXydJUv
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://127.0.0.1:8080/api/health-check" ]
       interval: 30s
