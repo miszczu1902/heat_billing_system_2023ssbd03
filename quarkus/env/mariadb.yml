@@ -8,7 +8,6 @@ spec:
   resources:
     requests:
       storage: 1Gi
-
 ---
 
 apiVersion: v1
@@ -1093,8 +1092,6 @@ spec:
       containers:
         - name: database
           image: mariadb:11.1.2
-          securityContext:
-            runAsUser: 1001
           envFrom:
             - configMapRef:
                 name: database-config
