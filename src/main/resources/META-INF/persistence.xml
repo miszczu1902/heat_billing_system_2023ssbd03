@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+    <persistence-unit name="ssbd03adminPU" transaction-type="JTA">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <exclude-unlisted-classes>false</exclude-unlisted-classes>
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MariaDBDialect"/>
+            <property name="hibernate.connection.driver_class" value="org.mariadb.jdbc.Driver"/>
+            <property name="hibernate.transaction.jta.platform"
+                      value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.discriminator.ignore_explicit_for_joined" value="true" />
+            <property name="hibernate.max_fetch_depth" value="1"/>
+
+        </properties>
+    </persistence-unit>
+
+    <persistence-unit name="ssbd03mokPU" transaction-type="JTA">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Account</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AccountConfirmationToken</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.EmailConfirmationToken</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.ResetPasswordToken</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AccessLevelMapping</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AbstractEntity</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Account</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Admin</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.LoginData</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Manager</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Owner</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.PersonalData</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MariaDBDialect"/>
+            <property name="hibernate.connection.driver_class" value="org.mariadb.jdbc.Driver"/>
+            <property name="hibernate.transaction.jta.platform"
+                      value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.discriminator.ignore_explicit_for_joined" value="true" />
+            <property name="hibernate.max_fetch_depth" value="1"/>
+        </properties>
+    </persistence-unit>
+
+    <persistence-unit name="ssbd03mowPU" transaction-type="JTA">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AbstractEntity</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Advance</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.AnnualBalance</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Building</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatDistributionCentre</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatDistributionCentrePayoff</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.HeatingPlaceAndCommunalAreaAdvance</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterAdvance</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.HotWaterEntry</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.MonthPayoff</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.PastQuarterHotWaterPayoff</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Place</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Admin</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.Address</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Account</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.AccessLevelMapping</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Manager</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Owner</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.Admin</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.LoginData</class>
+        <class>pl.lodz.p.it.ssbd2023.ssbd03.entities.accounts.PersonalData</class>
+        <exclude-unlisted-classes>true</exclude-unlisted-classes>
+        <properties>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MariaDBDialect"/>
+            <property name="hibernate.connection.driver_class" value="org.mariadb.jdbc.Driver"/>
+            <property name="hibernate.transaction.jta.platform"
+                      value="org.hibernate.service.jta.platform.internal.SunOneJtaPlatform"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.discriminator.ignore_explicit_for_joined" value="true" />
+            <property name="hibernate.max_fetch_depth" value="1"/>
+        </properties>
+    </persistence-unit>
+
+</persistence>

@@ -1,0 +1,3 @@
+LANGUAGE=en_US:en
+JAVA_OPTS=-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager
+JAVA_APP_JAR=/deployments/quarkus-run.jar
