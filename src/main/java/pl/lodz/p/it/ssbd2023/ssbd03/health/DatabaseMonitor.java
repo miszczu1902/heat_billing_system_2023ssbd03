@@ -28,12 +28,7 @@ public class DatabaseMonitor implements HealthCheck {
         long freeMemory = Runtime.getRuntime().freeMemory();
         long maxMemory = Runtime.getRuntime().maxMemory();
         double memoryUsage = (double) (maxMemory - freeMemory) / maxMemory;
-        if (memoryUsage <= memoryThreshold) {
-            responseBuilder.up()
-                    .withData("usage", "Obecne zuzycie pamieci  %s%%".formatted(memoryUsage * 100));
-        } else {
-            responseBuilder.down().withData("usage", "Obecne zuzycie pamieci %s %%".formatted(memoryUsage * 100));
-        }
+        responseBuilder.withData("usage", "Obecne zuzycie pamieci  %s%%".formatted(memoryUsage * 100));
 
         try (Connection connection = dataSource.getConnection()) {
             if (connection.isValid(5)) {
