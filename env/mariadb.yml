@@ -1,16 +1,4 @@
 apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: database-pvc
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
----
-
-apiVersion: v1
 kind: ConfigMap
 metadata:
   name: database-config
@@ -21,9 +9,9 @@ data:
     CREATE USER IF NOT EXISTS 'ssbd03auth'@'%' IDENTIFIED BY 'KHgXydJUv';
     CREATE USER IF NOT EXISTS 'ssbd03mok'@'%' IDENTIFIED BY 'CHqZxv5R1';
     CREATE USER IF NOT EXISTS 'ssbd03mow'@'%' IDENTIFIED BY 'obSjEBGaX';
-    
+
     CREATE DATABASE IF NOT EXISTS ssbd03;
-    
+
     drop table if exists account_confirmation_token;
     drop table if exists admin;
     drop table if exists annual_balance;
@@ -46,7 +34,7 @@ data:
     drop table if exists access_level_mapping;
     drop table if exists reset_password_token;
     drop table if exists account;
-    
+
     create table account
     (
     id                          bigint auto_increment primary key,
@@ -67,7 +55,7 @@ data:
     last_modified_by            bigint,
     foreign key (last_modified_by) references account (id)
     );
-    
+
     create table access_level_mapping
     (
     access_level                varchar(31)          not null,
@@ -84,10 +72,10 @@ data:
     foreign key (created_by) references account (id),
     unique (account_id, access_level)
     );
-    
+
     create index access_level_mapping_account_id
     on access_level_mapping (account_id);
-    
+
     create table account_confirmation_token
     (
     id                          bigint auto_increment primary key,
@@ -105,7 +93,7 @@ data:
     account_id                  bigint,
     foreign key (account_id) references account(id)
     );
-    
+
     create table address
     (
     id                          bigint auto_increment primary key,
@@ -121,14 +109,14 @@ data:
     last_modified_by            bigint,
     foreign key (last_modified_by) references account(id)
     );
-    
+
     create table admin
     (
     id bigint not null primary key,
     foreign key (id) references access_level_mapping(id)
     );
-    
-    
+
+
     create table email_confirmation_token
     (
     id                          bigint auto_increment primary key,
@@ -146,7 +134,7 @@ data:
     account_id                  bigint,
     foreign key (account_id) references account(id)
     );
-    
+
     create table heat_distribution_centre
     (
     id                          bigint auto_increment primary key,
@@ -158,7 +146,7 @@ data:
     last_modified_by            bigint,
     foreign key (last_modified_by) references account(id)
     );
-    
+
     create table building
     (
     id                          bigint auto_increment primary key,
@@ -176,13 +164,13 @@ data:
     heat_distribution_centre_id bigint,
     foreign key (heat_distribution_centre_id) references heat_distribution_centre(id)
     );
-    
+
     create index building_address_id
     on building (address_id);
-    
+
     create index building_heat_distribution_centre_id
     on building (heat_distribution_centre_id);
-    
+
     create table login_data
     (
     creation_date_time          datetime not null,
@@ -200,7 +188,7 @@ data:
     last_modified_by            bigint,
     foreign key (last_modified_by) references account(id)
     );
-    
+
     create table manager
     (
     license varchar(20) not null,
@@ -208,7 +196,7 @@ data:
     id      bigint      not null primary key,
     foreign key (id) references access_level_mapping(id)
     );
-    
+
     create table heat_distribution_centre_pay_off
     (
     id                          bigint auto_increment primary key,
@@ -228,13 +216,13 @@ data:
     manager_id                  bigint,
     foreign key (manager_id) references manager(id)
     );
-    
+
     create index heat_distribution_centre_pay_off_heat_distribution_centre_id
     on heat_distribution_centre_pay_off (heat_distribution_centre_id);
-    
+
     create index heat_distribution_centre_pay_off_manager_id
     on heat_distribution_centre_pay_off (manager_id);
-    
+
     create table owner
     (
     phone_number varchar(9) not null,
@@ -242,7 +230,7 @@ data:
     id           bigint     not null primary key,
     foreign key (id) references access_level_mapping(id)
     );
-    
+
     create table personal_data
     (
     creation_date_time          datetime not null,
@@ -257,7 +245,7 @@ data:
     last_modified_by            bigint,
     foreign key (last_modified_by) references account(id)
     );
-    
+
     create table place
     (
     id                              bigint auto_increment primary key,
@@ -279,7 +267,7 @@ data:
     foreign key (owner_id) references owner(id),
     unique (place_number, building_id)
     );
-    
+
     create table advance
     (
     id                          bigint auto_increment primary key,
@@ -294,10 +282,10 @@ data:
     place_id                    bigint,
     foreign key (place_id) references place(id)
     );
-    
+
     create index advance_place_id
     on advance (place_id);
-    
+
     create table annual_balance
     (
     id                                  bigint auto_increment primary key,
@@ -318,10 +306,10 @@ data:
     place_id                            bigint,
     foreign key (place_id) references place(id)
     );
-    
+
     create index annual_balance_place_id
     on annual_balance (place_id);
-    
+
     create table heating_place_and_communal_area_advance
     (
     advance_change_factor               decimal(19, 2) not null check (advance_change_factor >= 0),
@@ -330,14 +318,14 @@ data:
     id                                  bigint not null primary key,
     foreign key (id) references advance(id)
     );
-    
+
     create table hot_water_advance
     (
     hot_water_advance_value decimal(10, 2) not null,
     id                      bigint         not null primary key,
     foreign key (id) references advance(id)
     );
-    
+
     create table hot_water_entry
     (
     id                          bigint auto_increment primary key,
@@ -355,13 +343,13 @@ data:
     place_id                    bigint,
     foreign key (place_id) references place(id)
     );
-    
+
     create index hot_water_entry_place_id
     on hot_water_entry (place_id);
-    
+
     create index hot_water_entry_manager_id
     on hot_water_entry (manager_id);
-    
+
     create table month_pay_off
     (
     id                          bigint auto_increment primary key,
@@ -381,13 +369,13 @@ data:
     place_id                    bigint,
     foreign key (place_id) references place(id)
     );
-    
+
     create index month_pay_off_place_id
     on month_pay_off (place_id);
-    
+
     create index month_pay_off_owner_id
     on month_pay_off (owner_id);
-    
+
     create table past_quarter_hot_water_pay_off
     (
     creation_date_time          datetime not null,
@@ -402,13 +390,13 @@ data:
     last_modified_by            bigint,
     foreign key (last_modified_by) references account(id)
     );
-    
+
     create index place_building_id
     on place (building_id);
-    
+
     create index place_owner_id
     on place (owner_id);
-    
+
     create table reset_password_token
     (
     id                          bigint auto_increment primary key,
@@ -425,9 +413,9 @@ data:
     account_id                  bigint,
     foreign key (account_id) references account(id)
     );
-    
-    
-    
+
+
+
     CREATE OR REPLACE VIEW glassfish_auth_view AS
     SELECT username, password, access_level
     FROM account
@@ -435,7 +423,7 @@ data:
     WHERE account.is_active = true
     AND account.is_enable = true
     AND access_level_mapping.is_active = true;
-    
+
     GRANT SELECT ON TABLE glassfish_auth_view TO ssbd03auth;
     GRANT SELECT, INSERT, DELETE, UPDATE ON TABLE access_level_mapping TO ssbd03mok;
     GRANT SELECT, INSERT, DELETE, UPDATE ON TABLE account TO ssbd03mok;
@@ -466,7 +454,7 @@ data:
     GRANT SELECT, INSERT, UPDATE ON TABLE advance TO ssbd03mow;
     GRANT SELECT, INSERT, UPDATE ON TABLE hot_water_advance TO ssbd03mow;
     GRANT SELECT, INSERT, UPDATE ON TABLE heating_place_and_communal_area_advance TO ssbd03mow;
-    
+
     INSERT INTO address (id, street, building_number, city, postal_code, version, creation_date_time,
     last_modification_date_time)
     VALUES (1, 'Main Street', 12, 'New York', '12-345', 1, NOW(), NOW()),
@@ -1067,11 +1055,24 @@ metadata:
   name: database-secrets
 type: Opaque
 data:
-  MYSQL_DATABASE: OUxVb1lUU01I 
-  MYSQL_USER: S0hnWHlkSlV2     
-  MYSQL_PASSWORD: Q0hxWnh2NVIx 
-  MYSQL_ROOT_PASSWORD: b2JTakVCR2FY 
+  MYSQL_ROOT_PASSWORD: c3NiZDAz
+  MYSQL_DATABASE: c3NiZDAz
+  MYSQL_USER: c3NiZDAz
+  MYSQL_PASSWORD: c3NiZDAz
+---
 
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ssbd03-secrets
+type: Opaque
+data:
+  DB_ADMIN_PASSWORD: OUxVb1lUU01I
+  DB_MOK_PASSWORD: S0hnWHlkSlV2
+  DB_MOW_PASSWORD: Q0hxWnh2NVIx
+  DB_AUTH_PASSWORD: b2JTakVCR2FY
+  DB_URL: amRiYzptYXJpYWRiOi8vZGF0YWJhc2U6MzMwNi9zc2JkMDM=
+  DB_PASSWORD: c3NiZDAz
 ---
 
 apiVersion: apps/v1
@@ -1092,27 +1093,49 @@ spec:
       containers:
         - name: database
           image: mariadb:11.1.2
-          envFrom:
-            - configMapRef:
-                name: database-config
-            - secretRef:
-                name: database-secrets
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secrets
+                  key: MYSQL_ROOT_PASSWORD
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: database-secrets
+                  key: MYSQL_DATABASE
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: database-secrets
+                  key: MYSQL_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secrets
+                  key: MYSQL_PASSWORD
           ports:
             - containerPort: 3306
           volumeMounts:
             - name: database-storage
+              mountPath: /var/lib/mysql
+            - name: database-config
               mountPath: /docker-entrypoint-initdb.d
-          livenessProbe:
-            exec:
-              command:
-                - sh
-                - -c
-                - exec mariadb -pssbd03 --silent -e "SELECT 1"
-              initialDelaySeconds: 30
-              periodSeconds: 10
-              timeoutSeconds: 5
-              successThreshold: 1
-              failureThreshold: 3
+      volumes:
+        - name: database-config
+          configMap:
+            name: database-config
+#          livenessProbe:
+#            exec:
+#              command:
+#                - sh
+#                - -c
+#                - exec mariadb -pssbd03 --silent -e "SELECT 1"
+#              initialDelaySeconds: 30
+#              periodSeconds: 10
+#              timeoutSeconds: 5
+#              successThreshold: 1
+#              failureThreshold: 3
   volumeClaimTemplates:
     - metadata:
         name: database-storage
