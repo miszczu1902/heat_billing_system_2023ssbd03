@@ -1129,17 +1129,17 @@ spec:
         - name: database-config
           configMap:
             name: database-config
-#          livenessProbe:
-#            exec:
-#              command:
-#                - sh
-#                - -c
-#                - exec mariadb -pssbd03 --silent -e "SELECT 1"
-#              initialDelaySeconds: 30
-#              periodSeconds: 10
-#              timeoutSeconds: 5
-#              successThreshold: 1
-#              failureThreshold: 3
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - exec mariadb -u root -pssbd03 --silent -e "SELECT 1"
+              initialDelaySeconds: 30
+              periodSeconds: 10
+              timeoutSeconds: 5
+              successThreshold: 1
+              failureThreshold: 3
   volumeClaimTemplates:
     - metadata:
         name: database-storage
