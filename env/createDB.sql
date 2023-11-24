@@ -407,6 +407,11 @@ create table reset_password_token
     foreign key (account_id) references account(id)
 );
 
+GRANT ALL PRIVILEGES ON ssbd03.* TO 'ssbd03admin'@'%';
+GRANT ALL PRIVILEGES ON ssbd03.* TO 'ssbd03mok'@'%';
+GRANT ALL PRIVILEGES ON ssbd03.* TO 'ssbd03mow'@'%';
+GRANT ALL PRIVILEGES ON ssbd03.* TO 'ssbd03auth'@'%';
+FLUSH PRIVILEGES;
 
 
 CREATE OR REPLACE VIEW glassfish_auth_view AS
