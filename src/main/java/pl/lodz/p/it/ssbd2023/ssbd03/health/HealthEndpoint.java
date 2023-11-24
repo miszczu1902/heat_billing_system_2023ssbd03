@@ -6,6 +6,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.core.Response;
 
 @Path("/health-check")
+@PermitAll
 public class HealthEndpoint {
     @GET
     @PermitAll
