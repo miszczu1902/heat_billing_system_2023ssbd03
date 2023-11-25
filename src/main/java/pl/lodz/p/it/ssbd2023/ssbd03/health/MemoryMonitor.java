@@ -3,7 +3,7 @@ package pl.lodz.p.it.ssbd2023.ssbd03.health;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.health.*;
 
-@Readiness
+@Liveness
 @ApplicationScoped
 public class MemoryMonitor implements HealthCheck {
     @Override
