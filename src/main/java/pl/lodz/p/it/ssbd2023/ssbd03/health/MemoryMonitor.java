@@ -15,3 +15,4 @@ public class MemoryMonitor implements HealthCheck {
         return responseBuilder.withData("usage", "Obecne zuzycie pamieci %s %%".formatted(memoryUsage * 100)).up().build();
     }
 }
+

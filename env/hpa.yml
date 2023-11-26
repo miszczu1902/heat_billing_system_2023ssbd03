@@ -1,0 +1,22 @@
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ssbd03-hpa
+  namespace: tua03
+spec:
+  scaleTargetRef:
+    kind: DeploymentConfig
+    name: ssbd03
+    apiVersion: apps.openshift.io/v1
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: AverageValue
+          averageValue: 120m
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 60
