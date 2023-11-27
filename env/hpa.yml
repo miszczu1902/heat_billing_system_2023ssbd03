@@ -15,8 +15,8 @@ spec:
       resource:
         name: cpu
         target:
-          type: AverageValue
-          averageValue: 120m
+          type: Utilization
+          averageUtilization: 50
   behavior:
     scaleDown:
       stabilizationWindowSeconds: 60
