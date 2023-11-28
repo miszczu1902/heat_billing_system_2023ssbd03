@@ -4,8 +4,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.health.*;
 
-@Liveness
 @ApplicationScoped
+@Liveness
 public class APIMonitor implements HealthCheck {
     @Inject
     AppStatus appStatus;
