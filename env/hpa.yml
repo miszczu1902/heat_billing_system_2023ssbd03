@@ -1,8 +1,8 @@
-apiVersion: autoscaling/v2
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   name: ssbd03-hpa
-  namespace: tua03
+  namespace: tua202303
 spec:
   scaleTargetRef:
     kind: DeploymentConfig
